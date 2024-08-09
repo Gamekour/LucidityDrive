@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
+  m_Name: zombies
+  m_EditorClassIdentifier: 
+  legWidth: 0.09
+  legWidthMult: 0.5
+  ratiomult: 8
+  ratiofreezethreshold: 0.3
+  hipRotationSpeed: 2000
+  down: 1.75
+  maxforcemult: 5.4
+  forcesmoothness: 20
+  maxProbeOffset: 2
+  maxlegmult: 1.03
+  crouchmult: 0.7
+  jumpmult: 32
+  jumpforcemult: 1.1
+  probemult: 1
+  movespeed: 1.25
+  friction: 1
+  slidemult: 14
+  fmaxmult: 0.0275
+  wallrunmax: 0.3
+  airdownmult: 1
+  probeRotSmoothness: 0.8
+  moveflatprobemult: 1.5
+  probeXminimumOffset: 0.1
+  probeZminimumOffset: 0.1
+  hipspaceMaxRot: -0.9
+  airtimemult: 2
+  movedownmult: 0.5
+  movedownclamp: 0.6
+  moveupmult: 1
+  moveupclamp: 1
+  hipspacesmoothness: 0.94
+  moveburst: 6
+  crawlthreshold: 14
+  timescale: 1
+  crawlspeed: 0.5
+  crouchspeed: 0.75
+  crawlmult: 0.4
+  flightforce: 10
+  flightdrag: 0.003
+  sinemult: 0
+  sprintmult: 4.5
+  jumpgrav: -9.81
+  fallgrav: -9.81
+  airmove: 2
+  airdrag: 0.99925

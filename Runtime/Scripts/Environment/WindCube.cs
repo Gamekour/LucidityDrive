@@ -1,0 +1,55 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WindCube : MonoBehaviour
+{
+    private List<Rigidbody> targets = new List<Rigidbody>();
+    [SerializeField] float strength = 1;
+    [SerializeField] ForceMode fm = ForceMode.Force;
+    [SerializeField] bool multiplicative = false;
+    [SerializeField] float threshold = 0;
+    [SerializeField] bool subVel = false;
+    [SerializeField] float matchSmoothness = 0;
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.attachedRigidbody != null)
+            targets.Add(other.attachedRigidbody);
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.attachedRigidbody != null && targets.Contains(other.attachedRigidbody))
+            targets.Remove(other.attachedRigidbody);
+    }
+    private void FixedUpdate()
+    {
+        for (int i = 0; i < targets.Count; i++)
+        {
+            Rigidbody target = targets[i];
+            Vector3 force = transform.up * strength;
+            if (target != null)
+            {
+                Vector3 localvel = transform.InverseTransformVector(target.velocity);
+                if (localvel.y > threshold)
+                {
+                    if (multiplicative)
+                    {
+                        force = Vector3.Scale(force, transform.up * Mathf.Clamp(localvel.y, 0, Mathf.Infinity));
+                    }
+                    if (subVel)
+                    {
+                        force -= target.velocity;
+                        force /= Time.fixedDeltaTime;
+                        force *= (1 - matchSmoothness);
+                    }
+                    target.AddForce(force, fm);
+                }
+            }
+            else
+            {
+                targets.RemoveAt(i);
+                i--;
+            }
+        }
+    }
+}
