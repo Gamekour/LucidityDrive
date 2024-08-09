@@ -2459,7 +2459,7 @@ GameObject:
   - component: {fileID: 4885441524455793856}
   - component: {fileID: 3471226463212317937}
   m_Layer: 0
-  m_Name: vismodel_test_offline
+  m_Name: VismodelExample
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
