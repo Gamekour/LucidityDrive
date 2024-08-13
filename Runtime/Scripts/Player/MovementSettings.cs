@@ -35,8 +35,6 @@ public class MovementSettings : ScriptableObject
     public float airtimemult;
     public float movedownmult;
     public float movedownclamp;
-    public float moveupmult;
-    public float moveupclamp;
     public float hipspacesmoothness;
     public float moveburst;
     public float crawlthreshold;
@@ -46,7 +44,6 @@ public class MovementSettings : ScriptableObject
     public float crawlmult;
     public float flightforce;
     public float flightdrag;
-    public float sinemult;
     public float sprintmult;
     [Header("Special")]
     public float jumpgrav;

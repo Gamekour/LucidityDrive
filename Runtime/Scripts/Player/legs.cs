@@ -1,6 +1,8 @@
+using System;
+using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using System.Linq;
 
 class GFG : IComparer<RaycastHit>
 {
@@ -67,8 +69,6 @@ public class legs : MonoBehaviour
     private float airtimemult;
     private float movedownmult;
     private float movedownclamp;
-    private float moveupmult;
-    private float moveupclamp;
     private float hipspacesmoothness;
     private float moveburst;
     private float crawlthreshold;
@@ -78,7 +78,6 @@ public class legs : MonoBehaviour
     private float crawlmult;
     private float flightforce;
     private float flightdrag;
-    private float sinemult;
     private float sprintmult;
     //SPECIAL
     private float jumpgrav;
@@ -98,15 +97,11 @@ public class legs : MonoBehaviour
         PlayerInfo.legRef = this;
         PlayerInfo.mainBody = rb;
         PlayerInfo.pelvis = transform;
-        PlayerInfo.truepelvis = transform.Find("truehip");
         PlayerInfo.hipspace = hipspace;
         PlayerInfo.velspace = velspace;
-        PlayerInfo.willspace = willspace;
         PlayerInfo.footspace = footspace;
-        PlayerInfo.collisionspace = collisionspace;
         PlayerInfo.legspaceL = legspaceL;
         PlayerInfo.legspaceR = legspaceR;
-        PlayerInfo.origin = transform.root;
         PlayerInfo.physHips = physHips;
         PlayerInfo.physHipsRB = physHips.GetComponent<Rigidbody>();
         PlayerInfo.physHead = physHead;
@@ -116,7 +111,7 @@ public class legs : MonoBehaviour
     private void Start()
     {
         movementSettings = defaultMovementSettings;
-        legLength = transform.position.y - PlayerInfo.origin.position.y;
+        legLength = transform.position.y - transform.root.position.y;
         Time.timeScale = timescale;
     }
 
@@ -183,51 +178,21 @@ public class legs : MonoBehaviour
 
     public void CopyValues()
     {
-        legWidth = movementSettings.legWidth;
-        legWidthMult = movementSettings.legWidthMult;
-        ratiomult = movementSettings.ratiomult;
-        ratiofreezethreshold = movementSettings.ratiofreezethreshold;
-        hipRotationSpeed = movementSettings.hipRotationSpeed;
-        down = movementSettings.down;
-        maxforcemult = movementSettings.maxforcemult;
-        forcesmoothness = movementSettings.forcesmoothness;
-        maxProbeOffset = movementSettings.maxProbeOffset;
-        maxlegmult = movementSettings.maxlegmult;
-        crouchmult = movementSettings.crouchmult;
-        jumpmult = movementSettings.jumpmult;
-        jumpforcemult = movementSettings.jumpforcemult;
-        probemult = movementSettings.probemult;
-        movespeed = movementSettings.movespeed;
-        friction = movementSettings.friction;
-        slidemult = movementSettings.slidemult;
-        fmaxmult = movementSettings.fmaxmult;
-        wallrunmax = movementSettings.wallrunmax;
-        airdownmult = movementSettings.airdownmult;
-        probeRotSmoothness = movementSettings.probeRotSmoothness;
-        moveflatprobemult = movementSettings.moveflatprobemult;
-        probeXminimumOffset = movementSettings.probeXminimumOffset;
-        probeZminimumOffset = movementSettings.probeZminimumOffset;
-        hipspaceMaxRot = movementSettings.hipspaceMaxRot;
-        airtimemult = movementSettings.airtimemult;
-        movedownmult = movementSettings.movedownmult;
-        movedownclamp = movementSettings.movedownclamp;
-        moveupmult = movementSettings.moveupmult;
-        moveupclamp = movementSettings.moveupclamp;
-        hipspacesmoothness = movementSettings.hipspacesmoothness;
-        moveburst = movementSettings.moveburst;
-        crawlthreshold = movementSettings.crawlthreshold;
-        timescale = movementSettings.timescale;
-        crawlspeed = movementSettings.crawlspeed;
-        crouchspeed = movementSettings.crouchspeed;
-        crawlmult = movementSettings.crawlmult;
-        flightforce = movementSettings.flightforce;
-        flightdrag = movementSettings.flightdrag;
-        sinemult = movementSettings.sinemult;
-        jumpgrav = movementSettings.jumpgrav;
-        fallgrav = movementSettings.fallgrav;
-        airmove = movementSettings.airmove;
-        airdrag = movementSettings.airdrag;
-        sprintmult = movementSettings.sprintmult;
+        Type TMoveSettings = typeof(MovementSettings);
+        Type TLegs = typeof(legs);
+        FieldInfo[] fields = TMoveSettings.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+        foreach (var field in fields)
+        {
+            // Find the corresponding field in the destination object
+            FieldInfo destField = TLegs.GetField(field.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+            if (destField != null && destField.FieldType == field.FieldType)
+            {
+                // Copy the value from the source field to the destination field
+                object value = field.GetValue(movementSettings);
+                destField.SetValue(this, value);
+            }
+        }
     }
 
     private void AirCalc()
@@ -288,8 +253,7 @@ public class legs : MonoBehaviour
             movedownamount *= movedownmult;
             movedownamount -= downness;
 
-            float moveupamount = Mathf.Clamp(PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y, 0, moveupclamp);
-            moveupamount *= moveupmult;
+            float moveupamount = Mathf.Clamp01(PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y);
 
             float legadjust = legLength * maxlegmult * Mathf.Lerp(wallrunmax, 1, PlayerInfo.hipspace.up.y);
             if (PlayerInfo.climbing && !jump)
@@ -305,12 +269,10 @@ public class legs : MonoBehaviour
             else if (crouch)
             {
                 legadjust *= crouchmult;
-                legadjust += (Mathf.Sin(Time.time) * sinemult) - sinemult;
             }
             else
             {
                 legadjust *= 1 + movedownamount + moveupamount;
-                legadjust += (Mathf.Sin(Time.time) * sinemult) - sinemult;
             }
 
             Vector3 average = (PlayerInfo.targetL + PlayerInfo.targetR) / 2;

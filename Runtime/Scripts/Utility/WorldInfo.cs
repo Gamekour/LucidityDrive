@@ -56,15 +56,11 @@ public static class PlayerInfo
 
     public static Rigidbody mainBody;
     public static Transform pelvis;
-    public static Transform truepelvis;
     public static Transform hips;
-    public static Transform origin;
     public static Transform head;
     public static Transform hipspace;
     public static Transform velspace;
-    public static Transform willspace;
     public static Transform footspace;
-    public static Transform collisionspace;
     public static Transform legspaceR;
     public static Transform legspaceL;
     public static Transform climbtargetL;
