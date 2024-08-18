@@ -14,13 +14,13 @@ public class hovercoil : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        bool space = InputManager.jump.ReadValue<float>() != 0;
+        bool space = LucidInputActionRefs.jump.ReadValue<float>() != 0;
         if (space)
             rb.AddForce(Vector3.up * floatforce * Time.fixedDeltaTime, ForceMode.Acceleration);
         else if (!PlayerInfo.grounded)
             rb.AddForce(Vector3.down * fallforce * Time.fixedDeltaTime, ForceMode.Acceleration);
 
-        Vector2 moveVector = InputManager.movement.ReadValue<Vector2>();
+        Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;

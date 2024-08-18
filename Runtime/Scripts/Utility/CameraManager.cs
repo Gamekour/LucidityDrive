@@ -17,20 +17,20 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
-        InputManager.camselect1.started += CameraSwitch1;
-        InputManager.camselect2.started += CameraSwitch2;
-        InputManager.camselect3.started += CameraSwitch3;
-        InputManager.camselect4.started += CameraSwitch4;
+        LucidInputActionRefs.camselect1.started += CameraSwitch1;
+        LucidInputActionRefs.camselect2.started += CameraSwitch2;
+        LucidInputActionRefs.camselect3.started += CameraSwitch3;
+        LucidInputActionRefs.camselect4.started += CameraSwitch4;
         PlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
         PlayerInfo.FPTransform = camerapoints[0];
     }
 
     private void OnDisable()
     {
-        InputManager.camselect1.started -= CameraSwitch1;
-        InputManager.camselect2.started -= CameraSwitch2;
-        InputManager.camselect3.started -= CameraSwitch3;
-        InputManager.camselect4.started -= CameraSwitch4;
+        LucidInputActionRefs.camselect1.started -= CameraSwitch1;
+        LucidInputActionRefs.camselect2.started -= CameraSwitch2;
+        LucidInputActionRefs.camselect3.started -= CameraSwitch3;
+        LucidInputActionRefs.camselect4.started -= CameraSwitch4;
         PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
     }
 

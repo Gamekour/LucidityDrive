@@ -27,7 +27,6 @@ public class MovementSettings : ScriptableObject
     public float fmaxmult;
     public float wallrunmax;
     public float airdownmult;
-    public float probeRotSmoothness;
     public float moveflatprobemult;
     public float probeXminimumOffset;
     public float probeZminimumOffset;
@@ -38,7 +37,6 @@ public class MovementSettings : ScriptableObject
     public float hipspacesmoothness;
     public float moveburst;
     public float crawlthreshold;
-    public float timescale;
     public float crawlspeed;
     public float crouchspeed;
     public float crawlmult;
@@ -46,6 +44,7 @@ public class MovementSettings : ScriptableObject
     public float flightdrag;
     public float sprintmult;
     [Header("Special")]
+    public float timescale;
     public float jumpgrav;
     public float fallgrav;
     public float airmove;

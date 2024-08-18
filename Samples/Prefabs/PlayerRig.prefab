@@ -799,7 +799,7 @@ GameObject:
   - component: {fileID: 707126408657979175}
   m_Layer: 3
   m_Name: Head
-  m_TagString: PlayerNetCollider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1793,16 +1793,12 @@ MonoBehaviour:
   legspaceL: {fileID: 1105449331241879533}
   legspaceR: {fileID: 1573725869684149393}
   hipspace: {fileID: 7749507378016566050}
-  velspace: {fileID: 5777090903393929127}
-  willspace: {fileID: 2314956864208848750}
   footspace: {fileID: 283649365809611213}
-  collisionspace: {fileID: 3987726388503596301}
   vfloor: {fileID: 2916796221035400664}
   physHips: {fileID: 3845484869066579047}
   physHead: {fileID: 3252273764742618479}
   defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
     type: 2}
-  rotationTolerance: 0.05
 --- !u!1 &3489947252608200506
 GameObject:
   m_ObjectHideFlags: 0
@@ -2803,7 +2799,7 @@ GameObject:
   - component: {fileID: 9137347696438969249}
   m_Layer: 3
   m_Name: Hips
-  m_TagString: PlayerNetCollider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

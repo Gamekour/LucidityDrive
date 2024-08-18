@@ -9,12 +9,12 @@ public class CursorStateHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        InputManager.mouseUnlock.started -= MouseLockToggle;
+        LucidInputActionRefs.mouseUnlock.started -= MouseLockToggle;
     }
 
     private void Start()
     {
-        InputManager.mouseUnlock.started += MouseLockToggle;
+        LucidInputActionRefs.mouseUnlock.started += MouseLockToggle;
         Cursor.lockState = defaultLockMode;
     }
 

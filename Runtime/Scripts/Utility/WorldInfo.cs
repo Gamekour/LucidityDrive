@@ -50,16 +50,17 @@ public static class Shortcuts
 
 }
 
+//mostly used for interaction between motion-related scripts such as legs and modelsync
 public static class PlayerInfo
 {
     public static UnityEvent<vismodel> OnAssignVismodel = new UnityEvent<vismodel>();
 
+    //references
     public static Rigidbody mainBody;
     public static Transform pelvis;
     public static Transform hips;
     public static Transform head;
     public static Transform hipspace;
-    public static Transform velspace;
     public static Transform footspace;
     public static Transform legspaceR;
     public static Transform legspaceL;
@@ -74,6 +75,8 @@ public static class PlayerInfo
     public static Animator playermodelAnim;
     public static legs legRef;
     public static vismodel vismodelRef;
+
+    //motion data
     public static Vector3 targetL = Vector3.zero;
     public static Vector3 targetR = Vector3.zero;
     public static Vector3 footsurface = Vector3.zero;
@@ -84,7 +87,6 @@ public static class PlayerInfo
     public static Vector3 currentslide = Vector3.zero;
     public static float stepphase = 0;
     public static float animphase = 0;
-    public static float movespeed = 0;
     public static float legdiffL = 0;
     public static float legdiffR = 0;
     public static float traction = 1;

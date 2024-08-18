@@ -37,12 +37,12 @@ public class arms : MonoBehaviour
     {
         PlayerInfo.climbtargetL = leftanchor.transform;
         PlayerInfo.climbtargetR = rightanchor.transform;
-        if (InputManager.grabL != null)
+        if (LucidInputActionRefs.grabL != null)
         {
-            InputManager.grabL.started += GrabButtonLeft;
-            InputManager.grabL.canceled += UngrabButtonLeft;
-            InputManager.grabR.started += GrabButtonRight;
-            InputManager.grabR.canceled += UngrabButtonRight;
+            LucidInputActionRefs.grabL.started += GrabButtonLeft;
+            LucidInputActionRefs.grabL.canceled += UngrabButtonLeft;
+            LucidInputActionRefs.grabR.started += GrabButtonRight;
+            LucidInputActionRefs.grabR.canceled += UngrabButtonRight;
         }
         if (PlayerInfo.vismodelRef != null)
             Init();
@@ -68,18 +68,18 @@ public class arms : MonoBehaviour
         Ungrab(false);
         Ungrab(true);
         PlayerInfo.climbing = false;
-        InputManager.grabL.started -= GrabButtonLeft;
-        InputManager.grabL.canceled -= UngrabButtonLeft;
-        InputManager.grabR.started -= GrabButtonRight;
-        InputManager.grabR.canceled -= UngrabButtonRight;
+        LucidInputActionRefs.grabL.started -= GrabButtonLeft;
+        LucidInputActionRefs.grabL.canceled -= UngrabButtonLeft;
+        LucidInputActionRefs.grabR.started -= GrabButtonRight;
+        LucidInputActionRefs.grabR.canceled -= UngrabButtonRight;
     }
 
     private void Start()
     {
-        InputManager.grabL.started += GrabButtonLeft;
-        InputManager.grabL.canceled += UngrabButtonLeft;
-        InputManager.grabR.started += GrabButtonRight;
-        InputManager.grabR.canceled += UngrabButtonRight;
+        LucidInputActionRefs.grabL.started += GrabButtonLeft;
+        LucidInputActionRefs.grabL.canceled += UngrabButtonLeft;
+        LucidInputActionRefs.grabR.started += GrabButtonRight;
+        LucidInputActionRefs.grabR.canceled += UngrabButtonRight;
         off.limit = Mathf.Infinity;
         on.limit = limitdist;
         leftanchor.linearLimit = off;
@@ -96,7 +96,7 @@ public class arms : MonoBehaviour
             rightanchor.transform.position = PlayerInfo.pelvis.position;
 
 
-        float pulling = InputManager.crouch.ReadValue<float>();
+        float pulling = LucidInputActionRefs.crouch.ReadValue<float>();
 
         Transform cam = PlayerInfo.head;
 
@@ -242,7 +242,7 @@ public class arms : MonoBehaviour
         PlayerInfo.grabR = grabR;
         PlayerInfo.climbing = grabL || grabR;
 
-        Vector2 inputmove = InputManager.movement.ReadValue<Vector2>();
+        Vector2 inputmove = LucidInputActionRefs.movement.ReadValue<Vector2>();
         Vector3 moveflat = Vector3.zero;
         moveflat.x = inputmove.x;
         moveflat.z = inputmove.y;

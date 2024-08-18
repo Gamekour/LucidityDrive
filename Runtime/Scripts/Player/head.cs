@@ -62,7 +62,7 @@ public class head : MonoBehaviour
     private void RotationCalc()
     {
         PlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
-        Vector2 headlook = InputManager.headlook.ReadValue<Vector2>();
+        Vector2 headlook = LucidInputActionRefs.headlook.ReadValue<Vector2>();
         headlook *= sens * sensmult;
         headlook *= Time.deltaTime;
 

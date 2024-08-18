@@ -16,7 +16,7 @@ public class velocitycoils : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Vector2 moveVector = InputManager.movement.ReadValue<Vector2>();
+        Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x * sidemoveinfluence;
         moveFlat.z = moveVector.y;

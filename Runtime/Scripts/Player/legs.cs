@@ -22,25 +22,24 @@ class GFG : IComparer<RaycastHit>
 public class legs : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] Rigidbody rb;
-    [SerializeField] Transform legspaceL;
-    [SerializeField] Transform legspaceR;
-    [SerializeField] Transform hipspace;
-    [SerializeField] Transform velspace;
-    [SerializeField] Transform willspace;
-    [SerializeField] Transform footspace;
-    [SerializeField] Transform collisionspace;
-    [SerializeField] Transform vfloor;
-    [SerializeField] Collider physHips;
-    [SerializeField] Collider physHead;
-    [SerializeField] MovementSettings defaultMovementSettings;
     private MovementSettings m_movementSettings;
-    public float rotationTolerance = 0.01f;
     public MovementSettings movementSettings
     {
         get { return m_movementSettings; }
         set { m_movementSettings = value; CopyValues(); }
     }
+
+    [SerializeField] Rigidbody rb;
+    [SerializeField] Transform legspaceL;
+    [SerializeField] Transform legspaceR;
+    [SerializeField] Transform hipspace;
+    [SerializeField] Transform footspace;
+    [SerializeField] Transform vfloor;
+    [SerializeField] Collider physHips;
+    [SerializeField] Collider physHead;
+    [SerializeField] MovementSettings defaultMovementSettings;
+
+    //These values are copied from the Movement Settings
     private float legWidth;
     private float legWidthMult;
     private float ratiomult;
@@ -61,7 +60,6 @@ public class legs : MonoBehaviour
     private float fmaxmult;
     private float wallrunmax;
     private float airdownmult;
-    private float probeRotSmoothness;
     private float moveflatprobemult;
     private float probeXminimumOffset;
     private float probeZminimumOffset;
@@ -72,81 +70,82 @@ public class legs : MonoBehaviour
     private float hipspacesmoothness;
     private float moveburst;
     private float crawlthreshold;
-    private float timescale;
     private float crawlspeed;
     private float crouchspeed;
     private float crawlmult;
     private float flightforce;
     private float flightdrag;
     private float sprintmult;
-    //SPECIAL
+
+    private float m_timescale;
+    private float timescale
+    {
+        get { return m_timescale; }
+        set { m_timescale = value; Time.timeScale = value; }
+    }
+
     private float jumpgrav;
     private float fallgrav;
     private float airmove;
     private float airdrag;
+
+    //internal variables
     private float legLength;
     private float animPhase = 0;
     private float currentratio = 1;
-    private Vector3 currentprobefwd = Vector3.forward;
-    private Vector3 currentproberight = Vector3.up;
 
     private void Awake()
     {
-        movementSettings = defaultMovementSettings;
+        movementSettings = defaultMovementSettings; //starts process of copying values
         rb = GetComponent<Rigidbody>();
-        PlayerInfo.legRef = this;
-        PlayerInfo.mainBody = rb;
-        PlayerInfo.pelvis = transform;
-        PlayerInfo.hipspace = hipspace;
-        PlayerInfo.velspace = velspace;
-        PlayerInfo.footspace = footspace;
-        PlayerInfo.legspaceL = legspaceL;
-        PlayerInfo.legspaceR = legspaceR;
-        PlayerInfo.physHips = physHips;
-        PlayerInfo.physHipsRB = physHips.GetComponent<Rigidbody>();
-        PlayerInfo.physHead = physHead;
-        PlayerInfo.physHeadRB = physHead.GetComponent<Rigidbody>();
+        SetPlayerInfoReferences();
     }
 
     private void Start()
     {
         movementSettings = defaultMovementSettings;
-        legLength = transform.position.y - transform.root.position.y;
-        Time.timeScale = timescale;
+        legLength = transform.position.y - transform.root.position.y; //automatically determine leg length based on height from root - will eventually be replaced by a better avatar-specific system
     }
 
     private void OnDisable()
     {
         PlayerInfo.flying = false;
+        //this is a fix for a bug occurring when you switch scenes while in a flight zone - i may eventually have a function to reset all temporary values in playerinfo on scene change
     }
 
     private void FixedUpdate()
     {
-        if (PlayerInfo.mainBody.isKinematic) return;
-
-        PlayerInfo.movespeed = movespeed;
+        if (PlayerInfo.mainBody.isKinematic) return; //this could technically be optimized by delegating it to a bool that only updates when isKinematic is updated, but that's too much work and i don't think this is much of a perf hit
 
         PseudoWalk();
+        RotationLogic();
 
-        Vector3 vecHeadFlat = PlayerInfo.head.forward;
-        if (PlayerInfo.head.up.y < 0)
-            vecHeadFlat = -vecHeadFlat;
-        vecHeadFlat.y = 0;
+        Vector3 velflathip = PlayerInfo.hipspace.InverseTransformVector(rb.velocity);
+        velflathip.y = 0;
 
-        float angle = Vector3.SignedAngle(transform.forward, vecHeadFlat, Vector3.up);
-        if (Mathf.Abs(angle) < rotationTolerance)
+        //all of these need to eventually be delegated to bools
+        bool inputBellyslide = LucidInputActionRefs.crawl.ReadValue<float>() != 0;
+        bool inputBackslide = LucidInputActionRefs.slide.ReadValue<float>() != 0;
+        bool inputCrouch = LucidInputActionRefs.crouch.ReadValue<float>() != 0;
+        bool inputJump = LucidInputActionRefs.jump.ReadValue<float>() != 0;
+        bool inputSprint = LucidInputActionRefs.sprint.ReadValue<float>() != 0;
+        bool crawling = inputBellyslide && velflathip.magnitude < crawlthreshold && inputCrouch;
+        inputBellyslide &= !crawling;
+        inputBackslide &= !crawling;
+        bool doGroundLogic = PlayerInfo.grounded && PlayerInfo.footsurface.y >= -0.001f && !inputBellyslide && !inputBackslide; //when sliding, different logic will be used to push legs (not yet implemented)
+        
+        PlayerInfo.crawling = crawling;
+
+        if (!PlayerInfo.grounded)
         {
-            transform.Rotate(Vector3.up * angle);
-            rb.angularVelocity = Vector3.zero;
-        }
-        else
-            rb.AddTorque(Vector3.up * angle * hipRotationSpeed * Time.fixedDeltaTime);
+            if (!inputJump) Physics.gravity = Vector3.up * fallgrav;
+            else
+                Physics.gravity = Vector3.up * jumpgrav;
 
-        if(!PlayerInfo.grounded)
             AirCalc();
-
-        if(!PlayerInfo.flying)
-            LegPush();
+        }
+        else if (!PlayerInfo.flying && doGroundLogic) 
+            LegPush(inputCrouch, inputJump, inputSprint);
     }
 
     private void OnTriggerStay(Collider other)
@@ -154,14 +153,13 @@ public class legs : MonoBehaviour
         if (other.CompareTag("flightZone"))
         {
             PlayerInfo.flying = true;
-            Vector2 moveVector = InputManager.movement.ReadValue<Vector2>();
+            Vector2 moveVector = LucidInputValueShortcuts.movement;
             Vector3 moveFlat = Vector3.zero;
             moveFlat.x = moveVector.x;
             moveFlat.z = moveVector.y;
             moveFlat = PlayerInfo.head.TransformVector(moveFlat);
-            float jumpval = InputManager.jump.ReadValue<float>() * 2;
-            if(jumpval > 0)
-                moveFlat.y = Mathf.Clamp(moveFlat.y, jumpval, Mathf.Infinity);
+            float yclamp = LucidInputValueShortcuts.jump ? 0 : 2;
+            moveFlat.y = Mathf.Clamp(moveFlat.y, yclamp, Mathf.Infinity); 
             rb.velocity *= (1 - flightdrag);
             rb.AddForce(moveFlat * flightforce, ForceMode.Acceleration);
             rb.useGravity = false;
@@ -176,6 +174,23 @@ public class legs : MonoBehaviour
         }
     }
 
+    //self explanatory, updates playerinfo with what this script knows
+    private void SetPlayerInfoReferences()
+    {
+        PlayerInfo.legRef = this;
+        PlayerInfo.mainBody = rb;
+        PlayerInfo.pelvis = transform;
+        PlayerInfo.hipspace = hipspace;
+        PlayerInfo.footspace = footspace;
+        PlayerInfo.legspaceL = legspaceL;
+        PlayerInfo.legspaceR = legspaceR;
+        PlayerInfo.physHips = physHips;
+        PlayerInfo.physHipsRB = physHips.GetComponent<Rigidbody>();
+        PlayerInfo.physHead = physHead;
+        PlayerInfo.physHeadRB = physHead.GetComponent<Rigidbody>();
+    }
+
+    //copies values from movement settings to this script, using property names to match values
     public void CopyValues()
     {
         Type TMoveSettings = typeof(MovementSettings);
@@ -195,15 +210,36 @@ public class legs : MonoBehaviour
         }
     }
 
+    //calculates rotation forces necessary for aligning hips with head at an appropriate speed
+    private void RotationLogic()
+    {
+        //gets forward head vector
+        Vector3 vecHeadFlat = PlayerInfo.head.forward;
+        if (PlayerInfo.head.up.y < 0)
+            vecHeadFlat = -vecHeadFlat;
+        vecHeadFlat.y = 0;
+
+        float angle = Vector3.SignedAngle(transform.forward, vecHeadFlat, Vector3.up);
+        if (Mathf.Abs(angle) < 0.05f)
+        {
+            transform.Rotate(Vector3.up * angle);
+            rb.angularVelocity = Vector3.zero;
+        }
+        else
+            rb.AddTorque(Vector3.up * angle * hipRotationSpeed * Time.fixedDeltaTime);
+    }
+
+    //handles movement while midair, not to be confused with flight logic
     private void AirCalc()
     {
-        Vector2 moveVector = InputManager.movement.ReadValue<Vector2>();
+        Vector2 moveVector = LucidInputValueShortcuts.movement;
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
         Vector3 flattened = PlayerInfo.head.TransformVector(moveFlat);
         flattened.y = 0;
         flattened.Normalize();
+
         if (airdrag != 1)
         {
             float vely = rb.velocity.y;
@@ -212,131 +248,108 @@ public class legs : MonoBehaviour
             vel.y = vely;
             rb.velocity = vel;
         }
+
         rb.AddForce(flattened * airmove, ForceMode.Acceleration);
     }
 
-    private void LegPush()
+    private void LegPush(bool inputCrouch, bool inputJump, bool inputSprint)
     {
-        Vector3 velflathip = PlayerInfo.hipspace.InverseTransformVector(rb.velocity);
-        velflathip.y = 0;
+        Vector3 velflat = rb.velocity;
+        velflat.y = 0;
 
-        bool bellyslide = InputManager.crawl.ReadValue<float>() != 0;
-        bool backslide = InputManager.slide.ReadValue<float>() != 0;
-        bool crouch = InputManager.crouch.ReadValue<float>() != 0;
-        bool sprint = InputManager.sprint.ReadValue<float>() == 0;
-        bool jump = InputManager.jump.ReadValue<float>() != 0;
-        PlayerInfo.crawling = (bellyslide && velflathip.magnitude < crawlthreshold && crouch);
+        Vector2 moveVector = LucidInputValueShortcuts.movement;
+        Vector3 moveFlat = Vector3.zero;
+        moveFlat.x = moveVector.x;
+        moveFlat.z = moveVector.y;
+
+        float t = PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y;
+        t = Mathf.Clamp01(t);
+
+        Vector3 pushdir = Vector3.Lerp(Vector3.up, PlayerInfo.footsurface, t * wallrunmax);
+
+        float downness = Mathf.Clamp01(1 - PlayerInfo.hipspace.up.y) * Mathf.Abs(PlayerInfo.hipspace.up.x);
+        float movedownamount = Mathf.Clamp((PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -movedownclamp, 0);
+        movedownamount *= movedownmult;
+        movedownamount -= downness;
+
+        float moveupamount = Mathf.Clamp01(PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y);
+
+        float legadjust = legLength * maxlegmult * Mathf.Lerp(wallrunmax, 1, PlayerInfo.hipspace.up.y);
+        if (PlayerInfo.climbing && !inputJump)
+            legadjust = 0.5f;
+
         if (PlayerInfo.crawling)
+            legadjust *= crawlmult;
+        else if (inputJump)
         {
-            backslide = false;
-            bellyslide = false;
+            legadjust *= jumpmult;
+            Physics.gravity = Vector3.up * jumpgrav;
         }
-        if (PlayerInfo.grounded && PlayerInfo.footsurface.y >= -0.001f && !bellyslide && !backslide)
+        else if (inputCrouch)
         {
-            //Physics.gravity = Vector3.up * -9.81f;
-
-            Vector3 velflat = rb.velocity;
-            velflat.y = 0;
-
-            Vector2 moveVector = InputManager.movement.ReadValue<Vector2>();
-            Vector3 moveFlat = Vector3.zero;
-            moveFlat.x = moveVector.x;
-            moveFlat.z = moveVector.y;
-
-            float t = PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y;
-            t = Mathf.Clamp01(t);
-
-            Vector3 pushdir = Vector3.Lerp(Vector3.up, PlayerInfo.footsurface, t * wallrunmax);
-
-            float downness = Mathf.Clamp01(1 - PlayerInfo.hipspace.up.y) * Mathf.Abs(PlayerInfo.hipspace.up.x);
-            float movedownamount = Mathf.Clamp((PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -movedownclamp, 0);
-            movedownamount *= movedownmult;
-            movedownamount -= downness;
-
-            float moveupamount = Mathf.Clamp01(PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y);
-
-            float legadjust = legLength * maxlegmult * Mathf.Lerp(wallrunmax, 1, PlayerInfo.hipspace.up.y);
-            if (PlayerInfo.climbing && !jump)
-                legadjust = 0.5f;
-
-            if (PlayerInfo.crawling)
-                legadjust *= crawlmult;
-            else if (jump)
-            {
-                legadjust *= jumpmult;
-                Physics.gravity = Vector3.up * jumpgrav;
-            }
-            else if (crouch)
-            {
-                legadjust *= crouchmult;
-            }
-            else
-            {
-                legadjust *= 1 + movedownamount + moveupamount;
-            }
-
-            Vector3 average = (PlayerInfo.targetL + PlayerInfo.targetR) / 2;
-
-            float relativeheight = PlayerInfo.footspace.InverseTransformPoint(hipspace.position).y;
-            currentratio = relativeheight;
-            float heightratio = relativeheight / legadjust;
-            heightratio = Mathf.Clamp(heightratio, 0, 2);
-
-            float forceadjust = maxforcemult;
-            if (InputManager.jump.ReadValue<float>() == 1 && relativeheight <= maxlegmult)
-                forceadjust *= jumpforcemult;
-
-            float currentY = rb.velocity.y;
-            float targetY = Mathf.LerpUnclamped(forceadjust, 0, heightratio);
-            float diff = targetY - currentY;
-
-            Vector3 calc = pushdir * (-Physics.gravity.y + (diff * forcesmoothness));
-            NrmSlide(calc * rb.mass, out Vector3 slide, out float nrm);
-            slide = -slide;
-
-            Vector3 dir = hipspace.TransformVector(moveFlat);
-            if (dir.magnitude == 0)
-                dir = -rb.velocity;
-            Vector3 current = rb.velocity * rb.mass;
-            NrmSlide(current, out Vector3 velslide, out float velnrm);
-            slide += velslide * slidemult * (Vector3.Angle(rb.velocity, dir) / 180);
-            nrm += velnrm;
-
-            PlayerInfo.alignment = (Vector3.Angle(rb.velocity, dir) / 180) * Mathf.Clamp01(rb.velocity.magnitude);
-
-            float moveadjust = movespeed;
-            if (PlayerInfo.crawling)
-                moveadjust = crawlspeed;
-            else if (crouch)
-                moveadjust = crouchspeed;
-            if (sprint)
-                moveadjust *= sprintmult;
-
-            float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
-            moveadjust *= 1 + (diffmag * moveburst);
-
-            Vector3 movetarget = hipspace.TransformVector(moveFlat) * moveadjust;
-            Vector3 relativevel = hipspace.InverseTransformVector(rb.velocity);
-            relativevel.y = 0;
-            relativevel = hipspace.TransformVector(relativevel);
-            Vector3 movediff = movetarget - relativevel;
-            Vector3 surfaction = -movediff * rb.mass;
-            slide += surfaction;
-
-            nrm = Mathf.Clamp(nrm, 0, Mathf.Infinity);
-
-            float fmax = nrm * rb.mass * friction * fmaxmult;
-            PlayerInfo.traction = Mathf.Clamp01(fmax / slide.magnitude);
-            Vector3 pushcalc = nrm * PlayerInfo.footsurface;
-            Vector3 slidecalc = Vector3.ClampMagnitude(-slide, fmax);
-            rb.AddForce(slidecalc + pushcalc, ForceMode.Force);
-            PlayerInfo.currentslide = slidecalc;
-            PlayerInfo.currentpush = pushcalc;
+            legadjust *= crouchmult;
         }
-        else if (InputManager.jump.ReadValue<float>() != 1)
+        else
         {
-            Physics.gravity = Vector3.up * fallgrav;
+            legadjust *= 1 + movedownamount + moveupamount;
         }
+
+        float relativeheight = PlayerInfo.footspace.InverseTransformPoint(hipspace.position).y;
+        currentratio = relativeheight;
+        float heightratio = relativeheight / legadjust;
+        heightratio = Mathf.Clamp(heightratio, 0, 2);
+
+        float forceadjust = maxforcemult;
+        if (LucidInputActionRefs.jump.ReadValue<float>() == 1 && relativeheight <= maxlegmult)
+            forceadjust *= jumpforcemult;
+
+        float currentY = rb.velocity.y;
+        float targetY = Mathf.LerpUnclamped(forceadjust, 0, heightratio);
+        float diff = targetY - currentY;
+
+        Vector3 calc = pushdir * (-Physics.gravity.y + (diff * forcesmoothness));
+        NrmSlide(calc * rb.mass, out Vector3 slide, out float nrm);
+        slide = -slide;
+
+        Vector3 dir = hipspace.TransformVector(moveFlat);
+        if (dir.magnitude == 0)
+            dir = -rb.velocity;
+        Vector3 current = rb.velocity * rb.mass;
+        NrmSlide(current, out Vector3 velslide, out float velnrm);
+        slide += velslide * slidemult * (Vector3.Angle(rb.velocity, dir) / 180);
+        nrm += velnrm;
+
+        PlayerInfo.alignment = (Vector3.Angle(rb.velocity, dir) / 180) * Mathf.Clamp01(rb.velocity.magnitude);
+
+        float moveadjust = movespeed;
+        if (PlayerInfo.crawling)
+            moveadjust = crawlspeed;
+        else if (inputCrouch)
+            moveadjust = crouchspeed;
+        if (inputSprint)
+            moveadjust *= sprintmult;
+
+        float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
+        moveadjust *= 1 + (diffmag * moveburst);
+
+        Vector3 movetarget = hipspace.TransformVector(moveFlat) * moveadjust;
+        Vector3 relativevel = hipspace.InverseTransformVector(rb.velocity);
+        relativevel.y = 0;
+        relativevel = hipspace.TransformVector(relativevel);
+        Vector3 movediff = movetarget - relativevel;
+        Vector3 surfaction = -movediff * rb.mass;
+        slide += surfaction;
+
+        nrm = Mathf.Clamp(nrm, 0, Mathf.Infinity);
+
+        float fmax = nrm * rb.mass * friction * fmaxmult;
+        PlayerInfo.traction = Mathf.Clamp01(fmax / slide.magnitude);
+        Vector3 pushcalc = nrm * PlayerInfo.footsurface;
+        Vector3 slidecalc = Vector3.ClampMagnitude(-slide, fmax);
+        rb.AddForce(slidecalc + pushcalc, ForceMode.Force);
+        PlayerInfo.currentslide = slidecalc;
+        PlayerInfo.currentpush = pushcalc;
+
     }
 
     private void NrmSlide(Vector3 target, out Vector3 slide, out float nrm)
@@ -352,7 +365,7 @@ public class legs : MonoBehaviour
     {
         Transform pelvis = PlayerInfo.pelvis;
 
-        Vector2 moveVector = InputManager.movement.ReadValue<Vector2>();
+        Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
@@ -384,9 +397,6 @@ public class legs : MonoBehaviour
         Vector3 veladjust = velrelative;
         if (!PlayerInfo.grounded)
             veladjust = moveFlat * moveflatprobemult;
-
-        currentprobefwd = Vector3.Lerp(PlayerInfo.hipspace.forward, currentprobefwd, probeRotSmoothness);
-        currentproberight = Vector3.Lerp(PlayerInfo.hipspace.right, currentproberight, probeRotSmoothness);
 
         Vector3 probeN = pelvis.position + (PlayerInfo.pelvis.forward * Mathf.Clamp(Mathf.Abs(veladjust.z) * probemult, probeZminimumOffset, Mathf.Infinity));
         probeN.y = (Vector3.up * downadjust).y;

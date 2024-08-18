@@ -82,7 +82,7 @@ public class modelsync : MonoBehaviour
     {
         bool currentright = PlayerInfo.animphase < 0.5f;
 
-        Vector2 moveVector = InputManager.movement.ReadValue<Vector2>();
+        Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
@@ -99,8 +99,8 @@ public class modelsync : MonoBehaviour
         float lastalignment = anim.GetFloat("alignment");
         lastalignment = Mathf.Lerp(PlayerInfo.alignment, lastalignment, alignmentsmoothness);
 
-        float crawl = InputManager.crawl.ReadValue<float>();
-        float slide = InputManager.slide.ReadValue<float>();
+        float crawl = LucidInputActionRefs.crawl.ReadValue<float>();
+        float slide = LucidInputActionRefs.slide.ReadValue<float>();
         float flightfloat = 0;
         if (PlayerInfo.flying)
             flightfloat = 1;
@@ -142,7 +142,7 @@ public class modelsync : MonoBehaviour
         Vector3 targetL = anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
         Vector3 targetR = anim.GetBoneTransform(HumanBodyBones.RightFoot).position;
 
-        bool midaircrouching = (!PlayerInfo.grounded && InputManager.crouch.ReadValue<float>() == 1 && slide == 0 && crawl == 0 && !PlayerInfo.flying);
+        bool midaircrouching = (!PlayerInfo.grounded && LucidInputActionRefs.crouch.ReadValue<float>() == 1 && slide == 0 && crawl == 0 && !PlayerInfo.flying);
 
         float targetcrouch = midaircrouch;
         if (!midaircrouching)

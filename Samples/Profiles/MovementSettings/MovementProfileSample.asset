@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
-  m_Name: zombies
+  m_Name: MovementProfileSample
   m_EditorClassIdentifier: 
   legWidth: 0.09
   legWidthMult: 0.5
@@ -26,13 +26,12 @@ MonoBehaviour:
   jumpmult: 32
   jumpforcemult: 1
   probemult: 1
-  movespeed: 2.5
+  movespeed: 8
   friction: 1
   slidemult: 14
   fmaxmult: 0.025
   wallrunmax: 0.3
   airdownmult: 1
-  probeRotSmoothness: 0.8
   moveflatprobemult: 1.5
   probeXminimumOffset: 0.1
   probeZminimumOffset: 0.1
@@ -41,15 +40,15 @@ MonoBehaviour:
   movedownmult: 0.5
   movedownclamp: 0.6
   hipspacesmoothness: 0.94
-  moveburst: 1
+  moveburst: 1.3
   crawlthreshold: 14
-  timescale: 1
-  crawlspeed: 0.5
-  crouchspeed: 0.75
+  crawlspeed: 1
+  crouchspeed: 4
   crawlmult: 0.4
   flightforce: 10
   flightdrag: 0.003
   sprintmult: 4.5
+  timescale: 1
   jumpgrav: -9.81
   fallgrav: -9.81
   airmove: 0
