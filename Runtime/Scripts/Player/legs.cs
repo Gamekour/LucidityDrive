@@ -146,28 +146,23 @@ public class legs : MonoBehaviour
         }
         else if (!PlayerInfo.flying && doGroundLogic) 
             LegPush(inputCrouch, inputJump, inputSprint);
+
+        if (PlayerInfo.flying)
+            FlightCalc();
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("flightZone"))
+        if (other.CompareTag("FlightZone"))
         {
             PlayerInfo.flying = true;
-            Vector2 moveVector = LucidInputValueShortcuts.movement;
-            Vector3 moveFlat = Vector3.zero;
-            moveFlat.x = moveVector.x;
-            moveFlat.z = moveVector.y;
-            moveFlat = PlayerInfo.head.TransformVector(moveFlat);
-            float yclamp = LucidInputValueShortcuts.jump ? 0 : 2;
-            moveFlat.y = Mathf.Clamp(moveFlat.y, yclamp, Mathf.Infinity); 
-            rb.velocity *= (1 - flightdrag);
-            rb.AddForce(moveFlat * flightforce, ForceMode.Acceleration);
             rb.useGravity = false;
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("flightZone"))
+        if (other.CompareTag("FlightZone"))
         {
             PlayerInfo.flying = false;
             rb.useGravity = true;
@@ -252,6 +247,20 @@ public class legs : MonoBehaviour
         rb.AddForce(flattened * airmove, ForceMode.Acceleration);
     }
 
+    private void FlightCalc()
+    {
+        Vector2 moveVector = LucidInputValueShortcuts.movement;
+        Vector3 moveFlat = Vector3.zero;
+        moveFlat.x = moveVector.x;
+        moveFlat.z = moveVector.y;
+        moveFlat = PlayerInfo.head.TransformVector(moveFlat);
+        float yclamp = LucidInputValueShortcuts.jump ? 2 : 0;
+        moveFlat.y = Mathf.Clamp(moveFlat.y, yclamp, Mathf.Infinity);
+        rb.velocity *= (1 - flightdrag);
+        rb.AddForce(moveFlat * flightforce, ForceMode.Acceleration);
+    }
+
+    //handles the forces necessary to keep the player upright and moving
     private void LegPush(bool inputCrouch, bool inputJump, bool inputSprint)
     {
         Vector3 velflat = rb.velocity;
@@ -352,6 +361,7 @@ public class legs : MonoBehaviour
 
     }
 
+    //quickly splits a vector into its movement along and against the surface of footspace
     private void NrmSlide(Vector3 target, out Vector3 slide, out float nrm)
     {
         Vector3 relative = PlayerInfo.footspace.InverseTransformVector(target);
@@ -361,6 +371,7 @@ public class legs : MonoBehaviour
         nrm = relative.y;
     }
 
+    //mostly handles the calculation of the virtual floor and leg animations
     private void PseudoWalk() 
     {
         Transform pelvis = PlayerInfo.pelvis;

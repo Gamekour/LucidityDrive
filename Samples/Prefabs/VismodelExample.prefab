@@ -2520,7 +2520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
   autoinit: 1
-  grabspeed: 1
+  grabspeed: 2
   playerMeshParent: {fileID: 983050226132866235}
 --- !u!1 &7657696132603305211
 GameObject:

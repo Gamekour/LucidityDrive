@@ -37,33 +37,19 @@ public class vismodel : MonoBehaviour
             LocalCalc();
     }
 
-    public void UnhideFirstPerson()
-    {
-        foreach (Transform t in playerMeshParent.GetComponentsInChildren<Transform>())
-        {
-            if (t.gameObject.layer == 17)
-                t.gameObject.layer = 0;
-        }
-    }
-
     public void Init()
     {
-        foreach (Transform t in playerMeshParent.GetComponentsInChildren<Transform>())
-        {
-            if (t.gameObject.layer != 17)
-                t.gameObject.layer = 15;
-        }
         PlayerInfo.vismodelRef = this;
         PlayerInfo.OnAssignVismodel.Invoke(this);
         initialized = true;
     }
 
+    //creates a pose for the visual model based on the playermodel's animation, active IK points, and collisions with the ground
     private void LocalCalc()
     {
         Vector3 offset = PlayerInfo.pelvis.position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
         transform.position += offset;
         anim.SetBoneLocalRotation(HumanBodyBones.Hips, PlayerInfo.physHips.transform.rotation);
-        //anim.SetBoneLocalRotation(HumanBodyBones.Head, PlayerInfo.physHead.rotation);
         foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
         {
             string hbstring = Enum.GetName(typeof(HumanBodyBones), hb2);
