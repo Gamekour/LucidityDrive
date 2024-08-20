@@ -34,7 +34,7 @@ public class CameraManager : MonoBehaviour
         PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
     }
 
-    public void AssignVismodel(vismodel vismodel)
+    public void AssignVismodel(LucidVismodel vismodel)
     {
         headrootTarget = vismodel.anim.GetBoneTransform(HumanBodyBones.Head);
     }

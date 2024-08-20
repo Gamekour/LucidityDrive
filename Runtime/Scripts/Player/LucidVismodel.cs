@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Animator))]
-public class vismodel : MonoBehaviour
+public class LucidVismodel : MonoBehaviour
 {
     [HideInInspector]
     public Animator anim;
@@ -17,7 +17,7 @@ public class vismodel : MonoBehaviour
     [Header("References")]
     [SerializeField] Transform playerMeshParent;
 
-    private modelsync modelSync;
+    private LucidAnimationModel modelSync;
     private Dictionary<string, Quaternion> localBoneRots;
     private float grabweightL = 0;
     private float grabweightR = 0;
@@ -26,7 +26,7 @@ public class vismodel : MonoBehaviour
     private void OnEnable()
     {
         anim = GetComponent<Animator>();
-        modelSync = FindObjectOfType<modelsync>();
+        modelSync = FindObjectOfType<LucidAnimationModel>();
 
         if (autoinit) StartCoroutine(InitDelay());
     }

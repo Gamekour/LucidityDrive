@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class arms : MonoBehaviour
+public class LucidArms : MonoBehaviour
 {
     [SerializeField] ConfigurableJoint leftanchor;
     [SerializeField] ConfigurableJoint rightanchor;

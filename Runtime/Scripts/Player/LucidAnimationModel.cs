@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class modelsync : MonoBehaviour
+public class LucidAnimationModel : MonoBehaviour
 {
     [SerializeField] Camera fpcam;
     [SerializeField] float velsmoothness = 0.5f;

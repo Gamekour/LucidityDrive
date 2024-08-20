@@ -19,7 +19,7 @@ class GFG : IComparer<RaycastHit>
     }
 }
 
-public class legs : MonoBehaviour
+public class LucidLegs : MonoBehaviour
 {
     [Header("References")]
     private MovementSettings m_movementSettings;
@@ -189,7 +189,7 @@ public class legs : MonoBehaviour
     public void CopyValues()
     {
         Type TMoveSettings = typeof(MovementSettings);
-        Type TLegs = typeof(legs);
+        Type TLegs = typeof(LucidLegs);
         FieldInfo[] fields = TMoveSettings.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
         foreach (var field in fields)
         {

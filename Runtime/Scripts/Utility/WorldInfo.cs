@@ -53,7 +53,7 @@ public static class Shortcuts
 //mostly used for interaction between motion-related scripts such as legs and modelsync
 public static class PlayerInfo
 {
-    public static UnityEvent<vismodel> OnAssignVismodel = new UnityEvent<vismodel>();
+    public static UnityEvent<LucidVismodel> OnAssignVismodel = new UnityEvent<LucidVismodel>();
 
     //references
     public static Rigidbody mainBody;
@@ -73,8 +73,8 @@ public static class PlayerInfo
     public static Rigidbody physHeadRB;
     public static Camera mainCamera;
     public static Animator playermodelAnim;
-    public static legs legRef;
-    public static vismodel vismodelRef;
+    public static LucidLegs legRef;
+    public static LucidVismodel vismodelRef;
 
     //motion data
     public static Vector3 targetL = Vector3.zero;

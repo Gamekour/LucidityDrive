@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class head : MonoBehaviour
+public class LucidFreelook : MonoBehaviour
 {
     [SerializeField] Vector2 sens;
     [SerializeField] float headradius;
@@ -49,7 +49,7 @@ public class head : MonoBehaviour
         }
     }
 
-    public void AssignVismodel(vismodel vismodel)
+    public void AssignVismodel(LucidVismodel vismodel)
     {
         chest = vismodel.anim.GetBoneTransform(HumanBodyBones.Chest);
     }
