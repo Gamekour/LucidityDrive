@@ -19,7 +19,6 @@
     "url": "https://github.com/Gamekour"
   },
   "dependencies": {
-    "com.unity.render-pipelines.universal": "",
     "com.unity.inputsystem": "1.7.0"
   }
 }

@@ -570,7 +570,7 @@ public class LucidLegs : MonoBehaviour
             //Debug.DrawRay(center, normal, new Color(0, 255, 255));
         }
 
-        Vector3 hfwd = Vector3.ProjectOnPlane(PlayerInfo.pelvis.forward, normal);
+        Vector3 hfwd = Vector3.ProjectOnPlane(PlayerInfo.head.forward, normal);
         if (Vector3.Dot(PlayerInfo.pelvis.forward, normal) <= hipspaceMaxRot)
             hfwd += Vector3.up;
         Quaternion q1 = hipspace.rotation;
