@@ -60,7 +60,14 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void OnAnimatorMove()
     {
-        foreach(HumanBodyBones hb2 in Shortcuts.hb2list)
+        CollectBoneRotations();
+        hiprot = anim.GetBoneTransform(HumanBodyBones.Hips).rotation;
+    }
+
+    //reports all major bone rotations, mostly for vismodel sync - maybe there's a more optimized way to do this via constraints?
+    private void CollectBoneRotations()
+    {
+        foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
         {
             Transform t = anim.GetBoneTransform(hb2);
             string hbstring = Enum.GetName(typeof(HumanBodyBones), hb2);
@@ -75,9 +82,9 @@ public class LucidAnimationModel : MonoBehaviour
                     boneRots[hbstring] = t.localRotation;
             }
         }
-        hiprot = anim.GetBoneTransform(HumanBodyBones.Hips).rotation;
     }
 
+    //there really isnt any way i know of to refactor this without passing a thousand variables around
     private void OnAnimatorIK(int layerIndex)
     {
         bool currentright = PlayerInfo.animphase < 0.5f;
@@ -99,8 +106,8 @@ public class LucidAnimationModel : MonoBehaviour
         float lastalignment = anim.GetFloat("alignment");
         lastalignment = Mathf.Lerp(PlayerInfo.alignment, lastalignment, alignmentsmoothness);
 
-        float crawl = LucidInputActionRefs.crawl.ReadValue<float>();
-        float slide = LucidInputActionRefs.slide.ReadValue<float>();
+        bool crawl = LucidInputValueShortcuts.crawl;
+        bool slide = LucidInputValueShortcuts.slide;
         float flightfloat = 0;
         if (PlayerInfo.flying)
             flightfloat = 1;
@@ -120,8 +127,8 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat("hangX", PlayerInfo.climbrelative.x);
         anim.SetFloat("hangZ", PlayerInfo.climbrelative.z);
         anim.SetBool("grounded", PlayerInfo.grounded);
-        anim.SetBool("slide",  slide != 0);
-        anim.SetBool("bslide", crawl != 0);
+        anim.SetBool("slide",  slide);
+        anim.SetBool("bslide", crawl);
         anim.SetBool("crawl", PlayerInfo.crawling);
         anim.SetBool("flight", PlayerInfo.flying);
         anim.SetBool("grabL", PlayerInfo.grabL);
@@ -131,7 +138,7 @@ public class LucidAnimationModel : MonoBehaviour
             airtimesmooth = PlayerInfo.airtime;
         else
             airtimesmooth = Mathf.Lerp(airtimesmooth, PlayerInfo.airtime, landspeed);
-        anim.SetLayerWeight(1, Mathf.Clamp01(airtimesmooth / airtimemax) * (1 - slide) * (1 - crawl) * (1 - flightfloat));
+        anim.SetLayerWeight(1, Mathf.Clamp01(airtimesmooth / airtimemax) * (1 - (slide ? 1 : 0)) * (1 - (crawl ? 1 : 0)) * (1 - flightfloat));
 
         Transform tSpine = anim.GetBoneTransform(HumanBodyBones.Spine);
         tSpine.Rotate(Vector3.forward, currentsway, Space.Self);
@@ -142,7 +149,7 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 targetL = anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
         Vector3 targetR = anim.GetBoneTransform(HumanBodyBones.RightFoot).position;
 
-        bool midaircrouching = (!PlayerInfo.grounded && LucidInputActionRefs.crouch.ReadValue<float>() == 1 && slide == 0 && crawl == 0 && !PlayerInfo.flying);
+        bool midaircrouching = (!PlayerInfo.grounded && LucidInputActionRefs.crouch.ReadValue<float>() == 1 && !slide && !crawl && !PlayerInfo.flying);
 
         float targetcrouch = midaircrouch;
         if (!midaircrouching)
@@ -161,7 +168,7 @@ public class LucidAnimationModel : MonoBehaviour
 
         bool LHit = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, targetL - PlayerInfo.legspaceL.position, out LHitInfo, Vector3.Distance(targetL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
         bool Rhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, targetR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(targetR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
-        if (PlayerInfo.crawling || crawl != 0)
+        if (PlayerInfo.crawling || crawl)
         {
             Vector3 newtargetR = anim.GetBoneTransform(HumanBodyBones.RightToes).position;
             Vector3 newtargetL = anim.GetBoneTransform(HumanBodyBones.LeftToes).position;

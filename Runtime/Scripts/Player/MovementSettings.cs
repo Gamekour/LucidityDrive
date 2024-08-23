@@ -24,14 +24,14 @@ public class MovementSettings : ScriptableObject
     public float movespeed;
     public float friction;
     public float slidemult;
-    public float fmaxmult;
-    public float wallrunmax;
+    public float wallruntilt;
     public float airdownmult;
     public float moveflatprobemult;
     public float probeXminimumOffset;
     public float probeZminimumOffset;
     public float hipspaceMaxRot;
     public float airtimemult;
+    public float moveupmult;
     public float movedownmult;
     public float movedownclamp;
     public float hipspacesmoothness;
@@ -43,6 +43,8 @@ public class MovementSettings : ScriptableObject
     public float flightforce;
     public float flightdrag;
     public float sprintmult;
+    public float directionaljumpmult;
+    public float jumptilt;
     [Header("Special")]
     public float timescale;
     public float jumpgrav;

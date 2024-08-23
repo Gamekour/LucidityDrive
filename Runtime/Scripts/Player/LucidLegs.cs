@@ -57,14 +57,14 @@ public class LucidLegs : MonoBehaviour
     private float movespeed;
     private float friction;
     private float slidemult;
-    private float fmaxmult;
-    private float wallrunmax;
+    private float wallruntilt;
     private float airdownmult;
     private float moveflatprobemult;
     private float probeXminimumOffset;
     private float probeZminimumOffset;
     private float hipspaceMaxRot;
     private float airtimemult;
+    private float moveupmult;
     private float movedownmult;
     private float movedownclamp;
     private float hipspacesmoothness;
@@ -76,6 +76,8 @@ public class LucidLegs : MonoBehaviour
     private float flightforce;
     private float flightdrag;
     private float sprintmult;
+    private float directionaljumpmult;
+    private float jumptilt;
 
     private float m_timescale;
     private float timescale
@@ -273,17 +275,21 @@ public class LucidLegs : MonoBehaviour
 
         float t = PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y;
         t = Mathf.Clamp01(t);
+        t *= wallruntilt;
+        if (inputJump)
+            t = jumptilt;
 
-        Vector3 pushdir = Vector3.Lerp(Vector3.up, PlayerInfo.footsurface, t * wallrunmax);
+        Vector3 pushdir = Vector3.Lerp(Vector3.up, PlayerInfo.footsurface, t);
 
         float downness = Mathf.Clamp01(1 - PlayerInfo.hipspace.up.y) * Mathf.Abs(PlayerInfo.hipspace.up.x);
         float movedownamount = Mathf.Clamp((PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -movedownclamp, 0);
         movedownamount *= movedownmult;
         movedownamount -= downness;
 
-        float moveupamount = Mathf.Clamp01(PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y);
+        float moveupamount = Mathf.Clamp01(PlayerInfo.hipspace.TransformVector(moveFlat).y);
+        moveupamount *= moveupmult;
 
-        float legadjust = legLength * maxlegmult * Mathf.Lerp(wallrunmax, 1, PlayerInfo.hipspace.up.y);
+        float legadjust = legLength * maxlegmult * Mathf.Lerp(wallruntilt, 1, PlayerInfo.hipspace.up.y);
         if (PlayerInfo.climbing && !inputJump)
             legadjust = 0.5f;
 
@@ -303,7 +309,7 @@ public class LucidLegs : MonoBehaviour
             legadjust *= 1 + movedownamount + moveupamount;
         }
 
-        float relativeheight = PlayerInfo.footspace.InverseTransformPoint(hipspace.position).y;
+        float relativeheight = hipspace.position.y - PlayerInfo.footspace.position.y;
         currentratio = relativeheight;
         float heightratio = relativeheight / legadjust;
         heightratio = Mathf.Clamp(heightratio, 0, 2);
@@ -341,7 +347,8 @@ public class LucidLegs : MonoBehaviour
         float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
         moveadjust *= 1 + (diffmag * moveburst);
 
-        Vector3 movetarget = hipspace.TransformVector(moveFlat) * moveadjust;
+        float jumpadjust = inputJump ? directionaljumpmult : 1;
+        Vector3 movetarget = hipspace.TransformVector(moveFlat) * moveadjust * jumpadjust;
         Vector3 relativevel = hipspace.InverseTransformVector(rb.velocity);
         relativevel.y = 0;
         relativevel = hipspace.TransformVector(relativevel);
@@ -351,7 +358,7 @@ public class LucidLegs : MonoBehaviour
 
         nrm = Mathf.Clamp(nrm, 0, Mathf.Infinity);
 
-        float fmax = nrm * rb.mass * friction * fmaxmult;
+        float fmax = Mathf.Pow(nrm, 0.5f) * rb.mass * friction;
         PlayerInfo.traction = Mathf.Clamp01(fmax / slide.magnitude);
         Vector3 pushcalc = nrm * PlayerInfo.footsurface;
         Vector3 slidecalc = Vector3.ClampMagnitude(-slide, fmax);

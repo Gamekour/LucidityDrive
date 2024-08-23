@@ -29,25 +29,27 @@ MonoBehaviour:
   movespeed: 6
   friction: 1
   slidemult: 14
-  fmaxmult: 0.0275
-  wallrunmax: 0.3
+  wallruntilt: 0.1
   airdownmult: 1
   moveflatprobemult: 1.5
   probeXminimumOffset: 0.1
   probeZminimumOffset: 0.1
   hipspaceMaxRot: -0.9
   airtimemult: 2
+  moveupmult: 1
   movedownmult: 0.5
   movedownclamp: 0.6
   hipspacesmoothness: 0.94
   moveburst: 12
   crawlthreshold: 14
-  crawlspeed: 0.5
-  crouchspeed: 0.75
+  crawlspeed: 1
+  crouchspeed: 3
   crawlmult: 0.4
   flightforce: 10
   flightdrag: 0.003
   sprintmult: 4.5
+  directionaljumpmult: 5
+  jumptilt: 0.4
   timescale: 1
   jumpgrav: -7
   fallgrav: -10

@@ -86,6 +86,7 @@ public class LucidArms : MonoBehaviour
         rightanchor.linearLimit = off;
     }
 
+    //in short: uses an initial cast to find the nearest "wall", then another cast to find the top of said wall. If all is good and within reach, then we start asking if we're trying to grab and if so we call those functions up
     private void FixedUpdate()
     {
         if (disabling || leftshoulder == null || rightshoulder == null || !initialized) return;
@@ -96,7 +97,7 @@ public class LucidArms : MonoBehaviour
             rightanchor.transform.position = PlayerInfo.pelvis.position;
 
 
-        float pulling = LucidInputActionRefs.crouch.ReadValue<float>();
+        bool pulling = LucidInputValueShortcuts.crouch;
 
         Transform cam = PlayerInfo.head;
 
@@ -134,6 +135,8 @@ public class LucidArms : MonoBehaviour
         float distL = Vector3.Distance(cam.position + cam.right * -shoulderdist, initialHitInfoL.point);
         float distR = Vector3.Distance(cam.position + cam.right * shoulderdist, initialHitInfoR.point);
 
+
+        //i know this trig stuff looks scary but that's just how it knows where to look when you're dealing with a sloped wall
         float LsinC = (distL * Mathf.Sin(Mathf.Deg2Rad * angleL)) / castdist;
         float RsinC = (distR * Mathf.Sin(Mathf.Deg2Rad * angleR)) / castdist;
 
@@ -169,15 +172,15 @@ public class LucidArms : MonoBehaviour
             }
             leftanchor.targetPosition = Vector3.zero;
 
-            bool toofarL = Vector3.Distance(leftanchor.transform.position, cam.position - (cam.right * shoulderdist)) > limitdist + tolerance;
+            bool toofarL = Vector3.Distance(leftanchor.transform.position, leftshoulder.position) > limitdist + tolerance;
 
-            if (toofarL)
+            if (toofarL) //ungrab if something pushes you far enough to "lose grip"
                 Ungrab(false);
 
             currenttargetL = downcastHitInfoL.transform;
         }
         else
-            leftanchor.targetPosition = Vector3.up * pulling * pullstrength;
+            leftanchor.targetPosition = Vector3.up * (pulling ? 1 : 0) * pullstrength;
 
         if (!grabR)
         {
@@ -189,16 +192,16 @@ public class LucidArms : MonoBehaviour
             }
             rightanchor.targetPosition = Vector3.zero;
 
-            bool toofarR = Vector3.Distance(rightanchor.transform.position, cam.position + (cam.right * shoulderdist)) > limitdist + tolerance;
+            bool toofarR = Vector3.Distance(rightanchor.transform.position, rightshoulder.position) > limitdist + tolerance;
 
-            if (toofarR)
+            if (toofarR) //ungrab if something pushes you far enough to "lose grip"
                 Ungrab(true);
 
             currenttargetR = downcastHitInfoR.transform;
         }
         else
         {
-            rightanchor.targetPosition = Vector3.up * pulling * pullstrength;
+            rightanchor.targetPosition = Vector3.up * (pulling ? 1 : 0) * pullstrength;
         }
 
         Vector3 center = Vector3.zero;
