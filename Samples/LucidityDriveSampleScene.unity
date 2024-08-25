@@ -294,12 +294,6 @@ PrefabInstance:
       propertyPath: layermaskNormal.m_Bits
       value: 31
       objectReference: {fileID: 0}
-    - target: {fileID: 6962469843135845524, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: defaultMovementSettings
-      value: 
-      objectReference: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
-        type: 2}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 0}

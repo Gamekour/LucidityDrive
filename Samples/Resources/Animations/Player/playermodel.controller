@@ -2728,7 +2728,7 @@ BlendTree:
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 43dc3025ee68b1d4088b46ee4cda21b0, type: 2}
-    m_Threshold: -5
+    m_Threshold: -1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -2744,7 +2744,7 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: hangZ
   m_BlendParameterY: Blend
-  m_MinThreshold: -5
+  m_MinThreshold: -1
   m_MaxThreshold: 0
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
@@ -3296,7 +3296,7 @@ BlendTree:
   m_Name: climb
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 8c7d43aaa5c786044a39b7e77a75f201, type: 2}
+    m_Motion: {fileID: 7400000, guid: 0fc9f99253dc0df4da726769d47160b2, type: 2}
     m_Threshold: -1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -3311,10 +3311,18 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: alignment
     m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: 29085765a8a31334fae675cab4047880, type: 2}
+    m_Threshold: 1
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: alignment
+    m_Mirror: 0
   m_BlendParameter: hangZ
   m_BlendParameterY: Blend
   m_MinThreshold: -1
-  m_MaxThreshold: 0
+  m_MaxThreshold: 1
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0

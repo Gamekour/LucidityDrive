@@ -32,6 +32,8 @@ public class LucidArms : MonoBehaviour
     private bool grabwaitR = false;
     private bool disabling = false;
     private bool initialized = false;
+    private float hipdrag = 0;
+    private float headdrag = 0;
 
     private void OnEnable()
     {
@@ -57,6 +59,8 @@ public class LucidArms : MonoBehaviour
         rightshoulder = PlayerInfo.vismodelRef.anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
         leftanchor.connectedBody = PlayerInfo.mainBody;
         rightanchor.connectedBody = PlayerInfo.mainBody;
+        hipdrag = PlayerInfo.physHipsRB.angularDrag;
+        headdrag = PlayerInfo.physHeadRB.angularDrag;
         initialized = true;
     }
 
@@ -217,7 +221,11 @@ public class LucidArms : MonoBehaviour
         {
             center /= 2;
         }
-        PlayerInfo.climbrelative = center;
+
+        Vector3 climbrelative = center;
+        climbrelative.z *= 4;
+        climbrelative.y *= 4;
+        PlayerInfo.climbrelative = climbrelative;
 
         Vector3 targetposL = PlayerInfo.pelvis.transform.InverseTransformPoint(leftshoulder.position);
         Vector3 targetposR = PlayerInfo.pelvis.transform.InverseTransformPoint(rightshoulder.position);
@@ -245,11 +253,14 @@ public class LucidArms : MonoBehaviour
         PlayerInfo.grabR = grabR;
         PlayerInfo.climbing = grabL || grabR;
 
-        Vector2 inputmove = LucidInputActionRefs.movement.ReadValue<Vector2>();
-        Vector3 moveflat = Vector3.zero;
-        moveflat.x = inputmove.x;
-        moveflat.z = inputmove.y;
-        PlayerInfo.mainBody.AddForce(PlayerInfo.pelvis.TransformVector(moveflat) * swingforce);
+        if (PlayerInfo.climbing)
+        {
+            Vector2 inputmove = LucidInputValueShortcuts.movement;
+            Vector3 moveflat = Vector3.zero;
+            moveflat.x = inputmove.x;
+            moveflat.z = inputmove.y;
+            PlayerInfo.mainBody.AddForce(PlayerInfo.pelvis.TransformVector(moveflat) * swingforce);
+        }
     }
 
     private void GrabButtonLeft(InputAction.CallbackContext obj)
@@ -270,6 +281,8 @@ public class LucidArms : MonoBehaviour
 
     private void Grab(bool right)
     {
+        if (!initialized) return;
+
         if (!right)
         {
             grabwaitL = false;
@@ -294,6 +307,9 @@ public class LucidArms : MonoBehaviour
             }
             grabR = true;
         }
+
+        PlayerInfo.physHipsRB.angularDrag = 0;
+        PlayerInfo.physHeadRB.angularDrag = 0;
     }
 
     private void UngrabButtonLeft(InputAction.CallbackContext obj)
@@ -310,6 +326,8 @@ public class LucidArms : MonoBehaviour
 
     private void Ungrab(bool right)
     {
+        if (!initialized) return;
+
         Animator animL = null;
         Animator animR = null;
         if (!right)
@@ -334,6 +352,9 @@ public class LucidArms : MonoBehaviour
             }
             grabR = false;
         }
+
+        PlayerInfo.physHipsRB.angularDrag = hipdrag;
+        PlayerInfo.physHeadRB.angularDrag = headdrag;
     }
 
     private IEnumerator InitDelay()
