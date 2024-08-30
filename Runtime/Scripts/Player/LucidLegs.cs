@@ -92,6 +92,11 @@ public class LucidLegs : MonoBehaviour
     private float airdrag;
 
     //internal variables
+    private RaycastHit[] spherecastHitBufferL = new RaycastHit[100];
+    private RaycastHit[] spherecastHitBufferR = new RaycastHit[100];
+    private Transform animModelHips;
+    private Transform animModelLFoot;
+    private Transform animModelRFoot;
     private float legLength;
     private float animPhase = 0;
     private float currentratio = 1;
@@ -107,6 +112,9 @@ public class LucidLegs : MonoBehaviour
     {
         movementSettings = defaultMovementSettings;
         legLength = transform.position.y - transform.root.position.y; //automatically determine leg length based on height from root - will eventually be replaced by a better avatar-specific system
+        animModelHips = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips);
+        animModelLFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.LeftFoot);
+        animModelRFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.RightFoot);
     }
 
     private void OnDisable()
@@ -126,11 +134,11 @@ public class LucidLegs : MonoBehaviour
         velflathip.y = 0;
 
         //all of these need to eventually be delegated to bools
-        bool inputBellyslide = LucidInputActionRefs.crawl.ReadValue<float>() != 0;
-        bool inputBackslide = LucidInputActionRefs.slide.ReadValue<float>() != 0;
-        bool inputCrouch = LucidInputActionRefs.crouch.ReadValue<float>() != 0;
-        bool inputJump = LucidInputActionRefs.jump.ReadValue<float>() != 0;
-        bool inputSprint = LucidInputActionRefs.sprint.ReadValue<float>() != 0;
+        bool inputBellyslide = LucidInputValueShortcuts.crawl;
+        bool inputBackslide = LucidInputValueShortcuts.slide;
+        bool inputCrouch = LucidInputValueShortcuts.crouch;
+        bool inputJump = LucidInputValueShortcuts.jump;
+        bool inputSprint = LucidInputValueShortcuts.sprint;
         bool crawling = inputBellyslide && velflathip.magnitude < crawlthreshold && inputCrouch;
         inputBellyslide &= !crawling;
         inputBackslide &= !crawling;
@@ -140,9 +148,9 @@ public class LucidLegs : MonoBehaviour
 
         if (!PlayerInfo.grounded)
         {
-            if (!inputJump) Physics.gravity = Vector3.up * fallgrav;
+            if (!inputJump) rb.AddForce(Vector3.up * (fallgrav - Physics.gravity.y));
             else
-                Physics.gravity = Vector3.up * jumpgrav;
+                rb.AddForce(Vector3.up * (jumpgrav - Physics.gravity.y));
 
             AirCalc();
         }
@@ -155,7 +163,7 @@ public class LucidLegs : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("FlightZone"))
+        if (other.gameObject.layer == 7)
         {
             PlayerInfo.flying = true;
             rb.useGravity = false;
@@ -164,7 +172,7 @@ public class LucidLegs : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("FlightZone"))
+        if (other.gameObject.layer == 7)
         {
             PlayerInfo.flying = false;
             rb.useGravity = true;
@@ -249,6 +257,7 @@ public class LucidLegs : MonoBehaviour
         rb.AddForce(flattened * airmove, ForceMode.Acceleration);
     }
 
+    //handles movement while flying
     private void FlightCalc()
     {
         Vector2 moveVector = LucidInputValueShortcuts.movement;
@@ -289,7 +298,7 @@ public class LucidLegs : MonoBehaviour
         float moveupamount = Mathf.Clamp01(PlayerInfo.hipspace.TransformVector(moveFlat).y);
         moveupamount *= moveupmult;
 
-        float legadjust = legLength * maxlegmult * Mathf.Lerp(wallruntilt, 1, PlayerInfo.hipspace.up.y);
+        float legadjust = (animModelHips.position.y - animModelFootSelection().position.y) / legLength;
         if (PlayerInfo.climbing && !inputJump)
             legadjust = 0.5f;
 
@@ -298,7 +307,7 @@ public class LucidLegs : MonoBehaviour
         else if (inputJump)
         {
             legadjust *= jumpmult;
-            Physics.gravity = Vector3.up * jumpgrav;
+            rb.AddForce(Vector3.up * (jumpgrav - Physics.gravity.y));
         }
         else if (inputCrouch)
         {
@@ -366,6 +375,14 @@ public class LucidLegs : MonoBehaviour
         PlayerInfo.currentslide = slidecalc;
         PlayerInfo.currentpush = pushcalc;
 
+    }
+
+    public Transform animModelFootSelection()
+    {
+        if (animPhase > 0.5f)
+            return animModelRFoot;
+        else
+            return animModelLFoot;
     }
 
     //quickly splits a vector into its movement along and against the surface of footspace
@@ -614,24 +631,24 @@ public class LucidLegs : MonoBehaviour
         if (radius == -1)
             radius = legWidth * legWidthMult;
 
-        bool hitLeft1 = Physics.SphereCast(left.origin, radius, left.direction, out RaycastHit hitInfoLeft1, 1000, Shortcuts.geometryMask);
-        bool hitRight1 = Physics.SphereCast(right.origin, radius, right.direction, out RaycastHit hitInfoRight1, 1000, Shortcuts.geometryMask);
-        hitL = hitInfoLeft1;
-        hitR = hitInfoRight1;
-        if (hitLeft1)
+        int hitLeft1 = Physics.SphereCastNonAlloc(left.origin, radius, left.direction, spherecastHitBufferL, 1000, Shortcuts.geometryMask);
+        int hitRight1 = Physics.SphereCastNonAlloc(right.origin, radius, right.direction, spherecastHitBufferR, 1000, Shortcuts.geometryMask);
+        hitL = spherecastHitBufferL[0];
+        hitR = spherecastHitBufferR[0];
+        if (hitLeft1 > 0)
         {
-            Vector3 leftup = hitInfoLeft1.point;
+            Vector3 leftup = hitL.point;
             leftup.y = transform.position.y;
             bool hitLeft2 = Physics.SphereCast(leftup, radius * 0.25f, Vector3.down, out RaycastHit hitInfoLeft2, 1000, Shortcuts.geometryMask);
-            if (hitLeft2 && hitInfoLeft2.point.y > hitInfoLeft1.point.y)
+            if (hitLeft2 && hitInfoLeft2.point.y > hitL.point.y)
                 hitL = hitInfoLeft2;
         }
-        if (hitRight1)
+        if (hitRight1 > 0)
         {
-            Vector3 rightup = hitInfoRight1.point;
+            Vector3 rightup = hitR.point;
             rightup.y = transform.position.y;
             bool hitRight2 = Physics.SphereCast(rightup, radius * 0.25f, Vector3.down, out RaycastHit hitInfoRight2, 1000, Shortcuts.geometryMask);
-            if (hitRight2 && hitInfoRight2.point.y > hitInfoRight1.point.y)
+            if (hitRight2 && hitInfoRight2.point.y > hitR.point.y)
                 hitR = hitInfoRight2;
         }
     }

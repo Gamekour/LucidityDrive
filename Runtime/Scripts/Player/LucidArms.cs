@@ -104,11 +104,20 @@ public class LucidArms : MonoBehaviour
         bool pulling = LucidInputValueShortcuts.crouch;
 
         Transform cam = PlayerInfo.head;
+        Vector3 campos = cam.position;
+        Vector3 camfwd = cam.forward;
+        Vector3 camright = cam.right;
+        bool vaulting = grabwaitR ^ grabwaitL;
+        if (vaulting)
+        {
+            campos += cam.forward;
+            camfwd *= -1;
+        }
 
-        bool initialHitL = Physics.SphereCast(cam.position - (cam.right * shoulderdist), firstcastwidth, cam.forward, out RaycastHit initialHitInfoL, castdist, Shortcuts.geometryMask);
+        bool initialHitL = Physics.SphereCast(campos - (camright * shoulderdist), firstcastwidth, camfwd, out RaycastHit initialHitInfoL, castdist, Shortcuts.geometryMask);
         initialHitL &= ((initialHitInfoL.normal.y) < runmaxY);
 
-        bool initialHitR = Physics.SphereCast(cam.position + (cam.right * shoulderdist), firstcastwidth, cam.forward, out RaycastHit initialHitInfoR, castdist, Shortcuts.geometryMask);
+        bool initialHitR = Physics.SphereCast(campos + (camright * shoulderdist), firstcastwidth, camfwd, out RaycastHit initialHitInfoR, castdist, Shortcuts.geometryMask);
         initialHitR &= ((initialHitInfoR.normal.y) < runmaxY);
 
         float hitZL = PlayerInfo.pelvis.InverseTransformPoint(initialHitInfoL.point).z / 2;

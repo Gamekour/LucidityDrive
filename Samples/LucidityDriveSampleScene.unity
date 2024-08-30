@@ -620,6 +620,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: VismodelExample
       objectReference: {fileID: 0}
+    - target: {fileID: 7587276133036043626, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7657696132603305211, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
         type: 3}
       propertyPath: m_Layer
@@ -705,9 +710,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1927088119}
   - component: {fileID: 1927088116}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: FlightArea
-  m_TagString: FlightZone
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
