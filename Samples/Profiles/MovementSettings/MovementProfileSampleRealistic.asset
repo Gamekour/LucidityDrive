@@ -22,12 +22,12 @@ MonoBehaviour:
   forcesmoothness: 20
   maxProbeOffset: 2
   maxlegmult: 1.03
-  crouchmult: 0.7
-  jumpmult: 32
+  crouchmult: 0.5
+  jumpmult: 16
   jumpforcemult: 1
   probemult: 1
   movespeed: 8
-  friction: 0.7
+  friction: 0.5
   slidemult: 14
   wallruntilt: 0.1
   airdownmult: 1
@@ -50,6 +50,7 @@ MonoBehaviour:
   sprintmult: 4.5
   directionaljumpmult: 3.5
   jumptilt: 0.2
+  legLengthMult: 0.95
   timescale: 1
   jumpgrav: -9.81
   fallgrav: -9.81

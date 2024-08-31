@@ -18,6 +18,7 @@ public class LucidArms : MonoBehaviour
     [SerializeField] float minflatgrab = 0.8f;
     [SerializeField] float tolerance = 0.15f;
     [SerializeField] float swingforce = 1f;
+    [SerializeField] float ungrabBoost = 1f;
     [SerializeField] Transform leftunrotate;
     [SerializeField] Transform rightunrotate;
     private Transform leftshoulder;
@@ -362,6 +363,8 @@ public class LucidArms : MonoBehaviour
             grabR = false;
         }
 
+        Vector3 dir = Vector3.ClampMagnitude(PlayerInfo.mainBody.velocity, 1);
+        PlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
         PlayerInfo.physHipsRB.angularDrag = hipdrag;
         PlayerInfo.physHeadRB.angularDrag = headdrag;
     }

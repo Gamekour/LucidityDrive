@@ -768,8 +768,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.11979853
-  m_Center: {x: -1.7584122e-11, y: 0.02510237, z: 7.9240864e-11}
+  m_Radius: 0.13617575
+  m_Center: {x: 0, y: 0.11882424, z: 0}
 --- !u!153 &1904975163097124427
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -857,8 +857,8 @@ ConfigurableJoint:
     useAcceleration: 0
   m_SlerpDrive:
     serializedVersion: 4
-    positionSpring: 20000
-    positionDamper: 8000
+    positionSpring: 40000
+    positionDamper: 4000
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_ProjectionMode: 0
@@ -3074,16 +3074,16 @@ MonoBehaviour:
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
   headroot: {fileID: 2840716185538071160}
-  headsmooth: 0.1
+  headsmooth: 0.3
   headsmoothZ: 0.12
-  rawblend: 0.8
+  rawblend: 0.5
   transitionsmooth: 0.5
   layermaskNormal:
     serializedVersion: 2
-    m_Bits: 95
+    m_Bits: 31
   layermaskFP:
     serializedVersion: 2
-    m_Bits: 95
+    m_Bits: 31
 --- !u!1 &6532721719779654200
 GameObject:
   m_ObjectHideFlags: 0
@@ -4284,6 +4284,11 @@ PrefabInstance:
         type: 3}
       propertyPath: swingforce
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: ungrabBoost
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

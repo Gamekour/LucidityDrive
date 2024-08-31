@@ -14,6 +14,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] LayerMask layermaskFP;
     private int cameraPointIndex = 0;
     private Transform headrootTarget;
+    private bool forceRaw = false;
 
     private void Start()
     {
@@ -87,12 +88,25 @@ public class CameraManager : MonoBehaviour
             else
                 neweulers.z = headrootTarget.eulerAngles.z;
 
-            Quaternion raw = PlayerInfo.head.rotation;
-            Quaternion finalrot = Quaternion.Slerp(Quaternion.Euler(neweulers), raw, rawblend);
+            float blendadjust = rawblend;
+            if (forceRaw)
+                blendadjust = 1;
+            Quaternion raw = PlayerInfo.physHead.transform.rotation;
+            Quaternion finalrot = Quaternion.Slerp(Quaternion.Euler(neweulers), raw, blendadjust);
             headroot.rotation = finalrot;
         }
 
         PlayerInfo.mainCamera.transform.position = camerapoints[cameraPointIndex].position;
         PlayerInfo.mainCamera.transform.rotation = camerapoints[cameraPointIndex].rotation;
+    }
+
+    public void OnHeadCollisionStay(Collision c)
+    {
+        forceRaw = true;
+    }
+
+    public void OnHeadCollisionExit(Collision c)
+    {
+        forceRaw = false;
     }
 }

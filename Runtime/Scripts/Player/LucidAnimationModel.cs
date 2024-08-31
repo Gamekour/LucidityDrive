@@ -170,8 +170,8 @@ public class LucidAnimationModel : MonoBehaviour
         bool Rhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, targetR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(targetR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
         if (PlayerInfo.crawling || crawl)
         {
-            Vector3 newtargetR = anim.GetBoneTransform(HumanBodyBones.RightToes).position;
-            Vector3 newtargetL = anim.GetBoneTransform(HumanBodyBones.LeftToes).position;
+            Vector3 newtargetR = anim.GetBoneTransform(HumanBodyBones.RightFoot).position;
+            Vector3 newtargetL = anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
             LHit = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, newtargetL - PlayerInfo.legspaceL.position, out LHitInfo, Vector3.Distance(newtargetL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
             Rhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, newtargetR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(newtargetR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
             Debug.DrawLine(PlayerInfo.legspaceL.position, newtargetL);

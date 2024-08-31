@@ -100,6 +100,7 @@ public class LucidLegs : MonoBehaviour
     private float legLength;
     private float animPhase = 0;
     private float currentratio = 1;
+    private bool headcolliding = false;
 
     private void Awake()
     {
@@ -295,6 +296,10 @@ public class LucidLegs : MonoBehaviour
         movedownamount *= movedownmult;
         movedownamount -= downness;
 
+        float headdist = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head).position.y - PlayerInfo.physHead.transform.position.y;
+        headdist = Mathf.Clamp(headdist, 0, Mathf.Infinity);
+        float legclamp = legLength - (headdist * 2.5f);
+
         float moveupamount = Mathf.Clamp01(PlayerInfo.hipspace.TransformVector(moveFlat).y);
         moveupamount *= moveupmult;
 
@@ -317,6 +322,9 @@ public class LucidLegs : MonoBehaviour
         {
             legadjust *= 1 + movedownamount + moveupamount;
         }
+
+        if(headcolliding)
+            legadjust = Mathf.Clamp(legadjust, 0, legclamp);
 
         float relativeheight = hipspace.position.y - PlayerInfo.footspace.position.y;
         currentratio = relativeheight;
@@ -377,12 +385,22 @@ public class LucidLegs : MonoBehaviour
 
     }
 
-    public Transform animModelFootSelection()
+    private Transform animModelFootSelection()
     {
         if (animPhase > 0.5f)
             return animModelRFoot;
         else
             return animModelLFoot;
+    }
+
+    public void OnHeadCollisionStay(Collision c)
+    {
+        headcolliding = true;
+    }
+
+    public void OnHeadCollisionExit(Collision c)
+    {
+        headcolliding = false;
     }
 
     //quickly splits a vector into its movement along and against the surface of footspace
