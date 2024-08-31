@@ -208,7 +208,7 @@ public class LucidAnimationModel : MonoBehaviour
         else
             RCast = targetR;
         RCast = Vector3.Lerp(RCast, RCastOld, footsmoothness);
-        PlayerInfo.grounded = (LHit || Rhit);
+        PlayerInfo.grounded = (LHit || Rhit) || PlayerInfo.pelviscollision;
 
         if (PlayerInfo.crawling)
         {

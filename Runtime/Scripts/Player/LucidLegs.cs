@@ -122,6 +122,7 @@ public class LucidLegs : MonoBehaviour
     {
         PlayerInfo.flying = false;
         //this is a fix for a bug occurring when you switch scenes while in a flight zone - i may eventually have a function to reset all temporary values in playerinfo on scene change
+        PlayerInfo.pelviscollision = false;
     }
 
     private void FixedUpdate()
@@ -401,6 +402,16 @@ public class LucidLegs : MonoBehaviour
     public void OnHeadCollisionExit(Collision c)
     {
         headcolliding = false;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        PlayerInfo.pelviscollision = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        PlayerInfo.pelviscollision = false;
     }
 
     //quickly splits a vector into its movement along and against the surface of footspace

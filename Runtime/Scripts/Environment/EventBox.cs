@@ -36,7 +36,7 @@ public class EventBox : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if(doCollisionStayEvents)
+        if (doCollisionStayEvents)
             onCollisionStay.Invoke(collision);
     }
 
