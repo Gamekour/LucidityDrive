@@ -135,6 +135,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84801d359f42b734b9bc39f78c07f3d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &421612705 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3113282231559693925, guid: feb5ffb413408f64bb3e0843d3c27f57,
+    type: 3}
+  m_PrefabInstance: {fileID: 901255078}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &471510829 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
@@ -379,30 +385,15 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 0.015287878
       objectReference: {fileID: 0}
+    - target: {fileID: 4095379362296046315, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: m_Name
+      value: camera
+      objectReference: {fileID: 0}
     - target: {fileID: 4314459254256399924, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.279
-      objectReference: {fileID: 0}
-    - target: {fileID: 5496875962166913160, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_BackGroundColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5496875962166913160, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5496875962166913160, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5496875962166913160, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6098238120377473597, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
@@ -414,6 +405,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRig
       objectReference: {fileID: 0}
+    - target: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: cameratarget
+      value: 
+      objectReference: {fileID: 421612705}
     - target: {fileID: 8114009135476236412, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Avatar

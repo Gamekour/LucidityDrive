@@ -460,6 +460,19 @@ BlendTree:
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
+--- !u!114 &-7248804128819642331
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0309a02596db9734883429f4a869d2b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  methodname: OnReachedGroundedState
 --- !u!206 &-7073327958667174724
 BlendTree:
   m_ObjectHideFlags: 1
@@ -4322,7 +4335,8 @@ AnimatorState:
   m_Transitions:
   - {fileID: -826930087070374781}
   - {fileID: -5173017443866624802}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 8197827491595432628}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -4508,7 +4522,7 @@ AnimatorStateTransition:
   m_ExitTime: 0.806962
   m_HasExitTime: 0
   m_HasFixedDuration: 1
-  m_InterruptionSource: 2
+  m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
 --- !u!1101 &4597093076913243868
@@ -4553,7 +4567,8 @@ AnimatorState:
   - {fileID: 7160216522853216822}
   - {fileID: 4518703310656316357}
   - {fileID: -5814020103221859417}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -7248804128819642331}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -5481,7 +5496,7 @@ AnimatorStateTransition:
   m_ExitTime: 0.75
   m_HasExitTime: 0
   m_HasFixedDuration: 1
-  m_InterruptionSource: 2
+  m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
 --- !u!206 &7540195769475218424
@@ -5718,6 +5733,19 @@ AnimatorStateTransition:
   m_InterruptionSource: 2
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &8197827491595432628
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0309a02596db9734883429f4a869d2b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  methodname: OnReachedGroundedState
 --- !u!206 &8242528015257727261
 BlendTree:
   m_ObjectHideFlags: 1

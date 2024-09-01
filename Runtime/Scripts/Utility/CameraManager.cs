@@ -91,7 +91,7 @@ public class CameraManager : MonoBehaviour
             float blendadjust = rawblend;
             if (forceRaw)
                 blendadjust = 1;
-            Quaternion raw = PlayerInfo.physHead.transform.rotation;
+            Quaternion raw = PlayerInfo.head.transform.rotation;
             Quaternion finalrot = Quaternion.Slerp(Quaternion.Euler(neweulers), raw, blendadjust);
             headroot.rotation = finalrot;
         }

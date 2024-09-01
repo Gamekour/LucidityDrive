@@ -37,6 +37,7 @@ public class LucidAnimationModel : MonoBehaviour
     private float currentcrouch = 0;
     private float currentsway = 0;
     private float airtimesmooth = 0;
+    private bool stucksliding = false;
 
     private void Awake()
     {
@@ -111,6 +112,8 @@ public class LucidAnimationModel : MonoBehaviour
         float flightfloat = 0;
         if (PlayerInfo.flying)
             flightfloat = 1;
+        if (slide || crawl)
+            stucksliding = true;
 
         anim.SetFloat("velX", localVel.x);
         anim.SetFloat("velY", localVel.y);
@@ -208,7 +211,10 @@ public class LucidAnimationModel : MonoBehaviour
         else
             RCast = targetR;
         RCast = Vector3.Lerp(RCast, RCastOld, footsmoothness);
-        PlayerInfo.grounded = (LHit || Rhit) || PlayerInfo.pelviscollision;
+
+        bool castsuccess = (LHit || Rhit);
+        bool slidecheck = !(slide || crawl || stucksliding);
+        PlayerInfo.grounded = (castsuccess && slidecheck) || PlayerInfo.pelviscollision;
 
         if (PlayerInfo.crawling)
         {
@@ -218,5 +224,10 @@ public class LucidAnimationModel : MonoBehaviour
 
         PlayerInfo.targetL = LCast;
         PlayerInfo.targetR = RCast;
+    }
+
+    public void OnReachedGroundedState()
+    {
+        stucksliding = false;
     }
 }
