@@ -9,7 +9,6 @@ public class CameraManager : MonoBehaviour
     [SerializeField] float headsmooth;
     [SerializeField] float headsmoothZ;
     [SerializeField] float rawblend = 0.5f;
-    [SerializeField] float transitionsmooth = 0.5f;
     [SerializeField] LayerMask layermaskNormal;
     [SerializeField] LayerMask layermaskFP;
     private int cameraPointIndex = 0;

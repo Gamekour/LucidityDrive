@@ -77,8 +77,10 @@ public static class PlayerInfo
     public static LucidVismodel vismodelRef;
 
     //motion data
-    public static Vector3 targetL = Vector3.zero;
-    public static Vector3 targetR = Vector3.zero;
+    public static Vector3 footTargetL = Vector3.zero;
+    public static Vector3 footTargetR = Vector3.zero;
+    public static Vector3 handTargetL = Vector3.zero;
+    public static Vector3 handTargetR = Vector3.zero;
     public static Vector3 footsurface = Vector3.zero;
     public static Vector3 footsurfL = Vector3.zero;
     public static Vector3 footsurfR = Vector3.zero;

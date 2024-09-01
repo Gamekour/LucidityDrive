@@ -57,7 +57,7 @@ public class LucidVismodel : MonoBehaviour
             if (modelSync.boneRots.ContainsKey(hbstring))
                 anim.SetBoneLocalRotation(hb2, modelSync.boneRots[hbstring]);
         }
-        if (!PlayerInfo.crawling && LucidInputActionRefs.crawl.ReadValue<float>() == 0 && LucidInputActionRefs.slide.ReadValue<float>() == 0)
+        if (!PlayerInfo.crawling && !LucidInputValueShortcuts.crawl && !LucidInputValueShortcuts.slide)
         {
             anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
             anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
@@ -86,6 +86,12 @@ public class LucidVismodel : MonoBehaviour
 
             grabweightL = Mathf.Clamp01(grabweightL + (grabspeed * Time.deltaTime));
         }
+        else if (PlayerInfo.handTargetL != Vector3.zero)
+        {
+            anim.SetIKPosition(AvatarIKGoal.LeftHand, PlayerInfo.handTargetL);
+            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+            grabweightL = 0;
+        }
         else
         {
             anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, grabweightL);
@@ -101,6 +107,12 @@ public class LucidVismodel : MonoBehaviour
             anim.SetIKRotationWeight(AvatarIKGoal.RightHand, grabweightR);
 
             grabweightR = Mathf.Clamp01(grabweightR + (grabspeed * Time.deltaTime));
+        }
+        else if (PlayerInfo.handTargetR != Vector3.zero)
+        {
+            anim.SetIKPosition(AvatarIKGoal.RightHand, PlayerInfo.handTargetR);
+            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+            grabweightR = 0;
         }
         else
         {

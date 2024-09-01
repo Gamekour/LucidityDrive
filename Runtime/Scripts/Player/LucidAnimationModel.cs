@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.XR;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -32,12 +33,18 @@ public class LucidAnimationModel : MonoBehaviour
     public Quaternion hiprot = Quaternion.identity;
     private Animator anim;
     private Transform pelvis;
-    private Transform animpelvis;
     private Transform head;
     private float currentcrouch = 0;
     private float currentsway = 0;
     private float airtimesmooth = 0;
     private bool stucksliding = false;
+    private Transform animpelvis;
+    private Transform animfootL;
+    private Transform animfootR;
+    private Transform animHandL;
+    private Transform animHandR;
+    private Transform animShoulderL;
+    private Transform animShoulderR;
 
     private void Awake()
     {
@@ -50,6 +57,12 @@ public class LucidAnimationModel : MonoBehaviour
         head = PlayerInfo.head;
 
         animpelvis = anim.GetBoneTransform(HumanBodyBones.Hips);
+        animfootL = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
+        animfootR = anim.GetBoneTransform(HumanBodyBones.RightFoot);
+        animHandL = anim.GetBoneTransform(HumanBodyBones.LeftHand);
+        animHandR = anim.GetBoneTransform(HumanBodyBones.RightHand);
+        animShoulderL = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+        animShoulderR = anim.GetBoneTransform (HumanBodyBones.RightUpperArm);
         PlayerInfo.mainCamera = fpcam;
     }
     private void Update()
@@ -149,8 +162,9 @@ public class LucidAnimationModel : MonoBehaviour
         Quaternion localSpaceRotationNeck = Quaternion.Inverse(chest) * Quaternion.Slerp(head.rotation, chest, lerp);
         anim.SetBoneLocalRotation(HumanBodyBones.Neck, localSpaceRotationNeck);
         anim.SetBoneLocalRotation(HumanBodyBones.Head, localSpaceRotationNeck);
-        Vector3 targetL = anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
-        Vector3 targetR = anim.GetBoneTransform(HumanBodyBones.RightFoot).position;
+
+        Vector3 footposL = animfootL.position;
+        Vector3 footposR = animfootR.position;
 
         bool midaircrouching = (!PlayerInfo.grounded && LucidInputActionRefs.crouch.ReadValue<float>() == 1 && !slide && !crawl && !PlayerInfo.flying);
 
@@ -162,29 +176,28 @@ public class LucidAnimationModel : MonoBehaviour
 
         if (!PlayerInfo.grounded)
         {
-            targetL = Vector3.Lerp(targetL, PlayerInfo.legspaceL.position, currentcrouch * Mathf.Clamp01(PlayerInfo.airtime / airtimemax));
-            targetR = Vector3.Lerp(targetR, PlayerInfo.legspaceR.position, currentcrouch * Mathf.Clamp01(PlayerInfo.airtime / airtimemax));
+            footposL = Vector3.Lerp(footposL, PlayerInfo.legspaceL.position, currentcrouch * Mathf.Clamp01(PlayerInfo.airtime / airtimemax));
+            footposR = Vector3.Lerp(footposR, PlayerInfo.legspaceR.position, currentcrouch * Mathf.Clamp01(PlayerInfo.airtime / airtimemax));
         }
 
         RaycastHit LHitInfo = new RaycastHit();
         RaycastHit RHitInfo = new RaycastHit();
 
-        bool LHit = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, targetL - PlayerInfo.legspaceL.position, out LHitInfo, Vector3.Distance(targetL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
-        bool Rhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, targetR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(targetR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
+        bool footLHit = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, footposL - PlayerInfo.legspaceL.position, out LHitInfo, Vector3.Distance(footposL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
+        bool footRhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, footposR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(footposR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
         if (PlayerInfo.crawling || crawl)
         {
             Vector3 newtargetR = anim.GetBoneTransform(HumanBodyBones.RightFoot).position;
             Vector3 newtargetL = anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
-            LHit = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, newtargetL - PlayerInfo.legspaceL.position, out LHitInfo, Vector3.Distance(newtargetL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
-            Rhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, newtargetR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(newtargetR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
+            footLHit = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, newtargetL - PlayerInfo.legspaceL.position, out LHitInfo, Vector3.Distance(newtargetL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
+            footRhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, newtargetR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(newtargetR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
             Debug.DrawLine(PlayerInfo.legspaceL.position, newtargetL);
-
         }
         Vector3 LCastOld = LCast;
-        if (LHit)
+        if (footLHit)
         {
             LCast = LHitInfo.point;
-            if (!currentright || !Rhit)
+            if (!currentright || !footRhit)
             {
                 PlayerInfo.footsurface = LHitInfo.normal;
                 PlayerInfo.footsurfL = LHitInfo.normal;
@@ -193,14 +206,14 @@ public class LucidAnimationModel : MonoBehaviour
             }
         }
         else
-            LCast = targetL;
+            LCast = footposL;
         LCast = Vector3.Lerp(LCast, LCastOld, footsmoothness);
 
         Vector3 RCastOld = RCast;
-        if (Rhit)
+        if (footRhit)
         {
             RCast = RHitInfo.point;
-            if (currentright || !LHit)
+            if (currentright || !footLHit)
             {
                 PlayerInfo.footsurface = RHitInfo.normal;
                 PlayerInfo.footsurfR = RHitInfo.normal;
@@ -209,21 +222,31 @@ public class LucidAnimationModel : MonoBehaviour
             }
         }
         else
-            RCast = targetR;
+            RCast = footposR;
         RCast = Vector3.Lerp(RCast, RCastOld, footsmoothness);
 
-        bool castsuccess = (LHit || Rhit);
-        bool slidecheck = !(slide || crawl || stucksliding);
-        PlayerInfo.grounded = (castsuccess && slidecheck) || PlayerInfo.pelviscollision;
+        bool castsuccess = (footLHit || footRhit);
+        bool slidecheck1 = !(slide || crawl) || PlayerInfo.crawling;
+        bool slidecheck2 = slidecheck1 && !stucksliding;
+        PlayerInfo.grounded = (castsuccess && slidecheck2) || PlayerInfo.pelviscollision;
 
         if (PlayerInfo.crawling)
-        {
             PlayerInfo.footsurface = PlayerInfo.hipspace.up;
-            //PlayerInfo.footspace.rotation = PlayerInfo.hipspace.rotation;
-        }
 
-        PlayerInfo.targetL = LCast;
-        PlayerInfo.targetR = RCast;
+        PlayerInfo.footTargetL = LCast;
+        PlayerInfo.footTargetR = RCast;
+
+        bool armLHit = Physics.SphereCast(animShoulderL.position, castthickness / 2, animHandL.position - animShoulderL.position, out RaycastHit armHitInfoL, Vector3.Distance(animHandL.position, animShoulderL.position), Shortcuts.geometryMask);
+        bool armRHit = Physics.SphereCast(animShoulderR.position, castthickness / 2, animHandR.position - animShoulderR.position, out RaycastHit armHitInfoR, Vector3.Distance(animHandR.position, animShoulderR.position), Shortcuts.geometryMask);
+
+        if (armLHit)
+            PlayerInfo.handTargetL = armHitInfoL.point;
+        else
+            PlayerInfo.handTargetL = Vector3.zero;
+        if (armRHit)
+            PlayerInfo.handTargetR = armHitInfoR.point;
+        else
+            PlayerInfo.handTargetR = Vector3.zero;
     }
 
     public void OnReachedGroundedState()
