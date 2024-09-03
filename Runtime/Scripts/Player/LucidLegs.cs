@@ -309,7 +309,7 @@ public class LucidLegs : MonoBehaviour
             legadjust = 0.5f;
 
         if (PlayerInfo.crawling)
-            legadjust *= crawlmult;
+            legadjust = crawlmult;
         else if (inputJump)
         {
             legadjust *= jumpmult;

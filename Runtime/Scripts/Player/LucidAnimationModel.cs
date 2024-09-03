@@ -39,8 +39,10 @@ public class LucidAnimationModel : MonoBehaviour
     private float airtimesmooth = 0;
     private bool stucksliding = false;
     private Transform animpelvis;
-    private Transform animfootL;
-    private Transform animfootR;
+    private Transform animFootL;
+    private Transform animFootR;
+    private Transform animKneeL;
+    private Transform animKneeR;
     private Transform animHandL;
     private Transform animHandR;
     private Transform animShoulderL;
@@ -57,8 +59,10 @@ public class LucidAnimationModel : MonoBehaviour
         head = PlayerInfo.head;
 
         animpelvis = anim.GetBoneTransform(HumanBodyBones.Hips);
-        animfootL = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
-        animfootR = anim.GetBoneTransform(HumanBodyBones.RightFoot);
+        animFootL = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
+        animFootR = anim.GetBoneTransform(HumanBodyBones.RightFoot);
+        animKneeL = anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
+        animKneeR = anim.GetBoneTransform(HumanBodyBones.RightLowerLeg);
         animHandL = anim.GetBoneTransform(HumanBodyBones.LeftHand);
         animHandR = anim.GetBoneTransform(HumanBodyBones.RightHand);
         animShoulderL = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
@@ -163,8 +167,10 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBoneLocalRotation(HumanBodyBones.Neck, localSpaceRotationNeck);
         anim.SetBoneLocalRotation(HumanBodyBones.Head, localSpaceRotationNeck);
 
-        Vector3 footposL = animfootL.position;
-        Vector3 footposR = animfootR.position;
+        Vector3 footposL = animFootL.position;
+        Vector3 footposR = animFootR.position;
+        Vector3 kneeposL = animKneeL.position;
+        Vector3 kneeposR = animKneeR.position;
 
         bool midaircrouching = (!PlayerInfo.grounded && LucidInputActionRefs.crouch.ReadValue<float>() == 1 && !slide && !crawl && !PlayerInfo.flying);
 
@@ -174,35 +180,36 @@ public class LucidAnimationModel : MonoBehaviour
 
         currentcrouch = Mathf.Lerp(targetcrouch, currentcrouch, midaircrouchsmoothness);
 
-        if (!PlayerInfo.grounded)
-        {
-            footposL = Vector3.Lerp(footposL, PlayerInfo.legspaceL.position, currentcrouch * Mathf.Clamp01(PlayerInfo.airtime / airtimemax));
-            footposR = Vector3.Lerp(footposR, PlayerInfo.legspaceR.position, currentcrouch * Mathf.Clamp01(PlayerInfo.airtime / airtimemax));
-        }
+        RaycastHit LHitInfoThigh = new RaycastHit();
+        RaycastHit RHitInfoThigh = new RaycastHit();
+        RaycastHit LHitInfoShin = new RaycastHit();
+        RaycastHit RHitInfoShin = new RaycastHit();
 
-        RaycastHit LHitInfo = new RaycastHit();
-        RaycastHit RHitInfo = new RaycastHit();
-
-        bool footLHit = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, footposL - PlayerInfo.legspaceL.position, out LHitInfo, Vector3.Distance(footposL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
-        bool footRhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, footposR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(footposR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
-        if (PlayerInfo.crawling || crawl)
-        {
-            Vector3 newtargetR = anim.GetBoneTransform(HumanBodyBones.RightFoot).position;
-            Vector3 newtargetL = anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
-            footLHit = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, newtargetL - PlayerInfo.legspaceL.position, out LHitInfo, Vector3.Distance(newtargetL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
-            footRhit = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, newtargetR - PlayerInfo.legspaceR.position, out RHitInfo, Vector3.Distance(newtargetR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
-            Debug.DrawLine(PlayerInfo.legspaceL.position, newtargetL);
-        }
+        bool thighCastL = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, kneeposL - PlayerInfo.legspaceL.position, out LHitInfoThigh, Vector3.Distance(footposL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
+        bool thighCastR = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, kneeposR - PlayerInfo.legspaceR.position, out RHitInfoThigh, Vector3.Distance(footposR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
+        bool shinCastL = Physics.SphereCast(kneeposL, castthickness, footposL - PlayerInfo.legspaceL.position, out LHitInfoShin, Vector3.Distance(footposL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
+        bool shinCastR = Physics.SphereCast(kneeposR, castthickness, footposR - PlayerInfo.legspaceR.position, out RHitInfoShin, Vector3.Distance(footposR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
         Vector3 LCastOld = LCast;
-        if (footLHit)
+        if (thighCastL)
         {
-            LCast = LHitInfo.point;
-            if (!currentright || !footRhit)
+            LCast = LHitInfoThigh.point;
+            if (!currentright || !thighCastR)
             {
-                PlayerInfo.footsurface = LHitInfo.normal;
-                PlayerInfo.footsurfL = LHitInfo.normal;
-                PlayerInfo.footspace.position = LHitInfo.point;
-                PlayerInfo.footspace.up = LHitInfo.normal;
+                PlayerInfo.footsurface = LHitInfoThigh.normal;
+                PlayerInfo.footsurfL = LHitInfoThigh.normal;
+                PlayerInfo.footspace.position = LHitInfoThigh.point;
+                PlayerInfo.footspace.up = LHitInfoThigh.normal;
+            }
+        }
+        else if (shinCastL)
+        {
+            LCast = LHitInfoShin.point;
+            if (!currentright || !shinCastR)
+            {
+                PlayerInfo.footsurface = LHitInfoShin.normal;
+                PlayerInfo.footsurfL = LHitInfoShin.normal;
+                PlayerInfo.footspace.position = LHitInfoShin.point;
+                PlayerInfo.footspace.up = LHitInfoShin.normal;
             }
         }
         else
@@ -210,25 +217,35 @@ public class LucidAnimationModel : MonoBehaviour
         LCast = Vector3.Lerp(LCast, LCastOld, footsmoothness);
 
         Vector3 RCastOld = RCast;
-        if (footRhit)
+        if (thighCastR)
         {
-            RCast = RHitInfo.point;
-            if (currentright || !footLHit)
+            RCast = RHitInfoThigh.point;
+            if (currentright || !thighCastL)
             {
-                PlayerInfo.footsurface = RHitInfo.normal;
-                PlayerInfo.footsurfR = RHitInfo.normal;
-                PlayerInfo.footspace.position = RHitInfo.point;
-                PlayerInfo.footspace.up = RHitInfo.normal;
+                PlayerInfo.footsurface = RHitInfoThigh.normal;
+                PlayerInfo.footsurfR = RHitInfoThigh.normal;
+                PlayerInfo.footspace.position = RHitInfoThigh.point;
+                PlayerInfo.footspace.up = RHitInfoThigh.normal;
+            }
+        }
+        else if (shinCastR)
+        {
+            RCast = RHitInfoShin.point;
+            if (currentright || !shinCastL)
+            {
+                PlayerInfo.footsurface = RHitInfoShin.normal;
+                PlayerInfo.footsurfR = RHitInfoShin.normal;
+                PlayerInfo.footspace.position = RHitInfoShin.point;
+                PlayerInfo.footspace.up = RHitInfoShin.normal;
             }
         }
         else
             RCast = footposR;
         RCast = Vector3.Lerp(RCast, RCastOld, footsmoothness);
 
-        bool castsuccess = (footLHit || footRhit);
-        bool slidecheck1 = !(slide || crawl) || PlayerInfo.crawling;
-        bool slidecheck2 = slidecheck1 && !stucksliding;
-        PlayerInfo.grounded = (castsuccess && slidecheck2) || PlayerInfo.pelviscollision;
+        bool castsuccess = (thighCastL || thighCastR || shinCastL || shinCastR);
+
+        PlayerInfo.grounded = castsuccess || PlayerInfo.pelviscollision;
 
         if (PlayerInfo.crawling)
             PlayerInfo.footsurface = PlayerInfo.hipspace.up;

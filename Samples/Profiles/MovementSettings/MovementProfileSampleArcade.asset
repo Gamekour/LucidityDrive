@@ -42,15 +42,14 @@ MonoBehaviour:
   hipspacesmoothness: 0.94
   moveburst: 12
   crawlthreshold: 14
-  crawlspeed: 1
+  crawlspeed: 2
   crouchspeed: 3
-  crawlmult: 0.4
+  crawlmult: 0.225
   flightforce: 10
   flightdrag: 0.003
   sprintmult: 4.5
   directionaljumpmult: 5
   jumptilt: 0.4
-  legLengthMult: 1.05
   timescale: 1
   jumpgrav: -7
   fallgrav: -10
