@@ -79,6 +79,7 @@ public class LucidLegs : MonoBehaviour
     private float directionaljumpmult;
     private float jumptilt;
     private float slidepushforce;
+    private float climbtilt;
 
     private float m_timescale;
     private float timescale
@@ -291,10 +292,13 @@ public class LucidLegs : MonoBehaviour
         moveFlat.z = moveVector.y;
 
         float t = PlayerInfo.hipspace.TransformVector(moveFlat).normalized.y;
-        t = Mathf.Clamp01(t);
-        t *= wallruntilt;
-        if (inputJump)
+
+        if (PlayerInfo.climbing)
+            t = climbtilt;
+        else if (inputJump)
             t = jumptilt;
+        else
+            t *= wallruntilt;
 
         Vector3 pushdir = Vector3.Lerp(Vector3.up, PlayerInfo.footsurface, t);
 

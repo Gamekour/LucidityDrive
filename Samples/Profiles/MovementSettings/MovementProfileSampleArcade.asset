@@ -50,6 +50,8 @@ MonoBehaviour:
   sprintmult: 4.5
   directionaljumpmult: 5
   jumptilt: 0.4
+  slidepushforce: 0
+  climbtilt: 0.3
   timescale: 1
   jumpgrav: -7
   fallgrav: -10

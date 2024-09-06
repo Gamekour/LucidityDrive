@@ -3,23 +3,23 @@ using UnityEditor;
 
 public class LayerSetupTool : EditorWindow
 {
-    [MenuItem("Tools/Layer Setup")]
+    [MenuItem("LucidityDrive/Setup Tags and Layers")]
     public static void ShowWindow()
     {
-        GetWindow<LayerSetupTool>("Layer Setup");
+        GetWindow<LayerSetupTool>("Setup Tags and Layers");
     }
 
     void OnGUI()
     {
-        GUILayout.Label("Layer Setup Tool", EditorStyles.boldLabel);
+        GUILayout.Label("Tags and Layers Setup Tool", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Setup Layers"))
+        if (GUILayout.Button("Setup Tags and Layers"))
         {
-            SetupLayers();
+            Setup();
         }
     }
 
-    void SetupLayers()
+    void Setup()
     {
         // Set the name of user layer 3 to "Player"
         SetLayerName(3, "Player");
@@ -30,7 +30,9 @@ public class LayerSetupTool : EditorWindow
         // Set the name of user layer 7 to "FlightZone"
         SetLayerName(7, "FlightZone");
 
-        Debug.Log("Layers have been set up successfully.");
+        AddTag("Grabbable");
+
+        Debug.Log("Tags and Layers have been set up successfully.");
     }
 
     void SetLayerName(int layerNumber, string layerName)
@@ -44,5 +46,17 @@ public class LayerSetupTool : EditorWindow
             layerSP.stringValue = layerName;
             tagManager.ApplyModifiedProperties();
         }
+    }
+
+    void AddTag(string newTag)
+    {
+        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+        SerializedProperty tagsProp = tagManager.FindProperty("tags");
+
+        int index = tagsProp.arraySize;
+        tagsProp.InsertArrayElementAtIndex(index);
+        SerializedProperty sp = tagsProp.GetArrayElementAtIndex(index);
+        sp.stringValue = newTag;
+        tagManager.ApplyModifiedProperties();
     }
 }

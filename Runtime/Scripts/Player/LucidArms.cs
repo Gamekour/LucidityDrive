@@ -96,128 +96,157 @@ public class LucidArms : MonoBehaviour
     {
         if (disabling || leftshoulder == null || rightshoulder == null || !initialized) return;
 
-        if (!grabL)
-            leftanchor.transform.position = PlayerInfo.pelvis.position;
-        if(!grabR)
-            rightanchor.transform.position = PlayerInfo.pelvis.position;
+        GrabLogic(false);
+        GrabLogic(true);
 
+        CalcClimbRelative();
 
+        Vector3 targetposL = PlayerInfo.pelvis.transform.InverseTransformPoint(leftshoulder.position);
+        Vector3 targetposR = PlayerInfo.pelvis.transform.InverseTransformPoint(rightshoulder.position);
+
+        leftanchor.connectedAnchor += (targetposL - leftanchor.connectedAnchor) * shoulderstiffness;
+        rightanchor.connectedAnchor += (targetposR - rightanchor.connectedAnchor) * shoulderstiffness;
+
+        PlayerInfo.grabL = grabL;
+        PlayerInfo.grabR = grabR;
+        PlayerInfo.climbing = grabL || grabR;
+
+        if (PlayerInfo.climbing)
+        {
+            Vector2 inputmove = LucidInputValueShortcuts.movement;
+            Vector3 moveflat = Vector3.zero;
+            moveflat.x = inputmove.x;
+            moveflat.z = inputmove.y;
+            PlayerInfo.mainBody.AddForce(PlayerInfo.pelvis.TransformVector(moveflat) * swingforce);
+        }
+    }
+
+    private void GrabLogic(bool right)
+    {
         bool pulling = LucidInputValueShortcuts.crouch;
+        bool grabToCheck = (right ? grabR : grabL);
+        ConfigurableJoint targetanchor = right ? rightanchor : leftanchor;
 
+        if (!grabToCheck)
+        {
+            targetanchor.transform.position = PlayerInfo.pelvis.position;
+
+            
+
+            bool validgrab = ClimbScan(right);
+
+            Vector3 targetposL = PlayerInfo.pelvis.transform.InverseTransformPoint(leftshoulder.position);
+            Vector3 targetposR = PlayerInfo.pelvis.transform.InverseTransformPoint(rightshoulder.position);
+
+            bool oldgrab = right ? PlayerInfo.validgrabR : PlayerInfo.validgrabL;
+            if (right)
+                PlayerInfo.validgrabR = validgrab;
+            else
+                PlayerInfo.validgrabL = validgrab;
+
+            bool grabwait = (right ? grabwaitR : grabwaitL);
+            if (!oldgrab && validgrab && grabwait)
+            {
+                Grab(right);
+            }
+
+
+
+            Transform shoulder = right ? rightshoulder : leftshoulder;
+
+            bool toofar = false;
+            if (toofar) //ungrab if something pushes you far enough to "lose grip"
+                Ungrab(right);
+        }
+        else
+        {
+            if (right)
+                PlayerInfo.validgrabR = true;
+            else
+                PlayerInfo.validgrabL = true;
+        }
+
+        if (PlayerInfo.climbing)
+            targetanchor.targetPosition = Vector3.up * (pulling && grabToCheck ? 1 : 0) * pullstrength;
+    }
+
+    private bool ClimbScan(bool right)
+    {
+        ConfigurableJoint jointTarget = right ? rightanchor : leftanchor;
         Transform cam = PlayerInfo.head;
         Vector3 campos = cam.position;
         Vector3 camfwd = cam.forward;
         Vector3 camright = cam.right;
-        bool vaulting = grabwaitR ^ grabwaitL;
+        bool vaulting = (grabwaitR ^ grabwaitL) && !(grabL || grabR);
         if (vaulting)
         {
             campos += cam.forward;
             camfwd *= -1;
         }
 
-        bool initialHitL = Physics.SphereCast(campos - (camright * shoulderdist), firstcastwidth, camfwd, out RaycastHit initialHitInfoL, castdist, Shortcuts.geometryMask);
-        initialHitL &= ((initialHitInfoL.normal.y) < runmaxY);
+        Vector3 shoulder = campos + (right ? camright * shoulderdist : -camright * shoulderdist);
 
-        bool initialHitR = Physics.SphereCast(campos + (camright * shoulderdist), firstcastwidth, camfwd, out RaycastHit initialHitInfoR, castdist, Shortcuts.geometryMask);
-        initialHitR &= ((initialHitInfoR.normal.y) < runmaxY);
+        bool initialHit = Physics.SphereCast(shoulder, firstcastwidth, camfwd, out RaycastHit initialHitInfo, castdist, Shortcuts.geometryMask);
+        initialHit &= ((initialHitInfo.normal.y) < runmaxY);
 
-        float hitZL = PlayerInfo.pelvis.InverseTransformPoint(initialHitInfoL.point).z / 2;
-        float hitZR = PlayerInfo.pelvis.InverseTransformPoint(initialHitInfoR.point).z / 2;
+        if (initialHit)
+        {
+            if (initialHitInfo.transform.gameObject.CompareTag("Grabbable"))
+            {
+                jointTarget.transform.position = initialHitInfo.point;
+                Vector3 transformhitinfo = Vector3.ProjectOnPlane(-initialHitInfo.normal, initialHitInfo.normal);
+                jointTarget.transform.rotation = Quaternion.LookRotation(transformhitinfo, initialHitInfo.normal);
 
-        Vector3 projectvectorL = Vector3.up;
-        if (initialHitInfoL.normal.y < -0.05f)
-            projectvectorL = -PlayerInfo.pelvis.forward + Vector3.up;
-        else if (initialHitInfoL.normal.y > 0.05f)
-            projectvectorL = PlayerInfo.pelvis.forward + Vector3.up;
+                if (right)
+                    currenttargetR = initialHitInfo.transform;
+                else
+                    currenttargetL = initialHitInfo.transform;
 
-        Vector3 projectvectorR = Vector3.up;
-        if (initialHitInfoR.normal.y < -0.05f)
-            projectvectorR = -PlayerInfo.pelvis.forward + Vector3.up;
-        else if (initialHitInfoR.normal.y > 0.05f)
-            projectvectorR = PlayerInfo.pelvis.forward + Vector3.up;
+                return true;
+            }
+        }
 
-        Vector3 hitvectorL = Vector3.ProjectOnPlane(projectvectorL, initialHitInfoL.normal).normalized;
-        if (Mathf.Abs(initialHitInfoL.normal.y) < 0.01f)
-            hitvectorL = Vector3.up;
-        Vector3 hitvectorR = Vector3.ProjectOnPlane(projectvectorR, initialHitInfoR.normal).normalized;
-        if (Mathf.Abs(initialHitInfoR.normal.y) < 0.01f)
-            hitvectorR = Vector3.up;
 
-        float angleL = Vector3.Angle(-cam.forward, hitvectorL);
-        float angleR = Vector3.Angle(-cam.forward, hitvectorR);
+        Vector3 projectvector = Vector3.up;
+        if (initialHitInfo.normal.y < -0.05f)
+            projectvector = -PlayerInfo.pelvis.forward + Vector3.up;
+        else if (initialHitInfo.normal.y > 0.05f)
+            projectvector = PlayerInfo.pelvis.forward + Vector3.up;
 
-        float distL = Vector3.Distance(cam.position + cam.right * -shoulderdist, initialHitInfoL.point);
-        float distR = Vector3.Distance(cam.position + cam.right * shoulderdist, initialHitInfoR.point);
+        Vector3 hitvector = Vector3.ProjectOnPlane(projectvector, initialHitInfo.normal).normalized;
+        if (Mathf.Abs(initialHitInfo.normal.y) < 0.01f)
+            hitvector = Vector3.up;
 
+        float angle = Vector3.Angle(-cam.forward, hitvector);
+        float dist = Vector3.Distance(shoulder, initialHitInfo.point);
 
         //i know this trig stuff looks scary but that's just how it knows where to look when you're dealing with a sloped wall
-        float LsinC = (distL * Mathf.Sin(Mathf.Deg2Rad * angleL)) / castdist;
-        float RsinC = (distR * Mathf.Sin(Mathf.Deg2Rad * angleR)) / castdist;
+        float sinC = (dist * Mathf.Sin(Mathf.Deg2Rad * angle)) / castdist;
+        float A = 180 - (Mathf.Asin(sinC) + angle);
+        float newmaxheight = (Mathf.Sin(Mathf.Deg2Rad * A) * castdist) / Mathf.Sin(Mathf.Deg2Rad * angle);
 
-        float LA = 180 - (Mathf.Asin(LsinC) + angleL);
-        float RA = 180 - (Mathf.Asin(RsinC) + angleR);
+        Vector3 startpoint = initialHitInfo.point + (hitvector.normalized * newmaxheight);
 
-        float newmaxheightL = (Mathf.Sin(Mathf.Deg2Rad * LA) * castdist) / Mathf.Sin(Mathf.Deg2Rad * angleL);
-        float newmaxheightR = (Mathf.Sin(Mathf.Deg2Rad * RA) * castdist) / Mathf.Sin(Mathf.Deg2Rad * angleR);
+        bool surfaceCastHit = Physics.SphereCast(startpoint - initialHitInfo.normal * secondcastwidth, secondcastwidth, -hitvector, out RaycastHit downcastHitInfo, newmaxheight, Shortcuts.geometryMask);
+        bool validgrab = initialHit && surfaceCastHit && downcastHitInfo.normal.y > minflatgrab;
 
-        bool upCastHitL = Physics.Raycast(initialHitInfoL.point, hitvectorL, out RaycastHit upCastHitInfoL, newmaxheightL, Shortcuts.geometryMask);
-        bool upCastHitR = Physics.Raycast(initialHitInfoR.point, hitvectorR, out RaycastHit upCastHitInfoR, newmaxheightR, Shortcuts.geometryMask);
-
-        Vector3 startpointL = initialHitInfoL.point + hitvectorL * newmaxheightL;
-        if (upCastHitL)
-            startpointL = upCastHitInfoL.point;
-        Vector3 startpointR = initialHitInfoR.point + hitvectorR * newmaxheightR;
-        if (upCastHitR)
-            startpointR = upCastHitInfoR.point;
-
-        bool surfaceCastHitL = Physics.SphereCast(startpointL - initialHitInfoL.normal * secondcastwidth, secondcastwidth, -hitvectorL, out RaycastHit downcastHitInfoL, newmaxheightL, Shortcuts.geometryMask);
-        bool surfaceCastHitR = Physics.SphereCast(startpointR - initialHitInfoR.normal * secondcastwidth, secondcastwidth, -hitvectorR, out RaycastHit downcastHitInfoR, newmaxheightR, Shortcuts.geometryMask);
-
-        bool validgrabL = initialHitL && surfaceCastHitL && downcastHitInfoL.normal.y > minflatgrab;
-        bool validgrabR = initialHitR && surfaceCastHitR && downcastHitInfoR.normal.y > minflatgrab;
-
-        if (!grabL)
+        if (validgrab)
         {
-            if (validgrabL)
-            {
-                leftanchor.transform.position = downcastHitInfoL.point;
-                Vector3 transformhitinfo = Vector3.ProjectOnPlane(-initialHitInfoL.normal, downcastHitInfoL.normal);
-                leftanchor.transform.rotation = Quaternion.LookRotation(transformhitinfo, downcastHitInfoL.normal);
-            }
-            leftanchor.targetPosition = Vector3.zero;
-
-            bool toofarL = Vector3.Distance(leftanchor.transform.position, leftshoulder.position) > limitdist + tolerance;
-
-            if (toofarL) //ungrab if something pushes you far enough to "lose grip"
-                Ungrab(false);
-
-            currenttargetL = downcastHitInfoL.transform;
+            jointTarget.transform.position = downcastHitInfo.point;
+            Vector3 transformhitinfo = Vector3.ProjectOnPlane(-initialHitInfo.normal, downcastHitInfo.normal);
+            jointTarget.transform.rotation = Quaternion.LookRotation(transformhitinfo, downcastHitInfo.normal);
         }
+
+        if (right)
+            currenttargetR = downcastHitInfo.transform;
         else
-            leftanchor.targetPosition = Vector3.up * (pulling ? 1 : 0) * pullstrength;
+            currenttargetL = downcastHitInfo.transform;
 
-        if (!grabR)
-        {
-            if (validgrabR)
-            {
-                rightanchor.transform.position = downcastHitInfoR.point;
-                Vector3 transformhitinfo = Vector3.ProjectOnPlane(-initialHitInfoR.normal, downcastHitInfoR.normal);
-                rightanchor.transform.rotation = Quaternion.LookRotation(transformhitinfo, downcastHitInfoR.normal);
-            }
-            rightanchor.targetPosition = Vector3.zero;
+        return validgrab;
+    }
 
-            bool toofarR = Vector3.Distance(rightanchor.transform.position, rightshoulder.position) > limitdist + tolerance;
-
-            if (toofarR) //ungrab if something pushes you far enough to "lose grip"
-                Ungrab(true);
-
-            currenttargetR = downcastHitInfoR.transform;
-        }
-        else
-        {
-            rightanchor.targetPosition = Vector3.up * (pulling ? 1 : 0) * pullstrength;
-        }
-
+    private void CalcClimbRelative()
+    {
         Vector3 center = Vector3.zero;
         if (grabR)
         {
@@ -236,41 +265,6 @@ public class LucidArms : MonoBehaviour
         climbrelative.z *= 4;
         climbrelative.y *= 4;
         PlayerInfo.climbrelative = climbrelative;
-
-        Vector3 targetposL = PlayerInfo.pelvis.transform.InverseTransformPoint(leftshoulder.position);
-        Vector3 targetposR = PlayerInfo.pelvis.transform.InverseTransformPoint(rightshoulder.position);
-
-        leftanchor.connectedAnchor += (targetposL - leftanchor.connectedAnchor) * shoulderstiffness;
-        rightanchor.connectedAnchor += (targetposR - rightanchor.connectedAnchor) * shoulderstiffness;
-
-        bool oldgrabL = PlayerInfo.validgrabL;
-        PlayerInfo.validgrabL = validgrabL;
-
-        if (!oldgrabL && validgrabL && grabwaitL)
-        {
-            Grab(false);
-        }
-
-        bool oldgrabR = PlayerInfo.validgrabR;
-        PlayerInfo.validgrabR = validgrabR;
-
-        if (!oldgrabR && validgrabR && grabwaitR)
-        {
-            Grab(true);
-        }
-
-        PlayerInfo.grabL = grabL;
-        PlayerInfo.grabR = grabR;
-        PlayerInfo.climbing = grabL || grabR;
-
-        if (PlayerInfo.climbing)
-        {
-            Vector2 inputmove = LucidInputValueShortcuts.movement;
-            Vector3 moveflat = Vector3.zero;
-            moveflat.x = inputmove.x;
-            moveflat.z = inputmove.y;
-            PlayerInfo.mainBody.AddForce(PlayerInfo.pelvis.TransformVector(moveflat) * swingforce);
-        }
     }
 
     private void GrabButtonLeft(InputAction.CallbackContext obj)
