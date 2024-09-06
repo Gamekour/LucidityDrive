@@ -369,7 +369,7 @@ public class LucidLegs : MonoBehaviour
             moveadjust = crawlspeed;
         else if (inputCrouch)
             moveadjust = crouchspeed;
-        if (inputSprint)
+        if (!inputSprint)
             moveadjust *= sprintmult;
 
         float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
