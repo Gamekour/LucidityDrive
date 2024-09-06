@@ -78,6 +78,7 @@ public class LucidLegs : MonoBehaviour
     private float sprintmult;
     private float directionaljumpmult;
     private float jumptilt;
+    private float slidepushforce;
 
     private float m_timescale;
     private float timescale
@@ -127,7 +128,7 @@ public class LucidLegs : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (PlayerInfo.mainBody.isKinematic) return; //this could technically be optimized by delegating it to a bool that only updates when isKinematic is updated, but that's too much work and i don't think this is much of a perf hit
+        if (PlayerInfo.mainBody.isKinematic || PlayerInfo.vismodelRef == null) return; //this could technically be optimized by delegating it to a bool that only updates when isKinematic is updated, but that's too much work and i don't think this is much of a perf hit
 
         PseudoWalk();
         RotationLogic();
@@ -144,7 +145,7 @@ public class LucidLegs : MonoBehaviour
         bool crawling = inputBellyslide && velflathip.magnitude < crawlthreshold && inputCrouch;
         inputBellyslide &= !crawling;
         inputBackslide &= !crawling;
-        bool doGroundLogic = PlayerInfo.grounded && PlayerInfo.footsurface.y >= -0.001f && !inputBellyslide && !inputBackslide; //when sliding, different logic will be used to push legs (not yet implemented)
+        bool doGroundLogic = PlayerInfo.grounded && PlayerInfo.footsurface.y >= -0.001f;
         
         PlayerInfo.crawling = crawling;
 
@@ -156,8 +157,13 @@ public class LucidLegs : MonoBehaviour
 
             AirCalc();
         }
-        else if (!PlayerInfo.flying && doGroundLogic) 
-            LegPush(inputCrouch, inputJump, inputSprint);
+        else if (!PlayerInfo.flying && doGroundLogic)
+        {
+            if (inputBellyslide || inputBackslide)
+                SlidePush();
+            else
+                LegPush(inputCrouch, inputJump, inputSprint);
+        } 
 
         if (PlayerInfo.flying)
             FlightCalc();
@@ -383,7 +389,6 @@ public class LucidLegs : MonoBehaviour
         rb.AddForce(slidecalc + pushcalc, ForceMode.Force);
         PlayerInfo.currentslide = slidecalc;
         PlayerInfo.currentpush = pushcalc;
-
     }
 
     private Transform animModelFootSelection()
@@ -412,6 +417,17 @@ public class LucidLegs : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         PlayerInfo.pelviscollision = false;
+    }
+
+    private void SlidePush()
+    {
+        Vector3 diffL = legspaceL.position - PlayerInfo.footTargetL;
+        Vector3 diffR = legspaceR.position - PlayerInfo.footTargetR;
+        Vector3 avg = (diffL + diffR) / 2;
+        float strength = 1 - Mathf.Clamp01(avg.magnitude / legLength);
+        avg = avg.normalized * strength;
+
+        rb.AddForce(avg * slidepushforce, ForceMode.Acceleration);
     }
 
     //quickly splits a vector into its movement along and against the surface of footspace

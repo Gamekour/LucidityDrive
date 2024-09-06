@@ -45,6 +45,7 @@ public class MovementSettings : ScriptableObject
     public float sprintmult;
     public float directionaljumpmult;
     public float jumptilt;
+    public float slidepushforce;
     [Header("Special")]
     public float timescale;
     public float jumpgrav;
