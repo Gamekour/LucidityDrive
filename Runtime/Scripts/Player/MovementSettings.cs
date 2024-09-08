@@ -23,6 +23,7 @@ public class MovementSettings : ScriptableObject
     public float flightforce;
     public float flightdrag;
     public float timescale;
+    public float walkthreshold;
 
     [Header("Casting")]
     public float legWidth;

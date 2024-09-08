@@ -185,8 +185,8 @@ public class LucidAnimationModel : MonoBehaviour
         RaycastHit LHitInfoShin = new RaycastHit();
         RaycastHit RHitInfoShin = new RaycastHit();
 
-        bool thighCastL = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, kneeposL - PlayerInfo.legspaceL.position, out LHitInfoThigh, Vector3.Distance(footposL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
-        bool thighCastR = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, kneeposR - PlayerInfo.legspaceR.position, out RHitInfoThigh, Vector3.Distance(footposR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
+        bool thighCastL = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, kneeposL - PlayerInfo.legspaceL.position, out LHitInfoThigh, Vector3.Distance(footposL, PlayerInfo.legspaceL.position), Shortcuts.geometryMask);
+        bool thighCastR = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, kneeposR - PlayerInfo.legspaceR.position, out RHitInfoThigh, Vector3.Distance(footposR, PlayerInfo.legspaceR.position), Shortcuts.geometryMask);
         bool shinCastL = Physics.SphereCast(kneeposL, castthickness, footposL - PlayerInfo.legspaceL.position, out LHitInfoShin, Vector3.Distance(footposL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
         bool shinCastR = Physics.SphereCast(kneeposR, castthickness, footposR - PlayerInfo.legspaceR.position, out RHitInfoShin, Vector3.Distance(footposR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
         Vector3 LCastOld = LCast;

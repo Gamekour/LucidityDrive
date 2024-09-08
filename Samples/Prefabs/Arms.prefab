@@ -50,10 +50,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftanchor: {fileID: 275216622011826784}
   rightanchor: {fileID: 6697483173375196878}
-  physHipsRef: {fileID: 0}
-  physHeadRef: {fileID: 0}
   shoulderdist: 0.2
-  castdist: 0.5
+  castdist: 0.46
   limitdist: 0.45
   shoulderstiffness: 0.1
   pullstrength: 469
@@ -63,6 +61,7 @@ MonoBehaviour:
   minflatgrab: 0.8
   tolerance: 0.15
   swingforce: 256
+  ungrabBoost: 1
   leftunrotate: {fileID: 7546065390351026017}
   rightunrotate: {fileID: 9019065817558444350}
 --- !u!1 &5193957100170728927

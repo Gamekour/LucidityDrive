@@ -315,6 +315,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 44037071342416141, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1904975163097124427, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: m_SlerpDrive.positionDamper
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2635777386139525533, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -368,7 +378,7 @@ PrefabInstance:
     - target: {fileID: 2963859774491212165, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3252273764742618479, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
@@ -390,10 +400,21 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 0.015287878
       objectReference: {fileID: 0}
+    - target: {fileID: 3986225098609885375, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -7597560444520419082, guid: 39ad9b011414f074bbdee98964d08b91,
+        type: 3}
     - target: {fileID: 4095379362296046315, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Name
       value: camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307564219296961133, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 4314459254256399924, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
@@ -415,11 +436,6 @@ PrefabInstance:
       propertyPath: cameratarget
       value: 
       objectReference: {fileID: 421612705}
-    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: groundedforgiveness
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8114009135476236412, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Avatar

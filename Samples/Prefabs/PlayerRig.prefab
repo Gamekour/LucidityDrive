@@ -858,7 +858,7 @@ ConfigurableJoint:
   m_SlerpDrive:
     serializedVersion: 4
     positionSpring: 40000
-    positionDamper: 4000
+    positionDamper: 5
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_ProjectionMode: 0
@@ -2766,8 +2766,8 @@ ConfigurableJoint:
     useAcceleration: 0
   m_SlerpDrive:
     serializedVersion: 4
-    positionSpring: 15000
-    positionDamper: 4000
+    positionSpring: 60000
+    positionDamper: 1
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_ProjectionMode: 0
@@ -3074,10 +3074,9 @@ MonoBehaviour:
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
   headroot: {fileID: 2840716185538071160}
-  headsmooth: 0.3
-  headsmoothZ: 0.12
-  rawblend: 0.75
-  transitionsmooth: 0.5
+  headsmooth: 1
+  headsmoothZ: 1
+  rawblend: 0.5
   layermaskNormal:
     serializedVersion: 2
     m_Bits: 31

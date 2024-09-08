@@ -80,6 +80,7 @@ public class LucidLegs : MonoBehaviour
     private float jumptilt;
     private float slidepushforce;
     private float climbtilt;
+    private float walkthreshold;
 
     private float m_timescale;
     private float timescale
@@ -370,7 +371,7 @@ public class LucidLegs : MonoBehaviour
             moveadjust = crawlspeed;
         else if (inputCrouch)
             moveadjust = crouchspeed;
-        if (!inputSprint)
+        if (!inputSprint && Mathf.Abs(moveFlat.x) < walkthreshold)
             moveadjust *= sprintmult;
 
         float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);

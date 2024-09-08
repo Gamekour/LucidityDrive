@@ -12,48 +12,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
   m_Name: MovementProfileSampleArcade
   m_EditorClassIdentifier: 
-  legWidth: 0.09
-  legWidthMult: 0.5
-  ratiomult: 8
-  ratiofreezethreshold: 0.3
-  hipRotationSpeed: 2000
-  down: 1.75
-  maxforcemult: 5.4
-  forcesmoothness: 20
-  maxProbeOffset: 2
-  maxlegmult: 1.03
-  crouchmult: 0.5
-  jumpmult: 32
-  jumpforcemult: 1.1
-  probemult: 1
   movespeed: 6
-  friction: 0.5
-  slidemult: 14
-  wallruntilt: 0.1
-  airdownmult: 1
-  moveflatprobemult: 1.5
-  probeXminimumOffset: 0.1
-  probeZminimumOffset: 0.1
-  hipspaceMaxRot: -0.9
-  airtimemult: 2
-  moveupmult: 1
-  movedownmult: 0.5
-  movedownclamp: 0.6
-  hipspacesmoothness: 0.94
-  moveburst: 12
-  crawlthreshold: 14
+  sprintmult: 4.5
   crawlspeed: 2
   crouchspeed: 3
-  crawlmult: 0.225
-  flightforce: 10
-  flightdrag: 0.003
-  sprintmult: 4.5
-  directionaljumpmult: 5
-  jumptilt: 0.4
+  moveburst: 12
+  slidemult: 14
   slidepushforce: 0
-  climbtilt: 0.3
-  timescale: 1
+  jumpforcemult: 1.1
   jumpgrav: -7
   fallgrav: -10
   airmove: 2
   airdrag: 0.99925
+  flightforce: 10
+  flightdrag: 0.003
+  timescale: 1
+  walkthreshold: 2
+  legWidth: 0.09
+  legWidthMult: 0.5
+  down: 1.75
+  probemult: 1
+  moveflatprobemult: 1.5
+  maxProbeOffset: 2
+  probeXminimumOffset: 0.1
+  probeZminimumOffset: 0.1
+  ratiomult: 8
+  ratiofreezethreshold: 0.3
+  airtimemult: 2
+  friction: 0.5
+  maxforcemult: 5.4
+  hipRotationSpeed: 2000
+  hipspacesmoothness: 0.94
+  hipspaceMaxRot: -0.9
+  forcesmoothness: 20
+  maxlegmult: 1.03
+  crouchmult: 0.5
+  jumpmult: 32
+  airdownmult: 1
+  moveupmult: 1
+  movedownmult: 0.5
+  movedownclamp: 0.6
+  crawlthreshold: 14
+  crawlmult: 0.225
+  directionaljumpmult: 5
+  wallruntilt: 0.1
+  jumptilt: 0.4
+  climbtilt: 0.3
