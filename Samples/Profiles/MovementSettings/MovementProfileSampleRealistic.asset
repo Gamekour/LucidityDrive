@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 3
   sprintmult: 2.5
+  crawlspeed: 1.5
+  crouchspeed: 2
   moveburst: 1.3
   slidemult: 14
   slidepushforce: 10
@@ -22,6 +24,8 @@ MonoBehaviour:
   fallgrav: -9.81
   airmove: 0
   airdrag: 1
+  flightforce: 10
+  flightdrag: 0.003
   timescale: 1
   legWidth: 0.09
   legWidthMult: 0.5
@@ -34,25 +38,21 @@ MonoBehaviour:
   ratiomult: 8
   ratiofreezethreshold: 0.3
   airtimemult: 2
-  friction: 0.5
+  friction: 0.425
   maxforcemult: 5.4
   hipRotationSpeed: 2000
   hipspacesmoothness: 0.94
   hipspaceMaxRot: -0.9
   forcesmoothness: 20
-  maxlegmult: 1.03
+  maxlegmult: 1
   crouchmult: 0.5
-  jumpmult: 16
+  jumpmult: 8
   airdownmult: 1
   moveupmult: 1
   movedownmult: 0.25
   movedownclamp: 1
   crawlthreshold: 14
-  crawlspeed: 1.5
-  crouchspeed: 2
   crawlmult: 0.225
-  flightforce: 10
-  flightdrag: 0.003
   directionaljumpmult: 3.5
   wallruntilt: 0.1
   jumptilt: 0.2
