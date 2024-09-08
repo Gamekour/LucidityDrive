@@ -115,6 +115,7 @@ public class LucidLegs : MonoBehaviour
     {
         movementSettings = defaultMovementSettings;
         legLength = transform.position.y - transform.root.position.y; //automatically determine leg length based on height from root - will eventually be replaced by a better avatar-specific system
+        legLength *= maxlegmult;
         animModelHips = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips);
         animModelLFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.LeftFoot);
         animModelRFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.RightFoot);
