@@ -96,6 +96,7 @@ public static class PlayerInfo
     public static float alignment = 0;
     public static bool grounded = false;
     public static bool pelviscollision = false;
+    public static bool physCollision = false;
     public static bool crawling = false;
     public static bool flying = false;
     public static bool grabL = false;

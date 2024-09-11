@@ -103,7 +103,6 @@ public class LucidLegs : MonoBehaviour
     private float legLength;
     private float animPhase = 0;
     private float currentratio = 1;
-    private bool headcolliding = false;
 
     private void Awake()
     {
@@ -336,7 +335,7 @@ public class LucidLegs : MonoBehaviour
             legadjust *= 1 + movedownamount + moveupamount;
         }
 
-        if(headcolliding)
+        if(PlayerInfo.physCollision)
             legadjust = Mathf.Clamp(legadjust, 0, legclamp);
 
         float relativeheight = hipspace.position.y - PlayerInfo.footspace.position.y;
@@ -405,14 +404,14 @@ public class LucidLegs : MonoBehaviour
             return animModelLFoot;
     }
 
-    public void OnHeadCollisionStay(Collision c)
+    public void OnPhysCollisionStay(Collision c)
     {
-        headcolliding = true;
+        PlayerInfo.physCollision = true;
     }
 
-    public void OnHeadCollisionExit(Collision c)
+    public void OnPhysCollisionExit(Collision c)
     {
-        headcolliding = false;
+        PlayerInfo.physCollision = false;
     }
 
     private void OnCollisionStay(Collision collision)

@@ -13,6 +13,7 @@ public class LucidVismodel : MonoBehaviour
     [Header("Options")]
     [SerializeField] bool autoinit = true;
     [SerializeField] float grabspeed = 1;
+    [SerializeField] float collisionTransitionSpeed = 1;
 
     [Header("References")]
     [SerializeField] Transform playerMeshParent;
@@ -21,6 +22,7 @@ public class LucidVismodel : MonoBehaviour
     private Dictionary<string, Quaternion> localBoneRots;
     private float grabweightL = 0;
     private float grabweightR = 0;
+    private float t = 0;
     private bool initialized = false;
 
     private void OnEnable()
@@ -49,8 +51,22 @@ public class LucidVismodel : MonoBehaviour
     {
         Vector3 offset = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips).position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
         transform.position += offset;
-        anim.SetBoneLocalRotation(HumanBodyBones.Hips, PlayerInfo.physHips.transform.rotation);
-        anim.SetBoneLocalRotation(HumanBodyBones.Head, PlayerInfo.physHead.transform.rotation);
+        Quaternion qPhysHips = PlayerInfo.physHips.transform.rotation;
+        Quaternion qPhysHead = PlayerInfo.physHead.transform.rotation;
+        Quaternion qAnimHips = PlayerInfo.playermodelAnim.bodyRotation;
+        Quaternion qAnimHead = PlayerInfo.head.rotation;
+
+
+        if (PlayerInfo.physCollision)
+        {
+            t = Mathf.Clamp01(t + (Time.deltaTime * collisionTransitionSpeed));
+        }
+        else
+            t = Mathf.Clamp01(t + (Time.deltaTime * collisionTransitionSpeed));
+
+        anim.SetBoneLocalRotation(HumanBodyBones.Hips, Quaternion.Lerp(qAnimHips, qPhysHips, t));
+        anim.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Lerp(qAnimHead, qPhysHead, t));
+
         foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
         {
             string hbstring = Enum.GetName(typeof(HumanBodyBones), hb2);

@@ -9,11 +9,13 @@ public class CameraManager : MonoBehaviour
     [SerializeField] float headsmooth;
     [SerializeField] float headsmoothZ;
     [SerializeField] float rawblend = 0.5f;
+    [SerializeField] float rawblendTransitionSpeed = 1;
     [SerializeField] LayerMask layermaskNormal;
     [SerializeField] LayerMask layermaskFP;
     private int cameraPointIndex = 0;
     private Transform headrootTarget;
     private bool forceRaw = false;
+    private float currentrawblend = 0;
 
     private void Start()
     {
@@ -87,11 +89,15 @@ public class CameraManager : MonoBehaviour
             else
                 neweulers.z = headrootTarget.eulerAngles.z;
 
-            float blendadjust = rawblend;
             if (forceRaw)
-                blendadjust = 1;
+                currentrawblend = 0;
+            else
+            {
+                if (currentrawblend < rawblend)
+                    currentrawblend = Mathf.Clamp(currentrawblend + (Time.deltaTime * rawblendTransitionSpeed), 0, rawblend);
+            }
             Quaternion raw = PlayerInfo.head.transform.rotation;
-            Quaternion finalrot = Quaternion.Slerp(Quaternion.Euler(neweulers), raw, blendadjust);
+            Quaternion finalrot = Quaternion.Slerp(Quaternion.Euler(neweulers), raw, currentrawblend);
             headroot.rotation = finalrot;
         }
 
