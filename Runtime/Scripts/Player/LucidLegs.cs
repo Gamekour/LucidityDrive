@@ -223,6 +223,7 @@ public class LucidLegs : MonoBehaviour
                 destField.SetValue(this, value);
             }
         }
+        PlayerInfo.movespeed = movespeed;
     }
 
     //calculates rotation forces necessary for aligning hips with head at an appropriate speed
@@ -543,7 +544,7 @@ public class LucidLegs : MonoBehaviour
                 Vector3 pos2 = (a + b + results[3].point) / 3;
                 Vector3 pos3 = PlayerInfo.pelvis.position;
 
-                if (Vector3.Distance(pos3, pos2) <= Vector3.Distance(pos3, pos1))
+                if (Vector3.Distance(pos3, pos2) >= Vector3.Distance(pos3, pos1))
                     c = results[2].point;
                 else
                     c = results[3].point;

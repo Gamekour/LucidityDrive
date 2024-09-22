@@ -55,6 +55,6 @@ MonoBehaviour:
   crawlthreshold: 14
   crawlmult: 0.225
   directionaljumpmult: 5
-  wallruntilt: 0.1
+  wallruntilt: 0.05
   jumptilt: 0.4
   climbtilt: 0.3

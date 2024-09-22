@@ -1475,7 +1475,7 @@ MonoBehaviour:
   fpcam: {fileID: 5496875962166913160}
   velsmoothness: 0.97
   velscale: 1.5
-  nrmsmoothness: 0.96
+  nrmsmoothness: 0.05
   footsmoothness: 0.05
   willsmoothness: 0.95
   alignmentsmoothness: 0.99
@@ -1489,6 +1489,9 @@ MonoBehaviour:
   swaymult: 1
   swayspeed: 1
   landspeed: 0.025
+  footslidethreshold: 0.5
+  footslidevelthreshold: 3
+  leansmoothness: 0.025
   LCast: {x: 4.319404, y: -2.3021216, z: 43.07542}
   RCast: {x: 4.230167, y: -2.3021216, z: 43.240364}
   hiprot: {x: 0, y: 0, z: 0, w: 1}
@@ -3077,6 +3080,7 @@ MonoBehaviour:
   headsmooth: 0.75
   headsmoothZ: 0.75
   rawblend: 0.85
+  rawblendTransitionSpeed: 1
   layermaskNormal:
     serializedVersion: 2
     m_Bits: 31

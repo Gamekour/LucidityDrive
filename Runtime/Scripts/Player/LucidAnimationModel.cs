@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.XR;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Animator))]
 public class LucidAnimationModel : MonoBehaviour
@@ -24,6 +25,9 @@ public class LucidAnimationModel : MonoBehaviour
     [SerializeField] float swaymult;
     [SerializeField] float swayspeed;
     [SerializeField] float landspeed = 0.5f;
+    [SerializeField] float footslidethreshold = 3f;
+    [SerializeField] float footslidevelthreshold = 3f;
+    [SerializeField] float leansmoothness = 0.5f;
     [HideInInspector]
     public Dictionary<string, Quaternion> boneRots = new Dictionary<string, Quaternion>();
     [HideInInspector]
@@ -120,7 +124,7 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 currentnrmlocal = new Vector3(anim.GetFloat("nrmX"), anim.GetFloat("nrmY"), anim.GetFloat("nrmZ"));
         localNrm = Vector3.Lerp(localNrm, currentnrmlocal, nrmsmoothness);
         Vector3 currentWill = new Vector3(anim.GetFloat("willX"), 0, anim.GetFloat("willZ"));
-        Vector3 willFlat = Vector3.Lerp(moveFlat, currentWill, willsmoothness);
+        Vector3 willFlat = Vector3.Lerp(currentWill, moveFlat, willsmoothness);
         float lastalignment = anim.GetFloat("alignment");
         lastalignment = Mathf.Lerp(PlayerInfo.alignment, lastalignment, alignmentsmoothness);
 
@@ -131,6 +135,18 @@ public class LucidAnimationModel : MonoBehaviour
             flightfloat = 1;
         if (slide || crawl)
             stucksliding = true;
+
+        bool footslide = (lastalignment > footslidethreshold && localVel.magnitude > footslidevelthreshold);
+
+        Vector2 lean;
+        Vector2 oldlean = Vector2.zero;
+        oldlean.x = anim.GetFloat("leanX");
+        oldlean.y = anim.GetFloat("leanZ");
+        lean = LeanCalc(moveFlat, localVel * 0.25f, localNrm);
+        Vector2 lerplean = Vector2.zero;
+        lerplean = Vector2.Lerp(oldlean, lean, leansmoothness);
+        anim.SetFloat("leanX", lerplean.x);
+        anim.SetFloat("leanZ", lerplean.y);
 
         anim.SetFloat("velX", localVel.x);
         anim.SetFloat("velY", localVel.y);
@@ -154,11 +170,13 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBool("grabL", PlayerInfo.grabL);
         anim.SetBool("grabR", PlayerInfo.grabR);
         anim.SetBool("climbing", PlayerInfo.climbing);
+        anim.SetBool("footslide", footslide);
         if (PlayerInfo.airtime > airtimesmooth)
             airtimesmooth = PlayerInfo.airtime;
         else
             airtimesmooth = Mathf.Lerp(airtimesmooth, PlayerInfo.airtime, landspeed);
         anim.SetLayerWeight(1, Mathf.Clamp01(airtimesmooth / airtimemax) * (1 - (slide ? 1 : 0)) * (1 - (crawl ? 1 : 0)) * (1 - flightfloat));
+        anim.SetLayerWeight(2, Mathf.Clamp01(1 - ((slide ? 1 : 0) + (crawl ? 1 : 0))));
 
         Transform tSpine = anim.GetBoneTransform(HumanBodyBones.Spine);
         tSpine.Rotate(Vector3.forward, currentsway, Space.Self);
@@ -264,6 +282,31 @@ public class LucidAnimationModel : MonoBehaviour
             PlayerInfo.handTargetR = armHitInfoR.point;
         else
             PlayerInfo.handTargetR = Vector3.zero;
+    }
+
+    private Vector2 LeanCalc(Vector3 localwill, Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
+    {
+        Vector2 accel = Vector2.zero;
+        accel.x = localvel.x;
+        accel.y = localvel.z;
+        Vector2 slope = Vector2.zero;
+        slope.x = SlopeLeanCalc(localnrm.x);
+        slope.y = SlopeLeanCalc(localnrm.z);
+        Vector2 lean = Vector2.zero;
+        lean.x = (accel.x * k1) + (slope.x * k2);
+        lean.y = (accel.y * k1) + (slope.y * k2);
+
+        if (PlayerInfo.alignment > 0.5f && PlayerInfo.movespeed > footslidethreshold && PlayerInfo.grounded)
+            lean = -lean;
+
+        return lean;
+    }
+
+    public float SlopeLeanCalc(float slope)
+    {
+        if (Mathf.Abs(slope) < 0.75f) return -1.333f * slope;
+        else
+            return slope;
     }
 
     public void OnReachedGroundedState()

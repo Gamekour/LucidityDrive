@@ -94,6 +94,7 @@ public static class PlayerInfo
     public static float traction = 1;
     public static float airtime = 0;
     public static float alignment = 0;
+    public static float movespeed = 0;
     public static bool grounded = false;
     public static bool pelviscollision = false;
     public static bool physCollision = false;
