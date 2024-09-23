@@ -1475,7 +1475,7 @@ MonoBehaviour:
   fpcam: {fileID: 5496875962166913160}
   velsmoothness: 0.97
   velscale: 1.5
-  nrmsmoothness: 0.05
+  nrmsmoothness: 0.95
   footsmoothness: 0.05
   willsmoothness: 0.95
   alignmentsmoothness: 0.99

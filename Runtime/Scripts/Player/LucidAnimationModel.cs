@@ -124,7 +124,7 @@ public class LucidAnimationModel : MonoBehaviour
         localVel = Vector3.Lerp(localVel, currentvellocal, velsmoothness);
         Vector3 localNrm = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.hipspace.up);
         Vector3 currentnrmlocal = new Vector3(anim.GetFloat("nrmX"), anim.GetFloat("nrmY"), anim.GetFloat("nrmZ"));
-        localNrm = Vector3.Lerp(localNrm, currentnrmlocal, nrmsmoothness);
+        localNrm = Vector3.Lerp(currentnrmlocal, localNrm,1 - nrmsmoothness);
         Vector3 currentWill = new Vector3(anim.GetFloat("willX"), 0, anim.GetFloat("willZ"));
         Vector3 willFlat = Vector3.Lerp(currentWill, moveFlat, willsmoothness);
         float lastalignment = anim.GetFloat("alignment");
@@ -132,9 +132,6 @@ public class LucidAnimationModel : MonoBehaviour
 
         bool crawl = LucidInputValueShortcuts.crawl;
         bool slide = LucidInputValueShortcuts.slide;
-        float flightfloat = 0;
-        if (PlayerInfo.flying)
-            flightfloat = 1;
         if (slide || crawl)
             stucksliding = true;
 
@@ -177,7 +174,14 @@ public class LucidAnimationModel : MonoBehaviour
             airtimesmooth = PlayerInfo.airtime;
         else
             airtimesmooth = Mathf.Lerp(airtimesmooth, PlayerInfo.airtime, landspeed);
-        anim.SetLayerWeight(1, Mathf.Clamp01(airtimesmooth / airtimemax) * (1 - (slide ? 1 : 0)) * (1 - (crawl ? 1 : 0)) * (1 - flightfloat));
+
+        float legweight = Mathf.Clamp01(airtimesmooth / airtimemax);
+        legweight = Mathf.Clamp01(legweight + (1 - localNrm.y));
+        legweight *= (1 - (slide ? 1 : 0));
+        legweight *= (1 - (crawl ? 1 : 0));
+        legweight *= (1 - (PlayerInfo.flying ? 1 : 0));
+
+        anim.SetLayerWeight(1, legweight);
         anim.SetLayerWeight(2, Mathf.Clamp01(1 - ((slide ? 1 : 0) + (crawl ? 1 : 0))) * Mathf.Clamp01(velflat.magnitude));
         anim.SetLayerWeight(3, Mathf.Clamp01(velflat.magnitude + (PlayerInfo.grounded ? 0 : 1)));
 

@@ -29,8 +29,10 @@ public class MovementSettings : ScriptableObject
     public float legWidth;
     public float legWidthMult;
     public float down;
+    public float airdownmult;
     public float probemult;
     public float moveflatprobemult;
+    public float probeCutoffHeight;
     public float maxProbeOffset;
     public float probeXminimumOffset;
     public float probeZminimumOffset;
@@ -50,7 +52,6 @@ public class MovementSettings : ScriptableObject
     public float maxlegmult;
     public float crouchmult;
     public float jumpmult;
-    public float airdownmult;
     public float moveupmult;
     public float movedownmult;
     public float movedownclamp;

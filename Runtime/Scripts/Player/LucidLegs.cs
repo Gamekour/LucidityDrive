@@ -49,6 +49,7 @@ public class LucidLegs : MonoBehaviour
     private float maxforcemult;
     private float forcesmoothness;
     private float maxProbeOffset;
+    private float probeCutoffHeight;
     private float maxlegmult;
     private float crouchmult;
     private float jumpmult;
@@ -579,9 +580,9 @@ public class LucidLegs : MonoBehaviour
                 if (normal.y < 0)
                     normal = -normal;
 
-                //Debug.DrawLine(a1, b1, Color.blue);
-                //Debug.DrawLine(b1, c1, Color.blue);
-                //Debug.DrawLine(c1, a1, Color.blue);
+                Debug.DrawLine(a1, b1, Color.cyan);
+                Debug.DrawLine(b1, c1, Color.cyan);
+                Debug.DrawLine(c1, a1, Color.cyan);
 
                 break;
 
@@ -682,8 +683,13 @@ public class LucidLegs : MonoBehaviour
         if (radius == -1)
             radius = legWidth * legWidthMult;
 
-        int hitLeft1 = Physics.SphereCastNonAlloc(left.origin, radius, left.direction, spherecastHitBufferL, 1000, Shortcuts.geometryMask);
-        int hitRight1 = Physics.SphereCastNonAlloc(right.origin, radius, right.direction, spherecastHitBufferR, 1000, Shortcuts.geometryMask);
+        float leftslope = left.direction.y;
+        float maxdistL = probeCutoffHeight / leftslope;
+        float rightslope = right.direction.y;
+        float maxdistR = probeCutoffHeight / rightslope;
+
+        int hitLeft1 = Physics.SphereCastNonAlloc(left.origin, radius, left.direction, spherecastHitBufferL, maxdistL, Shortcuts.geometryMask);
+        int hitRight1 = Physics.SphereCastNonAlloc(right.origin, radius, right.direction, spherecastHitBufferR, maxdistR, Shortcuts.geometryMask);
         hitL = spherecastHitBufferL[0];
         hitR = spherecastHitBufferR[0];
         if (hitLeft1 > 0)

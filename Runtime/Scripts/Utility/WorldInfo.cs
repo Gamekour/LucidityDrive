@@ -33,6 +33,8 @@ public static class Shortcuts
         HumanBodyBones.RightUpperLeg,
         HumanBodyBones.LeftLowerLeg,
         HumanBodyBones.RightLowerLeg,
+        HumanBodyBones.LeftFoot,
+        HumanBodyBones.RightFoot
     };
     public static Quaternion QShortestRotation(Quaternion a, Quaternion b)
     {

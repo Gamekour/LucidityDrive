@@ -31,8 +31,10 @@ MonoBehaviour:
   legWidth: 0.09
   legWidthMult: 0.5
   down: 1.75
+  airdownmult: 1
   probemult: 1
   moveflatprobemult: 1.5
+  probeCutoffHeight: -2
   maxProbeOffset: 2
   probeXminimumOffset: 0.1
   probeZminimumOffset: 0.1
@@ -48,7 +50,6 @@ MonoBehaviour:
   maxlegmult: 1.03
   crouchmult: 0.5
   jumpmult: 32
-  airdownmult: 1
   moveupmult: 1
   movedownmult: 0.5
   movedownclamp: 0.6

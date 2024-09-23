@@ -30,10 +30,12 @@ MonoBehaviour:
   walkthreshold: 0.75
   legWidth: 0.09
   legWidthMult: 0.5
-  down: 1.75
+  down: 1.5
+  airdownmult: 0.1
   probemult: 1
   moveflatprobemult: 1
-  maxProbeOffset: 4
+  probeCutoffHeight: -2
+  maxProbeOffset: 2
   probeXminimumOffset: 0.05
   probeZminimumOffset: 0.05
   ratiomult: 8
@@ -48,7 +50,6 @@ MonoBehaviour:
   maxlegmult: 1.1
   crouchmult: 0.5
   jumpmult: 8
-  airdownmult: 1
   moveupmult: 0
   movedownmult: 0.25
   movedownclamp: 1

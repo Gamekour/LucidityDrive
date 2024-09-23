@@ -73,7 +73,7 @@ public class LucidVismodel : MonoBehaviour
             if (modelSync.boneRots.ContainsKey(hbstring))
                 anim.SetBoneLocalRotation(hb2, modelSync.boneRots[hbstring]);
         }
-        if (!PlayerInfo.crawling && !LucidInputValueShortcuts.crawl && !LucidInputValueShortcuts.slide)
+        if (!PlayerInfo.crawling && !LucidInputValueShortcuts.crawl && !LucidInputValueShortcuts.slide && PlayerInfo.grounded)
         {
             anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
             anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
