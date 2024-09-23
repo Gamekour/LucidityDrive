@@ -275,7 +275,7 @@ public class LucidLegs : MonoBehaviour
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
-        moveFlat = PlayerInfo.head.TransformVector(moveFlat);
+        moveFlat = PlayerInfo.pelvis.TransformVector(moveFlat);
         float yclamp = LucidInputValueShortcuts.jump ? 2 : 0;
         moveFlat.y = Mathf.Clamp(moveFlat.y, yclamp, Mathf.Infinity);
         rb.velocity *= (1 - flightdrag);

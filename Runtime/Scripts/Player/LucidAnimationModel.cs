@@ -117,6 +117,8 @@ public class LucidAnimationModel : MonoBehaviour
         moveFlat.z = moveVector.y;
 
         Vector3 localVel = PlayerInfo.hipspace.InverseTransformVector(PlayerInfo.mainBody.velocity);
+        Vector3 velflat = localVel;
+        velflat.y = 0;
         localVel *= velscale;
         Vector3 currentvellocal = new Vector3(anim.GetFloat("velX"), anim.GetFloat("velY"), anim.GetFloat("velZ"));
         localVel = Vector3.Lerp(localVel, currentvellocal, velsmoothness);
@@ -176,7 +178,8 @@ public class LucidAnimationModel : MonoBehaviour
         else
             airtimesmooth = Mathf.Lerp(airtimesmooth, PlayerInfo.airtime, landspeed);
         anim.SetLayerWeight(1, Mathf.Clamp01(airtimesmooth / airtimemax) * (1 - (slide ? 1 : 0)) * (1 - (crawl ? 1 : 0)) * (1 - flightfloat));
-        anim.SetLayerWeight(2, Mathf.Clamp01(1 - ((slide ? 1 : 0) + (crawl ? 1 : 0))));
+        anim.SetLayerWeight(2, Mathf.Clamp01(1 - ((slide ? 1 : 0) + (crawl ? 1 : 0))) * Mathf.Clamp01(velflat.magnitude));
+        anim.SetLayerWeight(3, Mathf.Clamp01(velflat.magnitude + (PlayerInfo.grounded ? 0 : 1)));
 
         Transform tSpine = anim.GetBoneTransform(HumanBodyBones.Spine);
         tSpine.Rotate(Vector3.forward, currentsway, Space.Self);
