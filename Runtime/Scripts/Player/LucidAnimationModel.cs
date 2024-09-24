@@ -177,13 +177,21 @@ public class LucidAnimationModel : MonoBehaviour
 
         float legweight = Mathf.Clamp01(airtimesmooth / airtimemax);
         legweight = Mathf.Clamp01(legweight + (1 - localNrm.y));
-        legweight *= (1 - (slide ? 1 : 0));
-        legweight *= (1 - (crawl ? 1 : 0));
-        legweight *= (1 - (PlayerInfo.flying ? 1 : 0));
-
+        legweight *= slide ? 0 : 1;
+        legweight *= crawl ? 0 : 1;
+        legweight *= PlayerInfo.flying ? 0 : 1;
+        legweight *= PlayerInfo.climbing ? 0 : 1;
         anim.SetLayerWeight(1, legweight);
-        anim.SetLayerWeight(2, Mathf.Clamp01(1 - ((slide ? 1 : 0) + (crawl ? 1 : 0))) * Mathf.Clamp01(velflat.magnitude));
-        anim.SetLayerWeight(3, Mathf.Clamp01(velflat.magnitude + (PlayerInfo.grounded ? 0 : 1)));
+
+        float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (crawl ? 0 : 1));
+        hipweight *= Mathf.Clamp01(velflat.magnitude);
+        hipweight *= PlayerInfo.climbing ? 0 : 1;
+        anim.SetLayerWeight(2, hipweight);
+
+        float legtiltweight = velflat.magnitude;
+        legtiltweight += (PlayerInfo.grounded ? 0 : 1);
+        legtiltweight *= PlayerInfo.climbing ? 0 : 1;
+        //anim.SetLayerWeight(3, legtiltweight);
 
         Transform tSpine = anim.GetBoneTransform(HumanBodyBones.Spine);
         tSpine.Rotate(Vector3.forward, currentsway, Space.Self);
