@@ -123,36 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &166159790 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6962469843135845524, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 901255078}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84801d359f42b734b9bc39f78c07f3d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &421612705 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3113282231559693925, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 901255078}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &471510829 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 901255078}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 596b1d94a4c7b0546b5093357a6e6a4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &492135137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -226,87 +196,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0208911d2d56b4a44aaa3d818969eaa4, type: 3}
---- !u!1 &638585664 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2112535026013051217, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 901255078}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &638585670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 638585664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fd50affce7435b4a8d137e87ad1ebbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onTriggered:
-    m_PersistentCalls:
-      m_Calls: []
-  onCollisionEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  onCollisionExit:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 166159790}
-        m_TargetAssemblyTypeName: LucidLegs, nostalgiagarden.luciditydrive.runtime
-        m_MethodName: OnPhysCollisionExit
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 471510829}
-        m_TargetAssemblyTypeName: CameraManager, nostalgiagarden.luciditydrive.runtime
-        m_MethodName: OnHeadCollisionExit
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onCollisionStay:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 166159790}
-        m_TargetAssemblyTypeName: LucidLegs, nostalgiagarden.luciditydrive.runtime
-        m_MethodName: OnPhysCollisionStay
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 471510829}
-        m_TargetAssemblyTypeName: CameraManager, nostalgiagarden.luciditydrive.runtime
-        m_MethodName: OnHeadCollisionStay
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  colliderRef: {fileID: 0}
-  doCollisionStayEvents: 1
-  drawGizmo: 0
 --- !u!1001 &901255078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -315,11 +204,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 44037071342416141, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_AngularDrag
-      value: 1000
-      objectReference: {fileID: 0}
     - target: {fileID: 2635777386139525533, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -370,145 +254,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2963859774491212165, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3252273764742618479, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.12695761
-      objectReference: {fileID: 0}
-    - target: {fileID: 3252273764742618479, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_Center.x
-      value: 1.9170334e-12
-      objectReference: {fileID: 0}
-    - target: {fileID: 3252273764742618479, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.09270827
-      objectReference: {fileID: 0}
-    - target: {fileID: 3252273764742618479, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 0.015287878
-      objectReference: {fileID: 0}
-    - target: {fileID: 3986225098609885375, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: -7597560444520419082, guid: 39ad9b011414f074bbdee98964d08b91,
-        type: 3}
-    - target: {fileID: 4095379362296046315, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_Name
-      value: camera
-      objectReference: {fileID: 0}
-    - target: {fileID: 4307564219296961133, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_AngularDrag
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4314459254256399924, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.279
-      objectReference: {fileID: 0}
-    - target: {fileID: 6098238120377473597, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_VolumeLayerMask.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 6671152753758007464, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Name
       value: PlayerRig
       objectReference: {fileID: 0}
-    - target: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: cameratarget
-      value: 
-      objectReference: {fileID: 421612705}
-    - target: {fileID: 8114009135476236412, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_Avatar
-      value: 
-      objectReference: {fileID: 9000000, guid: 0ac099bba2b325940850e47406201cd8, type: 3}
-    m_RemovedComponents:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5788374908850747535, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 901255080}
-    - targetCorrespondingSourceObject: {fileID: 2112535026013051217, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 638585670}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: feb5ffb413408f64bb3e0843d3c27f57, type: 3}
---- !u!1 &901255079 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5788374908850747535, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 901255078}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &901255080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 901255079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fd50affce7435b4a8d137e87ad1ebbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onTriggered:
-    m_PersistentCalls:
-      m_Calls: []
-  onCollisionEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  onCollisionExit:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 166159790}
-        m_TargetAssemblyTypeName: LucidLegs, nostalgiagarden.luciditydrive.runtime
-        m_MethodName: OnPhysCollisionExit
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onCollisionStay:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 166159790}
-        m_TargetAssemblyTypeName: LucidLegs, nostalgiagarden.luciditydrive.runtime
-        m_MethodName: OnPhysCollisionStay
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  colliderRef: {fileID: 0}
-  doCollisionStayEvents: 0
-  drawGizmo: 0
 --- !u!1001 &1375605992
 PrefabInstance:
   m_ObjectHideFlags: 0

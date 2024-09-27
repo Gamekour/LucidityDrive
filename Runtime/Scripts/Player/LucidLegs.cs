@@ -428,8 +428,8 @@ public class LucidLegs : MonoBehaviour
 
     private void SlidePush()
     {
-        Vector3 diffL = legspaceL.position - PlayerInfo.footTargetL;
-        Vector3 diffR = legspaceR.position - PlayerInfo.footTargetR;
+        Vector3 diffL = legspaceL.position - PlayerInfo.IK_LF.position;
+        Vector3 diffR = legspaceR.position - PlayerInfo.IK_RF.position;
         Vector3 avg = (diffL + diffR) / 2;
         float strength = 1 - Mathf.Clamp01(avg.magnitude / legLength);
         avg = avg.normalized * strength;

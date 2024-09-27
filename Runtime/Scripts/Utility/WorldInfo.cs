@@ -66,8 +66,6 @@ public static class PlayerInfo
     public static Transform footspace;
     public static Transform legspaceR;
     public static Transform legspaceL;
-    public static Transform climbtargetL;
-    public static Transform climbtargetR;
     public static Transform FPTransform;
     public static Collider physHips;
     public static Rigidbody physHipsRB;
@@ -79,10 +77,10 @@ public static class PlayerInfo
     public static LucidVismodel vismodelRef;
 
     //motion data
-    public static Vector3 footTargetL = Vector3.zero;
-    public static Vector3 footTargetR = Vector3.zero;
-    public static Vector3 handTargetL = Vector3.zero;
-    public static Vector3 handTargetR = Vector3.zero;
+    public static Transform IK_RH;
+    public static Transform IK_LH;
+    public static Transform IK_RF;
+    public static Transform IK_LF;
     public static Vector3 footsurface = Vector3.zero;
     public static Vector3 footsurfL = Vector3.zero;
     public static Vector3 footsurfR = Vector3.zero;

@@ -8,6 +8,12 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(Animator))]
 public class LucidAnimationModel : MonoBehaviour
 {
+    public float airtimeThreshold = 0.5f;
+
+    [SerializeField] Transform IK_LF;
+    [SerializeField] Transform IK_RF;
+    [SerializeField] Transform IK_LH;
+    [SerializeField] Transform IK_RH;
     [SerializeField] Camera fpcam;
     [SerializeField] float velsmoothness = 0.5f;
     [SerializeField] float velscale = 0.75f;
@@ -71,6 +77,10 @@ public class LucidAnimationModel : MonoBehaviour
         animHandR = anim.GetBoneTransform(HumanBodyBones.RightHand);
         animShoulderL = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
         animShoulderR = anim.GetBoneTransform (HumanBodyBones.RightUpperArm);
+        PlayerInfo.IK_LF = IK_LF;
+        PlayerInfo.IK_RF = IK_RF;
+        PlayerInfo.IK_LH = IK_LH;
+        PlayerInfo.IK_RH = IK_RH;
         PlayerInfo.mainCamera = fpcam;
     }
     private void Update()
@@ -188,10 +198,12 @@ public class LucidAnimationModel : MonoBehaviour
         hipweight *= PlayerInfo.climbing ? 0 : 1;
         anim.SetLayerWeight(2, hipweight);
 
+        /*
         float legtiltweight = velflat.magnitude;
         legtiltweight += (PlayerInfo.grounded ? 0 : 1);
         legtiltweight *= PlayerInfo.climbing ? 0 : 1;
-        //anim.SetLayerWeight(3, legtiltweight);
+        anim.SetLayerWeight(3, legtiltweight);
+        */
 
         Transform tSpine = anim.GetBoneTransform(HumanBodyBones.Spine);
         tSpine.Rotate(Vector3.forward, currentsway, Space.Self);
@@ -205,7 +217,7 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 kneeposL = animKneeL.position;
         Vector3 kneeposR = animKneeR.position;
 
-        bool midaircrouching = (!PlayerInfo.grounded && LucidInputActionRefs.crouch.ReadValue<float>() == 1 && !slide && !crawl && !PlayerInfo.flying);
+        bool midaircrouching = LucidInputValueShortcuts.crouch && !(PlayerInfo.grounded || slide || crawl || PlayerInfo.flying);
 
         float targetcrouch = midaircrouch;
         if (!midaircrouching)
@@ -232,6 +244,11 @@ public class LucidAnimationModel : MonoBehaviour
                 PlayerInfo.footsurfL = LHitInfoThigh.normal;
                 PlayerInfo.footspace.position = LHitInfoThigh.point;
                 PlayerInfo.footspace.up = LHitInfoThigh.normal;
+
+                Vector3 footforward = PlayerInfo.pelvis.forward;
+                if (Mathf.Abs(LHitInfoThigh.normal.y) < 0.1f)
+                    footforward = Vector3.up;
+                PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, LHitInfoThigh.normal);
             }
         }
         else if (shinCastL)
@@ -243,11 +260,17 @@ public class LucidAnimationModel : MonoBehaviour
                 PlayerInfo.footsurfL = LHitInfoShin.normal;
                 PlayerInfo.footspace.position = LHitInfoShin.point;
                 PlayerInfo.footspace.up = LHitInfoShin.normal;
+
+                Vector3 footforward = PlayerInfo.pelvis.forward;
+                if (Mathf.Abs(LHitInfoShin.normal.y) < 0.1f)
+                    footforward = Vector3.up;
+                PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, LHitInfoShin.normal);
             }
         }
         else
             LCast = footposL;
         LCast = Vector3.Lerp(LCast, LCastOld, footsmoothness);
+        PlayerInfo.IK_LF.position = LCast;
 
         Vector3 RCastOld = RCast;
         if (thighCastR)
@@ -259,6 +282,11 @@ public class LucidAnimationModel : MonoBehaviour
                 PlayerInfo.footsurfR = RHitInfoThigh.normal;
                 PlayerInfo.footspace.position = RHitInfoThigh.point;
                 PlayerInfo.footspace.up = RHitInfoThigh.normal;
+
+                Vector3 footforward = PlayerInfo.pelvis.forward;
+                if (Mathf.Abs(RHitInfoThigh.normal.y) < 0.1f)
+                    footforward = Vector3.up;
+                PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, RHitInfoThigh.normal);
             }
         }
         else if (shinCastR)
@@ -270,11 +298,20 @@ public class LucidAnimationModel : MonoBehaviour
                 PlayerInfo.footsurfR = RHitInfoShin.normal;
                 PlayerInfo.footspace.position = RHitInfoShin.point;
                 PlayerInfo.footspace.up = RHitInfoShin.normal;
+
+                Vector3 footforward = PlayerInfo.pelvis.forward;
+                if (Mathf.Abs(RHitInfoShin.normal.y) < 0.1f)
+                    footforward = Vector3.up;
+                PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, RHitInfoShin.normal);
             }
         }
         else
+        {
             RCast = footposR;
+        }
         RCast = Vector3.Lerp(RCast, RCastOld, footsmoothness);
+        PlayerInfo.IK_RF.position = RCast;
+
 
         bool castsuccess = (thighCastL || thighCastR || shinCastL || shinCastR);
 
@@ -283,20 +320,41 @@ public class LucidAnimationModel : MonoBehaviour
         if (PlayerInfo.crawling)
             PlayerInfo.footsurface = PlayerInfo.hipspace.up;
 
-        PlayerInfo.footTargetL = LCast;
-        PlayerInfo.footTargetR = RCast;
+        PlayerInfo.IK_LF.position = LCast;
+        PlayerInfo.IK_RF.position = RCast;
 
-        bool armLHit = Physics.SphereCast(animShoulderL.position, castthickness / 2, animHandL.position - animShoulderL.position, out RaycastHit armHitInfoL, Vector3.Distance(animHandL.position, animShoulderL.position), Shortcuts.geometryMask);
-        bool armRHit = Physics.SphereCast(animShoulderR.position, castthickness / 2, animHandR.position - animShoulderR.position, out RaycastHit armHitInfoR, Vector3.Distance(animHandR.position, animShoulderR.position), Shortcuts.geometryMask);
+        if (!PlayerInfo.grabL)
+        {
+            bool armLHit = Physics.SphereCast(animShoulderL.position, castthickness / 2, animHandL.position - animShoulderL.position, out RaycastHit armHitInfoL, Vector3.Distance(animHandL.position, animShoulderL.position), Shortcuts.geometryMask);
+            if (armLHit)
+            {
+                PlayerInfo.IK_LH.position = armHitInfoL.point;
 
-        if (armLHit)
-            PlayerInfo.handTargetL = armHitInfoL.point;
-        else
-            PlayerInfo.handTargetL = Vector3.zero;
-        if (armRHit)
-            PlayerInfo.handTargetR = armHitInfoR.point;
-        else
-            PlayerInfo.handTargetR = Vector3.zero;
+                Vector3 handforward = PlayerInfo.pelvis.forward;
+                if (Mathf.Abs(armHitInfoL.normal.y) < 0.05f)
+                    handforward = Vector3.up;
+                PlayerInfo.IK_LH.rotation = Quaternion.LookRotation(handforward, armHitInfoL.normal);
+            }
+            else
+                PlayerInfo.IK_LH.position = Vector3.zero;
+        }
+
+        if (!PlayerInfo.grabR)
+        {
+            bool armRHit = Physics.SphereCast(animShoulderR.position, castthickness / 2, animHandR.position - animShoulderR.position, out RaycastHit armHitInfoR, Vector3.Distance(animHandR.position, animShoulderR.position), Shortcuts.geometryMask);
+            if (armRHit)
+            {
+                PlayerInfo.IK_RH.position = armHitInfoR.point;
+
+                Vector3 handforward = PlayerInfo.pelvis.forward;
+                if (Mathf.Abs(armHitInfoR.normal.y) < 0.05f)
+                    handforward = Vector3.up;
+                PlayerInfo.IK_RH.rotation = Quaternion.LookRotation(handforward, armHitInfoR.normal);
+            }
+            else
+                PlayerInfo.IK_RH.position = Vector3.zero;
+        }
+        
     }
 
     private Vector2 LeanCalc(Vector3 localwill, Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
@@ -311,7 +369,7 @@ public class LucidAnimationModel : MonoBehaviour
         lean.x = (accel.x * k1) + (slope.x * k2);
         lean.y = (accel.y * k1) + (slope.y * k2);
 
-        if (PlayerInfo.alignment > 0.5f && PlayerInfo.movespeed > footslidethreshold && PlayerInfo.grounded)
+        if (PlayerInfo.alignment > 0.5f && PlayerInfo.movespeed > footslidethreshold && PlayerInfo.airtime < airtimeThreshold)
             lean = -lean;
 
         return lean;

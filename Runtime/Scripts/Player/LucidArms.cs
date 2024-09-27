@@ -38,8 +38,6 @@ public class LucidArms : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerInfo.climbtargetL = leftanchor.transform;
-        PlayerInfo.climbtargetR = rightanchor.transform;
         if (LucidInputActionRefs.grabL != null)
         {
             LucidInputActionRefs.grabL.started += GrabButtonLeft;
@@ -119,6 +117,17 @@ public class LucidArms : MonoBehaviour
             moveflat.z = inputmove.y;
             PlayerInfo.mainBody.AddForce(PlayerInfo.pelvis.TransformVector(moveflat) * swingforce);
         }
+
+        if (PlayerInfo.grabR)
+        {
+            PlayerInfo.IK_RH.position = rightanchor.transform.position;
+            PlayerInfo.IK_RH.rotation = rightanchor.transform.rotation;
+        }
+        if (PlayerInfo.grabL)
+        {
+            PlayerInfo.IK_LH.position = leftanchor.transform.position;
+            PlayerInfo.IK_LH.rotation = leftanchor.transform.rotation;
+        }
     }
 
     private void GrabLogic(bool right)
@@ -130,8 +139,6 @@ public class LucidArms : MonoBehaviour
         if (!grabToCheck)
         {
             targetanchor.transform.position = PlayerInfo.pelvis.position;
-
-            
 
             bool validgrab = ClimbScan(right);
 
@@ -149,8 +156,6 @@ public class LucidArms : MonoBehaviour
             {
                 Grab(right);
             }
-
-
 
             Transform shoulder = right ? rightshoulder : leftshoulder;
 
@@ -194,8 +199,11 @@ public class LucidArms : MonoBehaviour
             if (initialHitInfo.transform.gameObject.CompareTag("Grabbable"))
             {
                 jointTarget.transform.position = initialHitInfo.point;
-                Vector3 transformhitinfo = Vector3.ProjectOnPlane(-initialHitInfo.normal, initialHitInfo.normal);
-                jointTarget.transform.rotation = Quaternion.LookRotation(transformhitinfo, initialHitInfo.normal);
+
+                Vector3 jointfwd = PlayerInfo.pelvis.forward;
+                if (Mathf.Abs(initialHitInfo.normal.y) < 0.05f)
+                    jointfwd = Vector3.up;
+                jointTarget.transform.rotation = Quaternion.LookRotation(jointfwd, initialHitInfo.normal);
 
                 if (right)
                     currenttargetR = initialHitInfo.transform;
