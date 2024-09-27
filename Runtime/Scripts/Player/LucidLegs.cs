@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using PlasticGui;
 
 class GFG : IComparer<RaycastHit>
 {
@@ -277,8 +278,28 @@ public class LucidLegs : MonoBehaviour
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
         moveFlat = PlayerInfo.pelvis.TransformVector(moveFlat);
-        float yclamp = LucidInputValueShortcuts.jump ? 2 : 0;
-        moveFlat.y = Mathf.Clamp(moveFlat.y, yclamp, Mathf.Infinity);
+        bool jump = LucidInputValueShortcuts.jump;
+        bool crouch = LucidInputValueShortcuts.crouch;
+
+        float yclampmin = 0;
+        float yclampmax = 0;
+
+        if (jump)
+        {
+            yclampmax = Mathf.Infinity;
+            yclampmin = 2;
+        }
+        else if (crouch)
+        {
+            yclampmax = -2;
+            yclampmin = -Mathf.Infinity;
+        }
+        else
+        {
+            yclampmax = Mathf.Infinity;
+            yclampmin = -Mathf.Infinity;
+        }
+        moveFlat.y = Mathf.Clamp(moveFlat.y, yclampmin, yclampmax);
         rb.velocity *= (1 - flightdrag);
         rb.AddForce(moveFlat * flightforce, ForceMode.Acceleration);
     }

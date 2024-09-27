@@ -24,8 +24,8 @@ MonoBehaviour:
   fallgrav: -10
   airmove: 2
   airdrag: 0.99925
-  flightforce: 10
-  flightdrag: 0.003
+  flightforce: 15
+  flightdrag: 0.075
   timescale: 1
   walkthreshold: 2
   legWidth: 0.09
