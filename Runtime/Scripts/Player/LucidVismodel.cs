@@ -84,7 +84,7 @@ public class LucidVismodel : MonoBehaviour
         anim.SetIKPosition(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.position);
         anim.SetIKRotation(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.rotation);
 
-        if (PlayerInfo.grabL)
+        if (PlayerInfo.grabL || PlayerInfo.forceIK_LH)
         {
             anim.SetIKPosition(AvatarIKGoal.LeftHand, PlayerInfo.IK_LH.position + (PlayerInfo.mainBody.velocity * Time.fixedDeltaTime));
             anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, grabweightL);
@@ -106,7 +106,7 @@ public class LucidVismodel : MonoBehaviour
             anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, grabweightL);
             grabweightL = Mathf.Clamp01(grabweightL - (grabspeed * Time.deltaTime));
         }
-        if (PlayerInfo.grabR)
+        if (PlayerInfo.grabR || PlayerInfo.forceIK_RH)
         {
             anim.SetIKPosition(AvatarIKGoal.RightHand, PlayerInfo.IK_RH.position + (PlayerInfo.mainBody.velocity * Time.fixedDeltaTime));
             anim.SetIKPositionWeight(AvatarIKGoal.RightHand, grabweightR);

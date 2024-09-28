@@ -323,7 +323,7 @@ public class LucidAnimationModel : MonoBehaviour
         PlayerInfo.IK_LF.position = LCast;
         PlayerInfo.IK_RF.position = RCast;
 
-        if (!PlayerInfo.grabL)
+        if (!PlayerInfo.grabL && !PlayerInfo.forceIK_LH)
         {
             bool armLHit = Physics.SphereCast(animShoulderL.position, castthickness / 2, animHandL.position - animShoulderL.position, out RaycastHit armHitInfoL, Vector3.Distance(animHandL.position, animShoulderL.position), Shortcuts.geometryMask);
             if (armLHit)
@@ -339,7 +339,7 @@ public class LucidAnimationModel : MonoBehaviour
                 PlayerInfo.IK_LH.position = Vector3.zero;
         }
 
-        if (!PlayerInfo.grabR)
+        if (!PlayerInfo.grabR && !PlayerInfo.forceIK_RH)
         {
             bool armRHit = Physics.SphereCast(animShoulderR.position, castthickness / 2, animHandR.position - animShoulderR.position, out RaycastHit armHitInfoR, Vector3.Distance(animHandR.position, animShoulderR.position), Shortcuts.geometryMask);
             if (armRHit)

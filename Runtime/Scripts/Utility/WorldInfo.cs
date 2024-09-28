@@ -102,6 +102,8 @@ public static class PlayerInfo
     public static bool flying = false;
     public static bool grabL = false;
     public static bool grabR = false;
+    public static bool forceIK_RH = false;
+    public static bool forceIK_LH = false;
     public static bool climbing = false;
     public static bool validgrabL = false;
     public static bool validgrabR = false;
