@@ -1,19 +1,19 @@
 using UnityEngine;
 using UnityEditor;
 
-public class LayerSetupTool : EditorWindow
+public class LucidSetupTool : EditorWindow
 {
-    [MenuItem("LucidityDrive/Setup Tags and Layers")]
+    [MenuItem("LucidityDrive/Automatic Setup")]
     public static void ShowWindow()
     {
-        GetWindow<LayerSetupTool>("Setup Tags and Layers");
+        GetWindow<LucidSetupTool>("Automatic setup");
     }
 
     void OnGUI()
     {
-        GUILayout.Label("Tags and Layers Setup Tool", EditorStyles.boldLabel);
+        GUILayout.Label("Automatic Setup", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Setup Tags and Layers"))
+        if (GUILayout.Button("Automatic Setup"))
         {
             Setup();
         }
@@ -32,7 +32,9 @@ public class LayerSetupTool : EditorWindow
 
         AddTag("Grabbable");
 
-        Debug.Log("Tags and Layers have been set up successfully.");
+        Physics.defaultMaxAngularSpeed = 100f;
+
+        Debug.Log("Project set up successfully");
     }
 
     void SetLayerName(int layerNumber, string layerName)
