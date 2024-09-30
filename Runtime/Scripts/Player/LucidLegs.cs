@@ -155,9 +155,9 @@ public class LucidLegs : MonoBehaviour
 
         if (!PlayerInfo.grounded)
         {
-            if (!inputJump) rb.AddForce(Vector3.up * (fallgrav - Physics.gravity.y));
+            if (!inputJump) rb.AddForce(Vector3.up * (fallgrav - Physics.gravity.y), ForceMode.Acceleration);
             else
-                rb.AddForce(Vector3.up * (jumpgrav - Physics.gravity.y));
+                rb.AddForce(Vector3.up * (jumpgrav - Physics.gravity.y), ForceMode.Acceleration);
 
             AirCalc();
         }
