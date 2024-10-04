@@ -20,6 +20,7 @@ public class MovementSettings : ScriptableObject
     public float fallgrav;
     public float airmove;
     public float airdrag;
+    public float maxAirAccel;
     public float flightforce;
     public float flightdrag;
     public float timescale;

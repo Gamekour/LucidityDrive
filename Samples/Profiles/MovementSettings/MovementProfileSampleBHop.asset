@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
-  m_Name: MovementProfileSampleArcade
+  m_Name: MovementProfileSampleBHop
   m_EditorClassIdentifier: 
-  movespeed: 4
+  movespeed: 2
   sprintmult: 2
   crawlspeed: 2
-  crouchspeed: 3
-  moveburst: 12
-  slidemult: 14
+  crouchspeed: 2
+  moveburst: 14
+  slidemult: 5
   slidepushforce: 0
-  jumpforcemult: 1.1
-  jumpgrav: -3
-  fallgrav: -14
-  airmove: 20
-  airdrag: 0.99925
-  maxAirAccel: 3
+  jumpforcemult: 6
+  jumpgrav: -9.81
+  fallgrav: -16
+  airmove: 50
+  airdrag: 1
+  maxAirAccel: 2
   flightforce: 15
   flightdrag: 0.075
   timescale: 1
@@ -42,13 +42,13 @@ MonoBehaviour:
   ratiomult: 8
   ratiofreezethreshold: 0.3
   airtimemult: 2
-  friction: 0.5
-  maxforcemult: 5.4
+  friction: 0.1
+  maxforcemult: 1
   hipRotationSpeed: 2000
   hipspacesmoothness: 0.94
   hipspaceMaxRot: -0.9
   forcesmoothness: 20
-  maxlegmult: 1.03
+  maxlegmult: 1
   crouchmult: 0.5
   jumpmult: 32
   moveupmult: 1
@@ -56,7 +56,7 @@ MonoBehaviour:
   movedownclamp: 0.6
   crawlthreshold: 14
   crawlmult: 0.225
-  directionaljumpmult: 5
+  directionaljumpmult: 15
   wallruntilt: 0.05
   jumptilt: 0.4
   climbtilt: 0.3

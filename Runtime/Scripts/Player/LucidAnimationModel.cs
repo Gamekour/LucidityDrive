@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.XR;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Animator))]
 public class LucidAnimationModel : MonoBehaviour

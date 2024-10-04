@@ -2,8 +2,6 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using PlasticGui;
 
 class GFG : IComparer<RaycastHit>
 {
@@ -83,6 +81,7 @@ public class LucidLegs : MonoBehaviour
     private float slidepushforce;
     private float climbtilt;
     private float walkthreshold;
+    private float maxAirAccel;
 
     private float m_timescale;
     private float timescale
@@ -258,6 +257,7 @@ public class LucidLegs : MonoBehaviour
         flattened.y = 0;
         flattened.Normalize();
 
+        // Apply air drag
         if (airdrag != 1)
         {
             float vely = rb.velocity.y;
@@ -267,7 +267,25 @@ public class LucidLegs : MonoBehaviour
             rb.velocity = vel;
         }
 
-        rb.AddForce(flattened * airmove, ForceMode.Acceleration);
+        // Calculate current horizontal velocity
+        Vector3 velflat = rb.velocity;
+        velflat.y = 0;
+
+        // Project current velocity onto desired movement direction
+        Vector3 projectedVelocity = Vector3.Project(velflat, flattened);
+
+        // Calculate the difference between projected velocity and desired movement
+        Vector3 velocityDifference = (flattened * airmove) - projectedVelocity;
+
+        // Cap the magnitude of the velocity difference
+        if (velflat.magnitude > maxAirAccel)
+        {
+            float angle = Vector3.Angle(velflat, flattened) / 180;
+            velocityDifference = velocityDifference.normalized * airmove * angle;
+        }
+
+        // Apply the force
+        rb.AddForce(velocityDifference, ForceMode.Acceleration);
     }
 
     //handles movement while flying
