@@ -49,13 +49,14 @@ public class LucidVismodel : MonoBehaviour
     //creates a pose for the visual model based on the playermodel's animation, active IK points, and collisions with the ground
     private void LocalCalc()
     {
-        Vector3 offset = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips).position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
+        Transform tHips = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips);
+
+        Vector3 offset = tHips.position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
         transform.position += offset;
         Quaternion qPhysHips = PlayerInfo.physHips.transform.rotation;
         Quaternion qPhysHead = PlayerInfo.physHead.transform.rotation;
         Quaternion qAnimHips = PlayerInfo.playermodelAnim.bodyRotation;
         Quaternion qAnimHead = PlayerInfo.head.rotation;
-
 
         if (PlayerInfo.physCollision)
         {

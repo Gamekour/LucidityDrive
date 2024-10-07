@@ -31,6 +31,9 @@ public class LucidAnimationModel : MonoBehaviour
     [SerializeField] float footslidethreshold = 3f;
     [SerializeField] float footslidevelthreshold = 3f;
     [SerializeField] float leansmoothness = 0.5f;
+    [SerializeField] float unrotateFeetBySpeed = 1;
+    [SerializeField] float maxFootAngle = 90;
+    [SerializeField] float verticalFootAdjust = 0.1f;
     [HideInInspector]
     public Dictionary<string, Quaternion> boneRots = new Dictionary<string, Quaternion>();
     [HideInInspector]
@@ -44,6 +47,8 @@ public class LucidAnimationModel : MonoBehaviour
     private float currentcrouch = 0;
     private float currentsway = 0;
     private float airtimesmooth = 0;
+    private float refAngle = 0;
+    private float footAngle = 0;
     private bool stucksliding = false;
     private Transform animpelvis;
     private Transform animFootL;
@@ -137,6 +142,18 @@ public class LucidAnimationModel : MonoBehaviour
         float lastalignment = anim.GetFloat("alignment");
         lastalignment = Mathf.Lerp(PlayerInfo.alignment, lastalignment, alignmentsmoothness);
 
+        footAngle = Mathf.DeltaAngle(refAngle, PlayerInfo.pelvis.eulerAngles.y);
+        footAngle %= 360;
+        footAngle = footAngle > 180 ? footAngle - 360 : footAngle;
+        footAngle /= Mathf.Clamp(velflat.magnitude * unrotateFeetBySpeed, 1, 100);
+        if (Mathf.Abs(footAngle) > maxFootAngle)
+        {
+            footAngle = 0;
+            refAngle = PlayerInfo.pelvis.eulerAngles.y;
+            PlayerInfo.animphase += 0.5f;
+            PlayerInfo.animphase %= 1;
+        }
+
         bool crawl = LucidInputValueShortcuts.crawl;
         bool slide = LucidInputValueShortcuts.slide;
         if (slide || crawl)
@@ -177,6 +194,8 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBool("grabR", PlayerInfo.grabR);
         anim.SetBool("climbing", PlayerInfo.climbing);
         anim.SetBool("footslide", footslide);
+        anim.SetFloat("footAngle", footAngle / maxFootAngle);
+
         if (PlayerInfo.airtime > airtimesmooth)
             airtimesmooth = PlayerInfo.airtime;
         else
@@ -239,7 +258,7 @@ public class LucidAnimationModel : MonoBehaviour
             {
                 PlayerInfo.footsurface = LHitInfoThigh.normal;
                 PlayerInfo.footsurfL = LHitInfoThigh.normal;
-                PlayerInfo.footspace.position = LHitInfoThigh.point;
+                PlayerInfo.footspace.position = LHitInfoThigh.point + (LHitInfoThigh.normal * verticalFootAdjust);
                 PlayerInfo.footspace.up = LHitInfoThigh.normal;
 
                 Vector3 footforward = PlayerInfo.pelvis.forward;
@@ -255,7 +274,7 @@ public class LucidAnimationModel : MonoBehaviour
             {
                 PlayerInfo.footsurface = LHitInfoShin.normal;
                 PlayerInfo.footsurfL = LHitInfoShin.normal;
-                PlayerInfo.footspace.position = LHitInfoShin.point;
+                PlayerInfo.footspace.position = LHitInfoShin.point + (LHitInfoShin.normal * verticalFootAdjust);
                 PlayerInfo.footspace.up = LHitInfoShin.normal;
 
                 Vector3 footforward = PlayerInfo.pelvis.forward;
@@ -277,7 +296,7 @@ public class LucidAnimationModel : MonoBehaviour
             {
                 PlayerInfo.footsurface = RHitInfoThigh.normal;
                 PlayerInfo.footsurfR = RHitInfoThigh.normal;
-                PlayerInfo.footspace.position = RHitInfoThigh.point;
+                PlayerInfo.footspace.position = RHitInfoThigh.point + (RHitInfoThigh.normal * verticalFootAdjust);
                 PlayerInfo.footspace.up = RHitInfoThigh.normal;
 
                 Vector3 footforward = PlayerInfo.pelvis.forward;
@@ -293,7 +312,7 @@ public class LucidAnimationModel : MonoBehaviour
             {
                 PlayerInfo.footsurface = RHitInfoShin.normal;
                 PlayerInfo.footsurfR = RHitInfoShin.normal;
-                PlayerInfo.footspace.position = RHitInfoShin.point;
+                PlayerInfo.footspace.position = RHitInfoShin.point + (RHitInfoShin.normal * verticalFootAdjust);
                 PlayerInfo.footspace.up = RHitInfoShin.normal;
 
                 Vector3 footforward = PlayerInfo.pelvis.forward;

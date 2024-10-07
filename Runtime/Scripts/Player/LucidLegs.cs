@@ -82,6 +82,7 @@ public class LucidLegs : MonoBehaviour
     private float climbtilt;
     private float walkthreshold;
     private float maxAirAccel;
+    private float ratioBySpeed;
 
     private float m_timescale;
     private float timescale
@@ -698,7 +699,11 @@ public class LucidLegs : MonoBehaviour
         vfloor.position = center;
         vfloor.forward = -normal;
 
-        float ratio = currentratio / ratiomult;
+        float currentratiomult = ratiomult * (1 + (velflat.magnitude * ratioBySpeed));
+
+        print(currentratiomult);
+
+        float ratio = currentratio / currentratiomult;
         ratio = Mathf.Clamp(ratio, ratiofreezethreshold, 1);
 
         if (PlayerInfo.grounded && !PlayerInfo.climbing)
@@ -711,8 +716,7 @@ public class LucidLegs : MonoBehaviour
             float add = (Time.fixedDeltaTime * 0.5f) / ratio;
             add /= 1 + (PlayerInfo.airtime * airtimemult);
             animPhase += add;
-            if (animPhase > 1)
-                animPhase -= 1;
+            animPhase %= 1;
         }
         PlayerInfo.animphase = animPhase;
     }
