@@ -1277,6 +1277,7 @@ MonoBehaviour:
     m_Bits: 1
   distance: 2
   radius: 0.2
+  smoothTime: 0.03
 --- !u!1 &2963859774491212165
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,6 +1568,7 @@ MonoBehaviour:
   airtimemax: 0.4
   groundedforgiveness: 0.65
   lerp: 0.5
+  lerp_chest: 0.5
   swaymult: 1
   swayspeed: 1
   landspeed: 0.025
@@ -1575,6 +1577,7 @@ MonoBehaviour:
   leansmoothness: 0.025
   unrotateFeetBySpeed: 1
   maxFootAngle: 60
+  verticalFootAdjust: 0.1
   LCast: {x: 4.319404, y: -2.3021216, z: 43.07542}
   RCast: {x: 4.230167, y: -2.3021216, z: 43.240364}
   hiprot: {x: 0, y: 0, z: 0, w: 1}
@@ -4070,8 +4073,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sens: {x: 1, y: 1}
   headradius: 1
-  downfloat: -70
-  upfloat: 85
+  downfloat: -65
+  upfloat: 65
   sensmult: 7
 --- !u!1 &7443822214091298102
 GameObject:

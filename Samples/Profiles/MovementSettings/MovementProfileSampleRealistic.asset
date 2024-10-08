@@ -29,7 +29,7 @@ MonoBehaviour:
   flightdrag: 0.05
   timescale: 1
   walkthreshold: 0.75
-  ratioBySpeed: 100
+  ratioBySpeed: 0.35
   legWidth: 0.09
   legWidthMult: 0.5
   down: 1.5
@@ -40,8 +40,8 @@ MonoBehaviour:
   maxProbeOffset: 2
   probeXminimumOffset: 0.05
   probeZminimumOffset: 0.05
-  ratiomult: 8
-  ratiofreezethreshold: 0.3
+  ratiomult: 1
+  ratiofreezethreshold: 0.1
   airtimemult: 2
   friction: 0.425
   maxforcemult: 5.4

@@ -686,7 +686,7 @@ public class LucidLegs : MonoBehaviour
             //Debug.DrawRay(center, normal, new Color(0, 255, 255));
         }
 
-        Vector3 hfwd = Vector3.ProjectOnPlane(PlayerInfo.head.forward, normal);
+        Vector3 hfwd = Vector3.ProjectOnPlane(PlayerInfo.pelvis.forward, normal);
         if (Vector3.Dot(PlayerInfo.pelvis.forward, normal) <= hipspaceMaxRot)
             hfwd += Vector3.up;
         Quaternion q1 = hipspace.rotation;
@@ -700,8 +700,6 @@ public class LucidLegs : MonoBehaviour
         vfloor.forward = -normal;
 
         float currentratiomult = ratiomult * (1 + (velflat.magnitude * ratioBySpeed));
-
-        print(currentratiomult);
 
         float ratio = currentratio / currentratiomult;
         ratio = Mathf.Clamp(ratio, ratiofreezethreshold, 1);

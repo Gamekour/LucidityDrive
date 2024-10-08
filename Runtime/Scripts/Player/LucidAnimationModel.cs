@@ -25,6 +25,7 @@ public class LucidAnimationModel : MonoBehaviour
     [SerializeField] float airtimemax = 1;
     [SerializeField] float groundedforgiveness = 1;
     [SerializeField] float lerp = 0.5f;
+    [SerializeField] float lerp_chest = 0.5f;
     [SerializeField] float swaymult;
     [SerializeField] float swayspeed;
     [SerializeField] float landspeed = 0.5f;
