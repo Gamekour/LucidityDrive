@@ -45,22 +45,7 @@ public class LucidArms : MonoBehaviour
             LucidInputActionRefs.grabR.started += GrabButtonRight;
             LucidInputActionRefs.grabR.canceled += UngrabButtonRight;
         }
-        if (PlayerInfo.vismodelRef != null)
-            Init();
-        else
-            StartCoroutine(InitDelay());
-    }
-
-    private void Init()
-    {
-        disabling = false;
-        leftshoulder = PlayerInfo.vismodelRef.anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
-        rightshoulder = PlayerInfo.vismodelRef.anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
-        leftanchor.connectedBody = PlayerInfo.mainBody;
-        rightanchor.connectedBody = PlayerInfo.mainBody;
-        hipdrag = PlayerInfo.physHipsRB.angularDrag;
-        headdrag = PlayerInfo.physHeadRB.angularDrag;
-        initialized = true;
+        PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
     }
 
     private void OnDisable()
@@ -75,6 +60,20 @@ public class LucidArms : MonoBehaviour
         LucidInputActionRefs.grabL.canceled -= UngrabButtonLeft;
         LucidInputActionRefs.grabR.started -= GrabButtonRight;
         LucidInputActionRefs.grabR.canceled -= UngrabButtonRight;
+
+        PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+    }
+
+    private void OnAssignVismodel(LucidVismodel visModel)
+    {
+        disabling = false;
+        leftshoulder = PlayerInfo.vismodelRef.anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+        rightshoulder = PlayerInfo.vismodelRef.anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
+        leftanchor.connectedBody = PlayerInfo.mainBody;
+        rightanchor.connectedBody = PlayerInfo.mainBody;
+        hipdrag = PlayerInfo.physHipsRB.angularDrag;
+        headdrag = PlayerInfo.physHeadRB.angularDrag;
+        initialized = true;
     }
 
     private void Start()
@@ -369,11 +368,5 @@ public class LucidArms : MonoBehaviour
         PlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
         PlayerInfo.physHipsRB.angularDrag = hipdrag;
         PlayerInfo.physHeadRB.angularDrag = headdrag;
-    }
-
-    private IEnumerator InitDelay()
-    {
-        yield return new WaitForSeconds(1);
-        Init();
     }
 }

@@ -36,6 +36,28 @@ public static class Shortcuts
         HumanBodyBones.LeftFoot,
         HumanBodyBones.RightFoot
     };
+    public static List<HumanBodyBones> hb2list_full = new List<HumanBodyBones>()
+    {
+        HumanBodyBones.Hips,
+        HumanBodyBones.Spine,
+        HumanBodyBones.Chest,
+        HumanBodyBones.Neck,
+        HumanBodyBones.Head,
+        HumanBodyBones.LeftShoulder,
+        HumanBodyBones.RightShoulder,
+        HumanBodyBones.LeftUpperArm,
+        HumanBodyBones.RightUpperArm,
+        HumanBodyBones.LeftLowerArm,
+        HumanBodyBones.RightLowerArm,
+        HumanBodyBones.LeftHand,
+        HumanBodyBones.RightHand,
+        HumanBodyBones.LeftUpperLeg,
+        HumanBodyBones.RightUpperLeg,
+        HumanBodyBones.LeftLowerLeg,
+        HumanBodyBones.RightLowerLeg,
+        HumanBodyBones.LeftFoot,
+        HumanBodyBones.RightFoot
+    };
     public static Quaternion QShortestRotation(Quaternion a, Quaternion b)
     {
         if (Quaternion.Dot(a, b) < 0)
@@ -50,6 +72,42 @@ public static class Shortcuts
         return new Quaternion(input.x * scalar, input.y * scalar, input.z * scalar, input.w * scalar);
     }
 
+    public static HumanBodyBones PrimaryChild(HumanBodyBones parent)
+    {
+        switch (parent)
+        {
+            case HumanBodyBones.Hips:
+                return HumanBodyBones.Spine;
+            case HumanBodyBones.Spine:
+                return HumanBodyBones.Chest;
+            case HumanBodyBones.Chest:
+                return HumanBodyBones.Neck;
+            case HumanBodyBones.Neck:
+                return HumanBodyBones.Head;
+            case HumanBodyBones.RightShoulder:
+                return HumanBodyBones.RightUpperArm;
+            case HumanBodyBones.RightUpperArm:
+                return HumanBodyBones.RightLowerArm;
+            case HumanBodyBones.RightLowerArm:
+                return HumanBodyBones.RightHand;
+            case HumanBodyBones.LeftShoulder:
+                return HumanBodyBones.LeftUpperArm;
+            case HumanBodyBones.LeftUpperArm:
+                return HumanBodyBones.LeftLowerArm;
+            case HumanBodyBones.LeftLowerArm:
+                return HumanBodyBones.LeftHand;
+            case HumanBodyBones.LeftUpperLeg:
+                return HumanBodyBones.LeftLowerLeg;
+            case HumanBodyBones.LeftLowerLeg:
+                return HumanBodyBones.LeftFoot;
+            case HumanBodyBones.RightUpperLeg:
+                return HumanBodyBones.RightLowerLeg;
+            case HumanBodyBones.RightLowerLeg:
+                return HumanBodyBones.RightFoot;
+            default:
+                return parent;
+        }
+    }
 }
 
 //mostly used for interaction between motion-related scripts such as legs and modelsync

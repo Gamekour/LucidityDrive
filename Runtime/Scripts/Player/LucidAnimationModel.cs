@@ -25,7 +25,6 @@ public class LucidAnimationModel : MonoBehaviour
     [SerializeField] float airtimemax = 1;
     [SerializeField] float groundedforgiveness = 1;
     [SerializeField] float lerp = 0.5f;
-    [SerializeField] float lerp_chest = 0.5f;
     [SerializeField] float swaymult;
     [SerializeField] float swayspeed;
     [SerializeField] float landspeed = 0.5f;
@@ -93,6 +92,41 @@ public class LucidAnimationModel : MonoBehaviour
         currentsway = Mathf.Sin(Time.time * swayspeed) * swaymult;
     }
 
+    private void OnEnable()
+    {
+        PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+    }
+
+    private void OnDisable()
+    {
+        PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+    }
+
+    private void OnAssignVismodel(LucidVismodel visModel)
+    {
+        foreach(HumanBodyBones hb2 in Shortcuts.hb2list_full)
+        {
+            Transform tVisBone = visModel.anim.GetBoneTransform(hb2);
+            Transform tAnimBone = anim.GetBoneTransform(hb2);
+            Transform tVisChild = visModel.anim.GetBoneTransform(Shortcuts.PrimaryChild(hb2));
+            Transform tAnimChild = anim.GetBoneTransform(Shortcuts.PrimaryChild(hb2));
+
+            if (Vector3.Distance(tVisBone.position, tVisChild.position) < 0.001f)
+                continue;
+
+            float visBoneLength = Vector3.Distance(tVisBone.position, tVisChild.position);
+            float animBoneLength = Vector3.Distance(tAnimBone.position, tAnimChild.position);
+
+            tAnimBone.localPosition = tVisBone.localPosition;
+            tAnimBone.localRotation = tVisBone.localRotation;
+
+            float targetlength = (visBoneLength / animBoneLength);
+            tAnimBone.localScale = new Vector3(1, targetlength, 1);
+        }
+
+        //anim.avatar = visModel.anim.avatar;
+    }
+
     private void OnAnimatorMove()
     {
         CollectBoneRotations();
@@ -119,83 +153,29 @@ public class LucidAnimationModel : MonoBehaviour
         }
     }
 
-    //there really isnt any way i know of to refactor this without passing a thousand variables around
     private void OnAnimatorIK(int layerIndex)
     {
-        bool currentright = PlayerInfo.animphase < 0.5f;
+        bool crawl = LucidInputValueShortcuts.crawl;
+        bool slide = LucidInputValueShortcuts.slide;
+        if (slide || crawl)
+            stucksliding = true;
 
         Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
 
-        Vector3 localVel = PlayerInfo.hipspace.InverseTransformVector(PlayerInfo.mainBody.velocity);
+        Vector3 localVel = CalculateLocalVelocity();
         Vector3 velflat = localVel;
         velflat.y = 0;
-        localVel *= velscale;
-        Vector3 currentvellocal = new Vector3(anim.GetFloat("velX"), anim.GetFloat("velY"), anim.GetFloat("velZ"));
-        localVel = Vector3.Lerp(localVel, currentvellocal, velsmoothness);
-        Vector3 localNrm = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.hipspace.up);
-        Vector3 currentnrmlocal = new Vector3(anim.GetFloat("nrmX"), anim.GetFloat("nrmY"), anim.GetFloat("nrmZ"));
-        localNrm = Vector3.Lerp(currentnrmlocal, localNrm,1 - nrmsmoothness);
-        Vector3 currentWill = new Vector3(anim.GetFloat("willX"), 0, anim.GetFloat("willZ"));
-        Vector3 willFlat = Vector3.Lerp(currentWill, moveFlat, willsmoothness);
-        float lastalignment = anim.GetFloat("alignment");
-        lastalignment = Mathf.Lerp(PlayerInfo.alignment, lastalignment, alignmentsmoothness);
+        Vector3 localNrm = CalculateLocalNormal();
+        Vector3 willFlat = CalculateWillFlat();
+        float lastalignment = CalculateAlignment();
+        Vector2 lerplean = CalculateLean(moveFlat, localVel, localNrm);
 
-        footAngle = Mathf.DeltaAngle(refAngle, PlayerInfo.pelvis.eulerAngles.y);
-        footAngle %= 360;
-        footAngle = footAngle > 180 ? footAngle - 360 : footAngle;
-        footAngle /= Mathf.Clamp(velflat.magnitude * unrotateFeetBySpeed, 1, 100);
-        if (Mathf.Abs(footAngle) > maxFootAngle)
-        {
-            footAngle = 0;
-            refAngle = PlayerInfo.pelvis.eulerAngles.y;
-            PlayerInfo.animphase += 0.5f;
-            PlayerInfo.animphase %= 1;
-        }
-
-        bool crawl = LucidInputValueShortcuts.crawl;
-        bool slide = LucidInputValueShortcuts.slide;
-        if (slide || crawl)
-            stucksliding = true;
-
-        bool footslide = (lastalignment > footslidethreshold && localVel.magnitude > footslidevelthreshold);
-
-        Vector2 lean;
-        Vector2 oldlean = Vector2.zero;
-        oldlean.x = anim.GetFloat("leanX");
-        oldlean.y = anim.GetFloat("leanZ");
-        lean = LeanCalc(moveFlat, localVel * 0.25f, localNrm);
-        Vector2 lerplean = Vector2.zero;
-        lerplean = Vector2.Lerp(oldlean, lean, leansmoothness);
-        anim.SetFloat("leanX", lerplean.x);
-        anim.SetFloat("leanZ", lerplean.y);
-
-        anim.SetFloat("velX", localVel.x);
-        anim.SetFloat("velY", localVel.y);
-        anim.SetFloat("velZ", localVel.z);
-        anim.SetFloat("willX", willFlat.x);
-        anim.SetFloat("willZ", willFlat.z);
-        anim.SetFloat("nrmX", localNrm.x);
-        anim.SetFloat("nrmY", localNrm.y);
-        anim.SetFloat("nrmZ", localNrm.z);
-        anim.SetFloat("animcycle", PlayerInfo.animphase);
-        anim.SetFloat("airtime", PlayerInfo.airtime);
-        anim.SetFloat("alignment", lastalignment);
-        anim.SetFloat("climb", PlayerInfo.climbrelative.y);
-        anim.SetFloat("hangX", PlayerInfo.climbrelative.x);
-        anim.SetFloat("hangZ", PlayerInfo.climbrelative.z);
-        anim.SetBool("grounded", PlayerInfo.grounded);
-        anim.SetBool("slide",  slide);
-        anim.SetBool("bslide", crawl);
-        anim.SetBool("crawl", PlayerInfo.crawling);
-        anim.SetBool("flight", PlayerInfo.flying);
-        anim.SetBool("grabL", PlayerInfo.grabL);
-        anim.SetBool("grabR", PlayerInfo.grabR);
-        anim.SetBool("climbing", PlayerInfo.climbing);
-        anim.SetBool("footslide", footslide);
-        anim.SetFloat("footAngle", footAngle / maxFootAngle);
+        UpdateFootAngle();
+        UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean);
+        UpdateAnimatorBools();
 
         if (PlayerInfo.airtime > airtimesmooth)
             airtimesmooth = PlayerInfo.airtime;
@@ -214,13 +194,6 @@ public class LucidAnimationModel : MonoBehaviour
         hipweight *= Mathf.Clamp01(velflat.magnitude);
         hipweight *= PlayerInfo.climbing ? 0 : 1;
         anim.SetLayerWeight(2, hipweight);
-
-        /*
-        float legtiltweight = velflat.magnitude;
-        legtiltweight += (PlayerInfo.grounded ? 0 : 1);
-        legtiltweight *= PlayerInfo.climbing ? 0 : 1;
-        anim.SetLayerWeight(3, legtiltweight);
-        */
 
         Transform tSpine = anim.GetBoneTransform(HumanBodyBones.Spine);
         tSpine.Rotate(Vector3.forward, currentsway, Space.Self);
@@ -242,136 +215,103 @@ public class LucidAnimationModel : MonoBehaviour
 
         currentcrouch = Mathf.Lerp(targetcrouch, currentcrouch, midaircrouchsmoothness);
 
-        RaycastHit LHitInfoThigh = new RaycastHit();
-        RaycastHit RHitInfoThigh = new RaycastHit();
-        RaycastHit LHitInfoShin = new RaycastHit();
-        RaycastHit RHitInfoShin = new RaycastHit();
+        UpdateFootPositions();
+        UpdateHandPositions();
+    }
 
-        bool thighCastL = Physics.SphereCast(PlayerInfo.legspaceL.position + (PlayerInfo.legspaceL.up * castheight), castthickness, kneeposL - PlayerInfo.legspaceL.position, out LHitInfoThigh, Vector3.Distance(footposL, PlayerInfo.legspaceL.position), Shortcuts.geometryMask);
-        bool thighCastR = Physics.SphereCast(PlayerInfo.legspaceR.position + (PlayerInfo.legspaceR.up * castheight), castthickness, kneeposR - PlayerInfo.legspaceR.position, out RHitInfoThigh, Vector3.Distance(footposR, PlayerInfo.legspaceR.position), Shortcuts.geometryMask);
-        bool shinCastL = Physics.SphereCast(kneeposL, castthickness, footposL - PlayerInfo.legspaceL.position, out LHitInfoShin, Vector3.Distance(footposL, PlayerInfo.legspaceL.position) * groundedforgiveness, Shortcuts.geometryMask);
-        bool shinCastR = Physics.SphereCast(kneeposR, castthickness, footposR - PlayerInfo.legspaceR.position, out RHitInfoShin, Vector3.Distance(footposR, PlayerInfo.legspaceR.position) * groundedforgiveness, Shortcuts.geometryMask);
-        Vector3 LCastOld = LCast;
-        if (thighCastL)
+    private float CalculateAlignment()
+    {
+        float lastalignment = anim.GetFloat("alignment");
+        lastalignment = Mathf.Lerp(PlayerInfo.alignment, lastalignment, alignmentsmoothness);
+        return lastalignment;
+    }
+
+    private Vector2 CalculateLean(Vector3 moveFlat, Vector3 localVel, Vector3 localNrm)
+    {
+        Vector2 oldlean = Vector2.zero;
+        oldlean.x = anim.GetFloat("leanX");
+        oldlean.y = anim.GetFloat("leanZ");
+        Vector2 lean = LeanCalc(moveFlat, localVel * 0.25f, localNrm);
+        Vector2 lerplean = Vector2.Lerp(oldlean, lean, leansmoothness);
+        return lerplean;
+    }
+
+    private Vector3 CalculateLocalVelocity()
+    {
+        Vector3 localVel = PlayerInfo.hipspace.InverseTransformVector(PlayerInfo.mainBody.velocity);
+        localVel *= velscale;
+        Vector3 currentvellocal = new Vector3(anim.GetFloat("velX"), anim.GetFloat("velY"), anim.GetFloat("velZ"));
+        return Vector3.Lerp(localVel, currentvellocal, velsmoothness);
+    }
+
+    private Vector3 CalculateLocalNormal()
+    {
+        Vector3 localNrm = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.hipspace.up);
+        Vector3 currentnrmlocal = new Vector3(anim.GetFloat("nrmX"), anim.GetFloat("nrmY"), anim.GetFloat("nrmZ"));
+        return Vector3.Lerp(currentnrmlocal, localNrm, 1 - nrmsmoothness);
+    }
+
+    private Vector3 CalculateWillFlat()
+    {
+        Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
+        Vector3 moveFlat = new Vector3(moveVector.x, 0, moveVector.y);
+        Vector3 currentWill = new Vector3(anim.GetFloat("willX"), 0, anim.GetFloat("willZ"));
+        return Vector3.Lerp(currentWill, moveFlat, willsmoothness);
+    }
+
+
+    private void UpdateFootAngle()
+    {
+        footAngle = Mathf.DeltaAngle(refAngle, PlayerInfo.pelvis.eulerAngles.y);
+        footAngle %= 360;
+        footAngle = footAngle > 180 ? footAngle - 360 : footAngle;
+        footAngle /= Mathf.Clamp(PlayerInfo.mainBody.velocity.magnitude * unrotateFeetBySpeed, 1, 100);
+
+        if (Mathf.Abs(footAngle) > maxFootAngle)
         {
-            LCast = LHitInfoThigh.point;
-            if (!currentright || !thighCastR)
-            {
-                PlayerInfo.footsurface = LHitInfoThigh.normal;
-                PlayerInfo.footsurfL = LHitInfoThigh.normal;
-                PlayerInfo.footspace.position = LHitInfoThigh.point + (LHitInfoThigh.normal * verticalFootAdjust);
-                PlayerInfo.footspace.up = LHitInfoThigh.normal;
-
-                Vector3 footforward = PlayerInfo.pelvis.forward;
-                if (Mathf.Abs(LHitInfoThigh.normal.y) < 0.1f)
-                    footforward = Vector3.up;
-                PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, LHitInfoThigh.normal);
-            }
+            footAngle = 0;
+            refAngle = PlayerInfo.pelvis.eulerAngles.y;
+            PlayerInfo.animphase += 0.5f;
+            PlayerInfo.animphase %= 1;
         }
-        else if (shinCastL)
-        {
-            LCast = LHitInfoShin.point;
-            if (!currentright || !shinCastR)
-            {
-                PlayerInfo.footsurface = LHitInfoShin.normal;
-                PlayerInfo.footsurfL = LHitInfoShin.normal;
-                PlayerInfo.footspace.position = LHitInfoShin.point + (LHitInfoShin.normal * verticalFootAdjust);
-                PlayerInfo.footspace.up = LHitInfoShin.normal;
+    }
 
-                Vector3 footforward = PlayerInfo.pelvis.forward;
-                if (Mathf.Abs(LHitInfoShin.normal.y) < 0.1f)
-                    footforward = Vector3.up;
-                PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, LHitInfoShin.normal);
-            }
-        }
-        else
-            LCast = footposL;
-        LCast = Vector3.Lerp(LCast, LCastOld, footsmoothness);
-        PlayerInfo.IK_LF.position = LCast;
+    private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float lastalignment, Vector2 lean)
+    {
+        anim.SetFloat("velX", localVel.x);
+        anim.SetFloat("velY", localVel.y);
+        anim.SetFloat("velZ", localVel.z);
+        anim.SetFloat("willX", willFlat.x);
+        anim.SetFloat("willZ", willFlat.z);
+        anim.SetFloat("nrmX", localNrm.x);
+        anim.SetFloat("nrmY", localNrm.y);
+        anim.SetFloat("nrmZ", localNrm.z);
+        anim.SetFloat("animcycle", PlayerInfo.animphase);
+        anim.SetFloat("airtime", PlayerInfo.airtime);
+        anim.SetFloat("alignment", lastalignment);
+        anim.SetFloat("climb", PlayerInfo.climbrelative.y);
+        anim.SetFloat("hangX", PlayerInfo.climbrelative.x);
+        anim.SetFloat("hangZ", PlayerInfo.climbrelative.z);
+        anim.SetFloat("leanX", lean.x);
+        anim.SetFloat("leanZ", lean.y);
+        anim.SetFloat("footAngle", footAngle / maxFootAngle);
+    }
 
-        Vector3 RCastOld = RCast;
-        if (thighCastR)
-        {
-            RCast = RHitInfoThigh.point;
-            if (currentright || !thighCastL)
-            {
-                PlayerInfo.footsurface = RHitInfoThigh.normal;
-                PlayerInfo.footsurfR = RHitInfoThigh.normal;
-                PlayerInfo.footspace.position = RHitInfoThigh.point + (RHitInfoThigh.normal * verticalFootAdjust);
-                PlayerInfo.footspace.up = RHitInfoThigh.normal;
+    private void UpdateAnimatorBools()
+    {
+        bool slide = LucidInputValueShortcuts.slide;
+        bool crawl = LucidInputValueShortcuts.crawl;
+        bool footslide = (PlayerInfo.alignment > footslidethreshold && PlayerInfo.mainBody.velocity.magnitude > footslidevelthreshold);
 
-                Vector3 footforward = PlayerInfo.pelvis.forward;
-                if (Mathf.Abs(RHitInfoThigh.normal.y) < 0.1f)
-                    footforward = Vector3.up;
-                PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, RHitInfoThigh.normal);
-            }
-        }
-        else if (shinCastR)
-        {
-            RCast = RHitInfoShin.point;
-            if (currentright || !shinCastL)
-            {
-                PlayerInfo.footsurface = RHitInfoShin.normal;
-                PlayerInfo.footsurfR = RHitInfoShin.normal;
-                PlayerInfo.footspace.position = RHitInfoShin.point + (RHitInfoShin.normal * verticalFootAdjust);
-                PlayerInfo.footspace.up = RHitInfoShin.normal;
-
-                Vector3 footforward = PlayerInfo.pelvis.forward;
-                if (Mathf.Abs(RHitInfoShin.normal.y) < 0.1f)
-                    footforward = Vector3.up;
-                PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, RHitInfoShin.normal);
-            }
-        }
-        else
-        {
-            RCast = footposR;
-        }
-        RCast = Vector3.Lerp(RCast, RCastOld, footsmoothness);
-        PlayerInfo.IK_RF.position = RCast;
-
-
-        bool castsuccess = (thighCastL || thighCastR || shinCastL || shinCastR);
-
-        PlayerInfo.grounded = castsuccess || PlayerInfo.pelviscollision;
-
-        if (PlayerInfo.crawling)
-            PlayerInfo.footsurface = PlayerInfo.hipspace.up;
-
-        PlayerInfo.IK_LF.position = LCast;
-        PlayerInfo.IK_RF.position = RCast;
-
-        if (!PlayerInfo.grabL && !PlayerInfo.forceIK_LH)
-        {
-            bool armLHit = Physics.SphereCast(animShoulderL.position, castthickness / 2, animHandL.position - animShoulderL.position, out RaycastHit armHitInfoL, Vector3.Distance(animHandL.position, animShoulderL.position), Shortcuts.geometryMask);
-            if (armLHit)
-            {
-                PlayerInfo.IK_LH.position = armHitInfoL.point;
-
-                Vector3 handforward = PlayerInfo.pelvis.forward;
-                if (Mathf.Abs(armHitInfoL.normal.y) < 0.05f)
-                    handforward = Vector3.up;
-                PlayerInfo.IK_LH.rotation = Quaternion.LookRotation(handforward, armHitInfoL.normal);
-            }
-            else
-                PlayerInfo.IK_LH.position = Vector3.zero;
-        }
-
-        if (!PlayerInfo.grabR && !PlayerInfo.forceIK_RH)
-        {
-            bool armRHit = Physics.SphereCast(animShoulderR.position, castthickness / 2, animHandR.position - animShoulderR.position, out RaycastHit armHitInfoR, Vector3.Distance(animHandR.position, animShoulderR.position), Shortcuts.geometryMask);
-            if (armRHit)
-            {
-                PlayerInfo.IK_RH.position = armHitInfoR.point;
-
-                Vector3 handforward = PlayerInfo.pelvis.forward;
-                if (Mathf.Abs(armHitInfoR.normal.y) < 0.05f)
-                    handforward = Vector3.up;
-                PlayerInfo.IK_RH.rotation = Quaternion.LookRotation(handforward, armHitInfoR.normal);
-            }
-            else
-                PlayerInfo.IK_RH.position = Vector3.zero;
-        }
-        
+        anim.SetBool("grounded", PlayerInfo.grounded);
+        anim.SetBool("slide", slide);
+        anim.SetBool("bslide", crawl);
+        anim.SetBool("crawl", PlayerInfo.crawling);
+        anim.SetBool("flight", PlayerInfo.flying);
+        anim.SetBool("grabL", PlayerInfo.grabL);
+        anim.SetBool("grabR", PlayerInfo.grabR);
+        anim.SetBool("climbing", PlayerInfo.climbing);
+        anim.SetBool("footslide", footslide);
     }
 
     private Vector2 LeanCalc(Vector3 localwill, Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
@@ -390,6 +330,111 @@ public class LucidAnimationModel : MonoBehaviour
             lean = -lean;
 
         return lean;
+    }
+
+    private void UpdateFootPositions()
+    {
+        Vector3 footposL = animFootL.position;
+        Vector3 footposR = animFootR.position;
+        Vector3 kneeposL = animKneeL.position;
+        Vector3 kneeposR = animKneeR.position;
+
+        UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast);
+        UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast);
+
+        PlayerInfo.grounded = (LCast != footposL || RCast != footposR) || PlayerInfo.pelviscollision;
+
+        if (PlayerInfo.crawling)
+            PlayerInfo.footsurface = PlayerInfo.hipspace.up;
+
+        PlayerInfo.IK_LF.position = LCast;
+        PlayerInfo.IK_RF.position = RCast;
+    }
+
+    private void UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
+    {
+        RaycastHit hitInfoThigh = new RaycastHit();
+        RaycastHit hitInfoShin = new RaycastHit();
+
+        bool thighCast = Physics.SphereCast(legspace.position + (legspace.up * castheight), castthickness, kneepos - legspace.position, out hitInfoThigh, Vector3.Distance(footpos, legspace.position), Shortcuts.geometryMask);
+        bool shinCast = Physics.SphereCast(kneepos, castthickness, footpos - legspace.position, out hitInfoShin, Vector3.Distance(footpos, legspace.position) * groundedforgiveness, Shortcuts.geometryMask);
+
+        Vector3 CastOld = Cast;
+        if (thighCast)
+        {
+            Cast = hitInfoThigh.point;
+            UpdateFootSpaceAndRotation(isLeft, hitInfoThigh.normal, hitInfoThigh.point);
+        }
+        else if (shinCast)
+        {
+            Cast = hitInfoShin.point;
+            UpdateFootSpaceAndRotation(isLeft, hitInfoShin.normal, hitInfoShin.point);
+        }
+        else
+            Cast = footpos;
+
+        Cast = Vector3.Lerp(Cast, CastOld, footsmoothness);
+    }
+
+    private void UpdateFootSpaceAndRotation(bool isLeft, Vector3 normal, Vector3 point)
+    {
+        if (isLeft)
+            PlayerInfo.footsurfL = normal;
+        else
+            PlayerInfo.footsurfR = normal;
+
+        PlayerInfo.footsurface = normal;
+        PlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
+        PlayerInfo.footspace.up = normal;
+
+        Vector3 footforward = PlayerInfo.pelvis.forward;
+        if (Mathf.Abs(normal.y) < 0.1f)
+            footforward = Vector3.up;
+
+        if (isLeft)
+            PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, normal);
+        else
+            PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, normal);
+    }
+
+    private void UpdateHandPositions()
+    {
+        if (!PlayerInfo.grabL && !PlayerInfo.forceIK_LH)
+            UpdateHandPosition(true, animShoulderL, animHandL);
+
+        if (!PlayerInfo.grabR && !PlayerInfo.forceIK_RH)
+            UpdateHandPosition(false, animShoulderR, animHandR);
+    }
+
+    private void UpdateHandPosition(bool isLeft, Transform shoulder, Transform hand)
+    {
+        RaycastHit armHitInfo;
+        bool armHit = Physics.SphereCast(shoulder.position, castthickness / 2, hand.position - shoulder.position, out armHitInfo, Vector3.Distance(hand.position, shoulder.position), Shortcuts.geometryMask);
+
+        if (armHit)
+        {
+            Vector3 handforward = PlayerInfo.pelvis.forward;
+            if (Mathf.Abs(armHitInfo.normal.y) < 0.05f)
+                handforward = Vector3.up;
+
+            if (isLeft)
+            {
+                PlayerInfo.IK_LH.position = armHitInfo.point;
+                PlayerInfo.IK_LH.rotation = Quaternion.LookRotation(handforward, armHitInfo.normal);
+            }
+            else
+            {
+                PlayerInfo.IK_RH.position = armHitInfo.point;
+                PlayerInfo.IK_RH.rotation = Quaternion.LookRotation(handforward, armHitInfo.normal);
+            }
+        }
+        else
+        {
+            if (isLeft)
+                PlayerInfo.IK_LH.position = Vector3.zero;
+            else
+                PlayerInfo.IK_RH.position = Vector3.zero;
+        }
     }
 
     public float SlopeLeanCalc(float slope)

@@ -116,11 +116,14 @@ public class LucidLegs : MonoBehaviour
     private void Start()
     {
         movementSettings = defaultMovementSettings;
-        legLength = transform.position.y - transform.root.position.y; //automatically determine leg length based on height from root - will eventually be replaced by a better avatar-specific system
-        legLength *= maxlegmult;
         animModelHips = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips);
         animModelLFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.LeftFoot);
         animModelRFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.RightFoot);
+    }
+
+    private void OnEnable()
+    {
+        PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
     }
 
     private void OnDisable()
@@ -128,6 +131,20 @@ public class LucidLegs : MonoBehaviour
         PlayerInfo.flying = false;
         //this is a fix for a bug occurring when you switch scenes while in a flight zone - i may eventually have a function to reset all temporary values in playerinfo on scene change
         PlayerInfo.pelviscollision = false;
+
+        PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+    }
+
+    public void OnAssignVismodel(LucidVismodel visModel)
+    {
+        Vector3 posHip = visModel.anim.GetBoneTransform(HumanBodyBones.LeftUpperLeg).position;
+        Vector3 posKnee = visModel.anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg).position;
+        Vector3 posFoot = visModel.anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
+        float thighLength = Vector3.Distance(posHip, posKnee);
+        float calfLength = Vector3.Distance(posKnee, posFoot);
+        legLength = thighLength + calfLength;
+        legLength *= maxlegmult;
+        print(legLength);
     }
 
     private void FixedUpdate()
