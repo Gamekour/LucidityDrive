@@ -76,20 +76,17 @@ public class CameraManager : MonoBehaviour
     {
         if (!PlayerInfo.animModelInitialized) return;
 
-        if(headrootTarget != null && headroot != null) 
+        if (headrootTarget != null && headroot != null)
         {
-
+            // Handle head position interpolation
             if (cameraPointIndex != 0)
                 headroot.position = Vector3.Lerp(headroot.position, headrootTarget.position, 0.5f);
             else
                 headroot.position = headrootTarget.position;
-            Vector3 neweulers = Quaternion.Slerp(headroot.rotation, headrootTarget.rotation, 1 - headsmooth).eulerAngles;
-            bool startpolar = headrootTarget.up.y > 0;
-            bool endpolar = headroot.up.y > 0;
-            if (startpolar == endpolar)
-                neweulers.z = Mathf.LerpAngle(headroot.eulerAngles.z, headrootTarget.eulerAngles.z, 1 - headsmoothZ);
-            else
-                neweulers.z = headrootTarget.eulerAngles.z;
+
+            // Handle rotation with quaternions to prevent gimbal lock
+            Quaternion targetRotation = headrootTarget.rotation;
+            Quaternion smoothRotation = Quaternion.Slerp(headroot.rotation, targetRotation, 1 - headsmooth);
 
             if (forceRaw)
                 currentrawblend = 0;
@@ -98,11 +95,14 @@ public class CameraManager : MonoBehaviour
                 if (currentrawblend < rawblend)
                     currentrawblend = Mathf.Clamp(currentrawblend + (Time.deltaTime * rawblendTransitionSpeed), 0, rawblend);
             }
+
+            // Combine raw rotation with smoothed rotation
             Quaternion raw = PlayerInfo.head.transform.rotation;
-            Quaternion finalrot = Quaternion.Slerp(Quaternion.Euler(neweulers), raw, currentrawblend);
-            headroot.rotation = finalrot;
+            Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, currentrawblend);
+            headroot.rotation = finalRotation;
         }
 
+        // Update camera position and rotation
         PlayerInfo.mainCamera.transform.position = camerapoints[cameraPointIndex].position;
         PlayerInfo.mainCamera.transform.rotation = camerapoints[cameraPointIndex].rotation;
     }

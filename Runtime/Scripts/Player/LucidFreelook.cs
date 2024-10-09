@@ -1,22 +1,24 @@
 using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting.YamlDotNet.Serialization.NodeTypeResolvers;
 using UnityEngine;
 
 public class LucidFreelook : MonoBehaviour
 {
-    [SerializeField] Vector2 sens;
-    [SerializeField] float headradius;
-    [SerializeField] float downfloat;
-    [SerializeField] float upfloat;
-    [SerializeField] float sensmult = 1;
+    [SerializeField] private Vector2 sensitivity = Vector2.one;
+    [SerializeField] private float headRadius;
+    [SerializeField] private float downAngleLimit;
+    [SerializeField] private float upAngleLimit;
+    [SerializeField] private float sensitivityMultiplier = 1f;
+
     private Transform chest;
-    private Transform animhead;
-    private float chestXDisplay;
-    private float adjustUp;
-    private float adjustDown;
-    private float adjustDownReal;
-    private float adjustUpReal;
-    private float chex;
+    private Transform head;
+
+    private float chestXAngle;
+    private float adjustedUpAngle;
+    private float adjustedDownAngle;
+    private float realAdjustedDownAngle;
+    private float realAdjustedUpAngle;
+    private float currentXAngle;
     private float currentOffset;
     private float targetOffset;
 
@@ -39,15 +41,16 @@ public class LucidFreelook : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headlocked || !PlayerInfo.animModelInitialized) return;
+        if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headlocked || !PlayerInfo.animModelInitialized)
+            return;
 
-        transform.position = animhead.position;
-        RotationCalc();
+        transform.position = head.position;
+        CalculateRotation();
     }
 
     private void OnAnimModelInitialized()
     {
-        animhead = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head);
+        head = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head);
     }
 
     public void AssignVismodel(LucidVismodel vismodel)
@@ -55,107 +58,134 @@ public class LucidFreelook : MonoBehaviour
         chest = vismodel.anim.GetBoneTransform(HumanBodyBones.Chest);
     }
 
-    public void SetSensMult(float newValue)
+    public void SetSensitivityMultiplier(float newValue)
     {
-        sensmult = newValue;
+        sensitivityMultiplier = newValue;
     }
 
-    private void RotationCalc()
+    private void CalculateRotation()
     {
         PlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
-        Vector2 headlook = LucidInputActionRefs.headlook.ReadValue<Vector2>();
-        headlook *= sens * sensmult;
-        headlook *= Time.deltaTime;
 
-        Vector3 headflat = transform.forward;
-        headflat.y = 0;
-        Vector3 hipflat = PlayerInfo.pelvis.forward;
-        hipflat.y = 0;
+        Vector2 headLookInput = LucidInputActionRefs.headlook.ReadValue<Vector2>();
+        headLookInput *= sensitivity * sensitivityMultiplier;
+        headLookInput *= Time.deltaTime;
 
-        float angle = Mathf.Clamp(Vector3.SignedAngle(headflat, hipflat, Vector3.up), -90, 90);
-        bool left = (angle > 0);
-        float y = 1 - (Mathf.Abs(angle) / 90);
+        Vector3 headForwardFlat = transform.forward;
+        headForwardFlat.y = 0;
+        Vector3 hipForwardFlat = PlayerInfo.pelvis.forward;
+        hipForwardFlat.y = 0;
 
-        Vector3 rot = Vector3.zero;
-        rot.x = headlook.y;
-        rot.y = headlook.x;
-        if ((rot.y < 0 && left) || (rot.y > 0 && !left))
+        float angleDifference = Mathf.Clamp(Vector3.SignedAngle(headForwardFlat, hipForwardFlat, Vector3.up), -90f, 90f);
+        bool isLookingLeft = (angleDifference > 0);
+        float yFactor = 1f - (Mathf.Abs(angleDifference) / 90f);
+
+        Vector3 rotation = new Vector3(headLookInput.y, headLookInput.x, 0);
+
+        if ((rotation.y < 0 && isLookingLeft) || (rotation.y > 0 && !isLookingLeft))
         {
-            //rot.y *= y;
+            // Uncomment the following line if needed:
+            // rotation.y *= yFactor;
         }
 
         float chestX = chest.eulerAngles.x;
+        chestXAngle = chestX;
 
-        chestXDisplay = chestX;
+        float downAdjust = chestX + downAngleLimit;
+        realAdjustedDownAngle = downAdjust;
+        float upAdjust = chestX - upAngleLimit;
+        realAdjustedUpAngle = upAdjust;
 
-        float downadjust = chestX + downfloat;
-        float downadjustreal = downadjust;
-        float upadjust = chestX - upfloat;
-        float upadjustreal = upadjust;
-
-        if(chestX > 180)
+        if (chestX > 180f)
         {
-            if (downadjust > 360)
+            if (downAdjust > 360f)
             {
-                downadjustreal = downadjust - 360;
-            }
-        }
-        if (chestX < 180 && upadjust < 0)
-            upadjustreal = upadjust + 360;
-        if(chest.up.y < 0)
-        {
-            if(chestX > 180)
-            {
-                float extra = chestX - 270;
-                chestX -= (2 * extra);
-            }
-            if(chestX < 180)
-            {
-                float extra = chestX - 90;
-                chestX -= (2 * extra);
+                realAdjustedDownAngle = downAdjust - 360f;
             }
         }
 
-        float theX = transform.eulerAngles.x;
-
-        if(transform.up.y < 0)
+        if (chestX < 180f && upAdjust < 0f)
         {
-            if(theX > 180)
-            {
-                float extra = theX - 270;
-                theX -= (2 * extra);
-            }
-            if(theX < 180)
-            {
-                float extra = theX - 90;
-                theX -= (2 * extra);
-            }
+            realAdjustedUpAngle = upAdjust + 360f;
         }
 
-        adjustUp = upadjust;
-        adjustDown = downadjust;
-        adjustDownReal = downadjustreal;
-        adjustUpReal = upadjustreal;
-        chex = theX;
+        AdjustChestXForUpsideDown();
 
-        float currentoffset = chestX - theX;
-        if (Mathf.Abs(currentoffset) > 180)
+        float currentX = transform.eulerAngles.x;
+
+        AdjustForUpsideDown(ref currentX);
+
+        adjustedUpAngle = upAdjust;
+        adjustedDownAngle = downAdjust;
+        currentXAngle = currentX;
+
+        currentOffset = CalculateOffset(chestX, currentX);
+        targetOffset = Mathf.Clamp(currentOffset + rotation.x, downAngleLimit, upAngleLimit);
+
+        float offsetDifference = targetOffset - currentOffset;
+
+        RotateModel(rotation.y, offsetDifference);
+    }
+
+    private void AdjustChestXForUpsideDown()
+    {
+        if (chest.up.y < 0)
         {
-            if (chestX > 180)
-                currentoffset = chestX - (theX + 360);
+            if (chestXAngle > 180f)
+            {
+                float extra = chestXAngle - 270f;
+                chestXAngle -= 2 * extra;
+            }
+            else if (chestXAngle < 180f)
+            {
+                float extra = chestXAngle - 90f;
+                chestXAngle -= 2 * extra;
+            }
+        }
+    }
+
+    private void AdjustForUpsideDown(ref float currentX)
+    {
+        if (transform.up.y < 0)
+        {
+            if (currentX > 180f)
+            {
+                float extra = currentX - 270f;
+                currentX -= 2 * extra;
+            }
+            else if (currentX < 180f)
+            {
+                float extra = currentX - 90f;
+                currentX -= 2 * extra;
+            }
+        }
+    }
+
+    private float CalculateOffset(float chestX, float currentX)
+    {
+        float offset = chestX - currentX;
+
+        if (Mathf.Abs(offset) > 180f)
+        {
+            if (chestX > 180f)
+            {
+                offset = chestX - (currentX + 360f);
+            }
             else
-                currentoffset = chestX - (theX - 360);
+            {
+                offset = chestX - (currentX - 360f);
+            }
         }
-        float targetoffset = Mathf.Clamp(currentoffset + rot.x, downfloat, upfloat);
 
-        targetOffset = targetoffset;
-        currentOffset = currentoffset;
+        return offset;
+    }
 
-        float diff = (targetoffset - currentoffset);
+    private void RotateModel(float yRotation, float xRotationDifference)
+    {
+        transform.Rotate(Vector3.up, yRotation, Space.World);
+        transform.Rotate(Vector3.right, -xRotationDifference, Space.Self);
 
-        transform.Rotate(Vector3.up, rot.y, Space.World);
-        transform.Rotate(Vector3.right, -diff, Space.Self);
-        Vector3 localeulers = transform.localEulerAngles;
-        localeulers.x = 0;
+        Vector3 localEulerAngles = transform.localEulerAngles;
+        localEulerAngles.x = 0;
     }
 }

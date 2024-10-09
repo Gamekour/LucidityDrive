@@ -254,6 +254,56 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: upfloat
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: downfloat
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: headRadius
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: upAngleLimit
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: sensitivity.x
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: sensitivity.y
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: downAngleLimit
+      value: -80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: lowerAngleLimit
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: upperAngleLimit
+      value: -80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: headRotationLimit
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6671152753758007464, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Name
