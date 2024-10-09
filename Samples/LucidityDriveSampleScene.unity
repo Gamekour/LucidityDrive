@@ -196,7 +196,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0208911d2d56b4a44aaa3d818969eaa4, type: 3}
---- !u!1001 &901255078
+--- !u!1001 &825995170
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -254,20 +254,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4822602755174393244, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6671152753758007464, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Name
       value: PlayerRig
-      objectReference: {fileID: 0}
-    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: lerp
-      value: 0.33
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -897,7 +887,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 492135137}
-  - {fileID: 901255078}
+  - {fileID: 825995170}
   - {fileID: 3564898101018781700}
   - {fileID: 1927088119}
   - {fileID: 2042076946}

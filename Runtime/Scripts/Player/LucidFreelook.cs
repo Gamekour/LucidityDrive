@@ -28,25 +28,26 @@ public class LucidFreelook : MonoBehaviour
     private void OnEnable()
     {
         PlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
+        PlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
     }
 
     private void OnDisable()
     {
         PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
-    }
-
-    private void Start()
-    {
-        animhead = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head);
+        PlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
     }
 
     private void Update()
     {
-        if(PlayerInfo.mainCamera != null && chest != null && PlayerInfo.headlocked)
-        {
-            transform.position = animhead.position;
-            RotationCalc();
-        }
+        if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headlocked || !PlayerInfo.animModelInitialized) return;
+
+        transform.position = animhead.position;
+        RotationCalc();
+    }
+
+    private void OnAnimModelInitialized()
+    {
+        animhead = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head);
     }
 
     public void AssignVismodel(LucidVismodel vismodel)

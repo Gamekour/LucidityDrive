@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class ForceMatch : MonoBehaviour
 {
-    [SerializeField] Transform target;
+    [SerializeField] HumanBodyBones targetBone;
     [SerializeField] float positionforce = 10;
     [SerializeField] float tolerance = 0.01f;
+    private Transform target;
     private ConfigurableJoint joint;
     private Rigidbody rb;
 
@@ -14,6 +15,21 @@ public class ForceMatch : MonoBehaviour
     {
         joint = GetComponent<ConfigurableJoint>();
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void OnEnable()
+    {
+        PlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
+    }
+
+    private void OnDisable()
+    {
+        PlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
+    }
+
+    public void OnAnimModelInitialized()
+    {
+        target = PlayerInfo.playermodelAnim.GetBoneTransform(targetBone);
     }
 
     private void FixedUpdate()

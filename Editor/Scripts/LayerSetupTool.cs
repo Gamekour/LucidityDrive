@@ -30,6 +30,9 @@ public class LucidSetupTool : EditorWindow
         // Set the name of user layer 7 to "FlightZone"
         SetLayerName(7, "FlightZone");
 
+        // Set the name of user layer 8 to "HideInFirstPerson"
+        SetLayerName(8, "HideInFirstPerson");
+
         AddTag("Grabbable");
 
         Physics.defaultMaxAngularSpeed = 100f;

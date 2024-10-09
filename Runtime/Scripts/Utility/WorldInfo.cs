@@ -114,6 +114,7 @@ public static class Shortcuts
 public static class PlayerInfo
 {
     public static UnityEvent<LucidVismodel> OnAssignVismodel = new UnityEvent<LucidVismodel>();
+    public static UnityEvent OnAnimModellInitialized = new UnityEvent();
 
     //references
     public static Rigidbody mainBody;
@@ -166,4 +167,5 @@ public static class PlayerInfo
     public static bool validgrabL = false;
     public static bool validgrabR = false;
     public static bool headlocked = true;
+    public static bool animModelInitialized = false;
 }

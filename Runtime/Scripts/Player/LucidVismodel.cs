@@ -16,7 +16,7 @@ public class LucidVismodel : MonoBehaviour
     [SerializeField] float collisionTransitionSpeed = 1;
 
     [Header("References")]
-    [SerializeField] Transform playerMeshParent;
+    public Transform playerMeshParent;
 
     private LucidAnimationModel modelSync;
     private Dictionary<string, Quaternion> localBoneRots;
@@ -35,7 +35,7 @@ public class LucidVismodel : MonoBehaviour
 
     private void OnAnimatorIK(int layerIndex)
     {
-        if (initialized)
+        if (initialized && PlayerInfo.animModelInitialized)
             LocalCalc();
     }
 

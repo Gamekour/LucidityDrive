@@ -1,12 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 public class LucidAnimationModel : MonoBehaviour
 {
     public float airtimeThreshold = 0.5f;
 
+    [SerializeField] AnimatorController controller;
     [SerializeField] Transform IK_LF;
     [SerializeField] Transform IK_RF;
     [SerializeField] Transform IK_LH;
@@ -59,34 +61,17 @@ public class LucidAnimationModel : MonoBehaviour
     private Transform animHandR;
     private Transform animShoulderL;
     private Transform animShoulderR;
+    private bool initialized = false;
 
-    private void Awake()
-    {
-        PlayerInfo.playermodelAnim = GetComponent<Animator>();
-    }
     private void Start()
     {
-        anim = PlayerInfo.playermodelAnim;
         pelvis = PlayerInfo.pelvis;
         head = PlayerInfo.head;
-
-        animpelvis = anim.GetBoneTransform(HumanBodyBones.Hips);
-        animFootL = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
-        animFootR = anim.GetBoneTransform(HumanBodyBones.RightFoot);
-        animKneeL = anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
-        animKneeR = anim.GetBoneTransform(HumanBodyBones.RightLowerLeg);
-        animHandL = anim.GetBoneTransform(HumanBodyBones.LeftHand);
-        animHandR = anim.GetBoneTransform(HumanBodyBones.RightHand);
-        animShoulderL = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
-        animShoulderR = anim.GetBoneTransform (HumanBodyBones.RightUpperArm);
-        PlayerInfo.IK_LF = IK_LF;
-        PlayerInfo.IK_RF = IK_RF;
-        PlayerInfo.IK_LH = IK_LH;
-        PlayerInfo.IK_RH = IK_RH;
-        PlayerInfo.mainCamera = fpcam;
     }
     private void Update()
     {
+        if (!initialized) return;
+
         transform.position += pelvis.position - animpelvis.position;
         transform.rotation = pelvis.rotation;
         currentsway = Mathf.Sin(Time.time * swayspeed) * swaymult;
@@ -104,31 +89,49 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void OnAssignVismodel(LucidVismodel visModel)
     {
-        foreach(HumanBodyBones hb2 in Shortcuts.hb2list_full)
-        {
-            Transform tVisBone = visModel.anim.GetBoneTransform(hb2);
-            Transform tAnimBone = anim.GetBoneTransform(hb2);
-            Transform tVisChild = visModel.anim.GetBoneTransform(Shortcuts.PrimaryChild(hb2));
-            Transform tAnimChild = anim.GetBoneTransform(Shortcuts.PrimaryChild(hb2));
+        GameObject newPlayerModel = Instantiate(visModel.gameObject, transform);
+        LucidVismodel newVisModel = newPlayerModel.GetComponent<LucidVismodel>();
+        newVisModel.playerMeshParent.gameObject.SetActive(false);
+        Destroy(newVisModel);
+        anim = newPlayerModel.GetComponent<Animator>();
+        PlayerInfo.playermodelAnim = anim;
+        anim.runtimeAnimatorController = controller;
+        Component c = newPlayerModel.AddComponent(typeof(AnimatorIKReciever));
+        ((AnimatorIKReciever)c).target = this;
 
-            if (Vector3.Distance(tVisBone.position, tVisChild.position) < 0.001f)
-                continue;
-
-            float visBoneLength = Vector3.Distance(tVisBone.position, tVisChild.position);
-            float animBoneLength = Vector3.Distance(tAnimBone.position, tAnimChild.position);
-
-            tAnimBone.localPosition = tVisBone.localPosition;
-            tAnimBone.localRotation = tVisBone.localRotation;
-
-            float targetlength = (visBoneLength / animBoneLength);
-            tAnimBone.localScale = new Vector3(1, targetlength, 1);
-        }
-
-        //anim.avatar = visModel.anim.avatar;
+        animpelvis = anim.GetBoneTransform(HumanBodyBones.Hips);
+        animFootL = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
+        animFootR = anim.GetBoneTransform(HumanBodyBones.RightFoot);
+        animKneeL = anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
+        animKneeR = anim.GetBoneTransform(HumanBodyBones.RightLowerLeg);
+        animHandL = anim.GetBoneTransform(HumanBodyBones.LeftHand);
+        animHandR = anim.GetBoneTransform(HumanBodyBones.RightHand);
+        animShoulderL = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+        animShoulderR = anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
+        PlayerInfo.IK_LF = IK_LF;
+        PlayerInfo.IK_RF = IK_RF;
+        PlayerInfo.IK_LH = IK_LH;
+        PlayerInfo.IK_RH = IK_RH;
+        PlayerInfo.mainCamera = fpcam;
     }
 
-    private void OnAnimatorMove()
+    private void FixedUpdate()
     {
+        if (anim != null)
+        {
+            if (anim.isInitialized && !PlayerInfo.animModelInitialized)
+            {
+                PlayerInfo.animModelInitialized = true;
+                PlayerInfo.OnAnimModellInitialized.Invoke();
+                initialized = true;
+            }
+        }
+    }
+
+    public void AnimatorMoveDelegate()
+    {
+        if (!initialized) return;
+
         CollectBoneRotations();
         hiprot = anim.GetBoneTransform(HumanBodyBones.Hips).rotation;
     }
@@ -153,8 +156,10 @@ public class LucidAnimationModel : MonoBehaviour
         }
     }
 
-    private void OnAnimatorIK(int layerIndex)
+    public void AnimatorIKDelegate(int layerIndex)
     {
+        if (!initialized) return;
+
         bool crawl = LucidInputValueShortcuts.crawl;
         bool slide = LucidInputValueShortcuts.slide;
         if (slide || crawl)

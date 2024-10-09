@@ -116,14 +116,12 @@ public class LucidLegs : MonoBehaviour
     private void Start()
     {
         movementSettings = defaultMovementSettings;
-        animModelHips = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips);
-        animModelLFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.LeftFoot);
-        animModelRFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.RightFoot);
     }
 
     private void OnEnable()
     {
         PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+        PlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
     }
 
     private void OnDisable()
@@ -133,6 +131,7 @@ public class LucidLegs : MonoBehaviour
         PlayerInfo.pelviscollision = false;
 
         PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+        PlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
     }
 
     public void OnAssignVismodel(LucidVismodel visModel)
@@ -145,6 +144,13 @@ public class LucidLegs : MonoBehaviour
         legLength = thighLength + calfLength;
         legLength *= maxlegmult;
         print(legLength);
+    }
+
+    public void OnAnimModelInitialized()
+    {
+        animModelHips = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips);
+        animModelLFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.LeftFoot);
+        animModelRFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.RightFoot);
     }
 
     private void FixedUpdate()
