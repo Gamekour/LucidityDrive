@@ -10,6 +10,7 @@ public class LucidArms : MonoBehaviour
     [SerializeField] float shoulderdist = 0.5f;
     [SerializeField] float castdist = 1;
     [SerializeField] float limitdist = 1;
+    [SerializeField] float animArmLengthMult = 1;
     [SerializeField] float shoulderstiffness = 0.1f;
     [SerializeField] float pullstrength = 2f;
     [SerializeField] float firstcastwidth = 0.25f;
@@ -35,6 +36,7 @@ public class LucidArms : MonoBehaviour
     private bool initialized = false;
     private float hipdrag = 0;
     private float headdrag = 0;
+    private float animArmLength = 0;
 
     private void OnEnable()
     {
@@ -73,6 +75,8 @@ public class LucidArms : MonoBehaviour
         rightanchor.connectedBody = PlayerInfo.mainBody;
         hipdrag = PlayerInfo.physHipsRB.angularDrag;
         headdrag = PlayerInfo.physHeadRB.angularDrag;
+        animArmLength = CalculateAnimArmLength(visModel);
+        print(animArmLength);
         initialized = true;
     }
 
@@ -83,7 +87,7 @@ public class LucidArms : MonoBehaviour
         LucidInputActionRefs.grabR.started += GrabButtonRight;
         LucidInputActionRefs.grabR.canceled += UngrabButtonRight;
         off.limit = Mathf.Infinity;
-        on.limit = limitdist;
+        on.limit = animArmLength + limitdist;
         leftanchor.linearLimit = off;
         rightanchor.linearLimit = off;
     }
@@ -127,6 +131,18 @@ public class LucidArms : MonoBehaviour
             PlayerInfo.IK_LH.position = leftanchor.transform.position;
             PlayerInfo.IK_LH.rotation = leftanchor.transform.rotation;
         }
+    }
+
+    private float CalculateAnimArmLength(LucidVismodel visModel)
+    {
+        Vector3 shoulderPos = visModel.anim.GetBoneTransform(HumanBodyBones.RightUpperArm).position;
+        Vector3 elbowPos = visModel.anim.GetBoneTransform(HumanBodyBones.RightLowerArm).position;
+        Vector3 wristPos = visModel.anim.GetBoneTransform(HumanBodyBones.RightHand).position;
+
+        float upperArmLength = Vector3.Distance(shoulderPos, elbowPos);
+        float lowerArmLength = Vector3.Distance(elbowPos, wristPos);
+
+        return upperArmLength + lowerArmLength;
     }
 
     private void GrabLogic(bool right)
@@ -187,10 +203,11 @@ public class LucidArms : MonoBehaviour
             campos += cam.forward;
             camfwd *= -1;
         }
+        float castAdjust = animArmLength + castdist;
 
         Vector3 shoulder = campos + (right ? camright * shoulderdist : -camright * shoulderdist);
 
-        bool initialHit = Physics.SphereCast(shoulder, firstcastwidth, camfwd, out RaycastHit initialHitInfo, castdist, Shortcuts.geometryMask);
+        bool initialHit = Physics.SphereCast(shoulder, firstcastwidth, camfwd, out RaycastHit initialHitInfo, castAdjust, Shortcuts.geometryMask);
         initialHit &= ((initialHitInfo.normal.y) < runmaxY);
 
         if (initialHit)
@@ -228,9 +245,9 @@ public class LucidArms : MonoBehaviour
         float dist = Vector3.Distance(shoulder, initialHitInfo.point);
 
         //i know this trig stuff looks scary but that's just how it knows where to look when you're dealing with a sloped wall
-        float sinC = (dist * Mathf.Sin(Mathf.Deg2Rad * angle)) / castdist;
+        float sinC = (dist * Mathf.Sin(Mathf.Deg2Rad * angle)) / castAdjust;
         float A = 180 - (Mathf.Asin(sinC) + angle);
-        float newmaxheight = (Mathf.Sin(Mathf.Deg2Rad * A) * castdist) / Mathf.Sin(Mathf.Deg2Rad * angle);
+        float newmaxheight = (Mathf.Sin(Mathf.Deg2Rad * A) * castAdjust) / Mathf.Sin(Mathf.Deg2Rad * angle);
 
         Vector3 startpoint = initialHitInfo.point + (hitvector.normalized * newmaxheight);
 

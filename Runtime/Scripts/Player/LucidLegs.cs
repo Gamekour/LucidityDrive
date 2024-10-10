@@ -143,7 +143,6 @@ public class LucidLegs : MonoBehaviour
         float calfLength = Vector3.Distance(posKnee, posFoot);
         legLength = thighLength + calfLength;
         legLength *= maxlegmult;
-        print(legLength);
     }
 
     public void OnAnimModelInitialized()

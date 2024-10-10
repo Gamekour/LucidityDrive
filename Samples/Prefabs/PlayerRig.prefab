@@ -1928,10 +1928,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a507ecfa73c2e842b588eecaba365cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: {x: 1, y: 1}
-  headRadius: 0
-  downAngleLimit: 0
-  upAngleLimit: 0
+  sensitivity: {x: 9, y: 9}
+  headRadius: 1
+  downAngleLimit: -80
+  upAngleLimit: 80
   sensitivityMultiplier: 1
 --- !u!1 &7443822214091298102
 GameObject:
@@ -2116,6 +2116,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: castdist
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: limitdist
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
