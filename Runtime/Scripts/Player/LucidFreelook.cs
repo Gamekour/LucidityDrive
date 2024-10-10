@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting.YamlDotNet.Serialization.NodeTypeResolvers;
 using UnityEngine;
 
 public class LucidFreelook : MonoBehaviour
