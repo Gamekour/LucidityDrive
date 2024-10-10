@@ -82,12 +82,6 @@ public class LucidFreelook : MonoBehaviour
 
         Vector3 rotation = new Vector3(headLookInput.y, headLookInput.x, 0);
 
-        if ((rotation.y < 0 && isLookingLeft) || (rotation.y > 0 && !isLookingLeft))
-        {
-            // Uncomment the following line if needed:
-            // rotation.y *= yFactor;
-        }
-
         float chestX = chest.eulerAngles.x;
         chestXAngle = chestX;
 

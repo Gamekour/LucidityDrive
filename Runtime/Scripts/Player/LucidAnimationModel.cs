@@ -80,15 +80,22 @@ public class LucidAnimationModel : MonoBehaviour
     private void OnEnable()
     {
         PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+        PlayerInfo.OnRemoveVismodel.AddListener(OnVismodelRemoved);
     }
 
     private void OnDisable()
     {
         PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+        PlayerInfo.OnRemoveVismodel.RemoveListener(OnVismodelRemoved);
     }
 
     private void OnAssignVismodel(LucidVismodel visModel)
     {
+        foreach(Transform t in GetComponentsInChildren<Transform>())
+        {
+            if (t != transform)
+                Destroy(t.gameObject); //clear existing playermodel if applicable
+        }
         GameObject newPlayerModel = Instantiate(visModel.gameObject, transform);
         LucidVismodel newVisModel = newPlayerModel.GetComponent<LucidVismodel>();
         newVisModel.playerMeshParent.gameObject.SetActive(false);
@@ -113,6 +120,12 @@ public class LucidAnimationModel : MonoBehaviour
         PlayerInfo.IK_LH = IK_LH;
         PlayerInfo.IK_RH = IK_RH;
         PlayerInfo.mainCamera = fpcam;
+    }
+
+    public void OnVismodelRemoved()
+    {
+        PlayerInfo.animModelInitialized = false;
+        initialized = false;
     }
 
     private void FixedUpdate()

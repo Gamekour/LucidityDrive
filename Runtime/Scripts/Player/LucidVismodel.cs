@@ -46,6 +46,11 @@ public class LucidVismodel : MonoBehaviour
         initialized = true;
     }
 
+    private void OnDisable()
+    {
+        PlayerInfo.OnRemoveVismodel.Invoke();
+    }
+
     //creates a pose for the visual model based on the playermodel's animation, active IK points, and collisions with the ground
     private void LocalCalc()
     {

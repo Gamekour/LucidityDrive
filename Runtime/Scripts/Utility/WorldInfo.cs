@@ -115,6 +115,7 @@ public static class PlayerInfo
 {
     public static UnityEvent<LucidVismodel> OnAssignVismodel = new UnityEvent<LucidVismodel>();
     public static UnityEvent OnAnimModellInitialized = new UnityEvent();
+    public static UnityEvent OnRemoveVismodel = new UnityEvent();
 
     //references
     public static Rigidbody mainBody;
