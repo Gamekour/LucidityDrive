@@ -1,14 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class LucidAnimationModel : MonoBehaviour
 {
     public float airtimeThreshold = 0.5f;
 
-    [SerializeField] AnimatorController controller;
+    [SerializeField] RuntimeAnimatorController controller;
     [SerializeField] Transform IK_LF;
     [SerializeField] Transform IK_RF;
     [SerializeField] Transform IK_LH;
