@@ -29,21 +29,21 @@ public static class respawn
     public static UnityEvent OnRespawn = new UnityEvent();
     public static void Respawn(Vector3 point)
     {
-        PlayerInfo.physHips.isTrigger = true;
+        PlayerInfo.physBody.isTrigger = true;
         PlayerInfo.physHead.isTrigger = true;
-        Rigidbody rbHips = PlayerInfo.physHips.GetComponent<Rigidbody>();
-        Rigidbody rbHead = PlayerInfo.physHips.GetComponent<Rigidbody>();
+        Rigidbody rbHips = PlayerInfo.physBody.GetComponent<Rigidbody>();
+        Rigidbody rbHead = PlayerInfo.physBody.GetComponent<Rigidbody>();
         if (!rbHips.isKinematic)
         {
-            PlayerInfo.physHips.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            PlayerInfo.physHips.GetComponent<Rigidbody>().isKinematic = true;
+            PlayerInfo.physBody.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            PlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = true;
         }
         if(!rbHead.isKinematic)
         {
             PlayerInfo.physHead.GetComponent<Rigidbody>().velocity = Vector3.zero;
             PlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = true;
         }
-        PlayerInfo.physHips.transform.position = point;
+        PlayerInfo.physBody.transform.position = point;
         PlayerInfo.physHead.transform.position = point;
         if (!PlayerInfo.mainBody.isKinematic)
         {
@@ -55,21 +55,21 @@ public static class respawn
     }
     public static void Respawn(Vector3 point, Vector3 velocity)
     {
-        PlayerInfo.physHips.isTrigger = true;
+        PlayerInfo.physBody.isTrigger = true;
         PlayerInfo.physHead.isTrigger = true;
-        Rigidbody rbHips = PlayerInfo.physHips.GetComponent<Rigidbody>();
-        Rigidbody rbHead = PlayerInfo.physHips.GetComponent<Rigidbody>();
+        Rigidbody rbHips = PlayerInfo.physBody.GetComponent<Rigidbody>();
+        Rigidbody rbHead = PlayerInfo.physBody.GetComponent<Rigidbody>();
         if (!rbHips.isKinematic)
         {
-            PlayerInfo.physHips.GetComponent<Rigidbody>().velocity = velocity;
-            PlayerInfo.physHips.GetComponent<Rigidbody>().isKinematic = true;
+            PlayerInfo.physBody.GetComponent<Rigidbody>().velocity = velocity;
+            PlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = true;
         }
         if (!rbHead.isKinematic)
         {
             PlayerInfo.physHead.GetComponent<Rigidbody>().velocity = velocity;
             PlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = true;
         }
-        PlayerInfo.physHips.transform.position = point;
+        PlayerInfo.physBody.transform.position = point;
         PlayerInfo.physHead.transform.position = point;
         if (!PlayerInfo.mainBody.isKinematic)
         {
@@ -82,9 +82,9 @@ public static class respawn
     public static IEnumerator Unlock()
     {
         yield return new WaitForSeconds(0.5f);
-        PlayerInfo.physHips.isTrigger = false;
+        PlayerInfo.physBody.isTrigger = false;
         PlayerInfo.physHead.isTrigger = false;
-        PlayerInfo.physHips.GetComponent<Rigidbody>().isKinematic = false;
+        PlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = false;
         PlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = false;
         PlayerInfo.mainBody.isKinematic = false;
     }

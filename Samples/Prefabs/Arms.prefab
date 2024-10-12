@@ -51,8 +51,9 @@ MonoBehaviour:
   leftanchor: {fileID: 275216622011826784}
   rightanchor: {fileID: 6697483173375196878}
   shoulderdist: 0.2
-  castdist: 0.46
+  castdist: 0.15
   limitdist: 0.45
+  animArmLengthMult: 1
   shoulderstiffness: 0.1
   pullstrength: 469
   firstcastwidth: 0.075

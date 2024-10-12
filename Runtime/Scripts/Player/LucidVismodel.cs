@@ -13,17 +13,20 @@ public class LucidVismodel : MonoBehaviour
     [Header("Options")]
     [SerializeField] bool autoinit = true;
     [SerializeField] float grabspeed = 1;
-    [SerializeField] float collisionTransitionSpeed = 1;
+    [SerializeField] float collisionTransitionTime = 1;
 
     [Header("References")]
     public Transform playerMeshParent;
+    public BoxCollider bodyCollider;
+    public SphereCollider headCollider;
 
+    //internal variables
     private LucidAnimationModel modelSync;
-    private Dictionary<string, Quaternion> localBoneRots;
     private float grabweightL = 0;
     private float grabweightR = 0;
-    private float t = 0;
     private bool initialized = false;
+    private Quaternion hipDeriv = Quaternion.identity;
+    private Quaternion headDeriv = Quaternion.identity;
 
     private void OnEnable()
     {
@@ -58,20 +61,18 @@ public class LucidVismodel : MonoBehaviour
 
         Vector3 offset = tHips.position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
         transform.position += offset;
-        Quaternion qPhysHips = PlayerInfo.physHips.transform.rotation;
+        Quaternion qPhysHips = PlayerInfo.physBody.transform.rotation;
         Quaternion qPhysHead = PlayerInfo.physHead.transform.rotation;
         Quaternion qAnimHips = PlayerInfo.playermodelAnim.bodyRotation;
         Quaternion qAnimHead = PlayerInfo.head.rotation;
 
-        if (PlayerInfo.physCollision)
-        {
-            t = Mathf.Clamp01(t + (Time.deltaTime * collisionTransitionSpeed));
-        }
-        else
-            t = Mathf.Clamp01(t + (Time.deltaTime * collisionTransitionSpeed));
+        Quaternion qHips2 = PlayerInfo.physCollision ? qAnimHips : qPhysHips;
+        Quaternion qHips1 = PlayerInfo.physCollision ? qPhysHips : qAnimHips;
+        Quaternion qHead2 = PlayerInfo.physCollision ? qAnimHead : qPhysHead;
+        Quaternion qHead1 = PlayerInfo.physCollision ? qPhysHead : qAnimHead;
 
-        anim.SetBoneLocalRotation(HumanBodyBones.Hips, Quaternion.Lerp(qAnimHips, qPhysHips, t));
-        anim.SetBoneLocalRotation(HumanBodyBones.Head, Quaternion.Lerp(qAnimHead, qPhysHead, t));
+        anim.SetBoneLocalRotation(HumanBodyBones.Hips, QuaternionUtil.SmoothDamp(qHips1, qHips2, ref hipDeriv, collisionTransitionTime));
+        anim.SetBoneLocalRotation(HumanBodyBones.Head, QuaternionUtil.SmoothDamp(qHead1, qHead2, ref headDeriv, collisionTransitionTime));
 
         foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
         {

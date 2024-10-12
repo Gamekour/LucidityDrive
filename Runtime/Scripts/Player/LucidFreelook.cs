@@ -40,6 +40,7 @@ public class LucidFreelook : MonoBehaviour
 
     private void Update()
     {
+
         if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headlocked || !PlayerInfo.animModelInitialized)
             return;
 
@@ -76,8 +77,6 @@ public class LucidFreelook : MonoBehaviour
         hipForwardFlat.y = 0;
 
         float angleDifference = Mathf.Clamp(Vector3.SignedAngle(headForwardFlat, hipForwardFlat, Vector3.up), -90f, 90f);
-        bool isLookingLeft = (angleDifference > 0);
-        float yFactor = 1f - (Mathf.Abs(angleDifference) / 90f);
 
         Vector3 rotation = new Vector3(headLookInput.y, headLookInput.x, 0);
 

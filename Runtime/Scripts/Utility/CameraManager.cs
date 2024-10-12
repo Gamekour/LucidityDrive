@@ -7,15 +7,17 @@ public class CameraManager : MonoBehaviour
     [SerializeField] Transform[] camerapoints;
     [SerializeField] Transform headroot;
     [SerializeField] float headsmooth;
-    [SerializeField] float headsmoothZ;
     [SerializeField] float rawblend = 0.5f;
     [SerializeField] float rawblendTransitionSpeed = 1;
+    [SerializeField] float externalCameraSmoothTime = 0.5f;
     [SerializeField] LayerMask layermaskNormal;
     [SerializeField] LayerMask layermaskFP;
     private int cameraPointIndex = 0;
     private Transform headrootTarget;
     private bool forceRaw = false;
     private float currentrawblend = 0;
+    private Quaternion smoothDeriv = Quaternion.identity;
+    private Vector3 externalDampRef = Vector3.zero;
 
     private void Start()
     {
@@ -80,13 +82,13 @@ public class CameraManager : MonoBehaviour
         {
             // Handle head position interpolation
             if (cameraPointIndex != 0)
-                headroot.position = Vector3.Lerp(headroot.position, headrootTarget.position, 0.5f);
+                headroot.position = Vector3.SmoothDamp(headroot.position, headrootTarget.position, ref externalDampRef, externalCameraSmoothTime);
             else
                 headroot.position = headrootTarget.position;
 
             // Handle rotation with quaternions to prevent gimbal lock
             Quaternion targetRotation = headrootTarget.rotation;
-            Quaternion smoothRotation = Quaternion.Slerp(headroot.rotation, targetRotation, 1 - headsmooth);
+            Quaternion smoothRotation = QuaternionUtil.SmoothDamp(headroot.rotation, targetRotation, ref smoothDeriv, headsmooth);
 
             if (forceRaw)
                 currentrawblend = 0;

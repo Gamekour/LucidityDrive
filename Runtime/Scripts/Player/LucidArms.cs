@@ -73,10 +73,9 @@ public class LucidArms : MonoBehaviour
         rightshoulder = PlayerInfo.vismodelRef.anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
         leftanchor.connectedBody = PlayerInfo.mainBody;
         rightanchor.connectedBody = PlayerInfo.mainBody;
-        hipdrag = PlayerInfo.physHipsRB.angularDrag;
+        hipdrag = PlayerInfo.physBodyRB.angularDrag;
         headdrag = PlayerInfo.physHeadRB.angularDrag;
         animArmLength = CalculateAnimArmLength(visModel);
-        print(animArmLength);
         initialized = true;
     }
 
@@ -336,7 +335,7 @@ public class LucidArms : MonoBehaviour
             grabR = true;
         }
 
-        PlayerInfo.physHipsRB.angularDrag = 0;
+        PlayerInfo.physBodyRB.angularDrag = 0;
         PlayerInfo.physHeadRB.angularDrag = 0;
     }
 
@@ -383,7 +382,7 @@ public class LucidArms : MonoBehaviour
 
         Vector3 dir = Vector3.ClampMagnitude(PlayerInfo.mainBody.velocity, 1);
         PlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
-        PlayerInfo.physHipsRB.angularDrag = hipdrag;
+        PlayerInfo.physBodyRB.angularDrag = hipdrag;
         PlayerInfo.physHeadRB.angularDrag = headdrag;
     }
 }

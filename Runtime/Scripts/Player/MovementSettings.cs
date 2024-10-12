@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "UntitledMovementSettings", menuName = "motif/MovementSettings", order = 1)]
+[CreateAssetMenu(fileName = "UntitledMovementSettings", menuName = "LucidityDrive/MovementSettings", order = 1)]
 public class MovementSettings : ScriptableObject
 {
     //ik this isn't great but it's a lot less of a headache than "oh yeah go grab the Params[31] real quick"
@@ -23,9 +23,8 @@ public class MovementSettings : ScriptableObject
     public float maxAirAccel;
     public float flightforce;
     public float flightdrag;
-    public float timescale;
     public float walkthreshold;
-    public float ratioBySpeed;
+    public float directionaljumpmult;
 
     [Header("Casting")]
     public float legWidth;
@@ -43,6 +42,8 @@ public class MovementSettings : ScriptableObject
     public float ratiomult;
     public float ratiofreezethreshold;
     public float airtimemult;
+    public float ratioBySpeed;
+    public float maxlegmult;
 
     [Header("Physics")]
     public float friction;
@@ -51,7 +52,6 @@ public class MovementSettings : ScriptableObject
     public float hipspacesmoothness;
     public float hipspaceMaxRot;
     public float forcesmoothness;
-    public float maxlegmult;
     public float crouchmult;
     public float jumpmult;
     public float moveupmult;
@@ -59,7 +59,6 @@ public class MovementSettings : ScriptableObject
     public float movedownclamp;
     public float crawlthreshold;
     public float crawlmult;
-    public float directionaljumpmult;
     public float wallruntilt;
     public float jumptilt;
     public float climbtilt;

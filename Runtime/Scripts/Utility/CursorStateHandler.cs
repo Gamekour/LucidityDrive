@@ -21,9 +21,9 @@ public class CursorStateHandler : MonoBehaviour
     private void MouseLockToggle(InputAction.CallbackContext obj)
     {
         if (Cursor.lockState == CursorLockMode.Locked)
-            Cursor.lockState = CursorLockMode.None;
+            SetState(0);
         else
-            Cursor.lockState = CursorLockMode.Locked;
+            SetState(2);
     }
 
     public void SetState(int state)

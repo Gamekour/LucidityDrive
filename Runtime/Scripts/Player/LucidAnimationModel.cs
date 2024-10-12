@@ -8,58 +8,70 @@ public class LucidAnimationModel : MonoBehaviour
     public float airtimeThreshold = 0.5f;
 
     [SerializeField] RuntimeAnimatorController controller;
-    [SerializeField] Transform IK_LF;
-    [SerializeField] Transform IK_RF;
-    [SerializeField] Transform IK_LH;
-    [SerializeField] Transform IK_RH;
     [SerializeField] Camera fpcam;
-    [SerializeField] float velsmoothness = 0.5f;
-    [SerializeField] float velscale = 0.75f;
-    [SerializeField] float nrmsmoothness = 0.5f;
-    [SerializeField] float footsmoothness = 0.5f;
-    [SerializeField] float willsmoothness = 0.5f;
-    [SerializeField] float alignmentsmoothness = 0.5f;
-    [SerializeField] float midaircrouchsmoothness = 0.5f;
-    [SerializeField] float midaircrouch = 0.5f;
-    [SerializeField] float castthickness = 0.07f;
-    [SerializeField] float castheight = 0.07f;
-    [SerializeField] float airtimemax = 1;
-    [SerializeField] float groundedforgiveness = 1;
-    [SerializeField] float lerp = 0.5f;
-    [SerializeField] float swaymult;
-    [SerializeField] float swayspeed;
-    [SerializeField] float landspeed = 0.5f;
-    [SerializeField] float footslidethreshold = 3f;
-    [SerializeField] float footslidevelthreshold = 3f;
-    [SerializeField] float leansmoothness = 0.5f;
-    [SerializeField] float unrotateFeetBySpeed = 1;
-    [SerializeField] float maxFootAngle = 90;
-    [SerializeField] float verticalFootAdjust = 0.1f;
+
+    [SerializeField] Transform 
+        IK_LF,
+        IK_RF,
+        IK_LH,
+        IK_RH;
+
+    [SerializeField] float 
+        velsmoothTime,
+        velscale,
+        nrmSmoothTime,
+        footSmoothTime,
+        willSmoothTime,
+        alignmentSmoothTime,
+        castthickness,
+        castheight,
+        airtimemax,
+        groundedforgiveness,
+        lerp,
+        landtime,
+        footslidethreshold,
+        footslidevelthreshold,
+        leansmoothtime,
+        unrotateFeetBySpeed,
+        maxFootAngle,
+        verticalFootAdjust;
+
     [HideInInspector]
     public Dictionary<string, Quaternion> boneRots = new Dictionary<string, Quaternion>();
     [HideInInspector]
     public Vector3 LCast;
     [HideInInspector]
     public Vector3 RCast;
+    [HideInInspector]
     public Quaternion hiprot = Quaternion.identity;
+
     private Animator anim;
-    private Transform pelvis;
-    private Transform head;
-    private float currentcrouch = 0;
-    private float currentsway = 0;
-    private float airtimesmooth = 0;
-    private float refAngle = 0;
-    private float footAngle = 0;
-    private bool stucksliding = false;
-    private Transform animpelvis;
-    private Transform animFootL;
-    private Transform animFootR;
-    private Transform animKneeL;
-    private Transform animKneeR;
-    private Transform animHandL;
-    private Transform animHandR;
-    private Transform animShoulderL;
-    private Transform animShoulderR;
+
+    private Vector2 leanSmoothRef;
+    private Vector3 
+        velRef, 
+        nrmRef, 
+        willRef, 
+        footRef;
+    private float 
+        footAngle,
+        airtimesmooth,
+        angleRef,
+        landingRef,
+        alignmentRef;
+    private Transform 
+        pelvis,
+        head,
+        animpelvis,
+        animFootL,
+        animFootR,
+        animKneeL,
+        animKneeR,
+        animHandL,
+        animHandR,
+        animShoulderL,
+        animShoulderR;
+
     private bool initialized = false;
 
     private void Start()
@@ -73,7 +85,6 @@ public class LucidAnimationModel : MonoBehaviour
 
         transform.position += pelvis.position - animpelvis.position;
         transform.rotation = pelvis.rotation;
-        currentsway = Mathf.Sin(Time.time * swayspeed) * swaymult;
     }
 
     private void OnEnable()
@@ -174,8 +185,6 @@ public class LucidAnimationModel : MonoBehaviour
 
         bool crawl = LucidInputValueShortcuts.crawl;
         bool slide = LucidInputValueShortcuts.slide;
-        if (slide || crawl)
-            stucksliding = true;
 
         Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
         Vector3 moveFlat = Vector3.zero;
@@ -197,7 +206,7 @@ public class LucidAnimationModel : MonoBehaviour
         if (PlayerInfo.airtime > airtimesmooth)
             airtimesmooth = PlayerInfo.airtime;
         else
-            airtimesmooth = Mathf.Lerp(airtimesmooth, PlayerInfo.airtime, landspeed);
+            airtimesmooth = Mathf.SmoothDamp(airtimesmooth, PlayerInfo.airtime, ref landingRef, landtime);
 
         float legweight = Mathf.Clamp01(airtimesmooth / airtimemax);
         legweight = Mathf.Clamp01(legweight + (1 - localNrm.y));
@@ -212,25 +221,10 @@ public class LucidAnimationModel : MonoBehaviour
         hipweight *= PlayerInfo.climbing ? 0 : 1;
         anim.SetLayerWeight(2, hipweight);
 
-        Transform tSpine = anim.GetBoneTransform(HumanBodyBones.Spine);
-        tSpine.Rotate(Vector3.forward, currentsway, Space.Self);
         Quaternion chest = anim.GetBoneTransform(HumanBodyBones.Chest).rotation;
         Quaternion localSpaceRotationNeck = Quaternion.Inverse(chest) * Quaternion.Slerp(head.rotation, chest, lerp);
         anim.SetBoneLocalRotation(HumanBodyBones.Neck, localSpaceRotationNeck);
         anim.SetBoneLocalRotation(HumanBodyBones.Head, localSpaceRotationNeck);
-
-        Vector3 footposL = animFootL.position;
-        Vector3 footposR = animFootR.position;
-        Vector3 kneeposL = animKneeL.position;
-        Vector3 kneeposR = animKneeR.position;
-
-        bool midaircrouching = LucidInputValueShortcuts.crouch && !(PlayerInfo.grounded || slide || crawl || PlayerInfo.flying);
-
-        float targetcrouch = midaircrouch;
-        if (!midaircrouching)
-            targetcrouch = 0;
-
-        currentcrouch = Mathf.Lerp(targetcrouch, currentcrouch, midaircrouchsmoothness);
 
         UpdateFootPositions();
         UpdateHandPositions();
@@ -239,7 +233,7 @@ public class LucidAnimationModel : MonoBehaviour
     private float CalculateAlignment()
     {
         float lastalignment = anim.GetFloat("alignment");
-        lastalignment = Mathf.Lerp(PlayerInfo.alignment, lastalignment, alignmentsmoothness);
+        lastalignment = Mathf.SmoothDamp(PlayerInfo.alignment, lastalignment, ref alignmentRef, alignmentSmoothTime);
         return lastalignment;
     }
 
@@ -249,7 +243,7 @@ public class LucidAnimationModel : MonoBehaviour
         oldlean.x = anim.GetFloat("leanX");
         oldlean.y = anim.GetFloat("leanZ");
         Vector2 lean = LeanCalc(moveFlat, localVel * 0.25f, localNrm);
-        Vector2 lerplean = Vector2.Lerp(oldlean, lean, leansmoothness);
+        Vector2 lerplean = Vector2.SmoothDamp(oldlean, lean, ref leanSmoothRef, leansmoothtime);
         return lerplean;
     }
 
@@ -258,14 +252,14 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 localVel = PlayerInfo.hipspace.InverseTransformVector(PlayerInfo.mainBody.velocity);
         localVel *= velscale;
         Vector3 currentvellocal = new Vector3(anim.GetFloat("velX"), anim.GetFloat("velY"), anim.GetFloat("velZ"));
-        return Vector3.Lerp(localVel, currentvellocal, velsmoothness);
+        return Vector3.SmoothDamp(localVel, currentvellocal, ref velRef, velsmoothTime);
     }
 
     private Vector3 CalculateLocalNormal()
     {
         Vector3 localNrm = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.hipspace.up);
         Vector3 currentnrmlocal = new Vector3(anim.GetFloat("nrmX"), anim.GetFloat("nrmY"), anim.GetFloat("nrmZ"));
-        return Vector3.Lerp(currentnrmlocal, localNrm, 1 - nrmsmoothness);
+        return Vector3.SmoothDamp(currentnrmlocal, localNrm, ref nrmRef, nrmSmoothTime);
     }
 
     private Vector3 CalculateWillFlat()
@@ -273,13 +267,13 @@ public class LucidAnimationModel : MonoBehaviour
         Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
         Vector3 moveFlat = new Vector3(moveVector.x, 0, moveVector.y);
         Vector3 currentWill = new Vector3(anim.GetFloat("willX"), 0, anim.GetFloat("willZ"));
-        return Vector3.Lerp(currentWill, moveFlat, willsmoothness);
+        return Vector3.SmoothDamp(currentWill, moveFlat, ref willRef, willSmoothTime);
     }
 
 
     private void UpdateFootAngle()
     {
-        footAngle = Mathf.DeltaAngle(refAngle, PlayerInfo.pelvis.eulerAngles.y);
+        footAngle = Mathf.DeltaAngle(angleRef, PlayerInfo.pelvis.eulerAngles.y);
         footAngle %= 360;
         footAngle = footAngle > 180 ? footAngle - 360 : footAngle;
         footAngle /= Mathf.Clamp(PlayerInfo.mainBody.velocity.magnitude * unrotateFeetBySpeed, 1, 100);
@@ -287,7 +281,7 @@ public class LucidAnimationModel : MonoBehaviour
         if (Mathf.Abs(footAngle) > maxFootAngle)
         {
             footAngle = 0;
-            refAngle = PlayerInfo.pelvis.eulerAngles.y;
+            angleRef = PlayerInfo.pelvis.eulerAngles.y;
             PlayerInfo.animphase += 0.5f;
             PlayerInfo.animphase %= 1;
         }
@@ -390,7 +384,7 @@ public class LucidAnimationModel : MonoBehaviour
         else
             Cast = footpos;
 
-        Cast = Vector3.Lerp(Cast, CastOld, footsmoothness);
+        Cast = Vector3.SmoothDamp(Cast, CastOld, ref footRef, footSmoothTime);
     }
 
     private void UpdateFootSpaceAndRotation(bool isLeft, Vector3 normal, Vector3 point)
@@ -463,6 +457,6 @@ public class LucidAnimationModel : MonoBehaviour
 
     public void OnReachedGroundedState()
     {
-        stucksliding = false;
+
     }
 }

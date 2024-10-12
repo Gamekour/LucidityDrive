@@ -29,7 +29,7 @@ MonoBehaviour:
   flightdrag: 0.05
   timescale: 1
   walkthreshold: 0.75
-  ratioBySpeed: 0.35
+  ratioBySpeed: 0.25
   legWidth: 0.09
   legWidthMult: 0.5
   down: 1.5
