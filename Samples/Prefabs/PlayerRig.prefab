@@ -623,26 +623,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   airtimeThreshold: 0.5
   controller: {fileID: 9100000, guid: d306c39f8cccab24a8871088ef7f5657, type: 2}
+  fpcam: {fileID: 5496875962166913160}
   IK_LF: {fileID: 8982907529161714512}
   IK_RF: {fileID: 5249457337260208995}
   IK_LH: {fileID: 3483037214520940076}
   IK_RH: {fileID: 4123976296632360821}
-  fpcam: {fileID: 5496875962166913160}
   velsmoothTime: 0.5
   velscale: 1.5
   nrmSmoothTime: 0.5
   footSmoothTime: 0.5
   willSmoothTime: 0.1
   alignmentSmoothTime: 0.5
-  midaircrouchsmoothness: 0.95
-  midaircrouch: 0.5
   castthickness: 0.04
   castheight: 0.07
   airtimemax: 0.4
   groundedforgiveness: 0.65
   lerp: 0.33
-  swaymult: 1
-  swayspeed: 1
   landtime: 0.5
   footslidethreshold: 0.5
   footslidevelthreshold: 3
@@ -726,11 +722,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84801d359f42b734b9bc39f78c07f3d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  legSpaceL: {fileID: 0}
-  legSpaceR: {fileID: 0}
-  hipSpace: {fileID: 0}
-  footSpace: {fileID: 0}
-  vFloor: {fileID: 0}
+  legSpaceL: {fileID: 1105449331241879533}
+  legSpaceR: {fileID: 1573725869684149393}
+  hipSpace: {fileID: 7749507378016566050}
+  footSpace: {fileID: 283649365809611213}
+  vFloor: {fileID: 2916796221035400664}
   physBody: {fileID: 3845484869066579047}
   physHead: {fileID: 3252273764742618479}
   defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
@@ -1079,7 +1075,7 @@ GameObject:
   - component: {fileID: 9137347696438969249}
   - component: {fileID: 2295600701639870967}
   m_Layer: 3
-  m_Name: Hips
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
