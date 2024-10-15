@@ -40,7 +40,6 @@ public class LucidFreelook : MonoBehaviour
 
     private void Update()
     {
-
         if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headlocked || !PlayerInfo.animModelInitialized)
             return;
 
@@ -67,7 +66,7 @@ public class LucidFreelook : MonoBehaviour
     {
         PlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
 
-        Vector2 headLookInput = LucidInputActionRefs.headlook.ReadValue<Vector2>();
+        Vector2 headLookInput = LucidInputValueShortcuts.headlook;
         headLookInput *= sensitivity * sensitivityMultiplier;
         headLookInput *= Time.deltaTime;
 

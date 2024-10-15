@@ -70,9 +70,9 @@ public class Inputs : MonoBehaviour
 
     private void Value_Update(InputAction.CallbackContext obj)
     {
+        UpdateShortcutValue(obj.action);
         if (obj.canceled)
         {
-            UpdateShortcutValue(obj.action);
             activeValueInputs.Remove(obj.action);
         }
         else

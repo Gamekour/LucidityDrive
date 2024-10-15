@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 public class WorldInfo : MonoBehaviour
 {
@@ -60,6 +61,11 @@ public static class Shortcuts
         HumanBodyBones.LeftFoot,
         HumanBodyBones.RightFoot
     };
+
+    public static readonly Dictionary<HumanBodyBones, string> BoneNames =
+    Enum.GetValues(typeof(HumanBodyBones))
+        .Cast<HumanBodyBones>()
+        .ToDictionary(bone => bone, bone => Enum.GetName(typeof(HumanBodyBones), bone));
 
     //returns shortest possible rotation between two quaternions
     public static Quaternion QShortestRotation(Quaternion a, Quaternion b)

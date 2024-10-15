@@ -123,12 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!153 &106403254 stripped
-ConfigurableJoint:
-  m_CorrespondingSourceObject: {fileID: 5194779490826502153, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 825995170}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &492135137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -260,31 +254,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4256133664437597989, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: leftAnchor
-      value: 
-      objectReference: {fileID: 106403254}
-    - target: {fileID: 4256133664437597989, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: climbAnchor
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4256133664437597989, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: rightAnchor
-      value: 
-      objectReference: {fileID: 1018997502}
-    - target: {fileID: 4256133664437597989, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: leftUnrotate
-      value: 
-      objectReference: {fileID: 1011352404}
-    - target: {fileID: 4256133664437597989, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: rightUnrotate
-      value: 
-      objectReference: {fileID: 1393984394}
     - target: {fileID: 6671152753758007464, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Name
@@ -295,24 +264,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: feb5ffb413408f64bb3e0843d3c27f57, type: 3}
---- !u!4 &1011352404 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2557857802932487432, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 825995170}
-  m_PrefabAsset: {fileID: 0}
---- !u!153 &1018997502 stripped
-ConfigurableJoint:
-  m_CorrespondingSourceObject: {fileID: 1672076902125386919, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 825995170}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1393984394 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3957675543709543255, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 825995170}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1927088115
 GameObject:
   m_ObjectHideFlags: 0

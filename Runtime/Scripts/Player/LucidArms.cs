@@ -5,65 +5,73 @@ using UnityEngine.InputSystem;
 
 public class LucidArms : MonoBehaviour
 {
-    [SerializeField] ConfigurableJoint leftanchor;
-    [SerializeField] ConfigurableJoint rightanchor;
-    [SerializeField] float shoulderdist = 0.5f;
-    [SerializeField] float castdist = 1;
-    [SerializeField] float limitdist = 1;
-    [SerializeField] float animArmLengthMult = 1;
-    [SerializeField] float shoulderstiffness = 0.1f;
-    [SerializeField] float pullstrength = 2f;
-    [SerializeField] float firstcastwidth = 0.25f;
-    [SerializeField] float secondcastwidth = 0.025f;
-    [SerializeField] float runmaxY = 0.3f;
-    [SerializeField] float minflatgrab = 0.8f;
-    [SerializeField] float tolerance = 0.15f;
-    [SerializeField] float swingforce = 1f;
-    [SerializeField] float ungrabBoost = 1f;
-    [SerializeField] Transform leftunrotate;
-    [SerializeField] Transform rightunrotate;
-    private Transform leftshoulder;
-    private Transform rightshoulder;
-    private Transform currenttargetL;
-    private Transform currenttargetR;
-    private SoftJointLimit off = new SoftJointLimit();
-    private SoftJointLimit on = new SoftJointLimit();
-    private bool grabL = false;
-    private bool grabR = false;
-    private bool grabwaitL = false;
-    private bool grabwaitR = false;
-    private bool disabling = false;
-    private bool initialized = false;
-    private float hipdrag = 0;
-    private float headdrag = 0;
+    [SerializeField] float
+        shoulderdist,
+        castdist,
+        limitdist,
+        animArmLengthMult,
+        shoulderstiffness,
+        pullstrength,
+        firstcastwidth,
+        secondcastwidth,
+        runmaxY,
+        minflatgrab,
+        tolerance,
+        swingforce,
+        ungrabBoost;
+
+    [SerializeField] ConfigurableJoint leftanchor, rightanchor;
+    [SerializeField] Transform leftunrotate, rightunrotate;
+    private Transform leftshoulder, rightshoulder;
+    private Transform currenttargetL, currenttargetR;
+    private SoftJointLimit off, on = new SoftJointLimit();
+    private bool 
+        grabL,
+        grabR,
+        grabwaitL,
+        grabwaitR,
+        disabling,
+        initialized
+        = false;
+    private float hipdrag, headdrag = 0;
     private float animArmLength = 0;
 
     private void OnEnable()
     {
         if (LucidInputActionRefs.grabL != null)
-        {
-            LucidInputActionRefs.grabL.started += GrabButtonLeft;
-            LucidInputActionRefs.grabL.canceled += UngrabButtonLeft;
-            LucidInputActionRefs.grabR.started += GrabButtonRight;
-            LucidInputActionRefs.grabR.canceled += UngrabButtonRight;
-        }
+            ManageInputSubscriptions(true);
         PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
     }
 
     private void OnDisable()
     {
         disabling = true;
-        grabwaitL = false; 
+        grabwaitL = false;
         grabwaitR = false;
         Ungrab(false);
         Ungrab(true);
         PlayerInfo.climbing = false;
-        LucidInputActionRefs.grabL.started -= GrabButtonLeft;
-        LucidInputActionRefs.grabL.canceled -= UngrabButtonLeft;
-        LucidInputActionRefs.grabR.started -= GrabButtonRight;
-        LucidInputActionRefs.grabR.canceled -= UngrabButtonRight;
 
+        ManageInputSubscriptions(false);
         PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+    }
+
+    private void ManageInputSubscriptions(bool subscribe)
+    {
+        if (subscribe)
+        {
+            LucidInputActionRefs.grabL.started += GrabButtonLeft;
+            LucidInputActionRefs.grabL.canceled += UngrabButtonLeft;
+            LucidInputActionRefs.grabR.started += GrabButtonRight;
+            LucidInputActionRefs.grabR.canceled += UngrabButtonRight;
+        }
+        else
+        {
+            LucidInputActionRefs.grabL.started -= GrabButtonLeft;
+            LucidInputActionRefs.grabL.canceled -= UngrabButtonLeft;
+            LucidInputActionRefs.grabR.started -= GrabButtonRight;
+            LucidInputActionRefs.grabR.canceled -= UngrabButtonRight;
+        }
     }
 
     private void OnAssignVismodel(LucidVismodel visModel)
@@ -81,10 +89,7 @@ public class LucidArms : MonoBehaviour
 
     private void Start()
     {
-        LucidInputActionRefs.grabL.started += GrabButtonLeft;
-        LucidInputActionRefs.grabL.canceled += UngrabButtonLeft;
-        LucidInputActionRefs.grabR.started += GrabButtonRight;
-        LucidInputActionRefs.grabR.canceled += UngrabButtonRight;
+        ManageInputSubscriptions(true);
         off.limit = Mathf.Infinity;
         on.limit = animArmLength + limitdist;
         leftanchor.linearLimit = off;
@@ -144,42 +149,42 @@ public class LucidArms : MonoBehaviour
         return upperArmLength + lowerArmLength;
     }
 
-    private void GrabLogic(bool right)
+    private void GrabLogic(bool isRight)
     {
         bool pulling = LucidInputValueShortcuts.crouch;
-        bool grabToCheck = (right ? grabR : grabL);
-        ConfigurableJoint targetanchor = right ? rightanchor : leftanchor;
+        bool grabToCheck = (isRight ? grabR : grabL);
+        ConfigurableJoint targetanchor = isRight ? rightanchor : leftanchor;
 
         if (!grabToCheck)
         {
             targetanchor.transform.position = PlayerInfo.pelvis.position;
 
-            bool validgrab = ClimbScan(right);
+            bool validgrab = ClimbScan(isRight);
 
             Vector3 targetposL = PlayerInfo.pelvis.transform.InverseTransformPoint(leftshoulder.position);
             Vector3 targetposR = PlayerInfo.pelvis.transform.InverseTransformPoint(rightshoulder.position);
 
-            bool oldgrab = right ? PlayerInfo.validgrabR : PlayerInfo.validgrabL;
-            if (right)
+            bool oldgrab = isRight ? PlayerInfo.validgrabR : PlayerInfo.validgrabL;
+            if (isRight)
                 PlayerInfo.validgrabR = validgrab;
             else
                 PlayerInfo.validgrabL = validgrab;
 
-            bool grabwait = (right ? grabwaitR : grabwaitL);
+            bool grabwait = (isRight ? grabwaitR : grabwaitL);
             if (!oldgrab && validgrab && grabwait)
             {
-                Grab(right);
+                Grab(isRight);
             }
 
-            Transform shoulder = right ? rightshoulder : leftshoulder;
+            Transform shoulder = isRight ? rightshoulder : leftshoulder;
 
             bool toofar = false;
             if (toofar) //ungrab if something pushes you far enough to "lose grip"
-                Ungrab(right);
+                Ungrab(isRight);
         }
         else
         {
-            if (right)
+            if (isRight)
                 PlayerInfo.validgrabR = true;
             else
                 PlayerInfo.validgrabL = true;
@@ -290,6 +295,8 @@ public class LucidArms : MonoBehaviour
         PlayerInfo.climbrelative = climbrelative;
     }
 
+
+    #region Input Events
     private void GrabButtonLeft(InputAction.CallbackContext obj)
     {
         if (PlayerInfo.validgrabL)
@@ -305,6 +312,19 @@ public class LucidArms : MonoBehaviour
         else
             grabwaitR = true;
     }
+
+    private void UngrabButtonLeft(InputAction.CallbackContext obj)
+    {
+        grabwaitL = false;
+        Ungrab(false);
+    }
+
+    private void UngrabButtonRight(InputAction.CallbackContext obj)
+    {
+        grabwaitR = false;
+        Ungrab(true);
+    }
+    #endregion
 
     private void Grab(bool right)
     {
@@ -334,21 +354,6 @@ public class LucidArms : MonoBehaviour
             }
             grabR = true;
         }
-
-        //PlayerInfo.physBodyRB.angularDrag = 0;
-        //PlayerInfo.physHeadRB.angularDrag = 0;
-    }
-
-    private void UngrabButtonLeft(InputAction.CallbackContext obj)
-    {
-        grabwaitL = false;
-        Ungrab(false);
-    }
-
-    private void UngrabButtonRight(InputAction.CallbackContext obj)
-    {
-        grabwaitR = false;
-        Ungrab(true);
     }
 
     private void Ungrab(bool right)

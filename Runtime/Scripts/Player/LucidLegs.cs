@@ -416,7 +416,7 @@ public class LucidLegs : MonoBehaviour
         heightratio = Mathf.Clamp(heightratio, 0, 2);
 
         float forceadjust = maxforcemult;
-        if (LucidInputActionRefs.jump.ReadValue<float>() == 1 && relativeheight <= maxlegmult)
+        if (LucidInputValueShortcuts.jump && relativeheight <= maxlegmult)
             forceadjust *= jumpforcemult;
 
         float currentY = rb.velocity.y;
@@ -521,7 +521,7 @@ public class LucidLegs : MonoBehaviour
     private void PseudoWalk() 
     {
 
-        Vector2 moveVector = LucidInputActionRefs.movement.ReadValue<Vector2>();
+        Vector2 moveVector = LucidInputValueShortcuts.movement;
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
