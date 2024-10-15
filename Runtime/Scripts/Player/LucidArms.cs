@@ -335,8 +335,8 @@ public class LucidArms : MonoBehaviour
             grabR = true;
         }
 
-        PlayerInfo.physBodyRB.angularDrag = 0;
-        PlayerInfo.physHeadRB.angularDrag = 0;
+        //PlayerInfo.physBodyRB.angularDrag = 0;
+        //PlayerInfo.physHeadRB.angularDrag = 0;
     }
 
     private void UngrabButtonLeft(InputAction.CallbackContext obj)

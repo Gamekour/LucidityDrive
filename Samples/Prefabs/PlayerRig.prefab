@@ -1904,7 +1904,7 @@ PrefabInstance:
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
       propertyPath: ungrabBoost
-      value: 25
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
