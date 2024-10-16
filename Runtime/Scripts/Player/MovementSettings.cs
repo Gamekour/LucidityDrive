@@ -5,61 +5,63 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UntitledMovementSettings", menuName = "LucidityDrive/MovementSettings", order = 1)]
 public class MovementSettings : ScriptableObject
 {
-    //ik this isn't great but it's a lot less of a headache than "oh yeah go grab the Params[31] real quick"
-
     [Header("Gameplay")]
-    public float movespeed;
-    public float sprintmult;
-    public float crawlspeed;
-    public float crouchspeed;
-    public float moveburst;
-    public float slidemult;
-    public float slidepushforce;
-    public float jumpforcemult;
-    public float jumpgrav;
-    public float fallgrav;
-    public float airmove;
-    public float airdrag;
-    public float maxAirAccel;
-    public float flightforce;
-    public float flightdrag;
-    public float walkthreshold;
-    public float directionaljumpmult;
+    public float 
+        movespeed,
+        sprintmult,
+        crawlspeed,
+        crouchspeed,
+        moveburst,
+        slidemult,
+        slidepushforce,
+        jumpforcemult,
+        jumpgrav,
+        fallgrav,
+        airmove,
+        airdrag,
+        maxAirAccel,
+        flightforce,
+        flightdrag,
+        walkthreshold,
+        directionaljumpmult;
 
     [Header("Casting")]
-    public float legWidth;
-    public float legWidthMult;
-    public float down;
-    public float airdownmult;
-    public float probemult;
-    public float moveflatprobemult;
-    public float probeCutoffHeight;
-    public float maxProbeOffset;
-    public float probeXminimumOffset;
-    public float probeZminimumOffset;
+    public float 
+        legWidth,
+        legWidthMult,
+        down,
+        airdownmult,
+        probemult,
+        moveflatprobemult,
+        probeCutoffHeight,
+        maxProbeOffset,
+        probeXminimumOffset,
+        probeZminimumOffset;
 
     [Header("Animation")]
-    public float ratiomult;
-    public float ratiofreezethreshold;
-    public float airtimemult;
-    public float ratioBySpeed;
-    public float maxlegmult;
+    public float 
+        ratiomult,
+        ratiofreezethreshold,
+        airtimemult,
+        ratioBySpeed,
+        maxlegmult;
 
     [Header("Physics")]
-    public float friction;
-    public float maxforcemult;
-    public float hipRotationSpeed;
-    public float hipspacesmoothness;
-    public float hipspaceMaxRot;
-    public float forcesmoothness;
-    public float crouchmult;
-    public float jumpmult;
-    public float moveupmult;
-    public float movedownmult;
-    public float movedownclamp;
-    public float crawlthreshold;
-    public float crawlmult;
-    public float wallruntilt;
-    public float jumptilt;
-    public float climbtilt;
+    public float 
+        friction,
+        maxforcemult,
+        hipRotationSpeed,
+        hipspacesmoothness,
+        hipspaceMaxRot,
+        forcesmoothness,
+        crouchmult,
+        jumpmult,
+        moveupmult,
+        movedownmult,
+        movedownclamp,
+        crawlthreshold,
+        crawlmult,
+        wallruntilt,
+        jumptilt,
+        climbtilt;
 }

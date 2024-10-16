@@ -20,20 +20,18 @@ public class LucidVismodel : MonoBehaviour
     public BoxCollider bodyCollider;
     public SphereCollider headCollider;
 
-    //internal variables
     private LucidAnimationModel modelSync;
-    private float grabweightL = 0;
-    private float grabweightR = 0;
+    private float grabweightL, grabweightR = 0;
     private bool initialized = false;
     private Quaternion hipDeriv = Quaternion.identity;
     private Quaternion headDeriv = Quaternion.identity;
 
-    private void OnEnable()
+    private void Start()
     {
         anim = GetComponent<Animator>();
         modelSync = FindObjectOfType<LucidAnimationModel>();
 
-        if (autoinit) StartCoroutine(InitDelay());
+        if (autoinit) Init();
     }
 
     private void OnAnimatorIK(int layerIndex)
@@ -76,7 +74,7 @@ public class LucidVismodel : MonoBehaviour
 
         foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
         {
-            string hbstring = Enum.GetName(typeof(HumanBodyBones), hb2);
+            string hbstring = Shortcuts.boneNames[hb2];
             if (modelSync.boneRots.ContainsKey(hbstring))
                 anim.SetBoneLocalRotation(hb2, modelSync.boneRots[hbstring]);
         }
@@ -91,57 +89,47 @@ public class LucidVismodel : MonoBehaviour
         anim.SetIKPosition(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.position);
         anim.SetIKRotation(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.rotation);
 
-        if (PlayerInfo.grabL || PlayerInfo.forceIK_LH)
+        CalculateHandIK(false);
+        CalculateHandIK(true);
+    }
+
+    private void CalculateHandIK(bool isRight)
+    {
+        bool grab = isRight ? PlayerInfo.grabR : PlayerInfo.grabL;
+        bool forceIK = isRight ? PlayerInfo.forceIK_RH : PlayerInfo.forceIK_LH;
+        Transform IKTransform = isRight ? PlayerInfo.IK_RH : PlayerInfo.IK_LH;
+        AvatarIKGoal IKGoal = isRight ? AvatarIKGoal.RightHand : AvatarIKGoal.LeftHand;
+        float grabweight = isRight ? grabweightR : grabweightL;
+
+        if (grab || forceIK)
         {
-            anim.SetIKPosition(AvatarIKGoal.LeftHand, PlayerInfo.IK_LH.position + (PlayerInfo.mainBody.velocity * Time.fixedDeltaTime));
-            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, grabweightL);
+            anim.SetIKPosition(IKGoal, IKTransform.position + (PlayerInfo.mainBody.velocity * Time.fixedDeltaTime));
+            anim.SetIKPositionWeight(IKGoal, grabweight);
 
-            anim.SetIKRotation(AvatarIKGoal.LeftHand, PlayerInfo.IK_LH.rotation);
-            anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, grabweightL);
+            anim.SetIKRotation(IKGoal, IKTransform.rotation);
+            anim.SetIKRotationWeight(IKGoal, grabweight);
 
-            grabweightL = Mathf.Clamp01(grabweightL + (grabspeed * Time.deltaTime));
+            SetGrabWeight(isRight, Mathf.Clamp01(grabweight + (grabspeed * Time.deltaTime)));
         }
-        else if (PlayerInfo.IK_LH.position != Vector3.zero)
+        else if (IKTransform.position != Vector3.zero)
         {
-            anim.SetIKPosition(AvatarIKGoal.LeftHand, PlayerInfo.IK_LH.position);
-            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
-            grabweightL = 0;
+            anim.SetIKPosition(IKGoal, IKTransform.position);
+            anim.SetIKPositionWeight(IKGoal, 1);
+            SetGrabWeight(isRight, 0);
         }
         else
         {
-            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, grabweightL);
-            anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, grabweightL);
-            grabweightL = Mathf.Clamp01(grabweightL - (grabspeed * Time.deltaTime));
-        }
-        if (PlayerInfo.grabR || PlayerInfo.forceIK_RH)
-        {
-            anim.SetIKPosition(AvatarIKGoal.RightHand, PlayerInfo.IK_RH.position + (PlayerInfo.mainBody.velocity * Time.fixedDeltaTime));
-            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, grabweightR);
-
-            anim.SetIKRotation(AvatarIKGoal.RightHand, PlayerInfo.IK_RH.rotation);
-            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, grabweightR);
-
-            grabweightR = Mathf.Clamp01(grabweightR + (grabspeed * Time.deltaTime));
-        }
-        else if (PlayerInfo.IK_RH.position != Vector3.zero)
-        {
-            anim.SetIKPosition(AvatarIKGoal.RightHand, PlayerInfo.IK_RH.position);
-            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-            anim.SetIKRotation(AvatarIKGoal.RightHand, PlayerInfo.IK_RH.rotation);
-            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
-            grabweightR = 0;
-        }
-        else
-        {
-            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, grabweightR);
-            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, grabweightR);
-            grabweightR = Mathf.Clamp01(grabweightR - (grabspeed * Time.deltaTime));
+            anim.SetIKPositionWeight(IKGoal, grabweight);
+            anim.SetIKRotationWeight(IKGoal, grabweight);
+            SetGrabWeight(isRight, Mathf.Clamp01(grabweight - (grabspeed * Time.deltaTime)));
         }
     }
 
-    IEnumerator InitDelay()
+    private void SetGrabWeight(bool isRight, float value)
     {
-        yield return new WaitForEndOfFrame();
-        Init();
+        if (isRight)
+            grabweightR = value;
+        else
+            grabweightL = value;
     }
 }

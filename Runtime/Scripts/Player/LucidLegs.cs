@@ -389,7 +389,7 @@ public class LucidLegs : MonoBehaviour
 
         float legadjust = (animModelHips.position.y - animModelFootSelection().position.y) / legLength;
         if (PlayerInfo.climbing && !inputJump)
-            legadjust = 0.5f;
+            legadjust = 0;
 
         if (PlayerInfo.crawling)
             legadjust = crawlmult;

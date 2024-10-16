@@ -195,7 +195,7 @@ public class LucidAnimationModel : MonoBehaviour
         foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
         {
             Transform t = anim.GetBoneTransform(hb2);
-            string hbstring = Shortcuts.BoneNames[hb2];
+            string hbstring = Shortcuts.boneNames[hb2];
             if (!boneRots.ContainsKey(hbstring))
             {
                 if (hb2 != HumanBodyBones.Hips)

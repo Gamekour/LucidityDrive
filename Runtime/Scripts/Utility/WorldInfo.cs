@@ -62,7 +62,7 @@ public static class Shortcuts
         HumanBodyBones.RightFoot
     };
 
-    public static readonly Dictionary<HumanBodyBones, string> BoneNames =
+    public static readonly Dictionary<HumanBodyBones, string> boneNames =
     Enum.GetValues(typeof(HumanBodyBones))
         .Cast<HumanBodyBones>()
         .ToDictionary(bone => bone, bone => Enum.GetName(typeof(HumanBodyBones), bone));
