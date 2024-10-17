@@ -90,35 +90,38 @@ public class Inputs : MonoBehaviour
 //used to easily access relevant input actions for events
 public static class LucidInputActionRefs
 {
-    public static InputAction movement;
-    public static InputAction jump;
-    public static InputAction crouch;
-    public static InputAction sprint;
-    public static InputAction headlook;
-    public static InputAction slide;
-    public static InputAction bslide;
-    public static InputAction mousepos;
-    public static InputAction grabL;
-    public static InputAction grabR;
-    public static InputAction camselect1;
-    public static InputAction camselect2;
-    public static InputAction camselect3;
-    public static InputAction camselect4;
-    public static InputAction mouseUnlock;
+    public static InputAction 
+        movement,
+        jump,
+        crouch,
+        sprint,
+        headlook,
+        slide,
+        bslide,
+        mousepos,
+        grabL, 
+        grabR,
+        camselect1, 
+        camselect2, 
+        camselect3, 
+        camselect4,
+        mouseUnlock;
 }
 
 //used to easily access values from the input actions above without constantly calling readvalue
 public static class LucidInputValueShortcuts
 {
-    public static Vector2 movement;
-    public static Vector2 headlook;
-    public static Vector2 mousepos;
+    public static Vector2 
+        movement, 
+        headlook, 
+        mousepos;
 
-    public static bool jump;
-    public static bool crouch;
-    public static bool sprint;
-    public static bool slide;
-    public static bool bslide;
-    public static bool grabL;
-    public static bool grabR;
+    public static bool 
+        jump,
+        crouch,
+        sprint,
+        slide,
+        bslide,
+        grabL,
+        grabR;
 }
