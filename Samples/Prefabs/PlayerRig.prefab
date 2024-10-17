@@ -157,8 +157,8 @@ GameObject:
   - component: {fileID: 4307564219296961133}
   - component: {fileID: 3252273764742618479}
   - component: {fileID: 1904975163097124427}
-  - component: {fileID: 707126408657979175}
   - component: {fileID: 7110810031320244747}
+  - component: {fileID: 5522311372992652591}
   m_Layer: 3
   m_Name: Head
   m_TagString: Untagged
@@ -331,21 +331,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &707126408657979175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2112535026013051217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb359351b1c8d0a43bc2b53d26e2cd33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetBone: 10
-  positionforce: 0
-  tolerance: 0.01
 --- !u!114 &7110810031320244747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,6 +343,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fd50affce7435b4a8d137e87ad1ebbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderRef: {fileID: 3252273764742618479}
+  doCollisionStayEvents: 1
   onTriggered:
     m_PersistentCalls:
       m_Calls: []
@@ -418,9 +405,33 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  colliderRef: {fileID: 0}
-  doCollisionStayEvents: 1
-  drawGizmo: 0
+  onGrabbed:
+    m_PersistentCalls:
+      m_Calls: []
+  onUngrabbed:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnabled:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &5522311372992652591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112535026013051217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd528683d32e4e449674cd66a58f711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usePlayermodel: 1
+  targetBone: 10
+  useForceMatch: 1
+  positionforce: 10
+  torque: 10
+  tolerance: 0.01
 --- !u!1 &2368762494265202098
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,12 +476,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022c78da7e987f14196e772c1251f69f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawOnSelected: 1
   gizmoShape: 4
   gizmoColor: {r: 1, g: 1, b: 1, a: 1}
   lineTarget: {fileID: 0}
-  gizmoSphereRadius: 0
   gizmoMesh: {fileID: 0}
+  drawOnSelected: 1
+  gizmoSphereRadius: 0
 --- !u!1 &2432811704543141787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,8 +1083,8 @@ GameObject:
   - component: {fileID: 44037071342416141}
   - component: {fileID: 3845484869066579047}
   - component: {fileID: 8335055522678801965}
-  - component: {fileID: 9137347696438969249}
   - component: {fileID: 2295600701639870967}
+  - component: {fileID: 1036693347455370912}
   m_Layer: 3
   m_Name: Body
   m_TagString: Untagged
@@ -1246,21 +1257,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &9137347696438969249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5788374908850747535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb359351b1c8d0a43bc2b53d26e2cd33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetBone: 0
-  positionforce: 0
-  tolerance: 0.01
 --- !u!114 &2295600701639870967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1273,6 +1269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fd50affce7435b4a8d137e87ad1ebbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderRef: {fileID: 3845484869066579047}
+  doCollisionStayEvents: 1
   onTriggered:
     m_PersistentCalls:
       m_Calls: []
@@ -1309,9 +1307,33 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  colliderRef: {fileID: 0}
-  doCollisionStayEvents: 0
-  drawGizmo: 0
+  onGrabbed:
+    m_PersistentCalls:
+      m_Calls: []
+  onUngrabbed:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnabled:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1036693347455370912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5788374908850747535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd528683d32e4e449674cd66a58f711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usePlayermodel: 1
+  targetBone: 0
+  useForceMatch: 1
+  positionforce: 10
+  torque: 10
+  tolerance: 0.01
 --- !u!1 &6060887542458420456
 GameObject:
   m_ObjectHideFlags: 0

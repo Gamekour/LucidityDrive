@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class WorldInfo : MonoBehaviour
+public class LucidWorldInfo : MonoBehaviour
 {
     [SerializeField] LayerMask geometryMaskLayers;
     private void Awake()
@@ -170,14 +170,15 @@ public static class PlayerInfo
 
     public static float traction = 1;
 
-    public static float 
-        stepphase, 
-        animphase, 
-        legdiffL, 
-        legdiffR, 
-        airtime, 
-        alignment, 
-        movespeed 
+    public static float
+        stepphase,
+        animphase,
+        legdiffL,
+        legdiffR,
+        airtime,
+        alignment,
+        movespeed,
+        grounddist
         = 0;
 
     public static bool 

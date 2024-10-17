@@ -171,7 +171,7 @@ public class LucidLegs : MonoBehaviour
         velflathip.y = 0;
 
         //all of these need to eventually be delegated to bools
-        bool inputBellyslide = LucidInputValueShortcuts.crawl;
+        bool inputBellyslide = LucidInputValueShortcuts.bslide;
         bool inputBackslide = LucidInputValueShortcuts.slide;
         bool inputCrouch = LucidInputValueShortcuts.crouch;
         bool inputJump = LucidInputValueShortcuts.jump;
@@ -724,6 +724,11 @@ public class LucidLegs : MonoBehaviour
 
         vFloor.position = center;
         vFloor.forward = -normal;
+
+        float grounddist = Vector3.Distance(transform.position, vFloor.position) - legLength;
+        if (results.Count < 1)
+            grounddist = Mathf.Infinity;
+        PlayerInfo.grounddist = grounddist;
 
         float currentratiomult = ratiomult * (1 + (velflat.magnitude * ratioBySpeed));
 

@@ -6,26 +6,26 @@ using UnityEngine;
 public class EditorGizmo : MonoBehaviour
 {
     public enum GizmoShape { Box, WireBox, Sphere, WireSphere, Ray, Line, Mesh, WireMesh}
-    [SerializeField] bool drawOnSelected = true;
     [SerializeField] GizmoShape gizmoShape;
     [SerializeField] Color gizmoColor;
     [SerializeField] Transform lineTarget;
-    [SerializeField] float gizmoSphereRadius;
     [SerializeField] Mesh gizmoMesh;
+    [SerializeField] bool drawOnSelected = true;
+    [SerializeField] float gizmoSphereRadius;
 
     private void OnDrawGizmos()
     {
         if (!drawOnSelected)
-            gizmodraw();
+            DrawGizmo();
     }
 
     private void OnDrawGizmosSelected()
     {
         if(drawOnSelected)
-            gizmodraw();
+            DrawGizmo();
     }
 
-    private void gizmodraw()
+    private void DrawGizmo()
     {
         Gizmos.color = gizmoColor;
         switch (gizmoShape)

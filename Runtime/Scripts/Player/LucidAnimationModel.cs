@@ -32,9 +32,11 @@ public class LucidAnimationModel : MonoBehaviour
         footslidethreshold,
         footslidevelthreshold,
         leansmoothtime,
+        leansmoothtimeLayer,
         unrotateFeetBySpeed,
         maxFootAngle,
-        verticalFootAdjust;
+        verticalFootAdjust,
+        hipWeightReductionByHeight;
 
     [HideInInspector]
     public Dictionary<string, Quaternion> boneRots = new Dictionary<string, Quaternion>();
@@ -58,7 +60,8 @@ public class LucidAnimationModel : MonoBehaviour
         airtimesmooth,
         angleRef,
         landingRef,
-        alignmentRef;
+        alignmentRef,
+        hipLayerRef;
     private Transform 
         pelvis,
         head,
@@ -137,13 +140,16 @@ public class LucidAnimationModel : MonoBehaviour
         }
         GameObject newPlayerModel = Instantiate(visModel.gameObject, transform);
         LucidVismodel newVisModel = newPlayerModel.GetComponent<LucidVismodel>();
+        Avatar targetAvatar = newVisModel.anim.avatar;
         newVisModel.playerMeshParent.gameObject.SetActive(false);
         Destroy(newVisModel);
         anim = newPlayerModel.GetComponent<Animator>();
-        PlayerInfo.playermodelAnim = anim;
         anim.runtimeAnimatorController = controller;
-        Component c = newPlayerModel.AddComponent(typeof(AnimatorIKReciever));
-        ((AnimatorIKReciever)c).target = this;
+        anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+        anim.avatar = targetAvatar;
+        PlayerInfo.playermodelAnim = anim;
+        Component c = newPlayerModel.AddComponent(typeof(AnimatorEventReciever));
+        ((AnimatorEventReciever)c).target = this;
 
         animpelvis = anim.GetBoneTransform(HumanBodyBones.Hips);
         animFootL = anim.GetBoneTransform(HumanBodyBones.LeftFoot);
@@ -213,7 +219,7 @@ public class LucidAnimationModel : MonoBehaviour
     {
         if (!initialized) return;
 
-        bool crawl = LucidInputValueShortcuts.crawl;
+        bool bslide = LucidInputValueShortcuts.bslide;
         bool slide = LucidInputValueShortcuts.slide;
 
         Vector2 moveVector = LucidInputValueShortcuts.movement;
@@ -241,14 +247,17 @@ public class LucidAnimationModel : MonoBehaviour
         float legweight = Mathf.Clamp01(airtimesmooth / airtimemax);
         legweight = Mathf.Clamp01(legweight + (1 - localNrm.y));
         legweight *= slide ? 0 : 1;
-        legweight *= crawl ? 0 : 1;
+        legweight *= bslide ? 0 : 1;
         legweight *= PlayerInfo.flying ? 0 : 1;
         legweight *= PlayerInfo.climbing ? 0 : 1;
         anim.SetLayerWeight(1, legweight);
 
-        float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (crawl ? 0 : 1));
+        float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (bslide ? 0 : 1));
         hipweight *= Mathf.Clamp01(velflat.magnitude);
         hipweight *= PlayerInfo.climbing ? 0 : 1;
+        hipweight *= Mathf.Clamp01(1 - Mathf.Clamp(PlayerInfo.grounddist * hipWeightReductionByHeight, 0, Mathf.Infinity));
+        float currenthipweight = anim.GetLayerWeight(2);
+        hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
         anim.SetLayerWeight(2, hipweight);
 
         Quaternion chest = anim.GetBoneTransform(HumanBodyBones.Chest).rotation;
@@ -279,7 +288,7 @@ public class LucidAnimationModel : MonoBehaviour
 
     private Vector3 CalculateLocalVelocity()
     {
-        Vector3 localVel = PlayerInfo.hipspace.InverseTransformVector(PlayerInfo.mainBody.velocity);
+        Vector3 localVel = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.mainBody.velocity);
         localVel *= velscale;
         Vector3 currentvellocal = Vector3.zero;
         currentvellocal.x = anim.GetFloat(_VEL_X);
@@ -351,7 +360,7 @@ public class LucidAnimationModel : MonoBehaviour
     private void UpdateAnimatorBools()
     {
         bool slide = LucidInputValueShortcuts.slide;
-        bool crawl = LucidInputValueShortcuts.crawl;
+        bool crawl = LucidInputValueShortcuts.bslide;
         bool footslide = (PlayerInfo.alignment > footslidethreshold && PlayerInfo.mainBody.velocity.magnitude > footslidevelthreshold);
 
         anim.SetBool(_GROUNDED, PlayerInfo.grounded);

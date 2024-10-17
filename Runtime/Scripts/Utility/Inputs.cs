@@ -96,7 +96,7 @@ public static class LucidInputActionRefs
     public static InputAction sprint;
     public static InputAction headlook;
     public static InputAction slide;
-    public static InputAction crawl;
+    public static InputAction bslide;
     public static InputAction mousepos;
     public static InputAction grabL;
     public static InputAction grabR;
@@ -118,7 +118,7 @@ public static class LucidInputValueShortcuts
     public static bool crouch;
     public static bool sprint;
     public static bool slide;
-    public static bool crawl;
+    public static bool bslide;
     public static bool grabL;
     public static bool grabR;
 }

@@ -6,12 +6,13 @@ public class CameraManager : MonoBehaviour
 {
     [SerializeField] Transform[] camerapoints;
     [SerializeField] Transform headroot;
-    [SerializeField] float headsmooth;
-    [SerializeField] float rawblend = 0.5f;
-    [SerializeField] float rawblendTransitionSpeed = 1;
-    [SerializeField] float externalCameraSmoothTime = 0.5f;
-    [SerializeField] LayerMask layermaskNormal;
-    [SerializeField] LayerMask layermaskFP;
+    [SerializeField] float 
+        headsmooth,
+        rawblend,
+        rawblendTransitionSpeed,
+        externalCameraSmoothTime;
+    [SerializeField] LayerMask layermaskNormal, layermaskFP;
+
     private int cameraPointIndex = 0;
     private Transform headrootTarget;
     private bool forceRaw = false;

@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GrabTrigger : MonoBehaviour
+public interface GrabTrigger
 {
-    public UnityEvent onTriggered;
-
-    public void GrabEvent()
-    {
-        onTriggered.Invoke();
-    }
+    void GrabEvent();
+    void UngrabEvent();
 }

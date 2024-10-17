@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EventBox : MonoBehaviour
+public class EventBox : MonoBehaviour, GrabTrigger
 {
-    public UnityEvent<Collider> onTriggered = new UnityEvent<Collider>();
-    public UnityEvent<Collision> onCollisionEnter = new UnityEvent<Collision>();
-    public UnityEvent<Collision> onCollisionExit = new UnityEvent<Collision>();
-    [Tooltip("Make sure doCollisionStayEvents is enabled if using this!")]
-    public UnityEvent<Collision> onCollisionStay = new UnityEvent<Collision>();
     public Collider colliderRef;
     [SerializeField] bool doCollisionStayEvents = false;
-    [SerializeField] bool drawGizmo = false;
+
+    [Header("Events")]
+    public UnityEvent<Collider> onTriggered = new UnityEvent<Collider>();
+    public UnityEvent<Collision> onCollisionEnter, onCollisionExit, onCollisionStay = new UnityEvent<Collision>();
+    public UnityEvent onGrabbed, onUngrabbed, onEnabled;
+
 
     private void OnEnable()
     {
         colliderRef = GetComponent<Collider>();
+        onEnabled.Invoke();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,9 +41,13 @@ public class EventBox : MonoBehaviour
             onCollisionStay.Invoke(collision);
     }
 
-    private void OnDrawGizmosSelected()
+    public void GrabEvent()
     {
-        if(drawGizmo)
-            Gizmos.DrawCube(transform.position, transform.localScale);
+        onGrabbed.Invoke();
+    }
+
+    public void UngrabEvent()
+    {
+        onUngrabbed.Invoke();
     }
 }

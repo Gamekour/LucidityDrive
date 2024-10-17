@@ -360,16 +360,17 @@ public class LucidArms : MonoBehaviour
     {
         if (!initialized) return;
 
-        Animator animL = null;
-        Animator animR = null;
         if (!right)
         {
             leftanchor.linearLimit = off;
             if (currenttargetL != null)
             {
-                animL = currenttargetL.GetComponent<Animator>();
-                if (animL != null)
-                    animL.SetBool("grabbed", false);
+                if (currenttargetL != null)
+                {
+                    GrabTrigger trigL = currenttargetL.GetComponent<GrabTrigger>();
+                    if (trigL != null)
+                        trigL.UngrabEvent();
+                }
             }
             grabL = false;
         }
@@ -378,9 +379,9 @@ public class LucidArms : MonoBehaviour
             rightanchor.linearLimit = off;
             if (currenttargetR != null)
             {
-                animR = currenttargetR.GetComponent<Animator>();
-                if (animR != null && animR != animL)
-                    animR.SetBool("grabbed", false);
+                GrabTrigger trigR = currenttargetR.GetComponent<GrabTrigger>();
+                if (trigR != null)
+                    trigR.UngrabEvent();
             }
             grabR = false;
         }

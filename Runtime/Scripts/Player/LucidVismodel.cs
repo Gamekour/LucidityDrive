@@ -78,7 +78,7 @@ public class LucidVismodel : MonoBehaviour
             if (modelSync.boneRots.ContainsKey(hbstring))
                 anim.SetBoneLocalRotation(hb2, modelSync.boneRots[hbstring]);
         }
-        bool enableFootIK = !(PlayerInfo.crawling || LucidInputValueShortcuts.crawl || LucidInputValueShortcuts.slide || PlayerInfo.airtime > modelSync.airtimeThreshold);
+        bool enableFootIK = !(PlayerInfo.crawling || LucidInputValueShortcuts.bslide || LucidInputValueShortcuts.slide || PlayerInfo.airtime > modelSync.airtimeThreshold);
         float footIKWeight = enableFootIK ? 1 : 0;
         anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, footIKWeight);
         anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, footIKWeight);

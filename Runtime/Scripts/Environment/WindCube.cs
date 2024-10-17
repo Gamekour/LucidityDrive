@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class WindCube : MonoBehaviour
 {
-    private List<Rigidbody> targets = new List<Rigidbody>();
-    [SerializeField] float strength = 1;
+    [SerializeField] float strength, threshold, matchSmoothness;
+    [SerializeField] bool multiplicative, subVel = false;
     [SerializeField] ForceMode fm = ForceMode.Force;
-    [SerializeField] bool multiplicative = false;
-    [SerializeField] float threshold = 0;
-    [SerializeField] bool subVel = false;
-    [SerializeField] float matchSmoothness = 0;
+    private List<Rigidbody> targets = new List<Rigidbody>();
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.attachedRigidbody != null)
