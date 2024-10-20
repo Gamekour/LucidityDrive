@@ -18,6 +18,7 @@ public class BoneRoot : MonoBehaviour
     private Rigidbody rb;
 
     private ParentConstraint parentConstraint;
+    private bool initialized = false;
 
     private void OnEnable()
     {
@@ -29,14 +30,12 @@ public class BoneRoot : MonoBehaviour
             rb = GetComponent<Rigidbody>();
         }
         PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-        PlayerInfo.OnRemoveVismodel.AddListener(Detach);
         PlayerInfo.OnAnimModellInitialized.AddListener(OnInitializeAnimModel);
     }
 
     private void OnDisable()
     {
         PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
-        PlayerInfo.OnRemoveVismodel.RemoveListener(Detach);
         PlayerInfo.OnAnimModellInitialized.RemoveListener(OnInitializeAnimModel);
     }
 
@@ -71,12 +70,6 @@ public class BoneRoot : MonoBehaviour
         parentConstraint.SetTranslationOffset(0, Vector3.zero);
         parentConstraint.SetRotationOffset(0, Vector3.zero);
         parentConstraint.constraintActive = true;
-    }
-
-    public void Detach()
-    {
-        if (parentConstraint != null)
-            parentConstraint.constraintActive = false;
     }
 
     private void FixedUpdate()
