@@ -42,14 +42,24 @@ public class LucidVismodel : MonoBehaviour
 
     public void Init()
     {
-        PlayerInfo.vismodelRef = this;
-        PlayerInfo.OnAssignVismodel.Invoke(this);
         initialized = true;
     }
 
     private void OnDisable()
     {
         PlayerInfo.OnRemoveVismodel.Invoke();
+    }
+
+    private void FixedUpdate()
+    {
+        if (initialized && PlayerInfo.vismodelRef == null)
+        {
+            if (anim.isInitialized)
+            {
+                PlayerInfo.vismodelRef = this;
+                PlayerInfo.OnAssignVismodel.Invoke(this);
+            }
+        }
     }
 
     //creates a pose for the visual model based on the playermodel's animation, active IK points, and collisions with the ground

@@ -632,7 +632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e088b1b071aba4a8a1ac2b31d7dd60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  airtimeThreshold: 0.5
+  airtimeThreshold: 0.01
   controller: {fileID: 9100000, guid: d306c39f8cccab24a8871088ef7f5657, type: 2}
   fpcam: {fileID: 5496875962166913160}
   IK_LF: {fileID: 8982907529161714512}
@@ -650,13 +650,15 @@ MonoBehaviour:
   airtimemax: 0.4
   groundedforgiveness: 0.65
   lerp: 0.33
-  landtime: 0.5
+  landtime: 1
   footslidethreshold: 0.5
   footslidevelthreshold: 3
   leansmoothtime: 0.5
+  leansmoothtimeLayer: 0
   unrotateFeetBySpeed: 1
   maxFootAngle: 60
   verticalFootAdjust: 0.1
+  hipWeightReductionByHeight: 1
   LCast: {x: 4.319404, y: -2.3021216, z: 43.07542}
   RCast: {x: 4.230167, y: -2.3021216, z: 43.240364}
   hiprot: {x: 0, y: 0, z: 0, w: 1}
@@ -1569,6 +1571,7 @@ GameObject:
   - component: {fileID: 2635777386139525533}
   - component: {fileID: 3325826316032673845}
   - component: {fileID: 4850541687374653960}
+  - component: {fileID: 5102646455301297706}
   m_Layer: 3
   m_Name: PlayerRig
   m_TagString: Untagged
@@ -1626,6 +1629,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultLockMode: 0
+--- !u!114 &5102646455301297706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6671152753758007464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b19d59d64e0a3a41b5a20f3db6d5a6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnpoint: {x: 0, y: 0, z: 0}
+  startVel: {x: 0, y: 0, z: 0}
+  respawnHeight: -100
 --- !u!1 &7233637816261873098
 GameObject:
   m_ObjectHideFlags: 0
