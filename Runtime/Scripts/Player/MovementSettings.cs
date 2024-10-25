@@ -6,8 +6,8 @@ using UnityEngine;
 public class MovementSettings : ScriptableObject
 {
     [Header("Gameplay")]
+    public float movespeed;
     public float 
-        movespeed,
         sprintmult,
         crawlspeed,
         crouchspeed,
@@ -26,8 +26,8 @@ public class MovementSettings : ScriptableObject
         directionaljumpmult;
 
     [Header("Casting")]
+    public float legWidth;
     public float 
-        legWidth,
         legWidthMult,
         down,
         airdownmult,
@@ -39,16 +39,16 @@ public class MovementSettings : ScriptableObject
         probeZminimumOffset;
 
     [Header("Animation")]
+    public float ratiomult;
     public float 
-        ratiomult,
         ratiofreezethreshold,
         airtimemult,
         ratioBySpeed,
         maxlegmult;
 
     [Header("Physics")]
-    public float 
-        friction,
+    public float friction;
+    public float
         maxforcemult,
         hipRotationSpeed,
         hipspacesmoothness,
