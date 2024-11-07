@@ -12,51 +12,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
   m_Name: MovementProfileSampleArcade
   m_EditorClassIdentifier: 
-  movespeed: 4
+  movespeed: 3.5
   sprintmult: 2
-  crawlspeed: 2
-  crouchspeed: 3
-  moveburst: 12
+  crawlspeed: 1.5
+  crouchspeed: 2
+  moveburst: 1.3
   slidemult: 14
   slidepushforce: 0
-  jumpforcemult: 1.1
-  jumpgrav: -3
+  jumpforcemult: 1
+  jumpgrav: -6
   fallgrav: -14
-  airmove: 10
+  airmove: 15
   airdrag: 0.99925
   maxAirAccel: 3
-  flightforce: 15
-  flightdrag: 0.075
+  flightforce: 10
+  flightdrag: 0.05
   walkthreshold: 2
-  directionaljumpmult: 5
+  directionaljumpmult: 3.5
   legWidth: 0.09
   legWidthMult: 0.5
-  down: 1.75
-  airdownmult: 1
+  down: 1.5
+  airdownmult: 0.1
   probemult: 1
-  moveflatprobemult: 1.5
+  moveflatprobemult: 1
   probeCutoffHeight: -2
   maxProbeOffset: 2
-  probeXminimumOffset: 0.1
-  probeZminimumOffset: 0.1
+  probeXminimumOffset: 0.05
+  probeZminimumOffset: 0.05
   ratiomult: 1
   ratiofreezethreshold: 0.1
   airtimemult: 2
-  ratioBySpeed: 0.1
+  ratioBySpeed: 0.25
   maxlegmult: 1.4
-  friction: 0.3
+  friction: 0.425
   maxforcemult: 5.4
   hipRotationSpeed: 2000
-  hipspacesmoothness: 0.94
+  hipspacesmoothness: 0
   hipspaceMaxRot: -0.9
   forcesmoothness: 20
   crouchmult: 0.5
-  jumpmult: 32
-  moveupmult: 1
-  movedownmult: 0.5
-  movedownclamp: 0.6
+  jumpmult: 8
+  moveupmult: 0
+  movedownmult: 0.25
+  movedownclamp: 1
   crawlthreshold: 14
   crawlmult: 0.225
-  wallruntilt: 0.05
-  jumptilt: 0.4
+  wallruntilt: 0.5
+  jumptilt: 0.2
   climbtilt: 0.3
