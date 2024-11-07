@@ -22,7 +22,7 @@ MonoBehaviour:
   jumpforcemult: 1.1
   jumpgrav: -3
   fallgrav: -14
-  airmove: 20
+  airmove: 10
   airdrag: 0.99925
   maxAirAccel: 3
   flightforce: 15
@@ -42,9 +42,9 @@ MonoBehaviour:
   ratiomult: 1
   ratiofreezethreshold: 0.1
   airtimemult: 2
-  ratioBySpeed: 0.25
+  ratioBySpeed: 0.1
   maxlegmult: 1.4
-  friction: 0.5
+  friction: 0.3
   maxforcemult: 5.4
   hipRotationSpeed: 2000
   hipspacesmoothness: 0.94
