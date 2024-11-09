@@ -7,9 +7,8 @@ to install:
 - click the + button on the top left, then "add from git url"
 - paste https://github.com/Gamekour/LucidityDrive.git into the field, if it asks about restarting hit yes
 - on the bottom left of unity, find the packages folder
-- open lucidity drive folder, then samples, and drag the scene (LucidityDriveSampleScene) into the your assets folder on the left
 - go to the top of unity, open the tab called "Tools", and then click on automatic setup - it should create a window, click the button then close the window
-- go to your assets folder and double click the scene you dragged into it
+- create a new scene, and drag in the prefabs "PlayerRig", "WorldInfo", and "VismodelExample" from LucidityDrive/Samples/Prefabs
 - press play - if everything works then you're ready to start making your game!
 (if you want to hide your cursor, just click on the game window while playing and press tab. tab again restores cursor)
 
