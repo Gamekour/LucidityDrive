@@ -15,7 +15,7 @@ public class CursorStateHandler : MonoBehaviour
     private void Start()
     {
         LucidInputActionRefs.mouseUnlock.started += MouseLockToggle;
-        Cursor.lockState = defaultLockMode;
+        SetState(defaultLockMode);
     }
 
     private void MouseLockToggle(InputAction.CallbackContext obj)
