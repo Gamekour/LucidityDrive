@@ -21,30 +21,14 @@ public class CursorStateHandler : MonoBehaviour
     private void MouseLockToggle(InputAction.CallbackContext obj)
     {
         if (Cursor.lockState == CursorLockMode.Locked)
-            SetState(0);
+            SetState(CursorLockMode.None);
         else
-            SetState(2);
+            SetState(CursorLockMode.Locked);
     }
 
-    public void SetState(int state)
+    public void SetState(CursorLockMode state)
     {
-        switch (state)
-        {
-            case 0:
-                Cursor.lockState = CursorLockMode.None;
-                PlayerInfo.headlocked = false;
-                break;
-            case 1:
-                Cursor.lockState = CursorLockMode.Confined;
-                PlayerInfo.headlocked = false;
-                break;
-            case 2:
-                Cursor.lockState = CursorLockMode.Locked;
-                PlayerInfo.headlocked = true;
-                break;
-            default:
-                Debug.LogError("invalid lock state");
-                break;
-        }
+        Cursor.lockState = state;
+        PlayerInfo.headlocked = (state == CursorLockMode.Locked)
     }
 }
