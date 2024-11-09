@@ -176,7 +176,7 @@ public class LucidLegs : MonoBehaviour
         bool inputCrouch = LucidInputValueShortcuts.crouch;
         bool inputJump = LucidInputValueShortcuts.jump;
         bool inputSprint = LucidInputValueShortcuts.sprint;
-        bool crawling = inputBellyslide && velflathip.magnitude < crawlthreshold && inputCrouch;
+        bool crawling = inputBellyslide && inputCrouch && (velflathip.magnitude < crawlthreshold);
         inputBellyslide &= !crawling;
         inputBackslide &= !crawling;
         bool doGroundLogic = PlayerInfo.grounded && PlayerInfo.footsurface.y >= -0.001f;
