@@ -18,7 +18,7 @@ MonoBehaviour:
   crouchspeed: 2
   moveburst: 1.3
   slidemult: 14
-  slidepushforce: 0
+  slidepushforce: 16
   jumpforcemult: 1
   jumpgrav: -9.81
   fallgrav: -9.81
@@ -27,9 +27,8 @@ MonoBehaviour:
   maxAirAccel: 0
   flightforce: 10
   flightdrag: 0.05
-  timescale: 1
   walkthreshold: 0.75
-  ratioBySpeed: 0.25
+  directionaljumpmult: 3.5
   legWidth: 0.09
   legWidthMult: 0.5
   down: 1.5
@@ -43,13 +42,14 @@ MonoBehaviour:
   ratiomult: 1
   ratiofreezethreshold: 0.1
   airtimemult: 2
+  ratioBySpeed: 0.25
+  maxlegmult: 1.4
   friction: 0.425
   maxforcemult: 5.4
   hipRotationSpeed: 2000
   hipspacesmoothness: 0
   hipspaceMaxRot: -0.9
   forcesmoothness: 20
-  maxlegmult: 1.4
   crouchmult: 0.5
   jumpmult: 8
   moveupmult: 0
@@ -57,7 +57,7 @@ MonoBehaviour:
   movedownclamp: 1
   crawlthreshold: 14
   crawlmult: 0.225
-  directionaljumpmult: 3.5
   wallruntilt: 0.5
   jumptilt: 0.2
   climbtilt: 0.3
+  slidePushAngleThreshold: 45

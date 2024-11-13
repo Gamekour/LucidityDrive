@@ -178,7 +178,9 @@ public static class PlayerInfo
         airtime,
         alignment,
         movespeed,
-        grounddist
+        grounddist,
+        slidesurfangle,
+        slidepushanglethreshold
         = 0;
 
     public static bool 

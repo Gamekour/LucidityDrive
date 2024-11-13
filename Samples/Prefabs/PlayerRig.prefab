@@ -1455,7 +1455,7 @@ MonoBehaviour:
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
   headroot: {fileID: 2840716185538071160}
-  headsmooth: 0.3
+  headsmooth: 0.5
   rawblend: 0.1
   rawblendTransitionSpeed: 1
   externalCameraSmoothTime: 0.05

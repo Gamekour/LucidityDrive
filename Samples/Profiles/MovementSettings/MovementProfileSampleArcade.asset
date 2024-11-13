@@ -60,3 +60,4 @@ MonoBehaviour:
   wallruntilt: 0.5
   jumptilt: 0.2
   climbtilt: 0.3
+  slidePushAngleThreshold: 45

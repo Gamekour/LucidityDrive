@@ -63,5 +63,6 @@ public class MovementSettings : ScriptableObject
         crawlmult,
         wallruntilt,
         jumptilt,
-        climbtilt;
+        climbtilt,
+        slidePushAngleThreshold;
 }

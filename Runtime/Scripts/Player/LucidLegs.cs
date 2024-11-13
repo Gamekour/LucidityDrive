@@ -88,7 +88,8 @@ public class LucidLegs : MonoBehaviour
         jumpgrav, 
         fallgrav, 
         airmove, 
-        airdrag;
+        airdrag,
+        slidePushAngleThreshold;
 
     //internal variables
     private RaycastHit[] spherecastHitBufferL = new RaycastHit[100];
@@ -97,6 +98,7 @@ public class LucidLegs : MonoBehaviour
     private Transform animModelLFoot;
     private Transform animModelRFoot;
     private Rigidbody rb;
+    private Vector3 hipCollisionNrm;
     private float legLength;
     private float animPhase = 0;
     private float currentratio = 1;
@@ -256,6 +258,7 @@ public class LucidLegs : MonoBehaviour
             }
         }
         PlayerInfo.movespeed = movespeed;
+        PlayerInfo.slidepushanglethreshold = slidePushAngleThreshold;
     }
 
     //calculates rotation forces necessary for aligning hips with head at an appropriate speed
@@ -489,6 +492,7 @@ public class LucidLegs : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         PlayerInfo.pelviscollision = true;
+        hipCollisionNrm = collision.contacts[0].normal;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -498,6 +502,11 @@ public class LucidLegs : MonoBehaviour
 
     private void SlidePush()
     {
+        PlayerInfo.slidesurfangle = Vector3.Angle(hipCollisionNrm, PlayerInfo.footspace.up);
+
+        if (PlayerInfo.slidesurfangle < slidePushAngleThreshold)
+            return;
+
         Vector3 diffL = legSpaceL.position - PlayerInfo.IK_LF.position;
         Vector3 diffR = legSpaceR.position - PlayerInfo.IK_RF.position;
         Vector3 avg = (diffL + diffR) / 2;
