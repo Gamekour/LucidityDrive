@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 3.5
   sprintmult: 2
-  crawlspeed: 1.5
-  crouchspeed: 2
+  crawlspeed: 1
+  crouchspeed: 1.5
   moveburst: 1.3
   slidemult: 14
   slidepushforce: 16
@@ -50,7 +50,7 @@ MonoBehaviour:
   hipspacesmoothness: 0
   hipspaceMaxRot: -0.9
   forcesmoothness: 20
-  crouchmult: 0.5
+  crouchmult: 1
   jumpmult: 8
   moveupmult: 0
   movedownmult: 0.25

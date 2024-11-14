@@ -50,7 +50,7 @@ MonoBehaviour:
   hipspacesmoothness: 0.94
   hipspaceMaxRot: -0.9
   forcesmoothness: 20
-  crouchmult: 0.5
+  crouchmult: 1
   jumpmult: 32
   moveupmult: 1
   movedownmult: 0.5

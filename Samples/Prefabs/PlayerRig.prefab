@@ -639,8 +639,8 @@ MonoBehaviour:
   IK_RF: {fileID: 5249457337260208995}
   IK_LH: {fileID: 3483037214520940076}
   IK_RH: {fileID: 4123976296632360821}
-  velsmoothTime: 0.5
-  velscale: 1.5
+  velsmoothTime: 0.25
+  velscale: 1
   nrmSmoothTime: 0.5
   footSmoothTime: 0.5
   willSmoothTime: 0.1

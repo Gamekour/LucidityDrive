@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class LucidAnimationModel : MonoBehaviour
@@ -103,8 +104,8 @@ public class LucidAnimationModel : MonoBehaviour
         _GRAB_L = "grabL",
         _GRAB_R = "grabR",
         _CLIMBING = "climbing",
-        _FOOTSLIDE = "footslide";
-
+        _FOOTSLIDE = "footslide",
+        _CROUCH = "crouch";
 
     private void Start()
     {
@@ -221,6 +222,7 @@ public class LucidAnimationModel : MonoBehaviour
 
         bool bslide = LucidInputValueShortcuts.bslide;
         bool slide = LucidInputValueShortcuts.slide;
+        bool crouch = LucidInputValueShortcuts.crouch;
 
         Vector2 moveVector = LucidInputValueShortcuts.movement;
         Vector3 moveFlat = Vector3.zero;
@@ -245,14 +247,13 @@ public class LucidAnimationModel : MonoBehaviour
             airtimesmooth = Mathf.SmoothDamp(airtimesmooth, PlayerInfo.airtime, ref landingRef, landtime);
 
         float legweight = Mathf.Clamp01(airtimesmooth / airtimemax);
-        legweight = Mathf.Clamp01(legweight + (1 - localNrm.y));
         legweight *= slide ? 0 : 1;
         legweight *= bslide ? 0 : 1;
         legweight *= PlayerInfo.flying ? 0 : 1;
         legweight *= PlayerInfo.climbing ? 0 : 1;
         anim.SetLayerWeight(1, legweight);
 
-        float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (bslide ? 0 : 1));
+        float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (bslide ? 0 : 1) * (crouch ? 0 : 1));
         hipweight *= Mathf.Clamp01(velflat.magnitude);
         hipweight *= PlayerInfo.climbing ? 0 : 1;
         hipweight *= Mathf.Clamp01(1 - Mathf.Clamp(PlayerInfo.grounddist * hipWeightReductionByHeight, 0, Mathf.Infinity));
@@ -289,7 +290,10 @@ public class LucidAnimationModel : MonoBehaviour
     private Vector3 CalculateLocalVelocity()
     {
         Vector3 localVel = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.mainBody.velocity);
-        localVel *= velscale;
+        if (PlayerInfo.grounded)
+            localVel *= velscale;
+        else
+            localVel = localVel.normalized;
         Vector3 currentvellocal = Vector3.zero;
         currentvellocal.x = anim.GetFloat(_VEL_X);
         currentvellocal.y = anim.GetFloat(_VEL_Y);
@@ -362,6 +366,7 @@ public class LucidAnimationModel : MonoBehaviour
         bool slide = LucidInputValueShortcuts.slide;
         bool crawl = LucidInputValueShortcuts.bslide;
         bool footslide = (PlayerInfo.alignment > footslidethreshold && PlayerInfo.mainBody.velocity.magnitude > footslidevelthreshold);
+        bool crouch = LucidInputValueShortcuts.crouch;
 
         anim.SetBool(_GROUNDED, PlayerInfo.grounded);
         anim.SetBool(_SLIDE, slide);
@@ -372,6 +377,7 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBool(_GRAB_R, PlayerInfo.grabR);
         anim.SetBool(_CLIMBING, PlayerInfo.climbing);
         anim.SetBool(_FOOTSLIDE, footslide);
+        anim.SetBool(_CROUCH, crouch);
     }
 
     private Vector2 LeanCalc(Vector3 localwill, Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
@@ -399,10 +405,10 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 kneeposL = animKneeL.position;
         Vector3 kneeposR = animKneeR.position;
 
-        UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast);
-        UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast);
+        bool hitL = UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast);
+        bool hitR = UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast);
 
-        PlayerInfo.grounded = (LCast != footposL || RCast != footposR) || PlayerInfo.pelviscollision;
+        PlayerInfo.grounded = (hitL || hitR || PlayerInfo.pelviscollision);
 
         if (PlayerInfo.crawling)
             PlayerInfo.footsurface = PlayerInfo.hipspace.up;
@@ -411,7 +417,7 @@ public class LucidAnimationModel : MonoBehaviour
         PlayerInfo.IK_RF.position = RCast;
     }
 
-    private void UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
+    private bool UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
     {
         RaycastHit hitInfoThigh = new RaycastHit();
         RaycastHit hitInfoShin = new RaycastHit();
@@ -434,6 +440,8 @@ public class LucidAnimationModel : MonoBehaviour
             Cast = footpos;
 
         Cast = Vector3.SmoothDamp(Cast, CastOld, ref footRef, footSmoothTime);
+
+        return thighCast || shinCast;
     }
 
     private void UpdateFootSpaceAndRotation(bool isLeft, Vector3 normal, Vector3 point)

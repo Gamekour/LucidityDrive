@@ -89,7 +89,8 @@ public class LucidLegs : MonoBehaviour
         fallgrav, 
         airmove, 
         airdrag,
-        slidePushAngleThreshold;
+        slidePushAngleThreshold,
+        maxAngleChangeWhileSliding;
 
     //internal variables
     private RaycastHit[] spherecastHitBufferL = new RaycastHit[100];
@@ -98,7 +99,7 @@ public class LucidLegs : MonoBehaviour
     private Transform animModelLFoot;
     private Transform animModelRFoot;
     private Rigidbody rb;
-    private Vector3 hipCollisionNrm;
+    private Vector3 bodyCollisionNrm;
     private float legLength;
     private float animPhase = 0;
     private float currentratio = 1;
@@ -291,6 +292,9 @@ public class LucidLegs : MonoBehaviour
         flattened.y = 0;
         flattened.Normalize();
 
+        if (LucidInputValueShortcuts.slide || LucidInputValueShortcuts.bslide)
+            flattened = Vector3.zero;
+
         // Apply air drag
         if (airdrag != 1)
         {
@@ -482,6 +486,7 @@ public class LucidLegs : MonoBehaviour
     public void OnPhysCollisionStay(Collision c)
     {
         PlayerInfo.physCollision = true;
+        bodyCollisionNrm = c.contacts[0].normal;
     }
 
     public void OnPhysCollisionExit(Collision c)
@@ -492,7 +497,7 @@ public class LucidLegs : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         PlayerInfo.pelviscollision = true;
-        hipCollisionNrm = collision.contacts[0].normal;
+        bodyCollisionNrm = collision.contacts[0].normal;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -502,7 +507,7 @@ public class LucidLegs : MonoBehaviour
 
     private void SlidePush()
     {
-        PlayerInfo.slidesurfangle = Vector3.Angle(hipCollisionNrm, PlayerInfo.footspace.up);
+        PlayerInfo.slidesurfangle = Vector3.Angle(bodyCollisionNrm, PlayerInfo.footspace.up);
 
         if (PlayerInfo.slidesurfangle < slidePushAngleThreshold)
             return;
@@ -726,13 +731,14 @@ public class LucidLegs : MonoBehaviour
             hfwd += Vector3.up;
         Quaternion q1 = hipSpace.rotation;
         Quaternion q2 = Quaternion.LookRotation(hfwd, normal);
-        Quaternion q3 = Quaternion.RotateTowards(q1, q2, Quaternion.Angle(q1, q2) * (1 - hipspacesmoothness));
-        hipSpace.rotation = q3;
+        float deltaQ = Quaternion.Angle(q1, q2);
 
-        Vector3 up = Vector3.ProjectOnPlane(Vector3.up, hipSpace.up);
+        Quaternion q3 = Quaternion.RotateTowards(q1, q2, deltaQ * (1 - hipspacesmoothness));
+
+        hipSpace.rotation = q3;
+        vFloor.forward = -normal;
 
         vFloor.position = center;
-        vFloor.forward = -normal;
 
         float grounddist = Vector3.Distance(transform.position, vFloor.position) - legLength;
         if (results.Count < 1)
