@@ -37,7 +37,8 @@ public class LucidAnimationModel : MonoBehaviour
         unrotateFeetBySpeed,
         maxFootAngle,
         verticalFootAdjust,
-        hipWeightReductionByHeight;
+        hipWeightReductionByHeight,
+        crouchTime;
 
     [HideInInspector]
     public Dictionary<string, Quaternion> boneRots = new Dictionary<string, Quaternion>();
@@ -62,7 +63,8 @@ public class LucidAnimationModel : MonoBehaviour
         angleRef,
         landingRef,
         alignmentRef,
-        hipLayerRef;
+        hipLayerRef,
+        crouchRef;
     private Transform 
         pelvis,
         head,
@@ -342,6 +344,10 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float lastalignment, Vector2 lean)
     {
+        float currentcrouch = anim.GetFloat(_CROUCH);
+        float crouch = LucidInputValueShortcuts.crouch ? 1 : 0;
+        crouch = Mathf.SmoothDamp(currentcrouch, crouch, ref crouchRef, crouchTime);
+
         anim.SetFloat(_VEL_X, localVel.x);
         anim.SetFloat(_VEL_Y, localVel.y);
         anim.SetFloat(_VEL_Z, localVel.z);
@@ -359,6 +365,7 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_LEAN_X, lean.x);
         anim.SetFloat(_LEAN_Z, lean.y);
         anim.SetFloat(_FOOT_ANGLE, footAngle / maxFootAngle);
+        anim.SetFloat(_CROUCH, crouch);
     }
 
     private void UpdateAnimatorBools()
@@ -366,7 +373,6 @@ public class LucidAnimationModel : MonoBehaviour
         bool slide = LucidInputValueShortcuts.slide;
         bool crawl = LucidInputValueShortcuts.bslide;
         bool footslide = (PlayerInfo.alignment > footslidethreshold && PlayerInfo.mainBody.velocity.magnitude > footslidevelthreshold);
-        bool crouch = LucidInputValueShortcuts.crouch;
 
         anim.SetBool(_GROUNDED, PlayerInfo.grounded);
         anim.SetBool(_SLIDE, slide);
@@ -377,7 +383,6 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBool(_GRAB_R, PlayerInfo.grabR);
         anim.SetBool(_CLIMBING, PlayerInfo.climbing);
         anim.SetBool(_FOOTSLIDE, footslide);
-        anim.SetBool(_CROUCH, crouch);
     }
 
     private Vector2 LeanCalc(Vector3 localwill, Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
