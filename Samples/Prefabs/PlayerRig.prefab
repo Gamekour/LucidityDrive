@@ -640,7 +640,6 @@ MonoBehaviour:
   IK_LH: {fileID: 3483037214520940076}
   IK_RH: {fileID: 4123976296632360821}
   velsmoothTime: 0.25
-  velscale: 1
   nrmSmoothTime: 0.5
   footSmoothTime: 0.5
   willSmoothTime: 0.1
@@ -654,12 +653,11 @@ MonoBehaviour:
   footslidethreshold: 0.5
   footslidevelthreshold: 3
   leansmoothtime: 0.5
-  leansmoothtimeLayer: 0
   unrotateFeetBySpeed: 1
   maxFootAngle: 60
   verticalFootAdjust: 0.1
   hipWeightReductionByHeight: 1
-  crouchTime: 0.25
+  crouchTime: 0.5
   LCast: {x: 4.319404, y: -2.3021216, z: 43.07542}
   RCast: {x: 4.230167, y: -2.3021216, z: 43.240364}
   hiprot: {x: 0, y: 0, z: 0, w: 1}
