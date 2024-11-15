@@ -19,7 +19,6 @@ public class LucidAnimationModel : MonoBehaviour
 
     [SerializeField] float 
         velsmoothTime,
-        velscale,
         nrmSmoothTime,
         footSmoothTime,
         willSmoothTime,
@@ -33,7 +32,6 @@ public class LucidAnimationModel : MonoBehaviour
         footslidethreshold,
         footslidevelthreshold,
         leansmoothtime,
-        leansmoothtimeLayer,
         unrotateFeetBySpeed,
         maxFootAngle,
         verticalFootAdjust,
@@ -84,6 +82,9 @@ public class LucidAnimationModel : MonoBehaviour
         _VEL_X = "velX",
         _VEL_Y = "velY",
         _VEL_Z = "velZ",
+        _VEL_X_N = "velXN",
+        _VEL_Y_N = "velYN",
+        _VEL_Z_N = "velZN",
         _NRM_X = "nrmX",
         _NRM_Y = "nrmY",
         _NRM_Z = "nrmZ",
@@ -292,10 +293,6 @@ public class LucidAnimationModel : MonoBehaviour
     private Vector3 CalculateLocalVelocity()
     {
         Vector3 localVel = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.mainBody.velocity);
-        if (PlayerInfo.grounded)
-            localVel *= velscale;
-        else
-            localVel = localVel.normalized;
         Vector3 currentvellocal = Vector3.zero;
         currentvellocal.x = anim.GetFloat(_VEL_X);
         currentvellocal.y = anim.GetFloat(_VEL_Y);
@@ -347,10 +344,14 @@ public class LucidAnimationModel : MonoBehaviour
         float currentcrouch = anim.GetFloat(_CROUCH);
         float crouch = LucidInputValueShortcuts.crouch ? 1 : 0;
         crouch = Mathf.SmoothDamp(currentcrouch, crouch, ref crouchRef, crouchTime);
+        Vector3 velN = localVel.normalized;
 
         anim.SetFloat(_VEL_X, localVel.x);
         anim.SetFloat(_VEL_Y, localVel.y);
         anim.SetFloat(_VEL_Z, localVel.z);
+        anim.SetFloat(_VEL_X_N, velN.x);
+        anim.SetFloat(_VEL_Y_N, velN.y);
+        anim.SetFloat(_VEL_Z_N, velN.z);
         anim.SetFloat(_WILL_X, willFlat.x);
         anim.SetFloat(_WILL_Z, willFlat.z);
         anim.SetFloat(_NRM_X, localNrm.x);
