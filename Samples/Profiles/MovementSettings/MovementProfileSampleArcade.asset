@@ -42,7 +42,7 @@ MonoBehaviour:
   ratiomult: 1
   ratiofreezethreshold: 0.1
   airtimemult: 2
-  ratioBySpeed: 0.25
+  ratioBySpeed: 0.175
   maxlegmult: 1.4
   friction: 0.425
   maxforcemult: 5.4

@@ -164,7 +164,7 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 841222d2bf7e5f4458fd897b9ff0bae4, type: 2}
-    m_Threshold: 0.083333336
+    m_Threshold: 0.071428575
     m_Position: {x: 0, y: 3}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -172,7 +172,7 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: a7d2ec4de74dfa44b89a9f56d4c3679c, type: 2}
-    m_Threshold: 0.16666667
+    m_Threshold: 0.14285715
     m_Position: {x: 0, y: 8}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -180,7 +180,7 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: b7fe0c759bf30cf40a62ba8201dab77f, type: 2}
-    m_Threshold: 0.25
+    m_Threshold: 0.21428572
     m_Position: {x: 0, y: 10}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -188,15 +188,31 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: e74e61c971818644989afabc6b8ad65b, type: 2}
-    m_Threshold: 0.33333334
+    m_Threshold: 0.2857143
     m_Position: {x: 0, y: -3}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: velX
     m_Mirror: 0
   - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: aa1386199914423469ad96bd182653f7, type: 2}
+    m_Threshold: 0.35714287
+    m_Position: {x: -3, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0.5
+    m_DirectBlendParameter: alignment
+    m_Mirror: 1
+  - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: aa1386199914423469ad96bd182653f7, type: 2}
+    m_Threshold: 0.42857143
+    m_Position: {x: 3, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: alignment
+    m_Mirror: 0
+  - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: ccde06c22c3618446be898ac80ae63b9, type: 2}
-    m_Threshold: 0.41666666
+    m_Threshold: 0.5
     m_Position: {x: 0, y: -8}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -204,23 +220,23 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 4147e9ba6ee4fa24088ec68f2984dc7d, type: 2}
-    m_Threshold: 0.5
+    m_Threshold: 0.5714286
     m_Position: {x: 0, y: -10}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: velX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 3e626144f72d2c1408a116e20e4e0d3e, type: 2}
-    m_Threshold: 0.5833333
+    m_Motion: {fileID: 7400000, guid: 519e68e0f23f41542a537a570b8f6df8, type: 2}
+    m_Threshold: 0.64285713
     m_Position: {x: 10, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: velX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 3e626144f72d2c1408a116e20e4e0d3e, type: 2}
-    m_Threshold: 0.6666667
+    m_Motion: {fileID: 7400000, guid: 519e68e0f23f41542a537a570b8f6df8, type: 2}
+    m_Threshold: 0.71428573
     m_Position: {x: -10, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0.5
@@ -228,7 +244,7 @@ BlendTree:
     m_Mirror: 1
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 0496aa04d5042a440842c31232c05d09, type: 2}
-    m_Threshold: 0.75
+    m_Threshold: 0.78571427
     m_Position: {x: 6.28, y: 6.28}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -236,7 +252,7 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 0496aa04d5042a440842c31232c05d09, type: 2}
-    m_Threshold: 0.8333333
+    m_Threshold: 0.85714287
     m_Position: {x: -6.28, y: 6.28}
     m_TimeScale: 1
     m_CycleOffset: 0.5
@@ -244,7 +260,7 @@ BlendTree:
     m_Mirror: 1
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 32be488b68b364f48afe839847908bf3, type: 2}
-    m_Threshold: 0.9166667
+    m_Threshold: 0.9285714
     m_Position: {x: -6.28, y: -6.28}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -2914,163 +2930,163 @@ AnimatorController:
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: animcycle
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: airtime
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: velX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: velY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: velZ
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: nrmX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: nrmY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: nrmZ
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: willX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: willZ
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: hangX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: hangZ
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: climb
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: leanX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: leanZ
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: footAngle
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: crouch
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: grounded
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: slide
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: bslide
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: crawl
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: flight
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: grabL
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: grabR
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: climbing
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: footslide
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -3102,7 +3118,7 @@ AnimatorController:
     m_Mask: {fileID: 31900000, guid: 69140b37e2a6d5346bd5988760bf937f, type: 2}
     m_Motions: []
     m_Behaviours: []
-    m_BlendingMode: 0
+    m_BlendingMode: 1
     m_SyncedLayerIndex: -1
     m_DefaultWeight: 1
     m_IKPass: 1
@@ -4548,19 +4564,19 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 8fb1944c091b11f4daa74a816a16c4c4, type: 2}
     m_Threshold: 0
-    m_Position: {x: -0.6, y: 0}
+    m_Position: {x: -1, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0.5
     m_DirectBlendParameter: alignment
     m_Mirror: 1
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 8fb1944c091b11f4daa74a816a16c4c4, type: 2}
+    m_Motion: {fileID: 7400000, guid: 4015d4108dd505246bd2e5e06be1fff1, type: 2}
     m_Threshold: 0
-    m_Position: {x: 0.6, y: 0}
+    m_Position: {x: 1, y: 0}
     m_TimeScale: 1
-    m_CycleOffset: 0
+    m_CycleOffset: 0.5
     m_DirectBlendParameter: alignment
-    m_Mirror: 0
+    m_Mirror: 1
   m_BlendParameter: leanX
   m_BlendParameterY: leanZ
   m_MinThreshold: 0
