@@ -15,7 +15,7 @@ MonoBehaviour:
   movespeed: 5
   sprintmult: 2
   crawlspeed: 1.5
-  crouchspeed: 2
+  crouchspeed: 3.5
   moveburst: 16
   slidemult: 28
   slidepushforce: 0
