@@ -74,7 +74,9 @@ public class LucidAnimationModel : MonoBehaviour
         animHandL,
         animHandR,
         animShoulderL,
-        animShoulderR;
+        animShoulderR,
+        lastCastHitL,
+        lastCastHitR;
 
     private bool initialized = false;
 
@@ -436,14 +438,68 @@ public class LucidAnimationModel : MonoBehaviour
         {
             Cast = hitInfoThigh.point;
             UpdateFootSpaceAndRotation(isLeft, hitInfoThigh.normal, hitInfoThigh.point);
+
+            Transform lastCastHit = isLeft ? lastCastHitL : lastCastHitR;
+            if (hitInfoThigh.transform != lastCastHit)
+            {
+                Rigidbody rb = hitInfoThigh.transform.GetComponent<Rigidbody>();
+                bool rbvalid = rb != null;
+                if (isLeft)
+                {
+                    if (rbvalid)
+                        PlayerInfo.connectedRB_LF = rb;
+                    else
+                        PlayerInfo.connectedRB_LF = null;
+                    lastCastHitL = hitInfoThigh.transform;
+                }
+                else
+                {
+                    if (rbvalid)
+                        PlayerInfo.connectedRB_RF = rb;
+                    else
+                        PlayerInfo.connectedRB_RF = null;
+                    lastCastHitR = hitInfoThigh.transform;
+                }
+            }
         }
         else if (shinCast)
         {
             Cast = hitInfoShin.point;
             UpdateFootSpaceAndRotation(isLeft, hitInfoShin.normal, hitInfoShin.point);
+
+            bool lastCastHit = isLeft ? lastCastHitL : lastCastHitR;
+            if (hitInfoShin.transform != lastCastHit)
+            {
+                Rigidbody rb = hitInfoShin.transform.GetComponent<Rigidbody>();
+                bool rbvalid = rb != null;
+                if (isLeft)
+                {
+                    if (rbvalid)
+                        PlayerInfo.connectedRB_LF = rb;
+                    lastCastHitL = hitInfoShin.transform;
+                }
+                else
+                {
+                    if (rbvalid)
+                        PlayerInfo.connectedRB_RF = rb;
+                    lastCastHitR = hitInfoShin.transform;
+                }
+            }
         }
         else
+        {
             Cast = footpos;
+            if (isLeft)
+            {
+                PlayerInfo.connectedRB_LF = null;
+                lastCastHitL = null;
+            }
+            else
+            {
+                PlayerInfo.connectedRB_RF = null;
+                lastCastHitR = null;
+            }
+        }
 
         Cast = Vector3.SmoothDamp(Cast, CastOld, ref footRef, footSmoothTime);
 

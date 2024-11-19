@@ -23,7 +23,8 @@ public class MovementSettings : ScriptableObject
         flightforce,
         flightdrag,
         walkthreshold,
-        directionaljumpmult;
+        directionaljumpmult,
+        moveWithPlatform;
 
     [Header("Casting")]
     public float legWidth;

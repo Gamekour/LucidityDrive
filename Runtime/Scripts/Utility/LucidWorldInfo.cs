@@ -148,7 +148,9 @@ public static class PlayerInfo
     public static Rigidbody
         mainBody,
         physBodyRB,
-        physHeadRB;
+        physHeadRB,
+        connectedRB_RF,
+        connectedRB_LF;
 
     public static BoxCollider physBody;
     public static SphereCollider physHead;

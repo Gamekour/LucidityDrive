@@ -29,6 +29,7 @@ MonoBehaviour:
   flightdrag: 0.075
   walkthreshold: 2
   directionaljumpmult: 15
+  moveWithPlatform: 10
   legWidth: 0.09
   legWidthMult: 0.5
   down: 1.75

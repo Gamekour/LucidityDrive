@@ -90,7 +90,7 @@ public class LucidLegs : MonoBehaviour
         airmove, 
         airdrag,
         slidePushAngleThreshold,
-        maxAngleChangeWhileSliding;
+        moveWithPlatform;
 
     //internal variables
     private RaycastHit[] spherecastHitBufferL = new RaycastHit[100];
@@ -371,6 +371,12 @@ public class LucidLegs : MonoBehaviour
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
 
+        bool isRight = animPhase > 0.5f;
+        Transform tStep = isRight ? PlayerInfo.IK_RF : PlayerInfo.IK_LF;
+        Rigidbody tStepped = isRight ? PlayerInfo.connectedRB_RF : PlayerInfo.connectedRB_LF;
+        Vector3 pointVelocity = Vector3.zero;
+        if (tStep != null && tStepped != null) pointVelocity = tStepped.GetPointVelocity(tStep.position);
+
         float t = hipSpace.TransformVector(moveFlat).normalized.y;
 
         if (PlayerInfo.climbing)
@@ -430,14 +436,16 @@ public class LucidLegs : MonoBehaviour
         float targetY = Mathf.LerpUnclamped(forceadjust, 0, heightratio);
         float diff = targetY - currentY;
 
-        Vector3 calc = pushdir * (-Physics.gravity.y + (diff * forcesmoothness));
+        Vector3 calc = pushdir * (-Physics.gravity.y + (diff * forcesmoothness) + pointVelocity.y);
         NrmSlide(calc * rb.mass, out Vector3 slide, out float nrm);
         slide = -slide;
 
+        NrmSlide(pointVelocity, out Vector3 pointslide, out float pointnrm);
         Vector3 dir = hipSpace.TransformVector(moveFlat);
         if (dir.magnitude == 0)
             dir = -rb.velocity;
-        Vector3 current = rb.velocity * rb.mass;
+        Vector3 current = rb.velocity - pointVelocity;
+        current *= rb.mass;
         NrmSlide(current, out Vector3 velslide, out float velnrm);
         slide += velslide * slidemult * (Vector3.Angle(rb.velocity, dir) / 180);
         nrm += velnrm;
@@ -461,8 +469,8 @@ public class LucidLegs : MonoBehaviour
         relativevel.y = 0;
         relativevel = hipSpace.TransformVector(relativevel);
         Vector3 movediff = movetarget - relativevel;
-        Vector3 surfaction = -movediff * rb.mass;
-        slide += surfaction;
+        Vector3 surfaction = -movediff;
+        slide += surfaction * rb.mass;
 
         nrm = Mathf.Clamp(nrm, 0, Mathf.Infinity);
 
@@ -470,9 +478,19 @@ public class LucidLegs : MonoBehaviour
         PlayerInfo.traction = Mathf.Clamp01(fmax / slide.magnitude);
         Vector3 pushcalc = nrm * PlayerInfo.footsurface;
         Vector3 slidecalc = Vector3.ClampMagnitude(-slide, fmax);
-        rb.AddForce(slidecalc + pushcalc, ForceMode.Force);
         PlayerInfo.currentslide = slidecalc;
         PlayerInfo.currentpush = pushcalc;
+
+        Vector3 objectforce = -(slidecalc + pushcalc);
+
+        rb.AddForce(slidecalc + pushcalc, ForceMode.Force);
+
+        if (isRight && PlayerInfo.connectedRB_RF != null)
+        {
+            PlayerInfo.connectedRB_RF.AddForceAtPosition(objectforce, PlayerInfo.IK_RF.position, ForceMode.Force);
+        }
+        if (!isRight && PlayerInfo.connectedRB_LF != null)
+            PlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, PlayerInfo.IK_LF.position, ForceMode.Force);
     }
 
     private Transform animModelFootSelection()

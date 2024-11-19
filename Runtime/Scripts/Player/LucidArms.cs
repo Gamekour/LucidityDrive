@@ -339,6 +339,7 @@ public class LucidArms : MonoBehaviour
                 GrabTrigger trigL = currenttargetL.GetComponent<GrabTrigger>();
                 if (trigL != null)
                     trigL.GrabEvent();
+                leftanchor.transform.parent = currenttargetL;
             }
             grabL = true;
         }
@@ -351,6 +352,7 @@ public class LucidArms : MonoBehaviour
                 GrabTrigger trigR = currenttargetR.GetComponent<GrabTrigger>();
                 if (trigR != null)
                     trigR.GrabEvent();
+                rightanchor.transform.parent = currenttargetR;
             }
             grabR = true;
         }
@@ -370,6 +372,7 @@ public class LucidArms : MonoBehaviour
                     GrabTrigger trigL = currenttargetL.GetComponent<GrabTrigger>();
                     if (trigL != null)
                         trigL.UngrabEvent();
+                    leftanchor.transform.parent = transform;
                 }
             }
             grabL = false;
@@ -382,6 +385,7 @@ public class LucidArms : MonoBehaviour
                 GrabTrigger trigR = currenttargetR.GetComponent<GrabTrigger>();
                 if (trigR != null)
                     trigR.UngrabEvent();
+                rightanchor.transform.parent = transform;
             }
             grabR = false;
         }
