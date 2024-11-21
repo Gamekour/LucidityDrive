@@ -529,17 +529,29 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void UpdateHandPositions()
     {
-        if (!PlayerInfo.grabL && !PlayerInfo.forceIK_LH)
-            UpdateHandPosition(true, animShoulderL, animHandL);
-
-        if (!PlayerInfo.grabR && !PlayerInfo.forceIK_RH)
-            UpdateHandPosition(false, animShoulderR, animHandR);
+        if (!PlayerInfo.grabL)
+        {
+            PlayerInfo.handTargetL.position = animHandL.position;
+            PlayerInfo.handTargetL.rotation = animHandL.rotation;
+            UpdateHandPosition(true, animShoulderL, PlayerInfo.handTargetL);
+        }
+        if (!PlayerInfo.grabR)
+        {
+            PlayerInfo.handTargetR.position = animHandR.position;
+            PlayerInfo.handTargetR.rotation = animHandR.rotation;
+            UpdateHandPosition(false, animShoulderR, PlayerInfo.handTargetR);
+        }
     }
 
     private void UpdateHandPosition(bool isLeft, Transform shoulder, Transform hand)
     {
         RaycastHit armHitInfo;
         bool armHit = Physics.SphereCast(shoulder.position, castthickness / 2, hand.position - shoulder.position, out armHitInfo, Vector3.Distance(hand.position, shoulder.position), Shortcuts.geometryMask);
+
+        if (isLeft)
+            PlayerInfo.handCollisionL = armHit;
+        else
+            PlayerInfo.handCollisionR = armHit;
 
         if (armHit)
         {

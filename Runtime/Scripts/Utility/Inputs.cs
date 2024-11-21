@@ -105,7 +105,8 @@ public static class LucidInputActionRefs
         camselect2, 
         camselect3, 
         camselect4,
-        mouseUnlock;
+        mouseUnlock,
+        toggleClimbMode;
 }
 
 //used to easily access values from the input actions above without constantly calling readvalue

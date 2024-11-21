@@ -48,23 +48,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a79874f871de7b45ab63db4d069d0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftanchor: {fileID: 275216622011826784}
-  rightanchor: {fileID: 6697483173375196878}
   shoulderdist: 0.2
   castdist: 0.15
   limitdist: 0.45
   animArmLengthMult: 1
   shoulderstiffness: 0.1
-  pullstrength: 469
+  pushpullstrength: 800
   firstcastwidth: 0.075
   secondcastwidth: 0.025
   runmaxY: 0.45
   minflatgrab: 0.8
   tolerance: 0.15
-  swingforce: 256
+  lateralStrength: 500
   ungrabBoost: 1
+  leftAnchorRB: {fileID: 0}
+  rightAnchorRB: {fileID: 0}
+  leftAnchor: {fileID: 0}
+  rightAnchor: {fileID: 0}
   leftunrotate: {fileID: 7546065390351026017}
   rightunrotate: {fileID: 9019065817558444350}
+  handTargetL: {fileID: 0}
+  handTargetR: {fileID: 0}
 --- !u!1 &5193957100170728927
 GameObject:
   m_ObjectHideFlags: 0

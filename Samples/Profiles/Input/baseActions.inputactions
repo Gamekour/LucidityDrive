@@ -130,6 +130,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "toggleClimbMode",
+                    "type": "Button",
+                    "id": "d478ec05-65cd-47b6-b838-5c4b5bab1869",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -224,7 +233,7 @@
                 {
                     "name": "",
                     "id": "7d13181e-da3e-4f64-9de3-e539178715ac",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -521,7 +530,7 @@
                 {
                     "name": "",
                     "id": "c696c71e-caa3-4755-aff3-30a0f6fd5f39",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -537,6 +546,28 @@
                     "processors": "",
                     "groups": "Hardcore",
                     "action": "interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "997c5d63-17ea-427d-9ca1-b50e79429e88",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "toggleClimbMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6dc7e47e-901a-4226-9383-5731e00cd375",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "toggleClimbMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

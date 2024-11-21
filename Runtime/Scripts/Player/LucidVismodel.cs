@@ -90,7 +90,7 @@ public class LucidVismodel : MonoBehaviour
         }
         bool doSlideIK = PlayerInfo.slidesurfangle < PlayerInfo.slidepushanglethreshold;
         bool isSliding = LucidInputValueShortcuts.bslide || LucidInputValueShortcuts.slide;
-        bool enableFootIK = !(PlayerInfo.crawling || (isSliding && !doSlideIK) || PlayerInfo.airtime > modelSync.airtimeThreshold);
+        bool enableFootIK = !(PlayerInfo.crawling || (isSliding && !doSlideIK));
         float footIKWeight = enableFootIK ? 1 : 0;
         anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, footIKWeight);
         anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, footIKWeight);
@@ -108,12 +108,12 @@ public class LucidVismodel : MonoBehaviour
     private void CalculateHandIK(bool isRight)
     {
         bool grab = isRight ? PlayerInfo.grabR : PlayerInfo.grabL;
-        bool forceIK = isRight ? PlayerInfo.forceIK_RH : PlayerInfo.forceIK_LH;
+        bool handCollision = isRight ? PlayerInfo.handCollisionR : PlayerInfo.handCollisionL;
         Transform IKTransform = isRight ? PlayerInfo.IK_RH : PlayerInfo.IK_LH;
         AvatarIKGoal IKGoal = isRight ? AvatarIKGoal.RightHand : AvatarIKGoal.LeftHand;
         float grabweight = isRight ? grabweightR : grabweightL;
 
-        if (grab || forceIK)
+        if (grab || handCollision)
         {
             anim.SetIKPosition(IKGoal, IKTransform.position + (PlayerInfo.mainBody.velocity * Time.fixedDeltaTime));
             anim.SetIKPositionWeight(IKGoal, grabweight);

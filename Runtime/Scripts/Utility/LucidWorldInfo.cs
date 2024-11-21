@@ -143,7 +143,9 @@ public static class PlayerInfo
         IK_LH,
         IK_RF,
         IK_LF,
-        FPTransform;
+        FPTransform,
+        handTargetL,
+        handTargetR;
 
     public static Rigidbody
         mainBody,
@@ -193,8 +195,8 @@ public static class PlayerInfo
         flying,
         grabL,
         grabR,
-        forceIK_RH,
-        forceIK_LH,
+        handCollisionL,
+        handCollisionR,
         climbing,
         validgrabL,
         validgrabR,
