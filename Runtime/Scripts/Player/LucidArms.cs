@@ -160,21 +160,21 @@ public class LucidArms : MonoBehaviour
             if (dynamicGrabR)
             {
                 grabPositionR = grabbedRB_R.transform.TransformPoint(rightAnchor.connectedAnchor);
-                effectiveRotationR *= dynamicGrabRotationOffsetR;
+                effectiveRotationR = grabbedRB_R.rotation * dynamicGrabRotationOffsetR;
             }
             PlayerInfo.IK_RH.position = grabPositionR;
             PlayerInfo.IK_RH.rotation = effectiveRotationR;
         }
         if (grabL)
         {
-            Quaternion effectiveRotationR = grabRotationR;
+            Quaternion effectiveRotationL = grabRotationL;
             if (dynamicGrabL)
             {
                 grabPositionL = grabbedRB_L.transform.TransformPoint(leftAnchor.connectedAnchor);
-                effectiveRotationR *= dynamicGrabRotationOffsetR;
+                effectiveRotationL = grabbedRB_L.rotation * dynamicGrabRotationOffsetL;
             }
             PlayerInfo.IK_LH.position = grabPositionL;
-            PlayerInfo.IK_LH.rotation = grabRotationL;
+            PlayerInfo.IK_LH.rotation = effectiveRotationL;
         }
     }
 
@@ -238,9 +238,15 @@ public class LucidArms : MonoBehaviour
     private void HandPush()
     {
         if (leftAnchor != null)
+        {
             leftAnchor.targetPosition = leftAnchor.transform.InverseTransformPoint(handTargetL.position) - leftAnchor.anchor;
+            leftAnchor.targetRotation = handTargetL.rotation * Quaternion.Inverse(leftAnchor.transform.rotation);
+        }
         if (rightAnchor != null)
+        {
             rightAnchor.targetPosition = rightAnchor.transform.InverseTransformPoint(handTargetR.position) - rightAnchor.anchor;
+            rightAnchor.targetRotation = handTargetR.rotation * Quaternion.Inverse(rightAnchor.transform.rotation);
+        }
     }
 
     private float CalculateAnimArmLength(LucidVismodel visModel)
@@ -523,7 +529,7 @@ public class LucidArms : MonoBehaviour
     {
         ref Quaternion dynamicGrabRotationOffset = ref dynamicGrabRotationOffsetL;
         if (isRight)
-            dynamicGrabRotationOffset = dynamicGrabRotationOffsetR;
+            dynamicGrabRotationOffset = ref dynamicGrabRotationOffsetR;
 
         ref ConfigurableJoint jointTarget = ref leftAnchor;
         if (isRight)
