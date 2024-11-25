@@ -40,6 +40,7 @@ public class LucidArms : MonoBehaviour
     private Vector3 grabPositionL, grabPositionR;
     private Quaternion grabRotationL, grabRotationR;
     private Quaternion dynamicGrabRotationOffsetL, dynamicGrabRotationOffsetR;
+    private Quaternion poseOffsetL, poseOffsetR;
     private bool 
         grabL,
         grabR,
@@ -216,7 +217,7 @@ public class LucidArms : MonoBehaviour
         itemPoses.rotation = PlayerInfo.pelvis.rotation;
         Vector3 pos = itemPoses.TransformPoint(currentPose.localPosition * animArmLength);
         handTarget.position = pos;
-        handTarget.rotation = currentPose.localRotation * PlayerInfo.head.rotation;
+        handTarget.rotation = currentPose.localRotation * PlayerInfo.pelvis.rotation;
     }
 
     private void ClimbPose()
@@ -240,12 +241,12 @@ public class LucidArms : MonoBehaviour
         if (leftAnchor != null)
         {
             leftAnchor.targetPosition = leftAnchor.transform.InverseTransformPoint(handTargetL.position) - leftAnchor.anchor;
-            leftAnchor.targetRotation = handTargetL.rotation * Quaternion.Inverse(leftAnchor.transform.rotation);
+            leftAnchor.targetRotation = PlayerInfo.pelvis.rotation * handTargetL.rotation * Quaternion.Inverse(poseOffsetL);
         }
         if (rightAnchor != null)
         {
             rightAnchor.targetPosition = rightAnchor.transform.InverseTransformPoint(handTargetR.position) - rightAnchor.anchor;
-            rightAnchor.targetRotation = handTargetR.rotation * Quaternion.Inverse(rightAnchor.transform.rotation);
+            rightAnchor.targetRotation = PlayerInfo.pelvis.rotation * handTargetR.rotation * Quaternion.Inverse(poseOffsetR);
         }
     }
 
@@ -348,7 +349,8 @@ public class LucidArms : MonoBehaviour
 
                 targetTransform = initialHitInfo.transform;
                 position = initialHitInfo.point;
-                rotation = Quaternion.LookRotation(jointfwd, initialHitInfo.normal);
+                Vector3 transformhitinfo = Vector3.ProjectOnPlane(jointfwd, initialHitInfo.normal);
+                rotation = Quaternion.LookRotation(transformhitinfo, initialHitInfo.normal);
 
                 return true;
             }
@@ -467,6 +469,13 @@ public class LucidArms : MonoBehaviour
 
         Transform targetTransform = isRight ? targetTransformR : targetTransformL;
 
+        LucidTool lt = targetTransform.GetComponent<LucidTool>();
+        if (lt != null)
+        {
+            grabPosition = lt.PrimaryGrip.position;
+            grabRotation = lt.PrimaryGrip.rotation;
+        }
+
         CreateConfigurableJoint(isRight, grabPosition, grabRotation, targetTransform);
 
         ref bool grab = ref grabL;
@@ -480,6 +489,7 @@ public class LucidArms : MonoBehaviour
         GrabTrigger trig = targetTransform.GetComponent<GrabTrigger>();
         if (trig != null)
             trig.GrabEvent();
+
 
         if (grabL && grabR)
             UpdateItemPose("TwoHandedCarry");
@@ -531,6 +541,10 @@ public class LucidArms : MonoBehaviour
         if (isRight)
             dynamicGrabRotationOffset = ref dynamicGrabRotationOffsetR;
 
+        ref Quaternion poseOffset = ref poseOffsetL;
+        if (isRight)
+            poseOffset = ref poseOffsetR;
+
         ref ConfigurableJoint jointTarget = ref leftAnchor;
         if (isRight)
             jointTarget = ref rightAnchor;
@@ -553,7 +567,8 @@ public class LucidArms : MonoBehaviour
         {
             dynamic = true;
             grabbedRB = grabTargetRB;
-            dynamicGrabRotationOffset = grabRotation * Quaternion.Inverse(grabbedRB.rotation);
+            dynamicGrabRotationOffset = Quaternion.Inverse(grabbedRB.rotation) * grabRotation;
+            poseOffset = Quaternion.Inverse(PlayerInfo.pelvis.rotation) * grabRotation;
         }
         else
             grabbedRB = staticRB;
