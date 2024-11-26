@@ -21,17 +21,15 @@ public class LucidSetupTool : EditorWindow
 
     void Setup()
     {
-        // Set the name of user layer 3 to "Player"
         SetLayerName(3, "Player");
 
-        // Set the name of user layer 6 to "PostProcessing"
         SetLayerName(6, "PostProcessing");
 
-        // Set the name of user layer 7 to "FlightZone"
         SetLayerName(7, "FlightZone");
 
-        // Set the name of user layer 8 to "HideInFirstPerson"
         SetLayerName(8, "HideInFirstPerson");
+
+        SetLayerName(9, "GrabbableNoPlayer");
 
         AddTag("Grabbable");
 

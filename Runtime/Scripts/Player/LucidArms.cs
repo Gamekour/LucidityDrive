@@ -30,6 +30,7 @@ public class LucidArms : MonoBehaviour
     [SerializeField] Transform leftunrotate, rightunrotate, handTargetL, handTargetR;
     [SerializeField] ConfigurableJoint jointReference;
     [SerializeField] Rigidbody staticGrabRB_L, staticGrabRB_R;
+    [SerializeField] LayerMask CastMask;
     private JointDrive jdvance;
     private SoftJointLimit sjlewis;
     private ConfigurableJoint leftAnchor, rightAnchor;
@@ -129,7 +130,10 @@ public class LucidArms : MonoBehaviour
         bool dynamicGrabL = (grabbedRB_L != null && grabbedRB_L != staticGrabRB_L);
         bool dynamicGrabR = (grabbedRB_R != null && grabbedRB_R != staticGrabRB_R);
 
-        bool itemMode = (dynamicGrabL || dynamicGrabR) && !climbMode;
+        bool staticgrabL = !dynamicGrabL && grabL;
+        bool staticgrabR = !dynamicGrabR && grabR;
+
+        bool itemMode = !(staticgrabL || staticgrabR) && !climbMode;
 
         PlayerInfo.climbing = (grabL || grabR) && !itemMode;
 
@@ -238,19 +242,27 @@ public class LucidArms : MonoBehaviour
 
     private void HandPush()
     {
+        bool dynamicGrabL = (grabbedRB_L != null && grabbedRB_L != staticGrabRB_L);
+        bool dynamicGrabR = (grabbedRB_R != null && grabbedRB_R != staticGrabRB_R);
         if (leftAnchor != null)
         {
+            leftAnchor.targetPosition = leftAnchor.transform.InverseTransformPoint(handTargetL.position) - leftAnchor.anchor;
             Quaternion localhand = Quaternion.Inverse(PlayerInfo.pelvis.rotation) * handTargetL.rotation;
             localhand *= Quaternion.Inverse(dynamicGrabRotationOffsetL);
-            leftAnchor.targetPosition = leftAnchor.transform.InverseTransformPoint(handTargetL.position) - leftAnchor.anchor;
-            leftAnchor.targetRotation = localhand * poseOffsetL;
+            if (dynamicGrabL)
+                leftAnchor.targetRotation = localhand * poseOffsetL;
+            else
+                leftAnchor.targetRotation = Quaternion.identity;
         }
         if (rightAnchor != null)
         {
             Quaternion localhand = Quaternion.Inverse(PlayerInfo.pelvis.rotation) * handTargetR.rotation;
             localhand *= Quaternion.Inverse(dynamicGrabRotationOffsetR);
             rightAnchor.targetPosition = rightAnchor.transform.InverseTransformPoint(handTargetR.position) - rightAnchor.anchor;
-            rightAnchor.targetRotation = localhand * poseOffsetR;
+            if (dynamicGrabR)
+                rightAnchor.targetRotation = localhand * poseOffsetR;
+            else
+                rightAnchor.targetRotation = Quaternion.identity;
         }
     }
 
@@ -340,7 +352,7 @@ public class LucidArms : MonoBehaviour
 
         Vector3 shoulder = campos + (right ? camright * shoulderdist : -camright * shoulderdist);
 
-        bool initialHit = Physics.SphereCast(shoulder, firstcastwidth, camfwd, out RaycastHit initialHitInfo, castAdjust, Shortcuts.geometryMask);
+        bool initialHit = Physics.SphereCast(shoulder, firstcastwidth, camfwd, out RaycastHit initialHitInfo, castAdjust, CastMask);
         initialHit &= ((initialHitInfo.normal.y) < runmaxY);
 
         if (initialHit)
@@ -381,7 +393,7 @@ public class LucidArms : MonoBehaviour
 
         Vector3 startpoint = initialHitInfo.point + (hitvector.normalized * newmaxheight);
 
-        bool surfaceCastHit = Physics.SphereCast(startpoint - initialHitInfo.normal * secondcastwidth, secondcastwidth, -hitvector, out RaycastHit downcastHitInfo, newmaxheight, Shortcuts.geometryMask);
+        bool surfaceCastHit = Physics.SphereCast(startpoint - initialHitInfo.normal * secondcastwidth, secondcastwidth, -hitvector, out RaycastHit downcastHitInfo, newmaxheight, CastMask);
         bool validgrab = initialHit && surfaceCastHit && downcastHitInfo.normal.y > minflatgrab;
 
         if (validgrab)
@@ -577,7 +589,11 @@ public class LucidArms : MonoBehaviour
             poseOffset = Quaternion.Inverse(grabbedRB.rotation) * PlayerInfo.pelvis.rotation;
         }
         else
+        {
             grabbedRB = staticRB;
+            poseOffset = Quaternion.identity;
+            dynamicGrabRotationOffset = Quaternion.identity;
+        }
 
         jointTarget = Shortcuts.AddComponent(PlayerInfo.pelvis.gameObject, jointReference);
         jointTarget.autoConfigureConnectedAnchor = false;
