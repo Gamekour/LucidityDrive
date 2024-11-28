@@ -101,10 +101,13 @@ public static class LucidInputActionRefs
         mousepos,
         grabL,
         grabR,
+        dropL,
+        dropR,
         camselect1,
         camselect2,
         camselect3,
         camselect4,
+        camcycle,
         mouseUnlock;
 }
 

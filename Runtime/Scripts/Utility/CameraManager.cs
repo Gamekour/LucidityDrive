@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraManager : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class CameraManager : MonoBehaviour
         LucidInputActionRefs.camselect2.started += CameraSwitch2;
         LucidInputActionRefs.camselect3.started += CameraSwitch3;
         LucidInputActionRefs.camselect4.started += CameraSwitch4;
+        LucidInputActionRefs.camcycle.started += CameraCycle;
         PlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
         PlayerInfo.FPTransform = camerapoints[0];
     }
@@ -36,6 +38,7 @@ public class CameraManager : MonoBehaviour
         LucidInputActionRefs.camselect2.started -= CameraSwitch2;
         LucidInputActionRefs.camselect3.started -= CameraSwitch3;
         LucidInputActionRefs.camselect4.started -= CameraSwitch4;
+        LucidInputActionRefs.camcycle.started -= CameraCycle;
         PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
     }
 
@@ -44,21 +47,26 @@ public class CameraManager : MonoBehaviour
         headrootTarget = vismodel.anim.GetBoneTransform(HumanBodyBones.Head);
     }
 
-    private void CameraSwitch1(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void CameraSwitch1(InputAction.CallbackContext obj)
     {
         ChangeCam(0);
     }
-    private void CameraSwitch2(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void CameraSwitch2(InputAction.CallbackContext obj)
     {
         ChangeCam(1);
     }
-    private void CameraSwitch3(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void CameraSwitch3(InputAction.CallbackContext obj)
     {
         ChangeCam(2);
     }
-    private void CameraSwitch4(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void CameraSwitch4(InputAction.CallbackContext obj)
     {
         ChangeCam(3);
+    }
+    private void CameraCycle(InputAction.CallbackContext obj)
+    {
+        cameraPointIndex = (cameraPointIndex + 1) % 4;
+        ChangeCam(cameraPointIndex);
     }
     private void ChangeCam(int index)
     {

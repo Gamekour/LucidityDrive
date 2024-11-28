@@ -123,6 +123,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "camcycle",
+                    "type": "Button",
+                    "id": "82c0e0f7-5a4a-496e-a415-3e398159b64f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "interact",
                     "type": "Button",
                     "id": "d8948a4b-a35a-493d-807f-fd5d578f813b",
@@ -132,9 +141,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "toggleClimbMode",
+                    "name": "dropL",
                     "type": "Button",
-                    "id": "d478ec05-65cd-47b6-b838-5c4b5bab1869",
+                    "id": "2ff38efd-ba50-4ed8-abbb-18250867d079",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "dropR",
+                    "type": "Button",
+                    "id": "05c570bc-69dd-4ff9-92a2-ef704bf7a54f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -441,33 +459,11 @@
                 },
                 {
                     "name": "",
-                    "id": "51faa7cf-905a-49a3-967e-547480fae682",
-                    "path": "<Gamepad>/dpad/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "camselect1",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "e1d2f863-26ee-4699-ac3e-be1fcd54207c",
                     "path": "<Keyboard>/8",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
-                    "action": "camselect2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "13cf6ac3-33d6-4f0c-9751-6ec8d0f13ab6",
-                    "path": "<Gamepad>/dpad/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
                     "action": "camselect2",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -485,33 +481,11 @@
                 },
                 {
                     "name": "",
-                    "id": "203826fa-0caa-45ee-9034-04c31c4fdb02",
-                    "path": "<Gamepad>/dpad/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "camselect3",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3066f04c-9e97-495a-9c39-f13b6ea17c24",
                     "path": "<Keyboard>/0",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
-                    "action": "camselect4",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e41884dc-6957-44db-87bc-f7619e11388e",
-                    "path": "<Gamepad>/dpad/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
                     "action": "camselect4",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -551,23 +525,56 @@
                 },
                 {
                     "name": "",
-                    "id": "997c5d63-17ea-427d-9ca1-b50e79429e88",
-                    "path": "<Keyboard>/c",
+                    "id": "913b413c-f718-4f79-9a31-846dd8458c86",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "toggleClimbMode",
+                    "action": "dropL",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "6dc7e47e-901a-4226-9383-5731e00cd375",
-                    "path": "<Gamepad>/buttonNorth",
+                    "id": "ca7df018-0d8b-4b75-b8b0-6b1ee311e494",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "toggleClimbMode",
+                    "action": "dropL",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "650db303-f056-4807-8402-4fdedca9ab4b",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "dropR",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a7e18e2c-5dae-447b-be17-e3b45198e804",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "dropR",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bdfb83e6-c407-429f-b3fb-666a83c9bd71",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "camcycle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

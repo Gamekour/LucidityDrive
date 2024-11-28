@@ -6,4 +6,6 @@ public class LucidTool : MonoBehaviour
 {
     public Transform PrimaryGrip;
     public Transform SecondaryGrip;
+    public bool grabLockPrimary = true;
+    public bool grabLockSecondary = false;
 }

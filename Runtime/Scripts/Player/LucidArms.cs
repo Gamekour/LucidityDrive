@@ -51,6 +51,8 @@ public class LucidArms : MonoBehaviour
         grabR,
         grabwaitL,
         grabwaitR,
+        grabLockL,
+        grabLockR,
         disabling,
         initialized
         = false;
@@ -85,17 +87,21 @@ public class LucidArms : MonoBehaviour
     {
         if (subscribe)
         {
-            LucidInputActionRefs.grabL.started += GrabButtonLeft;
-            LucidInputActionRefs.grabL.canceled += UngrabButtonLeft;
-            LucidInputActionRefs.grabR.started += GrabButtonRight;
-            LucidInputActionRefs.grabR.canceled += UngrabButtonRight;
+            LucidInputActionRefs.grabL.started += GrabButtonLeftDown;
+            LucidInputActionRefs.grabL.canceled += GrabButtonLeftUp;
+            LucidInputActionRefs.grabR.started += GrabButtonRightDown;
+            LucidInputActionRefs.grabR.canceled += GrabButtonRightUp;
+            LucidInputActionRefs.dropL.started += DropButtonL;
+            LucidInputActionRefs.dropR.started += DropButtonR;
         }
         else
         {
-            LucidInputActionRefs.grabL.started -= GrabButtonLeft;
-            LucidInputActionRefs.grabL.canceled -= UngrabButtonLeft;
-            LucidInputActionRefs.grabR.started -= GrabButtonRight;
-            LucidInputActionRefs.grabR.canceled -= UngrabButtonRight;
+            LucidInputActionRefs.grabL.started -= GrabButtonLeftDown;
+            LucidInputActionRefs.grabL.canceled -= GrabButtonLeftUp;
+            LucidInputActionRefs.grabR.started -= GrabButtonRightDown;
+            LucidInputActionRefs.grabR.canceled -= GrabButtonRightUp;
+            LucidInputActionRefs.dropL.started -= DropButtonL;
+            LucidInputActionRefs.dropR.started -= DropButtonR;
         }
     }
 
@@ -458,7 +464,7 @@ public class LucidArms : MonoBehaviour
 
 
     #region Input Events
-    private void GrabButtonLeft(InputAction.CallbackContext obj)
+    private void GrabButtonLeftDown(InputAction.CallbackContext obj)
     {
         if (PlayerInfo.validgrabL)
             Grab(false);
@@ -466,7 +472,7 @@ public class LucidArms : MonoBehaviour
             grabwaitL = true;
     }
 
-    private void GrabButtonRight(InputAction.CallbackContext obj)
+    private void GrabButtonRightDown(InputAction.CallbackContext obj)
     {
         if (PlayerInfo.validgrabR)
             Grab(true);
@@ -474,16 +480,36 @@ public class LucidArms : MonoBehaviour
             grabwaitR = true;
     }
 
-    private void UngrabButtonLeft(InputAction.CallbackContext obj)
+    private void GrabButtonLeftUp(InputAction.CallbackContext obj)
     {
         grabwaitL = false;
-        Ungrab(false);
+        if (!grabLockL)
+            Ungrab(false);
     }
 
-    private void UngrabButtonRight(InputAction.CallbackContext obj)
+    private void GrabButtonRightUp(InputAction.CallbackContext obj)
     {
         grabwaitR = false;
-        Ungrab(true);
+        if (!grabLockR)
+            Ungrab(true);
+    }
+
+    private void DropButtonL(InputAction.CallbackContext obj)
+    {
+        if (grabL && grabLockL)
+        {
+            grabwaitL = false;
+            Ungrab(false);
+        }
+    }
+
+    private void DropButtonR(InputAction.CallbackContext obj)
+    {
+        if (grabR && grabLockR)
+        {
+            grabwaitR = false;
+            Ungrab(true);
+        }
     }
     #endregion
 
@@ -499,6 +525,10 @@ public class LucidArms : MonoBehaviour
         if (isRight)
             grabRotation = ref grabRotationR;
 
+        ref bool grabLock = ref grabLockL;
+        if (isRight)
+            grabLock = ref grabLockR;
+
         Transform targetTransform = isRight ? targetTransformR : targetTransformL;
 
         LucidTool lt = targetTransform.GetComponent<LucidTool>();
@@ -508,6 +538,7 @@ public class LucidArms : MonoBehaviour
             Transform targetGrip = doPrimary ? lt.PrimaryGrip : lt.SecondaryGrip;
             grabPosition = targetGrip.position;
             grabRotation = targetGrip.rotation;
+            grabLock = doPrimary ? lt.grabLockPrimary : lt.grabLockSecondary;
         }
 
         CreateConfigurableJoint(isRight, grabPosition, grabRotation, targetTransform);
@@ -523,7 +554,6 @@ public class LucidArms : MonoBehaviour
         GrabTrigger trig = targetTransform.GetComponent<GrabTrigger>();
         if (trig != null)
             trig.GrabEvent();
-
 
         if (grabL && grabR)
             UpdateItemPose("TwoHandedCarry");
@@ -544,7 +574,9 @@ public class LucidArms : MonoBehaviour
         if (isRight)
             climb = ref PlayerInfo.climbR;
 
-        bool otherClimb = isRight ? PlayerInfo.climbL : PlayerInfo.climbR;
+        ref bool otherClimb = ref PlayerInfo.climbL;
+        if (isRight)
+            otherClimb = ref PlayerInfo.climbR;
 
         if (!initialized || !grab) return;
 
@@ -574,6 +606,11 @@ public class LucidArms : MonoBehaviour
 
         grab = false;
         climb = false;
+
+        Vector3 otherGrabForce = isRight ? grabForceL : grabForceR;
+
+        if (otherGrabForce.y < climbForceThreshold)
+            otherClimb = false;
 
         if (!otherClimb)
             PlayerInfo.climbing = false;
