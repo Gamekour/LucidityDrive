@@ -38,6 +38,7 @@ public class LucidArms : MonoBehaviour
     private EventBox eventBoxL, eventBoxR;
     private ConfigurableJoint anchorL, anchorR;
     private Rigidbody grabbedRB_R, grabbedRB_L;
+    private LucidTool lt_R, lt_L;
     private Transform animShoulderL, animShoulderR;
     private Transform targetTransformL, targetTransformR;
     private Transform currentPoseL, currentPoseR;
@@ -53,6 +54,8 @@ public class LucidArms : MonoBehaviour
         grabwaitR,
         grabLockL,
         grabLockR,
+        isPrimaryL,
+        isPrimaryR,
         disabling,
         initialized
         = false;
@@ -216,16 +219,27 @@ public class LucidArms : MonoBehaviour
         sjlewis.limit = limitdist;
     }
 
-    private void UpdateItemPose(string pose)
+    private void UpdateItemPose(bool isRight, string pose)
     {
-        Transform poseL = itemPosesL.Find(pose);
-        Transform poseR = itemPosesR.Find(pose);
-        if (poseL == null)
-            poseL = itemPosesL.GetChild(0);
-        if (poseR == null)
-            poseR = itemPosesR.GetChild(0);
-        currentPoseL = poseL;
-        currentPoseR = poseR;
+        Transform tPoseParent = isRight ? itemPosesR : itemPosesL;
+        Transform tPose = tPoseParent.Find(pose);
+        ref LucidTool lt = ref lt_L;
+        if (isRight)
+            lt = ref lt_R;
+        if (lt != null)
+        {
+            bool doPrimary = isRight ? isPrimaryR : isPrimaryL;
+            if (isRight)
+                tPose = doPrimary ? lt.itemPosePrimaryR : lt.itemPoseSecondaryR;
+            else
+                tPose = doPrimary ? lt.itemPosePrimaryL : lt.itemPoseSecondaryL;
+        }
+        if (tPose == null)
+            tPose = tPoseParent.GetChild(0);
+        ref Transform currentPose = ref currentPoseL;
+        if (isRight)
+            currentPose = ref currentPoseR;
+        currentPose = tPose;
     }
 
     private void ItemPose(bool isRight)
@@ -466,18 +480,28 @@ public class LucidArms : MonoBehaviour
     #region Input Events
     private void GrabButtonLeftDown(InputAction.CallbackContext obj)
     {
-        if (PlayerInfo.validgrabL)
-            Grab(false);
+        if (lt_L != null && grabLockL)
+            lt_L.Use.Invoke();
         else
-            grabwaitL = true;
+        {
+            if (PlayerInfo.validgrabL)
+                Grab(false);
+            else
+                grabwaitL = true;
+        }
     }
 
     private void GrabButtonRightDown(InputAction.CallbackContext obj)
     {
-        if (PlayerInfo.validgrabR)
-            Grab(true);
+        if (lt_R != null && grabLockR)
+            lt_R.Use.Invoke();
         else
-            grabwaitR = true;
+        {
+            if (PlayerInfo.validgrabR)
+                Grab(true);
+            else
+                grabwaitR = true;
+        }
     }
 
     private void GrabButtonLeftUp(InputAction.CallbackContext obj)
@@ -515,7 +539,8 @@ public class LucidArms : MonoBehaviour
 
     private void Grab(bool isRight)
     {
-        if (!initialized) return;
+        bool grablock = isRight ? grabLockR : grabLockL;
+        if (!initialized || grablock) return;
 
         ref Vector3 grabPosition = ref grabPositionL;
         if (isRight)
@@ -529,16 +554,28 @@ public class LucidArms : MonoBehaviour
         if (isRight)
             grabLock = ref grabLockR;
 
+        ref bool isPrimary = ref isPrimaryL;
+        if (isRight)
+            isPrimary = ref isPrimaryR;
+
+        ref LucidTool lt = ref lt_L;
+        if (isRight)
+            lt = ref lt_R;
+
+        LucidTool otherLT = isRight ? lt_L : lt_R;
+
         Transform targetTransform = isRight ? targetTransformR : targetTransformL;
 
-        LucidTool lt = targetTransform.GetComponent<LucidTool>();
+        lt = targetTransform.GetComponent<LucidTool>();
         if (lt != null)
         {
-            bool doPrimary = isRight ^ PlayerInfo.leftHanded;
-            Transform targetGrip = doPrimary ? lt.PrimaryGrip : lt.SecondaryGrip;
+            isPrimary = (lt != otherLT);
+            Transform targetGrip = isPrimary ? lt.PrimaryGripL : lt.SecondaryGripL;
+            if (isRight)
+                targetGrip = isPrimary ? lt.PrimaryGripR : lt.SecondaryGripR;
             grabPosition = targetGrip.position;
             grabRotation = targetGrip.rotation;
-            grabLock = doPrimary ? lt.grabLockPrimary : lt.grabLockSecondary;
+            grabLock = isPrimary ? lt.grabLockPrimary : lt.grabLockSecondary;
         }
 
         CreateConfigurableJoint(isRight, grabPosition, grabRotation, targetTransform);
@@ -556,9 +593,12 @@ public class LucidArms : MonoBehaviour
             trig.GrabEvent();
 
         if (grabL && grabR)
-            UpdateItemPose("TwoHandedCarry");
+        {
+            UpdateItemPose(false, "TwoHandedCarry");
+            UpdateItemPose(true, "TwoHandedCarry");
+        }
         else
-            UpdateItemPose("OneHandedCarry");
+            UpdateItemPose(isRight, "OneHandedCarry");
 
         grabwait = false;
         grab = true;
@@ -578,6 +618,10 @@ public class LucidArms : MonoBehaviour
         if (isRight)
             otherClimb = ref PlayerInfo.climbR;
 
+        ref bool grabLock = ref grabLockL;
+        if (isRight)
+            grabLock = ref grabLockR;
+
         if (!initialized || !grab) return;
 
         Transform targetTransform = isRight ? targetTransformR : targetTransformL;
@@ -589,6 +633,12 @@ public class LucidArms : MonoBehaviour
         ref ConfigurableJoint jointTarget = ref anchorL;
         if (isRight)
             jointTarget = ref anchorR;
+
+        ref LucidTool lt = ref lt_L;
+        if (isRight)
+            lt = ref lt_R;
+
+        LucidTool otherLT = isRight ? lt_L : lt_R;
 
         Destroy(jointTarget);
 
@@ -602,10 +652,12 @@ public class LucidArms : MonoBehaviour
         PlayerInfo.physBodyRB.angularDrag = hipdrag;
         PlayerInfo.physHeadRB.angularDrag = headdrag;
 
-        UpdateItemPose("OneHandedCarry");
+        UpdateItemPose(!isRight, "OneHandedCarry");
 
         grab = false;
         climb = false;
+        lt = null;
+        grabLock = false;
 
         Vector3 otherGrabForce = isRight ? grabForceL : grabForceR;
 

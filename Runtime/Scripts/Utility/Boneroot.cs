@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 
+[RequireComponent(typeof(ParentConstraint))]
 public class BoneRoot : MonoBehaviour
 {
     [SerializeField] bool usePlayermodel = false;
@@ -18,7 +19,6 @@ public class BoneRoot : MonoBehaviour
     private Rigidbody rb;
 
     private ParentConstraint parentConstraint;
-    private bool initialized = false;
 
     private void OnEnable()
     {

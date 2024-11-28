@@ -235,8 +235,7 @@ public static class PlayerInfo
         validgrabL,
         validgrabR,
         headlocked,
-        animModelInitialized,
-        leftHanded
+        animModelInitialized
         = false;
     #endregion
 }
