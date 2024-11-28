@@ -90,7 +90,7 @@ public class Inputs : MonoBehaviour
 //used to easily access relevant input actions for events
 public static class LucidInputActionRefs
 {
-    public static InputAction 
+    public static InputAction
         movement,
         jump,
         crouch,
@@ -99,14 +99,13 @@ public static class LucidInputActionRefs
         slide,
         bslide,
         mousepos,
-        grabL, 
+        grabL,
         grabR,
-        camselect1, 
-        camselect2, 
-        camselect3, 
+        camselect1,
+        camselect2,
+        camselect3,
         camselect4,
-        mouseUnlock,
-        toggleClimbMode;
+        mouseUnlock;
 }
 
 //used to easily access values from the input actions above without constantly calling readvalue

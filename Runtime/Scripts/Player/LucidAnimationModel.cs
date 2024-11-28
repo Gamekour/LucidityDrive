@@ -382,8 +382,8 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBool(_BSLIDE, crawl);
         anim.SetBool(_CRAWL, PlayerInfo.crawling);
         anim.SetBool(_FLIGHT, PlayerInfo.flying);
-        anim.SetBool(_GRAB_L, PlayerInfo.grabL);
-        anim.SetBool(_GRAB_R, PlayerInfo.grabR);
+        anim.SetBool(_GRAB_L, PlayerInfo.climbL);
+        anim.SetBool(_GRAB_R, PlayerInfo.climbR);
         anim.SetBool(_CLIMBING, PlayerInfo.climbing);
         anim.SetBool(_FOOTSLIDE, footslide);
     }

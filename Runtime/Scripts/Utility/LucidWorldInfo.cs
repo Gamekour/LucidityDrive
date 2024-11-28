@@ -227,6 +227,8 @@ public static class PlayerInfo
         flying,
         grabL,
         grabR,
+        climbL,
+        climbR,
         handCollisionL,
         handCollisionR,
         climbing,
