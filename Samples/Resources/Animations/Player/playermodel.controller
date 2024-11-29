@@ -3118,7 +3118,7 @@ AnimatorController:
     m_Behaviours: []
     m_BlendingMode: 1
     m_SyncedLayerIndex: -1
-    m_DefaultWeight: 0
+    m_DefaultWeight: 1
     m_IKPass: 1
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
@@ -4985,6 +4985,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: climbing
     m_EventTreshold: 0
+  - m_ConditionMode: 3
+    m_ConditionEvent: airtime
+    m_EventTreshold: 0.1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7969431416998294375}
   m_Solo: 0

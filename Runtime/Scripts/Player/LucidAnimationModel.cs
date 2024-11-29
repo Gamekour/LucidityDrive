@@ -492,11 +492,13 @@ public class LucidAnimationModel : MonoBehaviour
             if (isLeft)
             {
                 PlayerInfo.connectedRB_LF = null;
+                PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
                 lastCastHitL = null;
             }
             else
             {
                 PlayerInfo.connectedRB_RF = null;
+                PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
                 lastCastHitR = null;
             }
         }
