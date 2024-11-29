@@ -83,7 +83,7 @@ public class CameraManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!PlayerInfo.animModelInitialized) return;
+        if (!PlayerInfo.animModelInitialized || PlayerInfo.mainCamera == null) return;
 
         if (headrootTarget != null && headRoot != null)
         {
