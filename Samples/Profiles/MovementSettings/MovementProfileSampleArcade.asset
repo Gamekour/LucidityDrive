@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
   m_Name: MovementProfileSampleArcade
   m_EditorClassIdentifier: 
-  movespeed: 5
+  moveSpeed: 5
   sprintScale: 2
   moveSpeedCrawling: 1.5
   moveSpeedCrouched: 3.5
