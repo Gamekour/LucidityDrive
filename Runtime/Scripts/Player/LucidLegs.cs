@@ -90,7 +90,8 @@ public class LucidLegs : MonoBehaviour
         airmove, 
         airdrag,
         slidePushAngleThreshold,
-        moveWithPlatform;
+        maxSlopeDefault,
+        maxSlopeByYVelocity;
 
     //internal variables
     private RaycastHit[] spherecastHitBufferL = new RaycastHit[100];
@@ -608,27 +609,29 @@ public class LucidLegs : MonoBehaviour
         float diffZ = Mathf.Abs(hitN.point.y - hitS.point.y);
         float diffX = Mathf.Abs(hitW.point.y - hitE.point.y);
 
+        float minNrmY = 1 - (maxSlopeDefault + (Mathf.Clamp(rb.velocity.y, 0, 1/maxSlopeByYVelocity) * maxSlopeByYVelocity));
+
         List<RaycastHit> results = new List<RaycastHit>();
         if (diffZ < diffX)
         {
-            if (hitN.point.sqrMagnitude > float.Epsilon && hitN.distance < maxProbeOffset)
+            if (hitN.point.sqrMagnitude > float.Epsilon && hitN.distance < maxProbeOffset && hitN.normal.y > minNrmY)
                 results.Add(hitN);
-            if (hitS.point.sqrMagnitude > float.Epsilon && hitS.distance < maxProbeOffset)
+            if (hitS.point.sqrMagnitude > float.Epsilon && hitS.distance < maxProbeOffset && hitS.normal.y > minNrmY)
                 results.Add(hitS);
-            if (hitE.point.sqrMagnitude > float.Epsilon && hitE.distance < maxProbeOffset)
+            if (hitE.point.sqrMagnitude > float.Epsilon && hitE.distance < maxProbeOffset && hitE.normal.y > minNrmY)
                 results.Add(hitE);
-            if (hitW.point.sqrMagnitude > float.Epsilon && hitW.distance < maxProbeOffset)
+            if (hitW.point.sqrMagnitude > float.Epsilon && hitW.distance < maxProbeOffset && hitW.normal.y > minNrmY)
                 results.Add(hitW);
         }
         else
         {
-            if (hitE.point.sqrMagnitude > float.Epsilon && hitE.distance < maxProbeOffset)
+            if (hitE.point.sqrMagnitude > float.Epsilon && hitE.distance < maxProbeOffset && hitE.normal.y > minNrmY)
                 results.Add(hitE);
-            if (hitW.point.sqrMagnitude > float.Epsilon && hitW.distance < maxProbeOffset)
+            if (hitW.point.sqrMagnitude > float.Epsilon && hitW.distance < maxProbeOffset && hitW.normal.y > minNrmY)
                 results.Add(hitW);
-            if (hitN.point.sqrMagnitude > float.Epsilon && hitN.distance < maxProbeOffset)
+            if (hitN.point.sqrMagnitude > float.Epsilon && hitN.distance < maxProbeOffset && hitN.normal.y > minNrmY)
                 results.Add(hitN);
-            if (hitS.point.sqrMagnitude > float.Epsilon && hitS.distance < maxProbeOffset)
+            if (hitS.point.sqrMagnitude > float.Epsilon && hitS.distance < maxProbeOffset && hitS.normal.y > minNrmY)
                 results.Add(hitS);
         }
 

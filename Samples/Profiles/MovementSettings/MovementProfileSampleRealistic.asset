@@ -29,7 +29,8 @@ MonoBehaviour:
   flightdrag: 0.05
   walkthreshold: 0.75
   directionaljumpmult: 3.5
-  moveWithPlatform: 10
+  maxSlopeDefault: 0.5
+  maxSlopeByYVelocity: 2
   legWidth: 0.09
   legWidthMult: 0.5
   down: 1.5

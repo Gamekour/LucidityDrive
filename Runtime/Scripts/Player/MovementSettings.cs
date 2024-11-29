@@ -7,7 +7,7 @@ public class MovementSettings : ScriptableObject
 {
     [Header("Gameplay")]
     public float movespeed;
-    public float 
+    public float
         sprintmult,
         crawlspeed,
         crouchspeed,
@@ -24,7 +24,8 @@ public class MovementSettings : ScriptableObject
         flightdrag,
         walkthreshold,
         directionaljumpmult,
-        moveWithPlatform;
+        maxSlopeDefault,
+        maxSlopeByYVelocity;
 
     [Header("Casting")]
     public float legWidth;
