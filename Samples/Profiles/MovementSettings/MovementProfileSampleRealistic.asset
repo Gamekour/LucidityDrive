@@ -12,54 +12,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
   m_Name: MovementProfileSampleRealistic
   m_EditorClassIdentifier: 
-  movespeed: 3.5
-  sprintmult: 2
-  crawlspeed: 1
-  crouchspeed: 1.5
-  moveburst: 1.3
-  slidemult: 14
-  slidepushforce: 16
-  jumpforcemult: 1
-  jumpgrav: -9.81
-  fallgrav: -9.81
-  airmove: 0
-  airdrag: 1
-  maxAirAccel: 0
-  flightforce: 10
-  flightdrag: 0.05
-  walkthreshold: 0.75
-  directionaljumpmult: 3.5
+  moveSpeed: 3.5
+  sprintScale: 2
+  moveSpeedCrawling: 1
+  moveSpeedCrouched: 1.5
+  moveBurst: 1.3
+  footSlideStrength: 14
+  slidePushStrength: 16
+  jumpForceScale: 1
+  jumpGravity: -9.81
+  fallGravity: -9.81
+  aerialMovementSpeed: 0
+  aerialDrag: 1
+  maxAirAcceleration: 0
+  flightSpeed: 10
+  flightDrag: 0.05
+  strafeWalkAngularThreshold: 0.75
+  directionalJumpStrength: 3.5
   maxSlopeDefault: 0.5
   maxSlopeByYVelocity: 2
   legWidth: 0.09
-  legWidthMult: 0.5
-  down: 1.5
-  airdownmult: 0.1
-  probemult: 1
-  moveflatprobemult: 1
+  probeDepth: 1.5
+  probeDepthByFall: 0.1
+  probeScale: 1
+  probeScaleByMoveFlat: 1
   probeCutoffHeight: -2
   maxProbeOffset: 2
-  probeXminimumOffset: 0.05
-  probeZminimumOffset: 0.05
-  ratiomult: 1
-  ratiofreezethreshold: 0.1
-  airtimemult: 2
-  ratioBySpeed: 0.25
-  maxlegmult: 1.4
+  probeXMinimumOffset: 0.05
+  probeZMinimumOffset: 0.05
+  ratioScale: 1
+  ratioFreezeThreshold: 0.1
+  dampAnimPhaseByAirtime: 2
+  scaleRatioBySpeed: 0.25
+  maxLegScale: 1.4
   friction: 0.425
-  maxforcemult: 5.4
-  hipRotationSpeed: 2000
-  hipspacesmoothness: 0
-  hipspaceMaxRot: -0.9
-  forcesmoothness: 20
-  crouchmult: 1
-  jumpmult: 16
-  moveupmult: 0
-  movedownmult: 0.25
-  movedownclamp: 1
-  crawlthreshold: 14
-  crawlmult: 0.225
-  wallruntilt: 0.5
-  jumptilt: 0.2
+  maxForceScale: 5.4
+  pelvisRotationSpeed: 2000
+  hipSpaceRotationSmoothness: 0
+  hipSpaceMaxRotation: -0.9
+  forceSmoothness: 20
+  jumpHeightScale: 16
+  targetHeightByPositiveSlope: 0
+  targetHeightByNegativeSlope: 0.25
+  targetHeightByNegativeSlopeClamp: 1
+  maxCrawlSpeed: 14
+  crawlHeight: 0.225
+  slopeTilt: 0.5
+  jumpTilt: 0.2
   climbtilt: 0.3
   slidePushAngleThreshold: 45

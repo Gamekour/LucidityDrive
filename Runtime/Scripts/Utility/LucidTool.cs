@@ -9,12 +9,12 @@ public class LucidTool : MonoBehaviour
     public Transform SecondaryGripL;
     public Transform PrimaryGripR;
     public Transform SecondaryGripR;
-    public Transform itemPosePrimaryL;
-    public Transform itemPoseSecondaryL;
-    public Transform itemPosePrimaryR;
-    public Transform itemPoseSecondaryR;
-    public bool grabLockPrimary = true;
-    public bool grabLockSecondary = false;
+    public Transform ItemPosePrimaryL;
+    public Transform ItemPoseSecondaryL;
+    public Transform ItemPosePrimaryR;
+    public Transform ItemPoseSecondaryR;
+    public bool GrabLockPrimary = true;
+    public bool GrabLockSecondary = false;
 
     public UnityEvent Use;
 }

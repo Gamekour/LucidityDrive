@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(Animator))]
 public class LucidVismodel : MonoBehaviour
@@ -11,8 +7,8 @@ public class LucidVismodel : MonoBehaviour
     public Animator anim;
 
     [Header("Options")]
-    [SerializeField] bool autoinit = true;
-    [SerializeField] float grabspeed = 1;
+    [SerializeField] bool initializeOnStart = true;
+    [SerializeField] float grabSpeed = 1;
     [SerializeField] float collisionTransitionTime = 1;
 
     [Header("References")]
@@ -21,7 +17,7 @@ public class LucidVismodel : MonoBehaviour
     public SphereCollider headCollider;
 
     private LucidAnimationModel modelSync;
-    private float grabweightL, grabweightR = 0;
+    private float grabWeightL, grabWeightR = 0;
     private bool initialized = false;
     private Quaternion hipDeriv = Quaternion.identity;
     private Quaternion headDeriv = Quaternion.identity;
@@ -31,7 +27,7 @@ public class LucidVismodel : MonoBehaviour
         anim = GetComponent<Animator>();
         modelSync = FindObjectOfType<LucidAnimationModel>();
 
-        if (autoinit) Init();
+        if (initializeOnStart) Init();
     }
 
     private void OnAnimatorIK(int layerIndex)
@@ -88,7 +84,7 @@ public class LucidVismodel : MonoBehaviour
             if (modelSync.boneRots.ContainsKey(hbstring))
                 anim.SetBoneLocalRotation(hb2, modelSync.boneRots[hbstring]);
         }
-        bool doSlideIK = PlayerInfo.slidesurfangle < PlayerInfo.slidepushanglethreshold;
+        bool doSlideIK = PlayerInfo.surfaceAngle < PlayerInfo.slidePushAngleThreshold;
         bool isSliding = LucidInputValueShortcuts.bslide || LucidInputValueShortcuts.slide;
         bool enableFootIK = !(PlayerInfo.crawling || (isSliding && !doSlideIK));
         float footIKWeight = enableFootIK ? 1 : 0;
@@ -111,7 +107,7 @@ public class LucidVismodel : MonoBehaviour
         bool handCollision = isRight ? PlayerInfo.handCollisionR : PlayerInfo.handCollisionL;
         Transform IKTransform = isRight ? PlayerInfo.IK_RH : PlayerInfo.IK_LH;
         AvatarIKGoal IKGoal = isRight ? AvatarIKGoal.RightHand : AvatarIKGoal.LeftHand;
-        float grabweight = isRight ? grabweightR : grabweightL;
+        float grabweight = isRight ? grabWeightR : grabWeightL;
 
         if (grab || handCollision)
         {
@@ -121,7 +117,7 @@ public class LucidVismodel : MonoBehaviour
             anim.SetIKRotation(IKGoal, IKTransform.rotation);
             anim.SetIKRotationWeight(IKGoal, grabweight);
 
-            SetGrabWeight(isRight, Mathf.Clamp01(grabweight + (grabspeed * Time.deltaTime)));
+            SetGrabWeight(isRight, Mathf.Clamp01(grabweight + (grabSpeed * Time.deltaTime)));
         }
         else if (IKTransform.position != Vector3.zero)
         {
@@ -133,15 +129,15 @@ public class LucidVismodel : MonoBehaviour
         {
             anim.SetIKPositionWeight(IKGoal, grabweight);
             anim.SetIKRotationWeight(IKGoal, grabweight);
-            SetGrabWeight(isRight, Mathf.Clamp01(grabweight - (grabspeed * Time.deltaTime)));
+            SetGrabWeight(isRight, Mathf.Clamp01(grabweight - (grabSpeed * Time.deltaTime)));
         }
     }
 
     private void SetGrabWeight(bool isRight, float value)
     {
         if (isRight)
-            grabweightR = value;
+            grabWeightR = value;
         else
-            grabweightL = value;
+            grabWeightL = value;
     }
 }

@@ -11,7 +11,7 @@ public class BoneRoot : MonoBehaviour
 
     [Header("Force Match")]
     [SerializeField] bool useForceMatch;
-    [SerializeField] float positionforce = 10;
+    [SerializeField] float positionForce = 10;
     [SerializeField] float torque = 10;
     [SerializeField] float tolerance = 0.01f;
     private Transform targetTransform;
@@ -63,7 +63,7 @@ public class BoneRoot : MonoBehaviour
     {
         if (parentConstraint.sourceCount > 0)
             parentConstraint.RemoveSource(0);
-        ConstraintSource constraintTargetIK = new ConstraintSource();
+        ConstraintSource constraintTargetIK = new();
         constraintTargetIK.sourceTransform = targetAnim.GetBoneTransform(targetBone);
         constraintTargetIK.weight = 1;
         parentConstraint.AddSource(constraintTargetIK);
@@ -84,6 +84,6 @@ public class BoneRoot : MonoBehaviour
             joint.targetRotation = Quaternion.Inverse(targetTransform.rotation) * joint.connectedBody.transform.rotation;
         else
             rb.AddTorque((Quaternion.Inverse(targetTransform.rotation) * targetTransform.rotation).eulerAngles * torque);
-        rb.AddForce((targetTransform.position - transform.position) * positionforce * Time.fixedDeltaTime);
+        rb.AddForce(positionForce * Time.fixedDeltaTime * (targetTransform.position - transform.position));
     }
 }

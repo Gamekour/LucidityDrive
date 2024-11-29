@@ -524,12 +524,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRig
       objectReference: {fileID: 0}
-    - target: {fileID: 6962469843135845524, guid: feb5ffb413408f64bb3e0843d3c27f57,
+    - target: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
-      propertyPath: defaultMovementSettings
-      value: 
-      objectReference: {fileID: 11400000, guid: b460e0abbe261ff4da0c849d2778e2a1,
-        type: 2}
+      propertyPath: headSmooth
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

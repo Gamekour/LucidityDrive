@@ -5,26 +5,26 @@ using UnityEngine.Events;
 
 public class RespawnSystem : MonoBehaviour
 {
-    public Vector3 spawnpoint = Vector3.zero;
-    [SerializeField] Vector3 startVel = Vector3.zero;
+    public Vector3 spawnPoint = Vector3.zero;
+    [SerializeField] private Vector3 startVel;
     [SerializeField] float respawnHeight = -100;
 
     private void Start()
     {
-        spawnpoint = transform.position;
+        spawnPoint = transform.position;
     }
 
     private void FixedUpdate()
     {
         if (PlayerInfo.pelvis.position.y < respawnHeight)
         {
-            respawn.Respawn(spawnpoint);
-            StartCoroutine(respawn.Unlock());
+            RespawnInterface.Respawn(spawnPoint);
+            StartCoroutine(RespawnInterface.Unlock());
         }
     }
 }
 
-public static class respawn
+public static class RespawnInterface
 {
     public static UnityEvent OnRespawn = new UnityEvent();
     public static void Respawn(Vector3 point)

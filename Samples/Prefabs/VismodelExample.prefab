@@ -1977,8 +1977,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
-  autoinit: 1
-  grabspeed: 2
+  initializeOnStart: 1
+  grabSpeed: 2
   collisionTransitionTime: 1
   playerMeshParent: {fileID: 7663928167839322220}
   bodyCollider: {fileID: 2779974011684470133}

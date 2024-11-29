@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EventBox : MonoBehaviour, GrabTrigger
+public class EventBox : MonoBehaviour, IGrabTrigger
 {
     public Collider colliderRef;
     [SerializeField] bool doCollisionStayEvents = false;
@@ -18,13 +16,13 @@ public class EventBox : MonoBehaviour, GrabTrigger
     private void OnEnable()
     {
         colliderRef = GetComponent<Collider>();
-        onTriggered = new UnityEvent<Collider>();
-        onCollisionEnter = new UnityEvent<Collision>();
-        onCollisionExit = new UnityEvent<Collision>();
-        onCollisionStay = new UnityEvent<Collision>();
-        onGrabbed = new UnityEvent();
-        onUngrabbed = new UnityEvent();
-        onEnabled = new UnityEvent();
+        onTriggered = new();
+        onCollisionEnter = new();
+        onCollisionExit = new();
+        onCollisionStay = new();
+        onGrabbed = new();
+        onUngrabbed = new();
+        onEnabled = new();
         onEnabled.Invoke();
         initialized = true;
     }

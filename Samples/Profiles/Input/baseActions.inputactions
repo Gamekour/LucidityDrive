@@ -78,7 +78,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "headlook",
+                    "name": "headLook",
                     "type": "Value",
                     "id": "2228f649-2096-48c5-b382-06a40f7b4623",
                     "expectedControlType": "Vector2",
@@ -87,7 +87,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "camselect1",
+                    "name": "camSelect1",
                     "type": "Button",
                     "id": "40c9b04c-7ba2-4779-9774-b02611d13336",
                     "expectedControlType": "Button",
@@ -96,7 +96,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "camselect2",
+                    "name": "camSelect2",
                     "type": "Button",
                     "id": "66163570-a59b-435f-990e-ad4f9533d2bc",
                     "expectedControlType": "Button",
@@ -105,7 +105,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "camselect3",
+                    "name": "camSelect3",
                     "type": "Button",
                     "id": "827a4503-c7b0-4f81-b911-90d689db1bba",
                     "expectedControlType": "Button",
@@ -114,7 +114,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "camselect4",
+                    "name": "camSelect4",
                     "type": "Button",
                     "id": "34b7a627-ad47-4868-a711-bc2b27333b45",
                     "expectedControlType": "Button",
@@ -123,7 +123,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "camcycle",
+                    "name": "camCycle",
                     "type": "Button",
                     "id": "82c0e0f7-5a4a-496e-a415-3e398159b64f",
                     "expectedControlType": "Button",
@@ -420,7 +420,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
-                    "action": "headlook",
+                    "action": "headLook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -431,7 +431,7 @@
                     "interactions": "",
                     "processors": "ScaleVector2(x=20,y=20)",
                     "groups": "Gamepad",
-                    "action": "headlook",
+                    "action": "headLook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -442,7 +442,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Hardcore",
-                    "action": "headlook",
+                    "action": "headLook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -453,7 +453,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
-                    "action": "camselect1",
+                    "action": "camSelect1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -464,7 +464,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
-                    "action": "camselect2",
+                    "action": "camSelect2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -475,7 +475,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
-                    "action": "camselect3",
+                    "action": "camSelect3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -486,7 +486,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
-                    "action": "camselect4",
+                    "action": "camSelect4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -574,7 +574,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "camcycle",
+                    "action": "camCycle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

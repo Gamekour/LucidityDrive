@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -8,10 +7,10 @@ using UnityEngine.InputSystem;
 public class Inputs : MonoBehaviour
 {
     [SerializeField] InputActionAsset m_ActionAsset;
-    public InputActionAsset actionAsset{ get => m_ActionAsset; set => m_ActionAsset = value; }
+    public InputActionAsset ActionAsset { get => m_ActionAsset; set => m_ActionAsset = value; }
 
-    private Dictionary<InputAction, FieldInfo> actionValueMapping = new Dictionary<InputAction, FieldInfo>();
-    private List<InputAction> activeValueInputs = new List<InputAction>();
+    private readonly Dictionary<InputAction, FieldInfo> actionValueMapping = new();
+    private readonly List<InputAction> activeValueInputs = new();
 
     private void Awake()
     {
@@ -38,7 +37,7 @@ public class Inputs : MonoBehaviour
         FieldInfo[] fields = targetType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
         foreach (var field in fields)
         {
-            InputAction action = actionAsset.FindAction(field.Name, true);
+            InputAction action = ActionAsset.FindAction(field.Name, true);
             FieldInfo valueField = actionValueType.GetField(field.Name);
             if (valueField != null)
             {
@@ -95,19 +94,19 @@ public static class LucidInputActionRefs
         jump,
         crouch,
         sprint,
-        headlook,
+        headLook,
         slide,
         bslide,
-        mousepos,
+        mousePos,
         grabL,
         grabR,
         dropL,
         dropR,
-        camselect1,
-        camselect2,
-        camselect3,
-        camselect4,
-        camcycle,
+        camSelect1,
+        camSelect2,
+        camSelect3,
+        camSelect4,
+        camCycle,
         mouseUnlock;
 }
 
@@ -116,8 +115,8 @@ public static class LucidInputValueShortcuts
 {
     public static Vector2 
         movement, 
-        headlook, 
-        mousepos;
+        headLook, 
+        mousePos;
 
     public static bool 
         jump,

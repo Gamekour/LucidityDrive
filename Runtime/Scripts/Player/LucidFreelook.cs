@@ -35,7 +35,7 @@ public class LucidFreelook : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headlocked || !PlayerInfo.animModelInitialized)
+        if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headLocked || !PlayerInfo.animModelInitialized)
             return;
 
         transform.position = head.position;
@@ -56,7 +56,7 @@ public class LucidFreelook : MonoBehaviour
     {
         PlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
 
-        Vector2 headLookInput = LucidInputValueShortcuts.headlook;
+        Vector2 headLookInput = LucidInputValueShortcuts.headLook;
         headLookInput *= sensitivity * sensitivityMultiplier;
         headLookInput *= Time.deltaTime;
 
@@ -65,7 +65,7 @@ public class LucidFreelook : MonoBehaviour
         Vector3 hipForwardFlat = PlayerInfo.pelvis.forward;
         hipForwardFlat.y = 0;
 
-        Vector3 rotation = new Vector3(headLookInput.y, headLookInput.x, 0);
+        Vector3 rotation = new(headLookInput.y, headLookInput.x, 0);
 
         float chestX = chest.eulerAngles.x;
         chestXAngle = chestX;

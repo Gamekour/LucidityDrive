@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -50,7 +49,8 @@ public static class Shortcuts
     }
 
 
-    public readonly static List<HumanBodyBones> hb2list = new List<HumanBodyBones> {
+    public readonly static List<HumanBodyBones> hb2list = new()
+    {
         HumanBodyBones.Spine,
         HumanBodyBones.Chest,
         HumanBodyBones.Neck,
@@ -71,7 +71,7 @@ public static class Shortcuts
         HumanBodyBones.RightFoot
     };
 
-    public readonly static List<HumanBodyBones> hb2list_full = new List<HumanBodyBones>()
+    public readonly static List<HumanBodyBones> hb2list_full = new()
     {
         HumanBodyBones.Hips,
         HumanBodyBones.Spine,
@@ -157,9 +157,9 @@ public static class Shortcuts
 public static class PlayerInfo
 {
     #region Initialization Events
-    public static UnityEvent<LucidVismodel> OnAssignVismodel = new UnityEvent<LucidVismodel>();
-    public static UnityEvent OnAnimModellInitialized = new UnityEvent();
-    public static UnityEvent OnRemoveVismodel = new UnityEvent();
+    public static UnityEvent<LucidVismodel> OnAssignVismodel = new();
+    public static UnityEvent OnAnimModellInitialized = new();
+    public static UnityEvent OnRemoveVismodel = new();
     #endregion
 
     #region References
@@ -196,32 +196,30 @@ public static class PlayerInfo
 
     #region Motion Data
     public static Vector3 
-        footsurface, 
-        footsurfL, 
-        footsurfR, 
-        climbrelative, 
-        currentpush, 
-        currentslide 
+        footSurface, 
+        footSurfaceL, 
+        footSurfaceR, 
+        climbRelative, 
+        currentLegPush, 
+        currentFootSlide 
         = Vector3.zero;
 
     public static float traction = 1;
 
     public static float
-        stepphase,
-        animphase,
-        legdiffL,
-        legdiffR,
-        airtime,
+        stepPhase,
+        animPhase,
+        airTime,
         alignment,
-        movespeed,
-        grounddist,
-        slidesurfangle,
-        slidepushanglethreshold
+        moveSpeed,
+        groundDistance,
+        surfaceAngle,
+        slidePushAngleThreshold
         = 0;
 
     public static bool 
         grounded,
-        pelviscollision,
+        pelvisCollision,
         physCollision,
         crawling,
         flying,
@@ -232,9 +230,9 @@ public static class PlayerInfo
         handCollisionL,
         handCollisionR,
         climbing,
-        validgrabL,
-        validgrabR,
-        headlocked,
+        grabValidL,
+        grabValidR,
+        headLocked,
         animModelInitialized
         = false;
     #endregion

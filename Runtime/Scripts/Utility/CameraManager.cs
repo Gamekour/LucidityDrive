@@ -1,44 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraManager : MonoBehaviour
 {
-    [SerializeField] Transform[] camerapoints;
-    [SerializeField] Transform headroot;
+    [SerializeField] Transform[] cameraPoints;
+    [SerializeField] Transform headRoot;
     [SerializeField] float 
-        headsmooth,
-        rawblend,
-        rawblendTransitionSpeed,
-        externalCameraSmoothTime;
+        headRotationSmoothTime,
+        mouselookBlend,
+        mouselookBlendTransitionSpeed,
+        nonFPCameraSmoothTime;
     [SerializeField] LayerMask layermaskNormal, layermaskFP;
 
     private int cameraPointIndex = 0;
     private Transform headrootTarget;
-    private bool forceRaw = false;
-    private float currentrawblend = 0;
+    private bool forceMouselook = false;
+    private float currentMouselookBlend = 0;
     private Quaternion smoothDeriv = Quaternion.identity;
     private Vector3 externalDampRef = Vector3.zero;
 
     private void Start()
     {
-        LucidInputActionRefs.camselect1.started += CameraSwitch1;
-        LucidInputActionRefs.camselect2.started += CameraSwitch2;
-        LucidInputActionRefs.camselect3.started += CameraSwitch3;
-        LucidInputActionRefs.camselect4.started += CameraSwitch4;
-        LucidInputActionRefs.camcycle.started += CameraCycle;
+        LucidInputActionRefs.camSelect1.started += CameraSwitch1;
+        LucidInputActionRefs.camSelect2.started += CameraSwitch2;
+        LucidInputActionRefs.camSelect3.started += CameraSwitch3;
+        LucidInputActionRefs.camSelect4.started += CameraSwitch4;
+        LucidInputActionRefs.camCycle.started += CameraCycle;
         PlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
-        PlayerInfo.FPTransform = camerapoints[0];
+        PlayerInfo.FPTransform = cameraPoints[0];
     }
 
     private void OnDisable()
     {
-        LucidInputActionRefs.camselect1.started -= CameraSwitch1;
-        LucidInputActionRefs.camselect2.started -= CameraSwitch2;
-        LucidInputActionRefs.camselect3.started -= CameraSwitch3;
-        LucidInputActionRefs.camselect4.started -= CameraSwitch4;
-        LucidInputActionRefs.camcycle.started -= CameraCycle;
+        LucidInputActionRefs.camSelect1.started -= CameraSwitch1;
+        LucidInputActionRefs.camSelect2.started -= CameraSwitch2;
+        LucidInputActionRefs.camSelect3.started -= CameraSwitch3;
+        LucidInputActionRefs.camSelect4.started -= CameraSwitch4;
+        LucidInputActionRefs.camCycle.started -= CameraCycle;
         PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
     }
 
@@ -77,7 +75,7 @@ public class CameraManager : MonoBehaviour
             PlayerInfo.mainCamera.cullingMask = layermaskNormal;
         if (index == 3)
         {
-            Transform tcam = camerapoints[3].transform;
+            Transform tcam = cameraPoints[3].transform;
             tcam.position = PlayerInfo.mainCamera.transform.position;
             tcam.rotation = PlayerInfo.mainCamera.transform.rotation;
         }
@@ -87,44 +85,44 @@ public class CameraManager : MonoBehaviour
     {
         if (!PlayerInfo.animModelInitialized) return;
 
-        if (headrootTarget != null && headroot != null)
+        if (headrootTarget != null && headRoot != null)
         {
             // Handle head position interpolation
             if (cameraPointIndex != 0)
-                headroot.position = Vector3.SmoothDamp(headroot.position, headrootTarget.position, ref externalDampRef, externalCameraSmoothTime);
+                headRoot.position = Vector3.SmoothDamp(headRoot.position, headrootTarget.position, ref externalDampRef, nonFPCameraSmoothTime);
             else
-                headroot.position = headrootTarget.position;
+                headRoot.position = headrootTarget.position;
 
             // Handle rotation with quaternions to prevent gimbal lock
             Quaternion targetRotation = headrootTarget.rotation;
-            Quaternion smoothRotation = QuaternionUtil.SmoothDamp(headroot.rotation, targetRotation, ref smoothDeriv, headsmooth);
+            Quaternion smoothRotation = QuaternionUtil.SmoothDamp(headRoot.rotation, targetRotation, ref smoothDeriv, headRotationSmoothTime);
 
-            if (forceRaw)
-                currentrawblend = 0;
+            if (forceMouselook)
+                currentMouselookBlend = 0;
             else
             {
-                if (currentrawblend < rawblend)
-                    currentrawblend = Mathf.Clamp(currentrawblend + (Time.deltaTime * rawblendTransitionSpeed), 0, rawblend);
+                if (currentMouselookBlend < mouselookBlend)
+                    currentMouselookBlend = Mathf.Clamp(currentMouselookBlend + (Time.deltaTime * mouselookBlendTransitionSpeed), 0, mouselookBlend);
             }
 
             // Combine raw rotation with smoothed rotation
             Quaternion raw = PlayerInfo.head.transform.rotation;
-            Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, currentrawblend);
-            headroot.rotation = finalRotation;
+            Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, currentMouselookBlend);
+            headRoot.rotation = finalRotation;
         }
 
         // Update camera position and rotation
-        PlayerInfo.mainCamera.transform.position = camerapoints[cameraPointIndex].position;
-        PlayerInfo.mainCamera.transform.rotation = camerapoints[cameraPointIndex].rotation;
+        PlayerInfo.mainCamera.transform.position = cameraPoints[cameraPointIndex].position;
+        PlayerInfo.mainCamera.transform.rotation = cameraPoints[cameraPointIndex].rotation;
     }
 
     public void OnHeadCollisionStay(Collision c)
     {
-        forceRaw = true;
+        forceMouselook = true;
     }
 
     public void OnHeadCollisionExit(Collision c)
     {
-        forceRaw = false;
+        forceMouselook = false;
     }
 }

@@ -1,70 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UntitledMovementSettings", menuName = "LucidityDrive/MovementSettings", order = 1)]
 public class MovementSettings : ScriptableObject
 {
     [Header("Gameplay")]
-    public float movespeed;
+    public float moveSpeed;
     public float
-        sprintmult,
-        crawlspeed,
-        crouchspeed,
-        moveburst,
-        slidemult,
-        slidepushforce,
-        jumpforcemult,
-        jumpgrav,
-        fallgrav,
-        airmove,
-        airdrag,
-        maxAirAccel,
-        flightforce,
-        flightdrag,
-        walkthreshold,
-        directionaljumpmult,
+        sprintScale,
+        moveSpeedCrawling,
+        moveSpeedCrouched,
+        moveBurst,
+        footSlideStrength,
+        slidePushStrength,
+        jumpForceScale,
+        jumpGravity,
+        fallGravity,
+        aerialMovementSpeed,
+        aerialDrag,
+        maxAirAcceleration,
+        flightSpeed,
+        flightDrag,
+        strafeWalkAngularThreshold,
+        directionalJumpStrength,
         maxSlopeDefault,
         maxSlopeByYVelocity;
 
     [Header("Casting")]
     public float legWidth;
-    public float 
-        legWidthMult,
-        down,
-        airdownmult,
-        probemult,
-        moveflatprobemult,
+    public float
+        probeDepth,
+        probeDepthByFall,
+        probeScale,
+        probeScaleByMoveFlat,
         probeCutoffHeight,
         maxProbeOffset,
-        probeXminimumOffset,
-        probeZminimumOffset;
+        probeXMinimumOffset,
+        probeZMinimumOffset;
 
     [Header("Animation")]
-    public float ratiomult;
-    public float 
-        ratiofreezethreshold,
-        airtimemult,
-        ratioBySpeed,
-        maxlegmult;
+    public float ratioScale;
+    public float
+        ratioFreezeThreshold,
+        dampAnimPhaseByAirtime,
+        scaleRatioBySpeed,
+        maxLegScale;
 
     [Header("Physics")]
     public float friction;
     public float
-        maxforcemult,
-        hipRotationSpeed,
-        hipspacesmoothness,
-        hipspaceMaxRot,
-        forcesmoothness,
-        crouchmult,
-        jumpmult,
-        moveupmult,
-        movedownmult,
-        movedownclamp,
-        crawlthreshold,
-        crawlmult,
-        wallruntilt,
-        jumptilt,
+        maxForceScale,
+        pelvisRotationSpeed,
+        hipSpaceRotationSmoothness,
+        hipSpaceMaxRotation,
+        forceSmoothness,
+        jumpHeightScale,
+        targetHeightByPositiveSlope,
+        targetHeightByNegativeSlope,
+        targetHeightByNegativeSlopeClamp,
+        maxCrawlSpeed,
+        crawlHeight,
+        slopeTilt,
+        jumpTilt,
         climbtilt,
         slidePushAngleThreshold;
 }

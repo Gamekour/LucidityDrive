@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,6 +27,6 @@ public class CursorStateHandler : MonoBehaviour
     public void SetState(CursorLockMode state)
     {
         Cursor.lockState = state;
-        PlayerInfo.headlocked = (state == CursorLockMode.Locked);
+        PlayerInfo.headLocked = (state == CursorLockMode.Locked);
     }
 }

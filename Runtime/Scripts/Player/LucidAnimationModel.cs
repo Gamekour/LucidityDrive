@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class LucidAnimationModel : MonoBehaviour
@@ -18,20 +15,20 @@ public class LucidAnimationModel : MonoBehaviour
         IK_RH;
 
     [SerializeField] float 
-        velsmoothTime,
+        velSmoothTime,
         nrmSmoothTime,
         footSmoothTime,
         willSmoothTime,
         alignmentSmoothTime,
-        castthickness,
-        castheight,
-        airtimemax,
-        groundedforgiveness,
+        castThickness,
+        castHeight,
+        airTimeMax,
+        groundedForgiveness,
         lerp,
-        landtime,
-        footslidethreshold,
-        footslidevelthreshold,
-        leansmoothtime,
+        landTime,
+        footSlideThreshold,
+        footSlideVelThreshold,
+        leanSmoothTime,
         unrotateFeetBySpeed,
         maxFootAngle,
         verticalFootAdjust,
@@ -39,7 +36,7 @@ public class LucidAnimationModel : MonoBehaviour
         crouchTime;
 
     [HideInInspector]
-    public Dictionary<string, Quaternion> boneRots = new Dictionary<string, Quaternion>();
+    public Dictionary<string, Quaternion> boneRots = new();
     [HideInInspector]
     public Vector3 LCast;
     [HideInInspector]
@@ -240,18 +237,18 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 localNrm = CalculateLocalNormal();
         Vector3 willFlat = CalculateWillFlat();
         float lastalignment = CalculateAlignment();
-        Vector2 lerplean = CalculateLean(moveFlat, localVel, localNrm);
+        Vector2 lerplean = CalculateLean(localVel, localNrm);
 
         UpdateFootAngle();
         UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean);
         UpdateAnimatorBools();
 
-        if (PlayerInfo.airtime > airtimesmooth)
-            airtimesmooth = PlayerInfo.airtime;
+        if (PlayerInfo.airTime > airtimesmooth)
+            airtimesmooth = PlayerInfo.airTime;
         else
-            airtimesmooth = Mathf.SmoothDamp(airtimesmooth, PlayerInfo.airtime, ref landingRef, landtime);
+            airtimesmooth = Mathf.SmoothDamp(airtimesmooth, PlayerInfo.airTime, ref landingRef, landTime);
 
-        float legweight = Mathf.Clamp01(airtimesmooth / airtimemax);
+        float legweight = Mathf.Clamp01(airtimesmooth / airTimeMax);
         legweight *= slide ? 0 : 1;
         legweight *= bslide ? 0 : 1;
         legweight *= PlayerInfo.flying ? 0 : 1;
@@ -261,7 +258,7 @@ public class LucidAnimationModel : MonoBehaviour
         float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (bslide ? 0 : 1) * (crouch ? 0 : 1));
         hipweight *= Mathf.Clamp01(velflat.magnitude);
         hipweight *= PlayerInfo.climbing ? 0 : 1;
-        hipweight *= Mathf.Clamp01(1 - Mathf.Clamp(PlayerInfo.grounddist * hipWeightReductionByHeight, 0, Mathf.Infinity));
+        hipweight *= Mathf.Clamp01(1 - Mathf.Clamp(PlayerInfo.groundDistance * hipWeightReductionByHeight, 0, Mathf.Infinity));
         float currenthipweight = anim.GetLayerWeight(2);
         hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
         anim.SetLayerWeight(2, hipweight);
@@ -282,13 +279,13 @@ public class LucidAnimationModel : MonoBehaviour
         return lastalignment;
     }
 
-    private Vector2 CalculateLean(Vector3 moveFlat, Vector3 localVel, Vector3 localNrm)
+    private Vector2 CalculateLean(Vector3 localVel, Vector3 localNrm)
     {
         Vector2 oldlean = Vector2.zero;
         oldlean.x = anim.GetFloat(_LEAN_X);
         oldlean.y = anim.GetFloat(_LEAN_Z);
-        Vector2 lean = LeanCalc(moveFlat, localVel * 0.25f, localNrm);
-        Vector2 lerplean = Vector2.SmoothDamp(oldlean, lean, ref leanSmoothRef, leansmoothtime);
+        Vector2 lean = LeanCalc(localVel * 0.25f, localNrm);
+        Vector2 lerplean = Vector2.SmoothDamp(oldlean, lean, ref leanSmoothRef, leanSmoothTime);
         return lerplean;
     }
 
@@ -299,7 +296,7 @@ public class LucidAnimationModel : MonoBehaviour
         currentvellocal.x = anim.GetFloat(_VEL_X);
         currentvellocal.y = anim.GetFloat(_VEL_Y);
         currentvellocal.z = anim.GetFloat(_VEL_Z);
-        return Vector3.SmoothDamp(localVel, currentvellocal, ref velRef, velsmoothTime);
+        return Vector3.SmoothDamp(localVel, currentvellocal, ref velRef, velSmoothTime);
     }
 
     private Vector3 CalculateLocalNormal()
@@ -336,8 +333,8 @@ public class LucidAnimationModel : MonoBehaviour
         {
             footAngle = 0;
             angleRef = PlayerInfo.pelvis.eulerAngles.y;
-            PlayerInfo.animphase += 0.5f;
-            PlayerInfo.animphase %= 1;
+            PlayerInfo.animPhase += 0.5f;
+            PlayerInfo.animPhase %= 1;
         }
     }
 
@@ -359,12 +356,12 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_NRM_X, localNrm.x);
         anim.SetFloat(_NRM_Y, localNrm.y);
         anim.SetFloat(_NRM_Z, localNrm.z);
-        anim.SetFloat(_ANIMCYCLE, PlayerInfo.animphase);
-        anim.SetFloat(_AIRTIME, PlayerInfo.airtime);
+        anim.SetFloat(_ANIMCYCLE, PlayerInfo.animPhase);
+        anim.SetFloat(_AIRTIME, PlayerInfo.airTime);
         anim.SetFloat(_ALIGNMENT, lastalignment);
-        anim.SetFloat(_CLIMB, PlayerInfo.climbrelative.y);
-        anim.SetFloat(_HANG_X, PlayerInfo.climbrelative.x);
-        anim.SetFloat(_HANG_Z, PlayerInfo.climbrelative.z);
+        anim.SetFloat(_CLIMB, PlayerInfo.climbRelative.y);
+        anim.SetFloat(_HANG_X, PlayerInfo.climbRelative.x);
+        anim.SetFloat(_HANG_Z, PlayerInfo.climbRelative.z);
         anim.SetFloat(_LEAN_X, lean.x);
         anim.SetFloat(_LEAN_Z, lean.y);
         anim.SetFloat(_FOOT_ANGLE, footAngle / maxFootAngle);
@@ -375,7 +372,7 @@ public class LucidAnimationModel : MonoBehaviour
     {
         bool slide = LucidInputValueShortcuts.slide;
         bool crawl = LucidInputValueShortcuts.bslide;
-        bool footslide = (PlayerInfo.alignment > footslidethreshold && PlayerInfo.mainBody.velocity.magnitude > footslidevelthreshold);
+        bool footslide = (PlayerInfo.alignment > footSlideThreshold && PlayerInfo.mainBody.velocity.magnitude > footSlideVelThreshold);
 
         anim.SetBool(_GROUNDED, PlayerInfo.grounded);
         anim.SetBool(_SLIDE, slide);
@@ -388,7 +385,7 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBool(_FOOTSLIDE, footslide);
     }
 
-    private Vector2 LeanCalc(Vector3 localwill, Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
+    private Vector2 LeanCalc(Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
     {
         Vector2 accel = Vector2.zero;
         accel.x = localvel.x;
@@ -400,7 +397,7 @@ public class LucidAnimationModel : MonoBehaviour
         lean.x = (accel.x * k1) + (slope.x * k2);
         lean.y = (accel.y * k1) + (slope.y * k2);
 
-        if (PlayerInfo.alignment > 0.5f && PlayerInfo.movespeed > footslidethreshold && PlayerInfo.airtime < airtimeThreshold)
+        if (PlayerInfo.alignment > 0.5f && PlayerInfo.moveSpeed > footSlideThreshold && PlayerInfo.airTime < airtimeThreshold)
             lean = -lean;
 
         return lean;
@@ -416,10 +413,10 @@ public class LucidAnimationModel : MonoBehaviour
         bool hitL = UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast);
         bool hitR = UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast);
 
-        PlayerInfo.grounded = (hitL || hitR || PlayerInfo.pelviscollision);
+        PlayerInfo.grounded = (hitL || hitR || PlayerInfo.pelvisCollision);
 
         if (PlayerInfo.crawling)
-            PlayerInfo.footsurface = PlayerInfo.hipspace.up;
+            PlayerInfo.footSurface = PlayerInfo.hipspace.up;
 
         PlayerInfo.IK_LF.position = LCast;
         PlayerInfo.IK_RF.position = RCast;
@@ -427,11 +424,9 @@ public class LucidAnimationModel : MonoBehaviour
 
     private bool UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
     {
-        RaycastHit hitInfoThigh = new RaycastHit();
-        RaycastHit hitInfoShin = new RaycastHit();
 
-        bool thighCast = Physics.SphereCast(legspace.position + (legspace.up * castheight), castthickness, kneepos - legspace.position, out hitInfoThigh, Vector3.Distance(footpos, legspace.position), Shortcuts.geometryMask);
-        bool shinCast = Physics.SphereCast(kneepos, castthickness, footpos - legspace.position, out hitInfoShin, Vector3.Distance(footpos, legspace.position) * groundedforgiveness, Shortcuts.geometryMask);
+        bool thighCast = Physics.SphereCast(legspace.position + (legspace.up * castHeight), castThickness, kneepos - legspace.position, out RaycastHit hitInfoThigh, Vector3.Distance(footpos, legspace.position), Shortcuts.geometryMask);
+        bool shinCast = Physics.SphereCast(kneepos, castThickness, footpos - legspace.position, out RaycastHit hitInfoShin, Vector3.Distance(footpos, legspace.position) * groundedForgiveness, Shortcuts.geometryMask);
 
         Vector3 CastOld = Cast;
         if (thighCast)
@@ -511,11 +506,11 @@ public class LucidAnimationModel : MonoBehaviour
     private void UpdateFootSpaceAndRotation(bool isLeft, Vector3 normal, Vector3 point)
     {
         if (isLeft)
-            PlayerInfo.footsurfL = normal;
+            PlayerInfo.footSurfaceL = normal;
         else
-            PlayerInfo.footsurfR = normal;
+            PlayerInfo.footSurfaceR = normal;
 
-        PlayerInfo.footsurface = normal;
+        PlayerInfo.footSurface = normal;
         PlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
         PlayerInfo.footspace.up = normal;
 
@@ -533,22 +528,19 @@ public class LucidAnimationModel : MonoBehaviour
     {
         if (!PlayerInfo.grabL)
         {
-            PlayerInfo.handTargetL.position = animHandL.position;
-            PlayerInfo.handTargetL.rotation = animHandL.rotation;
+            PlayerInfo.handTargetL.SetPositionAndRotation(animHandL.position, animHandL.rotation);
             UpdateHandPosition(true, animShoulderL, PlayerInfo.handTargetL);
         }
         if (!PlayerInfo.grabR)
         {
-            PlayerInfo.handTargetR.position = animHandR.position;
-            PlayerInfo.handTargetR.rotation = animHandR.rotation;
+            PlayerInfo.handTargetR.SetPositionAndRotation(animHandR.position, animHandR.rotation);
             UpdateHandPosition(false, animShoulderR, PlayerInfo.handTargetR);
         }
     }
 
     private void UpdateHandPosition(bool isLeft, Transform shoulder, Transform hand)
     {
-        RaycastHit armHitInfo;
-        bool armHit = Physics.SphereCast(shoulder.position, castthickness / 2, hand.position - shoulder.position, out armHitInfo, Vector3.Distance(hand.position, shoulder.position), Shortcuts.geometryMask);
+        bool armHit = Physics.SphereCast(shoulder.position, castThickness / 2, hand.position - shoulder.position, out RaycastHit armHitInfo, Vector3.Distance(hand.position, shoulder.position), Shortcuts.geometryMask);
 
         if (isLeft)
             PlayerInfo.handCollisionL = armHit;
@@ -563,13 +555,11 @@ public class LucidAnimationModel : MonoBehaviour
 
             if (isLeft)
             {
-                PlayerInfo.IK_LH.position = armHitInfo.point;
-                PlayerInfo.IK_LH.rotation = Quaternion.LookRotation(handforward, armHitInfo.normal);
+                PlayerInfo.IK_LH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
             }
             else
             {
-                PlayerInfo.IK_RH.position = armHitInfo.point;
-                PlayerInfo.IK_RH.rotation = Quaternion.LookRotation(handforward, armHitInfo.normal);
+                PlayerInfo.IK_RH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
             }
         }
         else

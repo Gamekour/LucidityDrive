@@ -159,6 +159,7 @@ GameObject:
   - component: {fileID: 1904975163097124427}
   - component: {fileID: 7110810031320244747}
   - component: {fileID: 5522311372992652591}
+  - component: {fileID: 4801197255847144058}
   m_Layer: 3
   m_Name: Head
   m_TagString: Untagged
@@ -429,9 +430,32 @@ MonoBehaviour:
   usePlayermodel: 1
   targetBone: 10
   useForceMatch: 1
-  positionforce: 10
+  positionForce: 10
   torque: 10
   tolerance: 0.01
+--- !u!1773428102 &4801197255847144058
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112535026013051217}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffsets: []
+  m_RotationOffsets: []
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources: []
 --- !u!1 &2368762494265202098
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,20 +663,20 @@ MonoBehaviour:
   IK_RF: {fileID: 5249457337260208995}
   IK_LH: {fileID: 3483037214520940076}
   IK_RH: {fileID: 4123976296632360821}
-  velsmoothTime: 0.25
+  velSmoothTime: 0.25
   nrmSmoothTime: 0.5
   footSmoothTime: 0.5
   willSmoothTime: 0.1
   alignmentSmoothTime: 0.5
-  castthickness: 0.04
-  castheight: 0.07
-  airtimemax: 0.4
-  groundedforgiveness: 0.65
+  castThickness: 0.04
+  castHeight: 0.07
+  airTimeMax: 0.4
+  groundedForgiveness: 0.65
   lerp: 0.33
-  landtime: 1
-  footslidethreshold: 0.5
-  footslidevelthreshold: 3
-  leansmoothtime: 0.5
+  landTime: 1
+  footSlideThreshold: 0.5
+  footSlideVelThreshold: 3
+  leanSmoothTime: 0.5
   unrotateFeetBySpeed: 1
   maxFootAngle: 60
   verticalFootAdjust: 0.1
@@ -1086,6 +1110,7 @@ GameObject:
   - component: {fileID: 8335055522678801965}
   - component: {fileID: 2295600701639870967}
   - component: {fileID: 1036693347455370912}
+  - component: {fileID: 6224056433310617076}
   m_Layer: 3
   m_Name: Body
   m_TagString: Untagged
@@ -1332,9 +1357,32 @@ MonoBehaviour:
   usePlayermodel: 1
   targetBone: 0
   useForceMatch: 1
-  positionforce: 10
+  positionForce: 10
   torque: 10
   tolerance: 0.01
+--- !u!1773428102 &6224056433310617076
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5788374908850747535}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffsets: []
+  m_RotationOffsets: []
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources: []
 --- !u!1 &6060887542458420456
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,16 +1496,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 596b1d94a4c7b0546b5093357a6e6a4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camerapoints:
+  cameraPoints:
   - {fileID: 3959364408176602085}
   - {fileID: 6184506732131234826}
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
-  headroot: {fileID: 2840716185538071160}
-  headsmooth: 0.5
-  rawblend: 0.1
-  rawblendTransitionSpeed: 1
-  externalCameraSmoothTime: 0.05
+  headRoot: {fileID: 2840716185538071160}
+  headRotationSmoothTime: 0.5
+  mouselookBlend: 0.1
+  mouselookBlendTransitionSpeed: 1
+  nonFPCameraSmoothTime: 0.05
   layermaskNormal:
     serializedVersion: 2
     m_Bits: 799
@@ -1640,7 +1688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b19d59d64e0a3a41b5a20f3db6d5a6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnpoint: {x: 0, y: 0, z: 0}
+  spawnPoint: {x: 0, y: 0, z: 0}
   startVel: {x: 0, y: 0, z: 0}
   respawnHeight: -100
 --- !u!1 &7233637816261873098
@@ -1997,6 +2045,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
+      propertyPath: unRotateL
+      value: 
+      objectReference: {fileID: 2557857802932487432}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: unRotateR
+      value: 
+      objectReference: {fileID: 3957675543709543255}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
       propertyPath: unrotateL
       value: 
       objectReference: {fileID: 2557857802932487432}
@@ -2007,12 +2065,52 @@ PrefabInstance:
       objectReference: {fileID: 3957675543709543255}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
+      propertyPath: castDistance
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: firstCastWidth
+      value: 0.075
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: maxInitialNrmY
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
       propertyPath: CastMask.m_Bits
       value: 513
       objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
+      propertyPath: minDowncastNrmY
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: secondCastWidth
+      value: 0.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: shoulderDistance
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: shoulderStiffness
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
       propertyPath: climbForceThreshold
+      value: 469
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: climbModeForceThreshold
       value: 469
       objectReference: {fileID: 0}
     - target: {fileID: 8598322749894854093, guid: 8c0e92cb77193bf4e91b4c156239fb07,

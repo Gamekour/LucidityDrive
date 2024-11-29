@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class StateEvents : StateMachineBehaviour
 {
-    public string methodname;
+    public string methodName;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         GameObject obj = animator.gameObject;
 
-        obj.SendMessage(methodname);
+        obj.SendMessage(methodName);
     }
 
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

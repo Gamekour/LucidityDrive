@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +6,7 @@ public class WindCube : MonoBehaviour
     [SerializeField] float strength, threshold, matchSmoothness;
     [SerializeField] bool multiplicative, subVel = false;
     [SerializeField] ForceMode fm = ForceMode.Force;
-    private List<Rigidbody> targets = new List<Rigidbody>();
+    private readonly List<Rigidbody> targets = new();
 
     private void OnTriggerEnter(Collider other)
     {

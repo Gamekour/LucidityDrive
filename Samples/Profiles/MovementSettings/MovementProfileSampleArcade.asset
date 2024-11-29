@@ -13,53 +13,51 @@ MonoBehaviour:
   m_Name: MovementProfileSampleArcade
   m_EditorClassIdentifier: 
   movespeed: 5
-  sprintmult: 2
-  crawlspeed: 1.5
-  crouchspeed: 3.5
-  moveburst: 16
-  slidemult: 28
-  slidepushforce: 16
-  jumpforcemult: 1.5
-  jumpgrav: -6
-  fallgrav: -14
-  airmove: 30
-  airdrag: 1
-  maxAirAccel: 2
-  flightforce: 10
-  flightdrag: 0.05
-  walkthreshold: 2
-  directionaljumpmult: 3.5
+  sprintScale: 2
+  moveSpeedCrawling: 1.5
+  moveSpeedCrouched: 3.5
+  moveBurst: 16
+  footSlideStrength: 28
+  slidePushStrength: 16
+  jumpForceScale: 1.5
+  jumpGravity: -6
+  fallGravity: -14
+  aerialMovementSpeed: 30
+  aerialDrag: 1
+  maxAirAcceleration: 2
+  flightSpeed: 10
+  flightDrag: 0.05
+  strafeWalkAngularThreshold: 2
+  directionalJumpStrength: 4
   maxSlopeDefault: 0.5
   maxSlopeByYVelocity: 1
   legWidth: 0.09
-  legWidthMult: 0.5
-  down: 1.5
-  airdownmult: 0.1
-  probemult: 1
-  moveflatprobemult: 1
+  probeDepth: 1.5
+  probeDepthByFall: 0.1
+  probeScale: 1
+  probeScaleByMoveFlat: 1
   probeCutoffHeight: -2
   maxProbeOffset: 2
-  probeXminimumOffset: 0.05
-  probeZminimumOffset: 0.05
-  ratiomult: 1
-  ratiofreezethreshold: 0.1
-  airtimemult: 2
-  ratioBySpeed: 0.175
-  maxlegmult: 1.4
+  probeXMinimumOffset: 0.05
+  probeZMinimumOffset: 0.05
+  ratioScale: 1
+  ratioFreezeThreshold: 0.1
+  dampAnimPhaseByAirtime: 2
+  scaleRatioBySpeed: 0.175
+  maxLegScale: 1.4
   friction: 0.425
-  maxforcemult: 5.4
-  hipRotationSpeed: 2000
-  hipspacesmoothness: 0
-  hipspaceMaxRot: -0.9
-  forcesmoothness: 20
-  crouchmult: 1
-  jumpmult: 8
-  moveupmult: 0
-  movedownmult: 0.25
-  movedownclamp: 1
-  crawlthreshold: 14
-  crawlmult: 0.225
-  wallruntilt: 0.5
-  jumptilt: 0.2
+  maxForceScale: 5.4
+  pelvisRotationSpeed: 2000
+  hipSpaceRotationSmoothness: 0
+  hipSpaceMaxRotation: -0.9
+  forceSmoothness: 20
+  jumpHeightScale: 16
+  targetHeightByPositiveSlope: 0
+  targetHeightByNegativeSlope: 0.25
+  targetHeightByNegativeSlopeClamp: 1
+  maxCrawlSpeed: 14
+  crawlHeight: 0.225
+  slopeTilt: 0.5
+  jumpTilt: 0.2
   climbtilt: 0.3
   slidePushAngleThreshold: 45
