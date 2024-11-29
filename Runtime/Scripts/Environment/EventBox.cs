@@ -16,13 +16,13 @@ public class EventBox : MonoBehaviour, IGrabTrigger
     private void OnEnable()
     {
         colliderRef = GetComponent<Collider>();
-        onTriggered = new();
-        onCollisionEnter = new();
-        onCollisionExit = new();
-        onCollisionStay = new();
-        onGrabbed = new();
-        onUngrabbed = new();
-        onEnabled = new();
+        onTriggered ??= new();
+        onCollisionEnter ??= new();
+        onCollisionExit ??= new();
+        onCollisionStay ??= new();
+        onGrabbed ??= new();
+        onUngrabbed ??= new();
+        onEnabled ??= new();
         onEnabled.Invoke();
         initialized = true;
     }
