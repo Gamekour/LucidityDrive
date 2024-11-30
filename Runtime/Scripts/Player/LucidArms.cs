@@ -21,7 +21,9 @@ public class LucidArms : MonoBehaviour
         ungrabBoost,
         climbModeForceThreshold;
 
-    [SerializeField] Transform unRotateL, unRotateR, handTargetL, handTargetR;
+    [SerializeField] Transform unRotateL, unRotateR;
+    [SerializeField] Transform handTargetL, handTargetR;
+    [SerializeField] Transform grabIndicatorL, grabIndicatorR;
     [SerializeField] ConfigurableJoint jointReference;
     [SerializeField] Rigidbody staticGrabRB_L, staticGrabRB_R;
     [SerializeField] LayerMask CastMask;
@@ -198,6 +200,11 @@ public class LucidArms : MonoBehaviour
             }
             PlayerInfo.IK_LH.SetPositionAndRotation(grabPositionL, effectiveRotationL);
         }
+
+        grabIndicatorL.transform.position = grabPositionL;
+        grabIndicatorL.gameObject.SetActive(PlayerInfo.grabValidL && !grabL);
+        grabIndicatorR.transform.position = grabPositionR;
+        grabIndicatorR.gameObject.SetActive(PlayerInfo.grabValidR && !grabR);
     }
 
     private void InitializeJointProfiles()
