@@ -128,6 +128,11 @@ public class LucidArms : MonoBehaviour
     {
         if (disabling || animShoulderL == null || animShoulderR == null || !initialized) return;
 
+        if (grabL && (targetTransformL == null || !targetTransformL.gameObject.activeInHierarchy))
+            Ungrab(false);
+        if (grabR && (targetTransformR == null || !targetTransformR.gameObject.activeInHierarchy))
+            Ungrab(true);
+
         GrabLogic(false);
         GrabLogic(true);
 
@@ -541,6 +546,11 @@ public class LucidArms : MonoBehaviour
         grabTransform = lt.transform;
 
         Grab(isRight);
+    }
+
+    public void ForceUngrab(bool isRight)
+    {
+        Ungrab(isRight);
     }
 
     private void Grab(bool isRight)

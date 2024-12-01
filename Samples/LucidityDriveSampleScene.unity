@@ -1404,16 +1404,6 @@ PrefabInstance:
       propertyPath: autoGrab
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
-        type: 3}
-      propertyPath: autoGrabL
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
-        type: 3}
-      propertyPath: disableDrop
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2449647605727731706, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
         type: 3}
       propertyPath: m_Name
