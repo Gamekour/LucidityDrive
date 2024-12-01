@@ -47,6 +47,8 @@ public class LucidArms : MonoBehaviour
         grabWaitR,
         grabLockL,
         grabLockR,
+        disableDropL,
+        disableDropR,
         isPrimaryL,
         isPrimaryR,
         disabling,
@@ -118,7 +120,7 @@ public class LucidArms : MonoBehaviour
     private void Start()
     {
         ManageInputSubscriptions(true);
-        InitializeJointProfiles();
+        sjlewis.limit = limitDistance;
     }
 
     //in short: uses an initial cast to find the nearest "wall", then another cast to find the top of said wall. If all is good and within reach, then we start asking if we're trying to grab and if so we call those functions up
@@ -205,11 +207,6 @@ public class LucidArms : MonoBehaviour
         grabIndicatorL.gameObject.SetActive(PlayerInfo.grabValidL && !grabL);
         grabIndicatorR.transform.position = grabPositionR;
         grabIndicatorR.gameObject.SetActive(PlayerInfo.grabValidR && !grabR);
-    }
-
-    private void InitializeJointProfiles()
-    {
-        sjlewis.limit = limitDistance;
     }
 
     private void UpdateItemPose(bool isRight, string pose)
@@ -510,7 +507,7 @@ public class LucidArms : MonoBehaviour
 
     private void DropButtonL(InputAction.CallbackContext obj)
     {
-        if (grabL && grabLockL)
+        if (grabL && grabLockL && !disableDropL)
         {
             grabWaitL = false;
             Ungrab(false);
@@ -519,13 +516,32 @@ public class LucidArms : MonoBehaviour
 
     private void DropButtonR(InputAction.CallbackContext obj)
     {
-        if (grabR && grabLockR)
+        if (grabR && grabLockR && !disableDropR)
         {
             grabWaitR = false;
             Ungrab(true);
         }
     }
     #endregion
+
+    public void ForceGrab(LucidTool lt, bool isRight)
+    {
+        ref Transform grabTransform = ref targetTransformL;
+        if (isRight)
+            grabTransform = ref targetTransformR;
+
+        ref Rigidbody staticRB = ref staticGrabRB_L;
+        if (isRight)
+            staticRB = ref staticGrabRB_R;
+
+        ref Rigidbody grabbedRB = ref grabbedRB_L;
+        if (isRight)
+            grabbedRB = ref grabbedRB_R;
+
+        grabTransform = lt.transform;
+
+        Grab(isRight);
+    }
 
     private void Grab(bool isRight)
     {
@@ -543,6 +559,10 @@ public class LucidArms : MonoBehaviour
         ref bool grabLock = ref grabLockL;
         if (isRight)
             grabLock = ref grabLockR;
+
+        ref bool disableDrop = ref disableDropL;
+        if (isRight)
+            disableDrop = ref disableDropR;
 
         ref bool isPrimary = ref isPrimaryL;
         if (isRight)
@@ -565,6 +585,7 @@ public class LucidArms : MonoBehaviour
             grabPosition = targetGrip.position;
             grabRotation = targetGrip.rotation;
             grabLock = isPrimary ? lt.GrabLockPrimary : lt.GrabLockSecondary;
+            disableDrop = lt.disableDrop;
         }
 
         CreateConfigurableJoint(isRight, grabPosition, grabRotation, targetTransform);
@@ -610,6 +631,10 @@ public class LucidArms : MonoBehaviour
         if (isRight)
             grabLock = ref grabLockR;
 
+        ref bool disableDrop = ref disableDropL;
+        if (isRight)
+            disableDrop = ref disableDropR;
+
         if (!initialized || !grab) return;
 
         Transform targetTransform = isRight ? targetTransformR : targetTransformL;
@@ -645,6 +670,7 @@ public class LucidArms : MonoBehaviour
         climb = false;
         lt = null;
         grabLock = false;
+        disableDrop = false;
 
         Vector3 otherGrabForce = isRight ? grabForceL : grabForceR;
 
