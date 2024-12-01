@@ -665,9 +665,12 @@ public class LucidArms : MonoBehaviour
 
         Destroy(jointTarget);
 
-        IGrabTrigger trig = targetTransform.GetComponent<IGrabTrigger>();
-        trig?.UngrabEvent();
-        grabbedRB = null;
+        if (targetTransform != null)
+        {
+            IGrabTrigger trig = targetTransform.GetComponent<IGrabTrigger>();
+            trig?.UngrabEvent();
+            grabbedRB = null;
+        }
 
         Vector3 dir = Vector3.ClampMagnitude(PlayerInfo.mainBody.velocity, 1);
         PlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
