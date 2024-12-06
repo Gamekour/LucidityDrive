@@ -187,6 +187,19 @@ public class LucidArms : MonoBehaviour
         if (grabL || grabR)
             HandPush();
 
+        
+
+        grabIndicatorL.transform.position = grabPositionL;
+        grabIndicatorL.gameObject.SetActive(PlayerInfo.grabValidL && !grabL);
+        grabIndicatorR.transform.position = grabPositionR;
+        grabIndicatorR.gameObject.SetActive(PlayerInfo.grabValidR && !grabR);
+    }
+
+    private void LateUpdate()
+    {
+        bool dynamicGrabL = (grabbedRB_L != null && grabbedRB_L != staticGrabRB_L);
+        bool dynamicGrabR = (grabbedRB_R != null && grabbedRB_R != staticGrabRB_R);
+
         if (grabR)
         {
             Quaternion effectiveRotationR = grabRotationR;
@@ -207,11 +220,6 @@ public class LucidArms : MonoBehaviour
             }
             PlayerInfo.IK_LH.SetPositionAndRotation(grabPositionL, effectiveRotationL);
         }
-
-        grabIndicatorL.transform.position = grabPositionL;
-        grabIndicatorL.gameObject.SetActive(PlayerInfo.grabValidL && !grabL);
-        grabIndicatorR.transform.position = grabPositionR;
-        grabIndicatorR.gameObject.SetActive(PlayerInfo.grabValidR && !grabR);
     }
 
     private void UpdateItemPose(bool isRight, string pose)
