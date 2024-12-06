@@ -113,7 +113,7 @@ public class LucidVismodel : MonoBehaviour
 
         if (grab || handCollision)
         {
-            anim.SetIKPosition(IKGoal, IKTransform.position + (PlayerInfo.mainBody.velocity * Time.fixedDeltaTime));
+            anim.SetIKPosition(IKGoal, IKTransform.position);
             anim.SetIKPositionWeight(IKGoal, grabweight);
 
             anim.SetIKRotation(IKGoal, IKTransform.rotation);
