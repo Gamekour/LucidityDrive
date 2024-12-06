@@ -19,7 +19,10 @@ public class LucidTool : MonoBehaviour
     public bool autoGrabR = false;
     public bool disableDrop = false;
 
-    public UnityEvent Use;
+    public UnityEvent OnUse;
+    public UnityEvent OnUseUp;
+    public UnityEvent OnGrab;
+    public UnityEvent OnDrop;
 
     public void OnEnable()
     {

@@ -1404,6 +1404,46 @@ PrefabInstance:
       propertyPath: autoGrab
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: OnUse.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: OnUse.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: OnUse.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2566580908680619296}
+    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: OnUse.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: OnUse.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Emit
+      objectReference: {fileID: 0}
+    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: OnUse.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.ParticleSystem, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: OnUse.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1638683756109814542, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: OnUse.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2449647605727731706, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
         type: 3}
       propertyPath: m_Name
@@ -1414,6 +1454,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61d339ec85044e0469ffc1cbabc6eaf4, type: 3}
+--- !u!198 &2566580908680619296 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8261393542337809533, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+    type: 3}
+  m_PrefabInstance: {fileID: 2566580908680619295}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3564898101018781700
 PrefabInstance:
   m_ObjectHideFlags: 0

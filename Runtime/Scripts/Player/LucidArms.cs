@@ -481,7 +481,7 @@ public class LucidArms : MonoBehaviour
     private void GrabButtonLeftDown(InputAction.CallbackContext obj)
     {
         if (lt_L != null && grabLockL)
-            lt_L.Use.Invoke();
+            lt_L.OnUse.Invoke();
         else
         {
             if (PlayerInfo.grabValidL)
@@ -494,7 +494,7 @@ public class LucidArms : MonoBehaviour
     private void GrabButtonRightDown(InputAction.CallbackContext obj)
     {
         if (lt_R != null && grabLockR)
-            lt_R.Use.Invoke();
+            lt_R.OnUse.Invoke();
         else
         {
             if (PlayerInfo.grabValidR)
@@ -506,6 +506,8 @@ public class LucidArms : MonoBehaviour
 
     private void GrabButtonLeftUp(InputAction.CallbackContext obj)
     {
+        if (lt_L != null && grabLockL)
+            lt_L.OnUseUp.Invoke();
         grabWaitL = false;
         if (!grabLockL)
             Ungrab(false);
@@ -513,6 +515,8 @@ public class LucidArms : MonoBehaviour
 
     private void GrabButtonRightUp(InputAction.CallbackContext obj)
     {
+        if (lt_R != null && grabLockR)
+            lt_R.OnUseUp.Invoke();
         grabWaitR = false;
         if (!grabLockR)
             Ungrab(true);
@@ -520,6 +524,8 @@ public class LucidArms : MonoBehaviour
 
     private void DropButtonL(InputAction.CallbackContext obj)
     {
+        if (lt_L != null)
+            lt_L.OnDrop.Invoke();
         if (grabL && grabLockL && !disableDropL)
         {
             grabWaitL = false;
@@ -529,6 +535,8 @@ public class LucidArms : MonoBehaviour
 
     private void DropButtonR(InputAction.CallbackContext obj)
     {
+        if (lt_R != null)
+            lt_R.OnDrop.Invoke();
         if (grabR && grabLockR && !disableDropR)
         {
             grabWaitR = false;
@@ -604,6 +612,7 @@ public class LucidArms : MonoBehaviour
             grabRotation = targetGrip.rotation;
             grabLock = isPrimary ? lt.GrabLockPrimary : lt.GrabLockSecondary;
             disableDrop = lt.disableDrop;
+            lt.OnGrab.Invoke();
         }
 
         CreateConfigurableJoint(isRight, grabPosition, grabRotation, targetTransform);
