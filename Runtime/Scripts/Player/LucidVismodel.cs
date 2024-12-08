@@ -7,6 +7,8 @@ public class LucidVismodel : MonoBehaviour
     public Animator anim;
 
     [Header("Options")]
+    public float maxLegScale = 1;
+    public float groundedForgiveness = 1;
     [SerializeField] bool initializeOnStart = true;
     [SerializeField] float grabSpeed = 1;
     [SerializeField] float collisionTransitionTime = 1;

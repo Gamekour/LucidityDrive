@@ -50,7 +50,6 @@ public class LucidLegs : MonoBehaviour
         forceSmoothness, 
         maxProbeOffset, 
         probeCutoffHeight,
-        maxLegScale,
         jumpHeightScale, 
         jumpForceScale, 
         probeScale, 
@@ -101,6 +100,7 @@ public class LucidLegs : MonoBehaviour
     private Rigidbody rb;
     private Vector3 bodyCollisionNrm;
     private float legLength;
+    private float hipLength;
     private float animPhase = 0;
     private float currentratio = 1;
 
@@ -135,13 +135,13 @@ public class LucidLegs : MonoBehaviour
     //uses approximate bone lengths from vismodel to determine total outstretched leg length
     private void CalculateLegLength(LucidVismodel visModel)
     {
-        Vector3 posHip = visModel.anim.GetBoneTransform(HumanBodyBones.LeftUpperLeg).position;
-        Vector3 posKnee = visModel.anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg).position;
-        Vector3 posFoot = visModel.anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
-        float thighLength = Vector3.Distance(posHip, posKnee);
-        float calfLength = Vector3.Distance(posKnee, posFoot);
+        float thighLength = visModel.anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg).localPosition.magnitude;
+        float calfLength = visModel.anim.GetBoneTransform(HumanBodyBones.LeftFoot).localPosition.magnitude;
         legLength = thighLength + calfLength;
-        legLength *= maxLegScale;
+
+        Vector3 hips = visModel.anim.GetBoneTransform(HumanBodyBones.Hips).position;
+        Vector3 thigh = visModel.anim.GetBoneTransform(HumanBodyBones.LeftUpperLeg).position;
+        hipLength = hips.y - thigh.y;
     }
 
     //copies physmodel configuration from vismodel
@@ -166,6 +166,8 @@ public class LucidLegs : MonoBehaviour
     private void FixedUpdate()
     {
         if (rb.isKinematic || PlayerInfo.vismodelRef == null || !PlayerInfo.animModelInitialized) return; //this could technically be optimized by delegating it to a bool that only updates when isKinematic is updated, but that's too much work and i don't think this is much of a perf hit
+
+
 
         PseudoWalk();
         RotationLogic();
@@ -395,12 +397,12 @@ public class LucidLegs : MonoBehaviour
 
         float headdist = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head).position.y - physHead.transform.position.y;
         headdist = Mathf.Clamp(headdist, 0, Mathf.Infinity);
-        float legclamp = legLength - (headdist * 2.5f);
+        float legclamp = ((legLength + hipLength) * PlayerInfo.vismodelRef.maxLegScale) - (headdist * 2.5f);
 
         float moveupamount = Mathf.Clamp01(hipSpace.TransformVector(moveFlat).y);
         moveupamount *= targetHeightByPositiveSlope;
 
-        float legadjust = (animModelHips.position.y - AnimModelFootSelection().position.y) / legLength;
+        float legadjust = (animModelHips.position.y - AnimModelFootSelection().position.y) / ((legLength + hipLength) * PlayerInfo.vismodelRef.maxLegScale);
         if (PlayerInfo.climbing && !inputJump)
             legadjust = 0;
 
@@ -425,7 +427,7 @@ public class LucidLegs : MonoBehaviour
         heightratio = Mathf.Clamp(heightratio, 0, 2);
 
         float forceadjust = maxForceScale;
-        if (LucidInputValueShortcuts.jump && relativeheight <= maxLegScale)
+        if (LucidInputValueShortcuts.jump && relativeheight <= PlayerInfo.vismodelRef.maxLegScale)
             forceadjust *= jumpForceScale;
 
         float currentY = rb.velocity.y;

@@ -42,8 +42,7 @@ public class MovementSettings : ScriptableObject
     public float
         ratioFreezeThreshold,
         dampAnimPhaseByAirtime,
-        scaleRatioBySpeed,
-        maxLegScale;
+        scaleRatioBySpeed;
 
     [Header("Physics")]
     public float friction;

@@ -23,7 +23,6 @@ public class LucidAnimationModel : MonoBehaviour
         castThickness,
         castHeight,
         airTimeMax,
-        groundedForgiveness,
         lerp,
         landTime,
         footSlideThreshold,
@@ -427,9 +426,8 @@ public class LucidAnimationModel : MonoBehaviour
 
     private bool UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
     {
-
-        bool thighCast = Physics.SphereCast(legspace.position + (legspace.up * castHeight), castThickness, kneepos - legspace.position, out RaycastHit hitInfoThigh, Vector3.Distance(footpos, legspace.position), Shortcuts.geometryMask);
-        bool shinCast = Physics.SphereCast(kneepos, castThickness, footpos - legspace.position, out RaycastHit hitInfoShin, Vector3.Distance(footpos, legspace.position) * groundedForgiveness, Shortcuts.geometryMask);
+        bool thighCast = Physics.SphereCast(legspace.position + (legspace.up * castHeight), castThickness, kneepos - legspace.position, out RaycastHit hitInfoThigh, Vector3.Distance(legspace.position, kneepos), Shortcuts.geometryMask);
+        bool shinCast = Physics.SphereCast(kneepos, castThickness, footpos - legspace.position, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * PlayerInfo.vismodelRef.groundedForgiveness, Shortcuts.geometryMask);
 
         Vector3 CastOld = Cast;
         if (thighCast)
