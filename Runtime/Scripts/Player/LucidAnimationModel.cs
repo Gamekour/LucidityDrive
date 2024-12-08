@@ -205,6 +205,9 @@ public class LucidAnimationModel : MonoBehaviour
         {
             Transform t = anim.GetBoneTransform(hb2);
             string hbstring = Shortcuts.boneNames[hb2];
+
+            if (t == null) continue;
+
             if (!boneRots.ContainsKey(hbstring))
             {
                 if (hb2 != HumanBodyBones.Hips)
