@@ -68,12 +68,14 @@ MonoBehaviour:
   unRotateR: {fileID: 0}
   handTargetL: {fileID: 1120398679289945129}
   handTargetR: {fileID: 6145940881675145151}
+  grabIndicatorL: {fileID: 0}
+  grabIndicatorR: {fileID: 0}
   jointReference: {fileID: 6667567213998687262}
   staticGrabRB_L: {fileID: 6994630003370633410}
   staticGrabRB_R: {fileID: 8937080053032953052}
   CastMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 257
 --- !u!1 &665269421678607574
 GameObject:
   m_ObjectHideFlags: 0

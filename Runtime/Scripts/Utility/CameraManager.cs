@@ -10,7 +10,7 @@ public class CameraManager : MonoBehaviour
         mouselookBlend,
         mouselookBlendTransitionSpeed,
         nonFPCameraSmoothTime;
-    [SerializeField] LayerMask layermaskNormal, layermaskFP;
+    [SerializeField] LayerMask layerMaskNormal, layerMaskFP;
 
     private int cameraPointIndex = 0;
     private Transform headrootTarget;
@@ -43,6 +43,7 @@ public class CameraManager : MonoBehaviour
     public void AssignVismodel(LucidVismodel vismodel)
     {
         headrootTarget = vismodel.anim.GetBoneTransform(HumanBodyBones.Head);
+        PlayerInfo.mainCamera.cullingMask = layerMaskFP;
     }
 
     private void CameraSwitch1(InputAction.CallbackContext obj)
@@ -70,9 +71,9 @@ public class CameraManager : MonoBehaviour
     {
         cameraPointIndex = index;
         if (index == 0)
-            PlayerInfo.mainCamera.cullingMask = layermaskFP;
+            PlayerInfo.mainCamera.cullingMask = layerMaskFP;
         else
-            PlayerInfo.mainCamera.cullingMask = layermaskNormal;
+            PlayerInfo.mainCamera.cullingMask = layerMaskNormal;
         if (index == 3)
         {
             Transform tcam = cameraPoints[3].transform;

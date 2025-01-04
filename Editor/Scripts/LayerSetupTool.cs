@@ -22,16 +22,14 @@ public class LucidSetupTool : EditorWindow
     void Setup()
     {
         SetLayerName(3, "Player");
-
-        SetLayerName(6, "PostProcessing");
-
-        SetLayerName(7, "FlightZone");
-
-        SetLayerName(8, "HideInFirstPerson");
-
-        SetLayerName(9, "GrabbableNoPlayer");
+        SetLayerName(6, "FlightZone");
+        SetLayerName(7, "HideInFirstPerson");
+        SetLayerName(8, "GrabbableNoPlayer");
 
         AddTag("Grabbable");
+
+        Physics.IgnoreLayerCollision(3, 3);
+        Physics.IgnoreLayerCollision(3, 8);
 
         Physics.defaultMaxAngularSpeed = 100f;
 

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 342940172233603294}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: boneRoots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6253646767538105769}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: PrimaryGripL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3715825657605770633}
   - component: {fileID: 2059050339812013269}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PrimaryPoseR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 6467280295009624815}
   - component: {fileID: 8261393542337809533}
   - component: {fileID: 3094982714868740106}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: boolet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4961,7 +4961,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1556899103141197069}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DemoGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4994,7 +4994,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7066198098707047275}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: SecondaryGripL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5026,7 +5026,7 @@ GameObject:
   m_Component:
   - component: {fileID: 720233733850697956}
   - component: {fileID: 7974983672277120279}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SecondaryPoseR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5086,7 +5086,7 @@ GameObject:
   - component: {fileID: 5749754711317863773}
   - component: {fileID: 1956104639045284304}
   - component: {fileID: 4561881646927740337}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5159,7 +5159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 903392223090030257}
   - component: {fileID: 324443087237117203}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5295,7 +5295,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4422679361626229463}
   - component: {fileID: 3247748655822841426}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SecondaryPoseL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5353,7 +5353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2131691995091472587}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: poses
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5390,7 +5390,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2126486918405161255}
   - component: {fileID: 4196522302544969631}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PrimaryPoseL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5448,7 +5448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3430844119118551258}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: PrimaryGripR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5479,7 +5479,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3218231704677407030}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: SecondaryGripR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5527,7 +5527,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 707829234d257fc46af065d33b501075,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.25
+      value: -0.522
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 707829234d257fc46af065d33b501075,
         type: 3}
@@ -5587,7 +5587,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 707829234d257fc46af065d33b501075,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 707829234d257fc46af065d33b501075,
         type: 3}
@@ -5712,7 +5712,10 @@ MonoBehaviour:
   ItemPoseSecondaryR: {fileID: 720233733850697956}
   GrabLockPrimary: 1
   GrabLockSecondary: 0
-  Use:
+  autoGrabL: 0
+  autoGrabR: 0
+  disableDrop: 0
+  OnUse:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8261393542337809533}
@@ -5727,6 +5730,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnUseUp:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDrop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &5213595569558303813 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 707829234d257fc46af065d33b501075,
