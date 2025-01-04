@@ -35,10 +35,11 @@ public class LucidFreelook : MonoBehaviour
 
     private void Update()
     {
+        if (head == null) return;
+        transform.position = head.position;
         if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headLocked || !PlayerInfo.animModelInitialized)
             return;
 
-        transform.position = head.position;
         CalculateRotation();
     }
 
