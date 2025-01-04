@@ -16,7 +16,7 @@ MonoBehaviour:
   sprintScale: 2
   moveSpeedCrawling: 1
   moveSpeedCrouched: 1.5
-  moveBurst: 1.3
+  moveBurst: 40
   footSlideStrength: 14
   slidePushStrength: 16
   jumpForceScale: 1
@@ -44,7 +44,6 @@ MonoBehaviour:
   ratioFreezeThreshold: 0.1
   dampAnimPhaseByAirtime: 2
   scaleRatioBySpeed: 0.25
-  maxLegScale: 1.4
   friction: 0.425
   maxForceScale: 5.4
   pelvisRotationSpeed: 2000
