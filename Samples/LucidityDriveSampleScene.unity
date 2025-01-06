@@ -1651,18 +1651,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3471226463212317937, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
         type: 3}
-      propertyPath: maxLegScale
-      value: 1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 3471226463212317937, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
-        type: 3}
       propertyPath: handSmoothTime
       value: 0.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 3471226463212317937, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
-        type: 3}
-      propertyPath: groundedForgiveness
-      value: 1.15
       objectReference: {fileID: 0}
     - target: {fileID: 7587276133036043626, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
         type: 3}

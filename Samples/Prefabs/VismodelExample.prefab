@@ -1977,6 +1977,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
+  maxLegScale: 1.12
+  groundedForgiveness: 1.15
   initializeOnStart: 1
   grabSpeed: 2
   collisionTransitionTime: 1
