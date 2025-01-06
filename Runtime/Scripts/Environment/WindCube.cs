@@ -27,7 +27,7 @@ public class WindCube : MonoBehaviour
             if (target != null)
             {
                 Vector3 localvel = transform.InverseTransformVector(target.velocity);
-                if (localvel.y > threshold)
+                if ((localvel.y > threshold) || threshold == 0)
                 {
                     if (multiplicative)
                     {
