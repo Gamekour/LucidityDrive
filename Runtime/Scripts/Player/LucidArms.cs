@@ -679,6 +679,10 @@ public class LucidArms : MonoBehaviour
         if (isRight)
             disableDrop = ref disableDropR;
 
+        ref Vector3 grabForce = ref grabForceL;
+        if (isRight)
+            grabForce = ref grabForceR;
+
         if (!initialized || !grab) return;
 
         Transform targetTransform = isRight ? targetTransformR : targetTransformL;
@@ -719,6 +723,7 @@ public class LucidArms : MonoBehaviour
         grabLock = false;
         disableDrop = false;
 
+        grabForce = Vector3.zero;
         ClimbCheck(true);
     }
 
