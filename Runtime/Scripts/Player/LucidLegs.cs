@@ -558,7 +558,7 @@ public class LucidLegs : MonoBehaviour
         stepphase = Mathf.Abs(stepphase) * 2;
         PlayerInfo.stepPhase = stepphase;
 
-        Vector3 willflat = (hipSpace.TransformVector(moveFlat) * (moveSpeed / 2));
+        Vector3 willflat = (PlayerInfo.pelvis.TransformVector(moveFlat) * (moveSpeed / 2));
         willflat.y = 0;
 
         Vector3 velflat = rb.velocity;
@@ -571,9 +571,12 @@ public class LucidLegs : MonoBehaviour
         Vector3 legL = legSpaceL.position;
         legL += legSpaceL.up * 0.1f;
 
+        float depthadjust = (probeDepthByFall * rb.velocity.y);
+        depthadjust = Mathf.Clamp(depthadjust, 0, float.MaxValue);
+
         float downadjust = -probeDepth;
         if (!PlayerInfo.grounded)
-            downadjust = -probeDepth * probeDepthByFall;
+            downadjust = -probeDepth * depthadjust;
         downadjust += transform.position.y;
 
         Vector3 veladjust = velrelative;
@@ -630,7 +633,6 @@ public class LucidLegs : MonoBehaviour
 
         Vector3 normal = Vector3.zero;
         Vector3 center = Vector3.zero;
-
         switch (results.Count)
         {
             case 4:
@@ -789,11 +791,11 @@ public class LucidLegs : MonoBehaviour
         float rightslope = right.direction.y;
         float maxdistR = probeCutoffHeight / rightslope;
 
-        int hitLeft1 = Physics.SphereCastNonAlloc(left.origin, radius, left.direction, spherecastHitBufferL, maxdistL, Shortcuts.geometryMask);
-        int hitRight1 = Physics.SphereCastNonAlloc(right.origin, radius, right.direction, spherecastHitBufferR, maxdistR, Shortcuts.geometryMask);
-        hitL = spherecastHitBufferL[0];
-        hitR = spherecastHitBufferR[0];
-        if (hitLeft1 > 0)
+        bool hitLeft1 = Physics.SphereCast(left.origin, radius, left.direction, out RaycastHit hitInfoLeft, maxdistL, Shortcuts.geometryMask);
+        bool hitRight1 = Physics.SphereCast(right.origin, radius, right.direction, out RaycastHit hitInfoRight, maxdistR, Shortcuts.geometryMask);
+        hitL = hitInfoLeft;
+        hitR = hitInfoRight;
+        if (hitLeft1)
         {
             Vector3 leftup = hitL.point;
             leftup.y = transform.position.y;
@@ -801,7 +803,7 @@ public class LucidLegs : MonoBehaviour
             if (hitLeft2 && hitInfoLeft2.point.y > hitL.point.y)
                 hitL = hitInfoLeft2;
         }
-        if (hitRight1 > 0)
+        if (hitRight1)
         {
             Vector3 rightup = hitR.point;
             rightup.y = transform.position.y;
