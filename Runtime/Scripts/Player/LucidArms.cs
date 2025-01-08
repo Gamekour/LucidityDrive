@@ -156,43 +156,60 @@ public class LucidArms : MonoBehaviour
 
         PlayerInfo.grabL = grabL;
         PlayerInfo.grabR = grabR;
-
-        bool dynamicGrabL = (grabbedRB_L != null && grabbedRB_L != staticGrabRB_L);
-        bool dynamicGrabR = (grabbedRB_R != null && grabbedRB_R != staticGrabRB_R);
-
-        float threshold = climbModeForceThreshold;
-        if (grabL && grabR)
-            threshold /= 2;
-
-        if ((grabForceL.y > threshold || !dynamicGrabL) && grabL)
-            PlayerInfo.climbL = true;
-        if ((grabForceR.y > threshold || !dynamicGrabR) && grabR)
-            PlayerInfo.climbR = true;
-
-        if (PlayerInfo.climbL || PlayerInfo.climbR)
-            PlayerInfo.climbing = true;
+        ClimbCheck();
 
         CalcClimbRelative();
 
-        if (PlayerInfo.climbL) 
+        if (PlayerInfo.climbL)
             ClimbPose(false);
-        else 
+        else
             ItemPose(false);
 
-        if (PlayerInfo.climbR) 
+        if (PlayerInfo.climbR)
             ClimbPose(true);
-        else 
+        else
             ItemPose(true);
 
         if (grabL || grabR)
             HandPush();
 
-        
+
 
         grabIndicatorL.transform.position = grabPositionL;
         grabIndicatorL.gameObject.SetActive(PlayerInfo.grabValidL && !grabL);
         grabIndicatorR.transform.position = grabPositionR;
         grabIndicatorR.gameObject.SetActive(PlayerInfo.grabValidR && !grabR);
+    }
+
+    private void ClimbCheck(bool allowUnclimb = false)
+    {
+        bool staticGrabL = (grabbedRB_L == null || grabbedRB_L == staticGrabRB_L);
+        bool staticGrabR = (grabbedRB_R == null || grabbedRB_R == staticGrabRB_R);
+
+        float totalGrabForce = 0;
+        if (grabL)
+            totalGrabForce += grabForceL.y;
+        if (grabR)
+            totalGrabForce += grabForceR.y;
+        bool selfsufficient = totalGrabForce > climbModeForceThreshold;
+        selfsufficient |= (staticGrabL || staticGrabR);
+
+        bool supportL = grabForceL.y > climbModeForceThreshold / 2;
+        bool supportR = grabForceR.y > climbModeForceThreshold / 2;
+
+        if ((supportL || staticGrabL) && grabL)
+            PlayerInfo.climbL = true;
+        else if (allowUnclimb)
+            PlayerInfo.climbL = false;
+        if ((supportR || staticGrabR) && grabR)
+            PlayerInfo.climbR = true;
+        else if (allowUnclimb)
+            PlayerInfo.climbR = false;
+
+        if ((PlayerInfo.climbL || PlayerInfo.climbR) && selfsufficient)
+            PlayerInfo.climbing = true;
+        else if (allowUnclimb)
+            PlayerInfo.climbing = false;
     }
 
     private void LateUpdate()
@@ -702,13 +719,7 @@ public class LucidArms : MonoBehaviour
         grabLock = false;
         disableDrop = false;
 
-        Vector3 otherGrabForce = isRight ? grabForceL : grabForceR;
-
-        if (otherGrabForce.y < climbModeForceThreshold)
-            otherClimb = false;
-
-        if (!otherClimb)
-            PlayerInfo.climbing = false;
+        ClimbCheck(true);
     }
 
     private void CreateConfigurableJoint(bool isRight, Vector3 grabPosition, Quaternion grabRotation, Transform grabTarget)
@@ -755,6 +766,11 @@ public class LucidArms : MonoBehaviour
                 eventBox.onCollisionExit.AddListener(CollisionExitCallbackR);
             else
                 eventBox.onCollisionExit.AddListener(CollisionExitCallbackL);
+
+            LayerMask ignoreMask = new();
+            ignoreMask |= (1 << 3);
+
+            eventBox.ignoreLayers = ignoreMask;
         }
         else
         {
@@ -773,13 +789,11 @@ public class LucidArms : MonoBehaviour
 
     public void CollisionExitCallbackL(Collision c)
     {
-        if (grabForceL.y < climbModeForceThreshold)
-            PlayerInfo.climbL = false;
+        ClimbCheck(true);
     }
 
     public void CollisionExitCallbackR(Collision c)
     {
-        if (grabForceR.y > climbModeForceThreshold)
-            PlayerInfo.climbR = false;
+        ClimbCheck(true);
     }
 }

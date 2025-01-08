@@ -32,7 +32,7 @@ MonoBehaviour:
   maxSlopeDefault: 0.5
   maxSlopeByYVelocity: 2
   legWidth: 0.09
-  probeDepth: 1.5
+  probeDepth: 4
   probeDepthByFall: 0.1
   probeScale: 1
   probeScaleByMoveFlat: 1

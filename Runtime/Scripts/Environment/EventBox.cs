@@ -4,7 +4,8 @@ using UnityEngine.Events;
 public class EventBox : MonoBehaviour, IGrabTrigger
 {
     public Collider colliderRef;
-    [SerializeField] bool doCollisionStayEvents = false;
+    public LayerMask ignoreLayers;
+    public bool doCollisionStayEvents = false;
     private bool initialized = false;
     private bool justCollided = false;
     private int framesSinceCollision = 0;
@@ -14,7 +15,6 @@ public class EventBox : MonoBehaviour, IGrabTrigger
     public UnityEvent<Collider> onTriggered;
     public UnityEvent<Collision> onCollisionEnter, onCollisionExit, onCollisionStay;
     public UnityEvent onGrabbed, onUngrabbed, onEnabled;
-
 
     private void OnEnable()
     {
@@ -32,20 +32,23 @@ public class EventBox : MonoBehaviour, IGrabTrigger
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!initialized) return;
+        bool isIgnoredLayer = ignoreLayers == (ignoreLayers | (1 << other.gameObject.layer));
+        if (!initialized || isIgnoredLayer) return;
         onTriggered.Invoke(other);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!initialized) return;
+        bool isIgnoredLayer = ignoreLayers == (ignoreLayers | (1 << collision.gameObject.layer));
+        if (!initialized || isIgnoredLayer) return;
         onCollisionEnter.Invoke(collision);
         lastCollision = collision;
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (!initialized) return;
+        bool isIgnoredLayer = ignoreLayers == (ignoreLayers | (1 << collision.gameObject.layer));
+        if (!initialized || isIgnoredLayer) return;
         onCollisionExit.Invoke(collision);
         framesSinceCollision = 0;
         justCollided = false;
@@ -53,7 +56,8 @@ public class EventBox : MonoBehaviour, IGrabTrigger
 
     private void OnCollisionStay(Collision collision)
     {
-        if (!initialized) return;
+        bool isIgnoredLayer = ignoreLayers == (ignoreLayers | (1 << collision.gameObject.layer));
+        if (!initialized || isIgnoredLayer) return;
         if (doCollisionStayEvents)
         {
             onCollisionStay.Invoke(collision);
@@ -72,8 +76,6 @@ public class EventBox : MonoBehaviour, IGrabTrigger
             justCollided = false;
         }
     }
-
-
 
     public void GrabEvent()
     {
