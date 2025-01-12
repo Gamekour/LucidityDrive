@@ -29,4 +29,23 @@ public class CursorStateHandler : MonoBehaviour
         Cursor.lockState = state;
         PlayerInfo.headLocked = (state == CursorLockMode.Locked);
     }
+
+    public void SetState(string statename)
+    {
+        switch (statename.ToLower())
+        {
+            case "none":
+                SetState(CursorLockMode.None);
+                break;
+            case "locked":
+                SetState(CursorLockMode.Locked);
+                break;
+            case "confined":
+                SetState(CursorLockMode.Confined);
+                break;
+            default:
+                SetState(CursorLockMode.None);
+                break;
+        }
+    }
 }
