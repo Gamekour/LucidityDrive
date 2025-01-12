@@ -120,4 +120,9 @@ public class LucidFreelook : MonoBehaviour
         Vector3 localEulerAngles = transform.localEulerAngles;
         localEulerAngles.x = 0;
     }
+
+    public void SetSensitivity(int sens)
+    {
+        sensitivityMultiplier = sens;
+    }
 }

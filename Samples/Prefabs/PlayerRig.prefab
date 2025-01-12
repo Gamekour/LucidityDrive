@@ -345,6 +345,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colliderRef: {fileID: 3252273764742618479}
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 0
   doCollisionStayEvents: 1
   onTriggered:
     m_PersistentCalls:
@@ -1410,6 +1413,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colliderRef: {fileID: 3845484869066579047}
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 0
   doCollisionStayEvents: 1
   onTriggered:
     m_PersistentCalls:
@@ -2022,11 +2028,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a507ecfa73c2e842b588eecaba365cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: {x: 9, y: 9}
+  sensitivity: {x: 1, y: 1}
   headRadius: 1
   downAngleLimit: -80
   upAngleLimit: 80
-  sensitivityMultiplier: 1
+  sensitivityMultiplier: 9
 --- !u!1 &7443822214091298102
 GameObject:
   m_ObjectHideFlags: 0
