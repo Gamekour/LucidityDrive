@@ -121,7 +121,7 @@ public class LucidFreelook : MonoBehaviour
         localEulerAngles.x = 0;
     }
 
-    public void SetSensitivity(int sens)
+    public void SetSensitivity(float sens)
     {
         sensitivityMultiplier = sens;
     }
