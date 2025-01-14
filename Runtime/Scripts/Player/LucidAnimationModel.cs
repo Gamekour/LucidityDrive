@@ -31,7 +31,6 @@ public class LucidAnimationModel : MonoBehaviour
         unrotateFeetBySpeed,
         maxFootAngle,
         verticalFootAdjust,
-        hipWeightReductionByHeight,
         crouchTime;
 
     [HideInInspector]
@@ -260,7 +259,6 @@ public class LucidAnimationModel : MonoBehaviour
         float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (bslide ? 0 : 1) * (crouch ? 0 : 1));
         hipweight *= Mathf.Clamp01(velflat.magnitude);
         hipweight *= PlayerInfo.climbing ? 0 : 1;
-        hipweight *= Mathf.Clamp01(1 - Mathf.Clamp(PlayerInfo.groundDistance * hipWeightReductionByHeight, 0, Mathf.Infinity));
         float currenthipweight = anim.GetLayerWeight(2);
         hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
         anim.SetLayerWeight(2, hipweight);
@@ -399,7 +397,7 @@ public class LucidAnimationModel : MonoBehaviour
         lean.x = (accel.x * k1) + (slope.x * k2);
         lean.y = (accel.y * k1) + (slope.y * k2);
 
-        if (PlayerInfo.alignment > 0.5f && PlayerInfo.moveSpeed > footSlideThreshold && PlayerInfo.airTime < airtimeThreshold)
+        if (PlayerInfo.alignment > 0.5f && PlayerInfo.airTime < airtimeThreshold)
             lean = -lean;
 
         return lean;
