@@ -8,6 +8,7 @@ public class RespawnSystem : MonoBehaviour
     public Vector3 spawnPoint = Vector3.zero;
     [SerializeField] private Vector3 startVel;
     [SerializeField] float respawnHeight = -100;
+    public UnityEvent OnRespawn;
 
     private void Start()
     {
