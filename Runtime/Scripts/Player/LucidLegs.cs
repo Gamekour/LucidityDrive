@@ -30,6 +30,12 @@ public class LucidLegs : MonoBehaviour
         set { m_movementSettings = value; CopyValues(); } //copy values any time the movement settings are changed
     }
 
+    public bool autoSprint = true;
+    public bool overrideSprint = false;
+
+    [HideInInspector]
+    public bool sprintOverride = false;
+
     [SerializeField] Transform legSpaceL;
     [SerializeField] Transform legSpaceR;
     [SerializeField] Transform hipSpace;
@@ -167,8 +173,6 @@ public class LucidLegs : MonoBehaviour
     {
         if (rb.isKinematic || PlayerInfo.vismodelRef == null || !PlayerInfo.animModelInitialized) return; //this could technically be optimized by delegating it to a bool that only updates when isKinematic is updated, but that's too much work and i don't think this is much of a perf hit
 
-
-
         PseudoWalk();
         RotationLogic();
 
@@ -181,6 +185,10 @@ public class LucidLegs : MonoBehaviour
         bool inputCrouch = LucidInputValueShortcuts.crouch;
         bool inputJump = LucidInputValueShortcuts.jump;
         bool inputSprint = LucidInputValueShortcuts.sprint;
+        if (overrideSprint)
+            inputSprint = sprintOverride;
+        else if (autoSprint)
+            inputSprint = !inputSprint;
         bool crawling = inputBellyslide && inputCrouch && (velflathip.magnitude < maxCrawlSpeed);
         inputBellyslide &= !crawling;
         inputBackslide &= !crawling;
@@ -453,7 +461,7 @@ public class LucidLegs : MonoBehaviour
             moveadjust = moveSpeedCrawling;
         else if (inputCrouch)
             moveadjust = moveSpeedCrouched;
-        if (!inputSprint && Mathf.Abs(moveFlat.x) < strafeWalkAngularThreshold)
+        if (inputSprint && Mathf.Abs(moveFlat.x) < strafeWalkAngularThreshold)
             moveadjust *= sprintScale;
 
         float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
