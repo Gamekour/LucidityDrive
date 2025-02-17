@@ -714,7 +714,6 @@ MonoBehaviour:
   unrotateFeetBySpeed: 1
   maxFootAngle: 60
   verticalFootAdjust: 0.1
-  hipWeightReductionByHeight: 5
   crouchTime: 0.5
   LCast: {x: 4.319404, y: -2.3021216, z: 43.07542}
   RCast: {x: 4.230167, y: -2.3021216, z: 43.240364}
@@ -792,6 +791,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84801d359f42b734b9bc39f78c07f3d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autoSprint: 1
+  overrideSprint: 0
+  sprintOverride: 0
   legSpaceL: {fileID: 1105449331241879533}
   legSpaceR: {fileID: 1573725869684149393}
   hipSpace: {fileID: 7749507378016566050}
@@ -1709,6 +1711,10 @@ MonoBehaviour:
   mouselookBlend: 0.1
   mouselookBlendTransitionSpeed: 1
   nonFPCameraSmoothTime: 0.05
+  fovBase: 75
+  fovBySpeed: 3
+  fovDampTime: 0.5
+  fovMinSpeed: 5
   layerMaskNormal:
     serializedVersion: 2
     m_Bits: 479
@@ -1894,6 +1900,9 @@ MonoBehaviour:
   spawnPoint: {x: 0, y: 0, z: 0}
   startVel: {x: 0, y: 0, z: 0}
   respawnHeight: -100
+  OnRespawn:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7233637816261873098
 GameObject:
   m_ObjectHideFlags: 0

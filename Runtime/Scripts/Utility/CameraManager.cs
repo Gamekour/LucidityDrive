@@ -5,19 +5,26 @@ public class CameraManager : MonoBehaviour
 {
     [SerializeField] Transform[] cameraPoints;
     [SerializeField] Transform headRoot;
-    [SerializeField] float 
+    [SerializeField]
+    float
         headRotationSmoothTime,
         mouselookBlend,
         mouselookBlendTransitionSpeed,
-        nonFPCameraSmoothTime;
+        nonFPCameraSmoothTime,
+        fovBase,
+        fovBySpeed,
+        fovDampTime,
+        fovMinSpeed;
     [SerializeField] LayerMask layerMaskNormal, layerMaskFP;
 
     private int cameraPointIndex = 0;
     private Transform headrootTarget;
     private bool forceMouselook = false;
     private float currentMouselookBlend = 0;
+    private float currentspeed;
     private Quaternion smoothDeriv = Quaternion.identity;
     private Vector3 externalDampRef = Vector3.zero;
+    private float fovDampRef;
 
     private void Start()
     {
@@ -80,6 +87,15 @@ public class CameraManager : MonoBehaviour
             tcam.position = PlayerInfo.mainCamera.transform.position;
             tcam.rotation = PlayerInfo.mainCamera.transform.rotation;
         }
+    }
+
+    private void Update()
+    {
+        float speed = PlayerInfo.mainBody.velocity.magnitude;
+        if (speed < fovMinSpeed)
+            speed = 0;
+        currentspeed = Mathf.SmoothDamp(currentspeed, speed, ref fovDampRef, fovDampTime);
+        PlayerInfo.mainCamera.fieldOfView = fovBase + (currentspeed * fovBySpeed);
     }
 
     private void LateUpdate()
