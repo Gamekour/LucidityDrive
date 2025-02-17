@@ -14,7 +14,8 @@ public class CameraManager : MonoBehaviour
         fovBase,
         fovBySpeed,
         fovDampTime,
-        fovMinSpeed;
+        fovMinSpeed,
+        fovMax;
     [SerializeField] LayerMask layerMaskNormal, layerMaskFP;
 
     private int cameraPointIndex = 0;
@@ -95,7 +96,7 @@ public class CameraManager : MonoBehaviour
         if (speed < fovMinSpeed)
             speed = 0;
         currentspeed = Mathf.SmoothDamp(currentspeed, speed, ref fovDampRef, fovDampTime);
-        PlayerInfo.mainCamera.fieldOfView = fovBase + (currentspeed * fovBySpeed);
+        PlayerInfo.mainCamera.fieldOfView = Mathf.Clamp(fovBase + (currentspeed * fovBySpeed), fovBase, fovMax);
     }
 
     private void LateUpdate()
