@@ -45,7 +45,10 @@ public class LucidVismodel : MonoBehaviour
 
     private void OnDisable()
     {
+        if (!initialized) return;
+
         PlayerInfo.OnRemoveVismodel.Invoke();
+        PlayerInfo.vismodelRef = null;
     }
 
     private void FixedUpdate()

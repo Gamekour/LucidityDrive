@@ -176,7 +176,7 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (anim == null) return;
+        if (anim == null || PlayerInfo.vismodelRef == null) return;
 
         if (!initialized)
         {
