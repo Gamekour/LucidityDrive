@@ -781,7 +781,9 @@ public class LucidArms : MonoBehaviour
             dynamicGrabRotationOffset = Quaternion.Inverse(grabbedRB.rotation) * grabRotation;
             poseOffset = Quaternion.Inverse(grabbedRB.rotation) * PlayerInfo.pelvis.rotation;
 
-            eventBox = grabTarget.gameObject.AddComponent<EventBox>();
+            eventBox = grabTarget.gameObject.GetComponent<EventBox>();
+            if (eventBox == null)
+                eventBox = grabTarget.gameObject.AddComponent<EventBox>();
             eventBox.onCollisionExit = new UnityEngine.Events.UnityEvent<Collision>();
             if (isRight)
                 eventBox.onCollisionExit.AddListener(CollisionExitCallbackR);
