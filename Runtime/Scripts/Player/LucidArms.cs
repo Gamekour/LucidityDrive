@@ -128,6 +128,16 @@ public class LucidArms : MonoBehaviour
     {
         if (disabling || animShoulderL == null || animShoulderR == null || !initialized) return;
 
+        Vector3 targetdirL = staticGrabRB_L.transform.forward;
+        if (staticGrabRB_L.transform.up.y < 0)
+            targetdirL *= -1;
+        unRotateL.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(targetdirL, Vector3.up), Vector3.up);
+
+        Vector3 targetdirR = staticGrabRB_R.transform.forward;
+        if (staticGrabRB_R.transform.up.y < 0)
+            targetdirR *= -1;
+        unRotateR.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(targetdirR, Vector3.up), Vector3.up);
+
         if (grabL && (targetTransformL == null || !targetTransformL.gameObject.activeInHierarchy))
             Ungrab(false);
         if (grabR && (targetTransformR == null || !targetTransformR.gameObject.activeInHierarchy))
@@ -418,8 +428,11 @@ public class LucidArms : MonoBehaviour
             if (initialHitInfo.transform.gameObject.CompareTag("Grabbable"))
             {
                 Vector3 jointfwd = PlayerInfo.pelvis.forward;
+                
                 if (Mathf.Abs(initialHitInfo.normal.y) < 0.05f)
                     jointfwd = Vector3.up;
+                else if (initialHitInfo.normal.y < 0)
+                    jointfwd = -jointfwd;
 
                 targetTransform = initialHitInfo.transform;
                 position = initialHitInfo.point;
@@ -476,11 +489,13 @@ public class LucidArms : MonoBehaviour
         Vector3 center = Vector3.zero;
         if (PlayerInfo.climbR)
         {
-            center += unRotateR.transform.InverseTransformPoint(PlayerInfo.pelvis.position);
+            Vector3 relative = unRotateR.transform.InverseTransformPoint(PlayerInfo.pelvis.position);
+            center += relative;
         }
         if (PlayerInfo.climbL)
         {
-            center += unRotateL.transform.InverseTransformPoint(PlayerInfo.pelvis.position);
+            Vector3 relative = unRotateL.transform.InverseTransformPoint(PlayerInfo.pelvis.position);
+            center += relative;
         }
         if (PlayerInfo.climbL && PlayerInfo.climbR)
         {
@@ -490,6 +505,7 @@ public class LucidArms : MonoBehaviour
         Vector3 climbrelative = center;
         climbrelative.z *= 4;
         climbrelative.y *= 4;
+
         PlayerInfo.climbRelative = climbrelative;
     }
 

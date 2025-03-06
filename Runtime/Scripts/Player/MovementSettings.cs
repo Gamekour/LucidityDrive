@@ -21,6 +21,7 @@ public class MovementSettings : ScriptableObject
         flightSpeed,
         flightDrag,
         strafeWalkAngularThreshold,
+        strafeWalkSpeedMult,
         directionalJumpStrength,
         maxSlopeDefault,
         maxSlopeByYVelocity;

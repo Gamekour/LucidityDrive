@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
   m_Name: MovementProfileSampleArcade
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  sprintScale: 2
+  moveSpeed: 4
+  sprintScale: 4
   moveSpeedCrawling: 1.5
   moveSpeedCrouched: 3.5
   moveBurst: 50
@@ -28,9 +28,10 @@ MonoBehaviour:
   flightSpeed: 10
   flightDrag: 0.05
   strafeWalkAngularThreshold: 2
+  strafeWalkSpeedMult: 1
   directionalJumpStrength: 4
   maxSlopeDefault: 0.5
-  maxSlopeByYVelocity: 1
+  maxSlopeByYVelocity: 2
   legWidth: 0.09
   probeDepth: 2
   probeDepthByFall: 0.1

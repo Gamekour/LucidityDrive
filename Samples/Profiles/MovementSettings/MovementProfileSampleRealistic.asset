@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
   m_Name: MovementProfileSampleRealistic
   m_EditorClassIdentifier: 
-  moveSpeed: 3.5
+  moveSpeed: 3
   sprintScale: 2
   moveSpeedCrawling: 1
   moveSpeedCrouched: 1.5
@@ -28,6 +28,7 @@ MonoBehaviour:
   flightSpeed: 10
   flightDrag: 0.05
   strafeWalkAngularThreshold: 0.75
+  strafeWalkSpeedMult: 0.75
   directionalJumpStrength: 3.5
   maxSlopeDefault: 0.5
   maxSlopeByYVelocity: 2

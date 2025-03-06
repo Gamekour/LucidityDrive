@@ -85,7 +85,8 @@ public class LucidLegs : MonoBehaviour
         jumpTilt, 
         slidePushStrength, 
         climbTilt, 
-        strafeWalkAngularThreshold, 
+        strafeWalkAngularThreshold,
+        strafeWalkSpeedMult,
         maxAirAcceleration, 
         scaleRatioBySpeed, 
         jumpGravity, 
@@ -98,8 +99,6 @@ public class LucidLegs : MonoBehaviour
         = 0;
 
     //internal variables
-    private RaycastHit[] spherecastHitBufferL = new RaycastHit[100];
-    private RaycastHit[] spherecastHitBufferR = new RaycastHit[100];
     private Transform animModelHips;
     private Transform animModelLFoot;
     private Transform animModelRFoot;
@@ -461,8 +460,10 @@ public class LucidLegs : MonoBehaviour
             moveadjust = moveSpeedCrawling;
         else if (inputCrouch)
             moveadjust = moveSpeedCrouched;
-        if (inputSprint && Mathf.Abs(moveFlat.x) < strafeWalkAngularThreshold)
+        if (inputSprint)
             moveadjust *= sprintScale;
+        if (Mathf.Abs(moveFlat.x) > strafeWalkAngularThreshold)
+            moveadjust *= strafeWalkSpeedMult;
 
         float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
         moveadjust *= 1 + (diffmag * moveBurst);
