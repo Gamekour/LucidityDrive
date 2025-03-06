@@ -703,7 +703,7 @@ MonoBehaviour:
   footSmoothTime: 0.5
   willSmoothTime: 0.1
   alignmentSmoothTime: 0.5
-  castThickness: 0.04
+  castThickness: 0.1
   castHeight: 0.07
   airTimeMax: 0.4
   lerp: 0.33
