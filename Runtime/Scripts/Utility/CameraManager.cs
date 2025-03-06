@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class CameraManager : MonoBehaviour
 {
+    public static int cameraPointIndex = 0;
+
     [SerializeField] Transform[] cameraPoints;
     [SerializeField] Transform headRoot;
     [SerializeField]
@@ -18,7 +20,6 @@ public class CameraManager : MonoBehaviour
         fovMax;
     [SerializeField] LayerMask layerMaskNormal, layerMaskFP;
 
-    private int cameraPointIndex = 0;
     private Transform headrootTarget;
     private bool forceMouselook = false;
     private float currentMouselookBlend = 0;
