@@ -412,12 +412,6 @@ public class LucidArms : MonoBehaviour
         Vector3 campos = cam.position;
         Vector3 camfwd = cam.forward;
         Vector3 camright = cam.right;
-        bool vaulting = (grabWaitR ^ grabWaitL) && !(grabL || grabR);
-        if (vaulting)
-        {
-            campos += cam.forward;
-            camfwd *= -1;
-        }
         float castAdjust = animArmLength + castDistance;
 
         Vector3 shoulder = campos + (right ? camright * shoulderDistance : -camright * shoulderDistance);
@@ -467,7 +461,14 @@ public class LucidArms : MonoBehaviour
         Vector3 startpoint = initialHitInfo.point + (hitvector.normalized * newmaxheight);
 
         bool surfaceCastHit = Physics.SphereCast(startpoint - initialHitInfo.normal * secondCastWidth, secondCastWidth, -hitvector, out RaycastHit downcastHitInfo, newmaxheight, CastMask);
-        bool validgrab = initialHit && surfaceCastHit && downcastHitInfo.normal.y > minDowncastNrmY;
+        bool holeCastHit = false;
+        if (surfaceCastHit)
+        {
+            Vector3 holeCastStart = shoulder;
+            holeCastStart.y = downcastHitInfo.point.y + secondCastWidth + 0.01f;
+            holeCastHit = Physics.SphereCast(holeCastStart, secondCastWidth, (downcastHitInfo.point - shoulder).normalized, out RaycastHit holeCastInfo, Vector3.Distance(downcastHitInfo.point, shoulder));
+        }
+        bool validgrab = initialHit && surfaceCastHit && downcastHitInfo.normal.y > minDowncastNrmY && !holeCastHit;
 
         if (validgrab)
         {
