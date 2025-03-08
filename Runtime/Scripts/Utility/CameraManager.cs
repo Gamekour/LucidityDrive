@@ -17,7 +17,8 @@ public class CameraManager : MonoBehaviour
         fovBySpeed,
         fovDampTime,
         fovMinSpeed,
-        fovMax;
+        fovMax,
+        minAngle;
     [SerializeField] LayerMask layerMaskNormal, layerMaskFP;
 
     private Transform headrootTarget;
@@ -106,13 +107,11 @@ public class CameraManager : MonoBehaviour
 
         if (headrootTarget != null && headRoot != null)
         {
-            // Handle head position interpolation
             if (cameraPointIndex != 0)
                 headRoot.position = Vector3.SmoothDamp(headRoot.position, headrootTarget.position, ref externalDampRef, nonFPCameraSmoothTime);
             else
                 headRoot.position = headrootTarget.position;
-
-            // Handle rotation with quaternions to prevent gimbal lock
+            
             Quaternion targetRotation = headrootTarget.rotation;
             Quaternion smoothRotation = QuaternionUtil.SmoothDamp(headRoot.rotation, targetRotation, ref smoothDeriv, headRotationSmoothTime);
 
@@ -127,7 +126,9 @@ public class CameraManager : MonoBehaviour
             // Combine raw rotation with smoothed rotation
             Quaternion raw = PlayerInfo.head.transform.rotation;
             Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, currentMouselookBlend);
-            headRoot.rotation = finalRotation;
+            float totalAngle = Quaternion.Angle(finalRotation, headRoot.rotation);
+            if (totalAngle > minAngle)
+                headRoot.rotation = finalRotation;
         }
 
         // Update camera position and rotation
