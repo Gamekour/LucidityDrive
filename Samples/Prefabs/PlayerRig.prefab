@@ -699,7 +699,7 @@ MonoBehaviour:
   IK_LH: {fileID: 3483037214520940076}
   IK_RH: {fileID: 4123976296632360821}
   velSmoothTime: 0.25
-  nrmSmoothTime: 0.5
+  nrmSmoothTime: 0
   footSmoothTime: 0.5
   willSmoothTime: 0.1
   alignmentSmoothTime: 0.5
@@ -1716,6 +1716,7 @@ MonoBehaviour:
   fovDampTime: 0.5
   fovMinSpeed: 5
   fovMax: 120
+  minAngle: 0
   layerMaskNormal:
     serializedVersion: 2
     m_Bits: 479
