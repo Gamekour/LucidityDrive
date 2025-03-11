@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MovementProfileSampleArcade
   m_EditorClassIdentifier: 
   moveSpeed: 4
-  sprintScale: 4
+  sprintScale: 2
   moveSpeedCrawling: 1.5
   moveSpeedCrouched: 3.5
   moveBurst: 50
@@ -22,21 +22,22 @@ MonoBehaviour:
   jumpForceScale: 1.5
   jumpGravity: -6
   fallGravity: -14
-  aerialMovementSpeed: 30
+  aerialMovementSpeed: 50
   aerialDrag: 1
-  maxAirAcceleration: 2
+  maxAirAcceleration: 1
   flightSpeed: 10
   flightDrag: 0.05
   strafeWalkAngularThreshold: 2
   strafeWalkSpeedMult: 1
   directionalJumpStrength: 4
-  maxSlopeDefault: 0.5
-  maxSlopeByYVelocity: 2
-  legWidth: 0.09
+  maxSlopeDefault: 1
+  maxSlopeByYVelocity: 0
+  surfaceMagnetismBySlope: 8
+  legWidth: 0.01
   probeDepth: 2
   probeDepthByFall: 0.1
-  probeScale: 0.5
-  probeScaleByMoveFlat: 0.5
+  probeScale: 1
+  probeScaleByMoveFlat: 1
   probeCutoffHeight: -2
   maxProbeOffset: 3
   probeXMinimumOffset: 0.05
@@ -45,7 +46,7 @@ MonoBehaviour:
   ratioFreezeThreshold: 0.1
   dampAnimPhaseByAirtime: 2
   scaleRatioBySpeed: 0.175
-  friction: 0.425
+  friction: 0.4
   maxForceScale: 5.4
   pelvisRotationSpeed: 2000
   hipSpaceRotationSmoothness: 0
@@ -53,11 +54,11 @@ MonoBehaviour:
   forceSmoothness: 20
   jumpHeightScale: 16
   targetHeightByPositiveSlope: 0
-  targetHeightByNegativeSlope: 0.25
-  targetHeightByNegativeSlopeClamp: 1
+  targetHeightByNegativeSlope: 0
+  targetHeightByNegativeSlopeClamp: 2
   maxCrawlSpeed: 14
   crawlHeight: 0.225
   slopeTilt: 0.5
-  jumpTilt: 0.2
+  jumpTilt: 0.1
   climbtilt: 0.3
   slidePushAngleThreshold: 45

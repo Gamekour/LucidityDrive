@@ -24,7 +24,8 @@ public class MovementSettings : ScriptableObject
         strafeWalkSpeedMult,
         directionalJumpStrength,
         maxSlopeDefault,
-        maxSlopeByYVelocity;
+        maxSlopeByYVelocity,
+        surfaceMagnetismBySlope;
 
     [Header("Casting")]
     public float legWidth;
@@ -32,7 +33,6 @@ public class MovementSettings : ScriptableObject
         probeDepth,
         probeDepthByFall,
         probeScale,
-        probeScaleByMoveFlat,
         probeCutoffHeight,
         maxProbeOffset,
         probeXMinimumOffset,

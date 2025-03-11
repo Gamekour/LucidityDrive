@@ -46,56 +46,56 @@ public class LucidLegs : MonoBehaviour
     [SerializeField] MovementSettings defaultMovementSettings;
 
     //parameters copied from movementsettings
-    private float 
+    private float
         legWidth,
-        ratioScale, 
-        ratioFreezeThreshold, 
-        pelvisRotationSpeed, 
-        probeDepth, 
-        maxForceScale, 
-        forceSmoothness, 
-        maxProbeOffset, 
+        ratioScale,
+        ratioFreezeThreshold,
+        pelvisRotationSpeed,
+        probeDepth,
+        maxForceScale,
+        forceSmoothness,
+        maxProbeOffset,
         probeCutoffHeight,
-        jumpHeightScale, 
-        jumpForceScale, 
-        probeScale, 
-        moveSpeed, 
-        friction, 
-        footSlideStrength, 
-        slopeTilt, 
-        probeDepthByFall, 
-        probeScaleByMoveFlat, 
-        probeXMinimumOffset, 
-        probeZMinimumOffset, 
-        hipSpaceMaxRotation, 
-        dampAnimPhaseByAirtime, 
-        targetHeightByPositiveSlope, 
-        targetHeightByNegativeSlope, 
-        targetHeightByNegativeSlopeClamp, 
-        hipSpaceRotationSmoothness, 
-        moveBurst, 
-        maxCrawlSpeed, 
-        moveSpeedCrawling, 
-        moveSpeedCrouched, 
-        crawlHeight, 
-        flightSpeed, 
-        flightDrag, 
-        sprintScale, 
-        directionalJumpStrength, 
-        jumpTilt, 
-        slidePushStrength, 
-        climbTilt, 
+        jumpHeightScale,
+        jumpForceScale,
+        probeScale,
+        moveSpeed,
+        friction,
+        footSlideStrength,
+        slopeTilt,
+        probeDepthByFall,
+        probeXMinimumOffset,
+        probeZMinimumOffset,
+        hipSpaceMaxRotation,
+        dampAnimPhaseByAirtime,
+        targetHeightByPositiveSlope,
+        targetHeightByNegativeSlope,
+        targetHeightByNegativeSlopeClamp,
+        hipSpaceRotationSmoothness,
+        moveBurst,
+        maxCrawlSpeed,
+        moveSpeedCrawling,
+        moveSpeedCrouched,
+        crawlHeight,
+        flightSpeed,
+        flightDrag,
+        sprintScale,
+        directionalJumpStrength,
+        jumpTilt,
+        slidePushStrength,
+        climbTilt,
         strafeWalkAngularThreshold,
         strafeWalkSpeedMult,
-        maxAirAcceleration, 
-        scaleRatioBySpeed, 
-        jumpGravity, 
-        fallGravity, 
-        aerialMovementSpeed, 
+        maxAirAcceleration,
+        scaleRatioBySpeed,
+        jumpGravity,
+        fallGravity,
+        aerialMovementSpeed,
         aerialDrag,
         slidePushAngleThreshold,
         maxSlopeDefault,
-        maxSlopeByYVelocity
+        maxSlopeByYVelocity,
+        surfaceMagnetismBySlope
         = 0;
 
     //internal variables
@@ -209,7 +209,7 @@ public class LucidLegs : MonoBehaviour
                 SlidePush();
             else
                 LegPush(inputCrouch, inputJump, inputSprint);
-        } 
+        }
 
         if (PlayerInfo.flying)
             FlightCalc();
@@ -380,6 +380,9 @@ public class LucidLegs : MonoBehaviour
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
 
+        float surfaceMagnetism = (1 - Mathf.Abs(hipSpace.up.y)) * surfaceMagnetismBySlope;
+        rb.AddForce(-hipSpace.up * surfaceMagnetism, ForceMode.Acceleration);
+
         bool isRight = animPhase > 0.5f;
         Transform tStep = isRight ? PlayerInfo.IK_RF : PlayerInfo.IK_LF;
         Rigidbody tStepped = isRight ? PlayerInfo.connectedRB_RF : PlayerInfo.connectedRB_LF;
@@ -397,8 +400,8 @@ public class LucidLegs : MonoBehaviour
 
         Vector3 pushdir = Vector3.Lerp(Vector3.up, PlayerInfo.footSurface, t);
 
-        float downness = Mathf.Clamp01(1 - hipSpace.up.y) * Mathf.Abs(hipSpace.up.x);
-        float movedownamount = Mathf.Clamp((hipSpace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -targetHeightByNegativeSlopeClamp, 0);
+        float downness = Mathf.Clamp01(1 - footSpace.up.y) * Mathf.Abs(footSpace.up.x);
+        float movedownamount = Mathf.Clamp((footSpace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -targetHeightByNegativeSlopeClamp, 0);
         movedownamount *= targetHeightByNegativeSlope;
         movedownamount -= downness;
 
@@ -406,7 +409,7 @@ public class LucidLegs : MonoBehaviour
         headdist = Mathf.Clamp(headdist, 0, Mathf.Infinity);
         float legclamp = ((legLength + hipLength) * PlayerInfo.vismodelRef.maxLegScale) - (headdist * 2.5f);
 
-        float moveupamount = Mathf.Clamp01(hipSpace.TransformVector(moveFlat).y);
+        float moveupamount = Mathf.Clamp01(footSpace.TransformVector(moveFlat).y);
         moveupamount *= targetHeightByPositiveSlope;
 
         float legadjust = (animModelHips.position.y - AnimModelFootSelection().position.y) / ((legLength + hipLength) * PlayerInfo.vismodelRef.maxLegScale);
@@ -573,8 +576,6 @@ public class LucidLegs : MonoBehaviour
         Vector3 velflat = rb.velocity;
         velflat.y = 0;
 
-        Vector3 velrelative = transform.InverseTransformVector(velflat);
-
         Vector3 legR = legSpaceR.position;
         legR += legSpaceR.up * 0.1f;
         Vector3 legL = legSpaceL.position;
@@ -588,17 +589,13 @@ public class LucidLegs : MonoBehaviour
             downadjust = -probeDepth * depthadjust;
         downadjust += transform.position.y;
 
-        Vector3 veladjust = velrelative;
-        if (!PlayerInfo.grounded)
-            veladjust = moveFlat * probeScaleByMoveFlat;
-
-        Vector3 probeN = transform.position + (transform.forward * Mathf.Clamp(Mathf.Abs(veladjust.z) * probeScale, probeZMinimumOffset, Mathf.Infinity));
+        Vector3 probeN = transform.position + (transform.forward * Mathf.Clamp(Mathf.Abs(moveFlat.z) * probeScale, probeZMinimumOffset, Mathf.Infinity));
         probeN.y = (Vector3.up * downadjust).y;
-        Vector3 probeS = transform.position - (transform.forward * Mathf.Clamp(Mathf.Abs(veladjust.z) * probeScale, probeZMinimumOffset, Mathf.Infinity));
+        Vector3 probeS = transform.position - (transform.forward * Mathf.Clamp(Mathf.Abs(moveFlat.z) * probeScale, probeZMinimumOffset, Mathf.Infinity));
         probeS.y = (Vector3.up * downadjust).y;
-        Vector3 probeE = transform.position + (transform.right * Mathf.Clamp(Mathf.Abs(veladjust.x) * probeScale, probeXMinimumOffset, Mathf.Infinity));
+        Vector3 probeE = transform.position + (transform.right * Mathf.Clamp(Mathf.Abs(moveFlat.x) * probeScale, probeXMinimumOffset, Mathf.Infinity));
         probeE.y = (Vector3.up * downadjust).y;
-        Vector3 probeW = transform.position - (transform.right * Mathf.Clamp(Mathf.Abs(veladjust.x) * probeScale, probeXMinimumOffset, Mathf.Infinity));
+        Vector3 probeW = transform.position - (transform.right * Mathf.Clamp(Mathf.Abs(moveFlat.x) * probeScale, probeXMinimumOffset, Mathf.Infinity));
         probeW.y = (Vector3.up * downadjust).y;
 
         //probe Z
