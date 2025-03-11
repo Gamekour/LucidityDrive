@@ -24,20 +24,19 @@ MonoBehaviour:
   fallGravity: -14
   aerialMovementSpeed: 50
   aerialDrag: 1
-  maxAirAcceleration: 1
+  maxAirAcceleration: 0.5
   flightSpeed: 10
   flightDrag: 0.05
   strafeWalkAngularThreshold: 2
   strafeWalkSpeedMult: 1
   directionalJumpStrength: 4
   maxSlopeDefault: 1
-  maxSlopeByYVelocity: 0
-  surfaceMagnetismBySlope: 8
+  maxSlopeByYVelocity: 1000
+  surfaceMagnetismBySlope: 4
   legWidth: 0.01
   probeDepth: 2
   probeDepthByFall: 0.1
   probeScale: 1
-  probeScaleByMoveFlat: 1
   probeCutoffHeight: -2
   maxProbeOffset: 3
   probeXMinimumOffset: 0.05
@@ -58,7 +57,7 @@ MonoBehaviour:
   targetHeightByNegativeSlopeClamp: 2
   maxCrawlSpeed: 14
   crawlHeight: 0.225
-  slopeTilt: 0.5
-  jumpTilt: 0.1
+  slopeTilt: 0.1
+  jumpTilt: 0.2
   climbtilt: 0.3
   slidePushAngleThreshold: 45

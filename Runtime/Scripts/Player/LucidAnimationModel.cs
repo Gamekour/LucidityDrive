@@ -391,8 +391,8 @@ public class LucidAnimationModel : MonoBehaviour
         accel.x = localvel.x;
         accel.y = localvel.z;
         Vector2 slope = Vector2.zero;
-        slope.x = SlopeLeanCalc(localnrm.x);
-        slope.y = SlopeLeanCalc(localnrm.z);
+        slope.x = localnrm.x;
+        slope.y = localnrm.z;
         Vector2 lean = Vector2.zero;
         lean.x = (accel.x * k1) + (slope.x * k2);
         lean.y = (accel.y * k1) + (slope.y * k2);
