@@ -419,26 +419,7 @@ public class LucidArms : MonoBehaviour
         bool initialHit = Physics.SphereCast(shoulder, firstCastWidth, camfwd, out RaycastHit initialHitInfo, castAdjust, CastMask);
         initialHit &= ((initialHitInfo.normal.y) < maxInitialNrmY);
 
-        if (initialHit)
-        {
-            if (initialHitInfo.transform.gameObject.CompareTag("Grabbable"))
-            {
-                Vector3 jointfwd = PlayerInfo.pelvis.forward;
-                
-                if (Mathf.Abs(initialHitInfo.normal.y) < 0.05f)
-                    jointfwd = Vector3.up;
-                else if (initialHitInfo.normal.y < 0)
-                    jointfwd = -jointfwd;
-
-                targetTransform = initialHitInfo.transform;
-                position = initialHitInfo.point;
-                Vector3 transformhitinfo = Vector3.ProjectOnPlane(jointfwd, initialHitInfo.normal);
-                rotation = Quaternion.LookRotation(transformhitinfo, initialHitInfo.normal);
-
-                return true;
-            }
-        }
-
+        bool grabbableInitialHit = (initialHit && initialHitInfo.transform.gameObject.CompareTag("Grabbable"));
 
         Vector3 projectvector = Vector3.up;
         if (initialHitInfo.normal.y < -0.05f)
@@ -483,6 +464,23 @@ public class LucidArms : MonoBehaviour
         }
 
         targetTransform = surfaceCastHitInfo.transform;
+
+        if (!validgrab && grabbableInitialHit)
+        {
+            Vector3 jointfwd = PlayerInfo.pelvis.forward;
+
+            if (Mathf.Abs(initialHitInfo.normal.y) < 0.05f)
+                jointfwd = Vector3.up;
+            else if (initialHitInfo.normal.y < 0)
+                jointfwd = -jointfwd;
+
+            targetTransform = initialHitInfo.transform;
+            position = initialHitInfo.point;
+            Vector3 transformhitinfo = Vector3.ProjectOnPlane(jointfwd, initialHitInfo.normal);
+            rotation = Quaternion.LookRotation(transformhitinfo, initialHitInfo.normal);
+
+            validgrab = true;
+        }
 
         return validgrab;
     }
