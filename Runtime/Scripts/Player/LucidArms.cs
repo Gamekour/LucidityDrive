@@ -456,25 +456,25 @@ public class LucidArms : MonoBehaviour
         //i know this trig stuff looks scary but that's just how it knows where to look when you're dealing with a sloped wall
         float sinC = (dist * Mathf.Sin(Mathf.Deg2Rad * angle)) / castAdjust;
         float A = 180 - (Mathf.Asin(sinC) + angle);
-        float newmaxheight = (Mathf.Sin(Mathf.Deg2Rad * A) * castAdjust) / Mathf.Sin(Mathf.Deg2Rad * angle);
+        float newMaxHeight = (Mathf.Sin(Mathf.Deg2Rad * A) * castAdjust) / Mathf.Sin(Mathf.Deg2Rad * angle);
 
-        Vector3 startpoint = initialHitInfo.point + (hitvector.normalized * newmaxheight);
+        Vector3 startpoint = initialHitInfo.point + (hitvector.normalized * newMaxHeight);
 
-        bool surfaceCastHit = Physics.SphereCast(startpoint - initialHitInfo.normal * secondCastWidth, secondCastWidth, -hitvector, out RaycastHit downcastHitInfo, newmaxheight, CastMask);
+        bool surfaceCastHit = Physics.SphereCast(startpoint - initialHitInfo.normal * secondCastWidth, secondCastWidth, -hitvector, out RaycastHit surfaceCastHitInfo, newMaxHeight, CastMask);
         bool holeCastHit = false;
         if (surfaceCastHit)
         {
             Vector3 holeCastStart = shoulder;
-            holeCastStart.y = downcastHitInfo.point.y + secondCastWidth + 0.01f;
-            holeCastHit = Physics.SphereCast(holeCastStart, secondCastWidth, (downcastHitInfo.point - shoulder).normalized, out RaycastHit holeCastInfo, Vector3.Distance(downcastHitInfo.point, shoulder));
+            holeCastStart.y = surfaceCastHitInfo.point.y + secondCastWidth + (1 - surfaceCastHitInfo.normal.y) + 0.01f;
+            holeCastHit = Physics.SphereCast(holeCastStart, secondCastWidth, (surfaceCastHitInfo.point - shoulder).normalized, out RaycastHit holeCastInfo, Vector3.Distance(surfaceCastHitInfo.point, shoulder));
         }
-        bool validgrab = initialHit && surfaceCastHit && downcastHitInfo.normal.y > minDowncastNrmY && !holeCastHit;
+        bool validgrab = initialHit && surfaceCastHit && surfaceCastHitInfo.normal.y > minDowncastNrmY && !holeCastHit;
 
         if (validgrab)
         {
-            position = downcastHitInfo.point;
-            Vector3 transformhitinfo = Vector3.ProjectOnPlane(-initialHitInfo.normal, downcastHitInfo.normal);
-            rotation = Quaternion.LookRotation(transformhitinfo, downcastHitInfo.normal);
+            position = surfaceCastHitInfo.point;
+            Vector3 transformhitinfo = Vector3.ProjectOnPlane(-initialHitInfo.normal, surfaceCastHitInfo.normal);
+            rotation = Quaternion.LookRotation(transformhitinfo, surfaceCastHitInfo.normal);
         }
         else
         {
@@ -482,7 +482,7 @@ public class LucidArms : MonoBehaviour
             rotation = Quaternion.identity;
         }
 
-        targetTransform = downcastHitInfo.transform;
+        targetTransform = surfaceCastHitInfo.transform;
 
         return validgrab;
     }

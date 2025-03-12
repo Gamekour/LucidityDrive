@@ -22,7 +22,7 @@ MonoBehaviour:
   jumpForceScale: 1.5
   jumpGravity: -6
   fallGravity: -14
-  aerialMovementSpeed: 50
+  aerialMovementSpeed: 30
   aerialDrag: 1
   maxAirAcceleration: 0.5
   flightSpeed: 10
