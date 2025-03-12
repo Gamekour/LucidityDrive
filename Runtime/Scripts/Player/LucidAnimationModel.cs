@@ -428,18 +428,6 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 thighOrigin = legspace.position + (legspace.up * castHeight);
         bool thighCast = Physics.SphereCast(thighOrigin, castThickness, kneepos - legspace.position, out RaycastHit hitInfoThigh, Vector3.Distance(legspace.position, kneepos), Shortcuts.geometryMask);
         bool shinCast = Physics.SphereCast(kneepos, castThickness, footpos - legspace.position, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * PlayerInfo.vismodelRef.groundedForgiveness, Shortcuts.geometryMask);
-        if (thighCast)
-            if (Vector3.Distance(thighOrigin, hitInfoThigh.point) < (minCastDist + castHeight))
-            {
-                thighCast = false;
-                shinCast = false;
-            }
-        if (shinCast)
-            if (Vector3.Distance(thighOrigin, hitInfoShin.point) < (minCastDist + castHeight)) 
-            {
-                thighCast = false;
-                shinCast = false;
-            }
 
         Vector3 CastOld = Cast;
         if (thighCast)
@@ -511,7 +499,11 @@ public class LucidAnimationModel : MonoBehaviour
             }
         }
 
+        if (Vector3.Distance(thighOrigin, Cast) < minCastDist)
+            Cast = footpos;
+
         Cast = Vector3.SmoothDamp(Cast, CastOld, ref footRef, footSmoothTime);
+        
 
         return thighCast || shinCast;
     }
