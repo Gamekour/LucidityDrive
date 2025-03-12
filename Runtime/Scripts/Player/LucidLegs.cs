@@ -215,21 +215,21 @@ public class LucidLegs : MonoBehaviour
             FlightCalc();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == 7)
-        {
-            PlayerInfo.flying = true;
-            rb.useGravity = false;
-        }
-    }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == 7)
         {
             PlayerInfo.flying = false;
             rb.useGravity = true;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == 7)
+        {
+            PlayerInfo.flying = true;
+            rb.useGravity = false;
         }
     }
 
