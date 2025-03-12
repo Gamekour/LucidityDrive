@@ -2332,7 +2332,7 @@ PrefabInstance:
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
       propertyPath: maxInitialNrmY
-      value: 0.45
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
