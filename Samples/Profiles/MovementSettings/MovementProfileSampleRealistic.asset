@@ -32,15 +32,15 @@ MonoBehaviour:
   directionalJumpStrength: 3.5
   maxSlopeDefault: 0.5
   maxSlopeByYVelocity: 2
+  surfaceMagnetismBySlope: 0
   legWidth: 0.09
   probeDepth: 2
   probeDepthByFall: 0.1
   probeScale: 0.5
-  probeScaleByMoveFlat: 0.5
-  probeCutoffHeight: -2
+  probeCutoffHeight: 10000
   maxProbeOffset: 3
-  probeXMinimumOffset: 0.05
-  probeZMinimumOffset: 0.05
+  probeXMinimumOffset: 0.1
+  probeZMinimumOffset: 0.1
   ratioScale: 1
   ratioFreezeThreshold: 0.1
   dampAnimPhaseByAirtime: 2

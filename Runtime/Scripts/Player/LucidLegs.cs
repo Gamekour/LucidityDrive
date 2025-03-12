@@ -55,7 +55,6 @@ public class LucidLegs : MonoBehaviour
         maxForceScale,
         forceSmoothness,
         maxProbeOffset,
-        probeCutoffHeight,
         jumpHeightScale,
         jumpForceScale,
         probeScale,
@@ -63,7 +62,6 @@ public class LucidLegs : MonoBehaviour
         friction,
         footSlideStrength,
         slopeTilt,
-        probeDepthByFall,
         probeXMinimumOffset,
         probeZMinimumOffset,
         hipSpaceMaxRotation,
@@ -581,13 +579,7 @@ public class LucidLegs : MonoBehaviour
         Vector3 legL = legSpaceL.position;
         legL += legSpaceL.up * 0.1f;
 
-        float depthadjust = (probeDepthByFall * rb.velocity.y);
-        depthadjust = Mathf.Clamp(depthadjust, 0, float.MaxValue);
-
-        float downadjust = -probeDepth;
-        if (!PlayerInfo.grounded)
-            downadjust = -probeDepth * depthadjust;
-        downadjust += transform.position.y;
+        float downadjust = transform.position.y - probeDepth;
 
         Vector3 probeN = transform.position + (transform.forward * Mathf.Clamp(Mathf.Abs(moveFlat.z) * probeScale, probeZMinimumOffset, Mathf.Infinity));
         probeN.y = (Vector3.up * downadjust).y;
@@ -739,13 +731,13 @@ public class LucidLegs : MonoBehaviour
                 break;
         }
 
-        if (Vector3.Distance(transform.position, hitN.point) < maxProbeOffset)
+        //if (Vector3.Distance(transform.position, hitN.point) < maxProbeOffset)
             Debug.DrawLine(transform.position, hitN.point, Color.green);
-        if (Vector3.Distance(transform.position, hitS.point) < maxProbeOffset)
+        //if (Vector3.Distance(transform.position, hitS.point) < maxProbeOffset)
             Debug.DrawLine(transform.position, hitS.point, Color.green);
-        if (Vector3.Distance(legR, hitE.point) < maxProbeOffset)
+        //if (Vector3.Distance(legR, hitE.point) < maxProbeOffset)
             Debug.DrawLine(legR, hitE.point, Color.green);
-        if (Vector3.Distance(legL, hitW.point) < maxProbeOffset)
+        //if (Vector3.Distance(legL, hitW.point) < maxProbeOffset)
             Debug.DrawLine(legL, hitW.point, Color.green);
 
         Vector3 hfwd = Vector3.ProjectOnPlane(transform.forward, normal);
@@ -792,13 +784,8 @@ public class LucidLegs : MonoBehaviour
         if (radius == -1)
             radius = legWidth;
 
-        float leftslope = left.direction.y;
-        float maxdistL = probeCutoffHeight / leftslope;
-        float rightslope = right.direction.y;
-        float maxdistR = probeCutoffHeight / rightslope;
-
-        bool hitLeft1 = Physics.SphereCast(left.origin, radius, left.direction, out RaycastHit hitInfoLeft, maxdistL, Shortcuts.geometryMask);
-        bool hitRight1 = Physics.SphereCast(right.origin, radius, right.direction, out RaycastHit hitInfoRight, maxdistR, Shortcuts.geometryMask);
+        bool hitLeft1 = Physics.SphereCast(left.origin, radius, left.direction, out RaycastHit hitInfoLeft, 1000, Shortcuts.geometryMask);
+        bool hitRight1 = Physics.SphereCast(right.origin, radius, right.direction, out RaycastHit hitInfoRight, 1000, Shortcuts.geometryMask);
         hitL = hitInfoLeft;
         hitR = hitInfoRight;
         if (hitLeft1)

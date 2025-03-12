@@ -31,9 +31,7 @@ public class MovementSettings : ScriptableObject
     public float legWidth;
     public float
         probeDepth,
-        probeDepthByFall,
         probeScale,
-        probeCutoffHeight,
         maxProbeOffset,
         probeXMinimumOffset,
         probeZMinimumOffset;

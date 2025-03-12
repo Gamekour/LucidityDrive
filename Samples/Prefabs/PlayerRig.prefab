@@ -715,6 +715,7 @@ MonoBehaviour:
   maxFootAngle: 60
   verticalFootAdjust: 0.1
   crouchTime: 0.5
+  minCastDist: 0.3
   LCast: {x: 4.319404, y: -2.3021216, z: 43.07542}
   RCast: {x: 4.230167, y: -2.3021216, z: 43.240364}
   hiprot: {x: 0, y: 0, z: 0, w: 1}

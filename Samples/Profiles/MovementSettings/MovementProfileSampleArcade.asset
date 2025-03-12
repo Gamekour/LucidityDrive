@@ -37,10 +37,10 @@ MonoBehaviour:
   probeDepth: 2
   probeDepthByFall: 0.1
   probeScale: 1
-  probeCutoffHeight: -2
+  probeCutoffHeight: 10000
   maxProbeOffset: 3
-  probeXMinimumOffset: 0.05
-  probeZMinimumOffset: 0.05
+  probeXMinimumOffset: 0.1
+  probeZMinimumOffset: 0.1
   ratioScale: 1
   ratioFreezeThreshold: 0.1
   dampAnimPhaseByAirtime: 2

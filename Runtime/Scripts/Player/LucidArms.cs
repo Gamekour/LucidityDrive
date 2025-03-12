@@ -809,6 +809,7 @@ public class LucidArms : MonoBehaviour
         jointTarget.autoConfigureConnectedAnchor = false;
         jointTarget.linearLimit = sjlewis;
         jointTarget.connectedBody = grabbedRB;
+        jointTarget.enableCollision = true;
         if (dynamic)
             jointTarget.connectedAnchor = grabTarget.InverseTransformPoint(grabPosition);
     }
