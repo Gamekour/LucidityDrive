@@ -126,9 +126,11 @@ public class CameraManager : MonoBehaviour
             // Combine raw rotation with smoothed rotation
             Quaternion raw = PlayerInfo.head.transform.rotation;
             Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, currentMouselookBlend);
-            float totalAngle = Quaternion.Angle(finalRotation, headRoot.rotation);
+            float totalAngle = Quaternion.Angle(finalRotation, raw);
             if (totalAngle > minAngle)
                 headRoot.rotation = finalRotation;
+            else
+                headRoot.rotation = raw;
         }
 
         // Update camera position and rotation
