@@ -1717,7 +1717,7 @@ MonoBehaviour:
   fovDampTime: 0.5
   fovMinSpeed: 5
   fovMax: 120
-  minAngle: 0
+  minAngle: 2
   layerMaskNormal:
     serializedVersion: 2
     m_Bits: 479
