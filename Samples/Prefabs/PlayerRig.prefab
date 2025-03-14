@@ -1708,8 +1708,8 @@ MonoBehaviour:
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
   headRoot: {fileID: 2840716185538071160}
-  headRotationSmoothTime: 0.5
-  mouselookBlend: 1
+  headRotationSmoothTime: 1
+  mouselookBlend: 0.1
   mouselookBlendTransitionSpeed: 1
   nonFPCameraSmoothTime: 0.05
   fovBase: 75
