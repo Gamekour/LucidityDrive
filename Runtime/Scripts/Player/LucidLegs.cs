@@ -522,6 +522,8 @@ public class LucidLegs : MonoBehaviour
     {
         PlayerInfo.pelvisCollision = true;
         bodyCollisionNrm = collision.contacts[0].normal;
+        PlayerInfo.hipspace.up = bodyCollisionNrm;
+        PlayerInfo.footspace.up = bodyCollisionNrm;
     }
 
     private void OnCollisionExit(Collision collision)
