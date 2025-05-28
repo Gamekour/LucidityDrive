@@ -215,7 +215,7 @@ public class LucidLegs : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == 7)
+        if (other.gameObject.layer == 6)
         {
             PlayerInfo.flying = false;
             rb.useGravity = true;
@@ -224,7 +224,7 @@ public class LucidLegs : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == 7)
+        if (other.gameObject.layer == 6)
         {
             PlayerInfo.flying = true;
             rb.useGravity = false;

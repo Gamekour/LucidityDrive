@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.12107873, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9089,7 +9089,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1927088119}
   - component: {fileID: 1927088116}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: FlightArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
