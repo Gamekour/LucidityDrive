@@ -166,7 +166,6 @@ public class LucidAnimationModel : MonoBehaviour
         PlayerInfo.IK_RF = IK_RF;
         PlayerInfo.IK_LH = IK_LH;
         PlayerInfo.IK_RH = IK_RH;
-        PlayerInfo.mainCamera = fpcam;
     }
 
     public void OnVismodelRemoved()

@@ -31,6 +31,7 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
+        PlayerInfo.mainCamera = Camera.main;
         LucidInputActionRefs.camSelect1.started += CameraSwitch1;
         LucidInputActionRefs.camSelect2.started += CameraSwitch2;
         LucidInputActionRefs.camSelect3.started += CameraSwitch3;
