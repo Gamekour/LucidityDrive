@@ -328,7 +328,7 @@ public class LucidLegs : MonoBehaviour
         {
             float angle = Vector3.Angle(velflat, flattened) / 180;
             velocityDifference = aerialMovementSpeed * angle * velocityDifference.normalized;
-            velocityDifference += (PlayerInfo.pelvis.forward * angle * airTurnAssist);
+            velocityDifference += (PlayerInfo.pelvis.forward * angle * velflat.magnitude * airTurnAssist);
         }
 
         // Apply the force
