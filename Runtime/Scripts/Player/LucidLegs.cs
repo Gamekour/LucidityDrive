@@ -191,7 +191,7 @@ public class LucidLegs : MonoBehaviour
         inputBellyslide &= !crawling;
         inputBackslide &= !crawling;
         bool doGroundLogic = PlayerInfo.grounded && PlayerInfo.footSurface.y >= -0.001f;
-        
+
         PlayerInfo.crawling = crawling;
 
         if (!PlayerInfo.grounded)
@@ -320,19 +320,28 @@ public class LucidLegs : MonoBehaviour
         // Project current velocity onto desired movement direction
         Vector3 projectedVelocity = Vector3.Project(velflat, flattened);
 
-        // Calculate the difference between projected velocity and desired movement
-        Vector3 velocityDifference = (flattened * aerialMovementSpeed) - projectedVelocity;
+        // check if the movevector is moving towards or away from the projected velocity
+        bool isAway = Vector3.Dot(flattened, projectedVelocity) <= 0f;
 
-        // Cap the magnitude of the velocity difference
-        if (velflat.magnitude > maxAirAcceleration)
+        // only apply force if moving away from velocity or velocity is below MaxAirSpeed
+        if (projectedVelocity.magnitude < maxAirAcceleration || isAway)
         {
-            float angle = Vector3.Angle(velflat, flattened) / 180;
-            velocityDifference = aerialMovementSpeed * angle * velocityDifference.normalized;
-            velocityDifference += (PlayerInfo.pelvis.forward * angle * velflat.magnitude * airTurnAssist);
-        }
+            // calculate the ideal movement force
+            Vector3 vc = flattened.normalized * aerialMovementSpeed;
 
-        // Apply the force
-        rb.AddForce(velocityDifference, ForceMode.Acceleration);
+            // cap it if it would accelerate beyond MaxAirSpeed directly.
+            if (!isAway)
+            {
+                vc = Vector3.ClampMagnitude(vc, maxAirAcceleration - projectedVelocity.magnitude);
+            }
+            else
+            {
+                vc = Vector3.ClampMagnitude(vc, maxAirAcceleration + projectedVelocity.magnitude);
+            }
+
+            // Apply the force
+            rb.AddForce(vc * airTurnAssist, ForceMode.Acceleration);
+        }
     }
 
     //handles movement while flying
@@ -428,7 +437,7 @@ public class LucidLegs : MonoBehaviour
             legadjust *= 1 + movedownamount + moveupamount;
         }
 
-        if(PlayerInfo.physCollision)
+        if (PlayerInfo.physCollision)
             legadjust = Mathf.Clamp(legadjust, 0, legclamp);
 
         float relativeheight = hipSpace.position.y - footSpace.position.y;
@@ -560,7 +569,7 @@ public class LucidLegs : MonoBehaviour
     }
 
     //mostly handles the calculation of the virtual floor and leg animations
-    private void PseudoWalk() 
+    private void PseudoWalk()
     {
 
         Vector2 moveVector = LucidInputValueShortcuts.movement;
@@ -689,7 +698,7 @@ public class LucidLegs : MonoBehaviour
 
             case 2:
                 Vector3 dir = hipSpace.TransformVector(moveFlat);
-                if(dir.sqrMagnitude > float.Epsilon)
+                if (dir.sqrMagnitude > float.Epsilon)
                 {
                     Vector3 diff1 = results[0].point - transform.position;
                     Vector3 diff2 = results[1].point - transform.position;
@@ -710,7 +719,7 @@ public class LucidLegs : MonoBehaviour
                 {
                     float dist1 = Vector3.Distance(transform.position, results[0].point);
                     float dist2 = Vector3.Distance(transform.position, results[1].point);
-                    if(dist1 < dist2)
+                    if (dist1 < dist2)
                     {
                         normal = results[0].normal;
                         center = results[0].point;
@@ -721,7 +730,7 @@ public class LucidLegs : MonoBehaviour
                         center = results[1].point;
                     }
                 }
-                
+
                 break;
 
             case 1:
@@ -736,13 +745,13 @@ public class LucidLegs : MonoBehaviour
         }
 
         //if (Vector3.Distance(transform.position, hitN.point) < maxProbeOffset)
-            Debug.DrawLine(transform.position, hitN.point, Color.green);
+        Debug.DrawLine(transform.position, hitN.point, Color.green);
         //if (Vector3.Distance(transform.position, hitS.point) < maxProbeOffset)
-            Debug.DrawLine(transform.position, hitS.point, Color.green);
+        Debug.DrawLine(transform.position, hitS.point, Color.green);
         //if (Vector3.Distance(legR, hitE.point) < maxProbeOffset)
-            Debug.DrawLine(legR, hitE.point, Color.green);
+        Debug.DrawLine(legR, hitE.point, Color.green);
         //if (Vector3.Distance(legL, hitW.point) < maxProbeOffset)
-            Debug.DrawLine(legL, hitW.point, Color.green);
+        Debug.DrawLine(legL, hitW.point, Color.green);
 
         Vector3 hfwd = Vector3.ProjectOnPlane(transform.forward, normal);
         if (Vector3.Dot(transform.forward, normal) <= hipSpaceMaxRotation)
