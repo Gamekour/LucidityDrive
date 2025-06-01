@@ -8,7 +8,7 @@ to install:
 - paste https://github.com/Gamekour/LucidityDrive.git into the field, if it asks about restarting hit yes
 - on the bottom left of unity, find the packages folder
 - go to the top of unity, open the tab called "LucidityDrive", and then click on "Automatic Setup" - it should create a window, click the button then close the window
-- create a new scene, and drag in the prefabs "PlayerRig", "WorldInfo", and "VismodelExample" from LucidityDrive/Samples/Prefabs
+- create a new scene, and drag in the prefabs "PlayerRig" and "VismodelExample" from LucidityDrive/Samples/Prefabs
 - press play - if everything works then you're ready to start making your game!
 (if you want to hide your cursor, just click on the game window while playing and press tab. tab again restores cursor)
 
