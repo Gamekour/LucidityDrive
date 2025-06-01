@@ -93,6 +93,7 @@ public class LucidLegs : MonoBehaviour
         slidePushAngleThreshold,
         maxSlopeDefault,
         maxSlopeByYVelocity,
+        airTurnAssist,
         surfaceMagnetismBySlope
         = 0;
 
@@ -327,6 +328,7 @@ public class LucidLegs : MonoBehaviour
         {
             float angle = Vector3.Angle(velflat, flattened) / 180;
             velocityDifference = aerialMovementSpeed * angle * velocityDifference.normalized;
+            velocityDifference += (velflat.normalized * angle * airTurnAssist);
         }
 
         // Apply the force

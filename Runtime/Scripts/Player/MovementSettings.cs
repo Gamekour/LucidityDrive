@@ -18,6 +18,7 @@ public class MovementSettings : ScriptableObject
         aerialMovementSpeed,
         aerialDrag,
         maxAirAcceleration,
+        airTurnAssist,
         flightSpeed,
         flightDrag,
         strafeWalkAngularThreshold,

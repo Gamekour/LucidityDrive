@@ -25,6 +25,7 @@ MonoBehaviour:
   aerialMovementSpeed: 30
   aerialDrag: 1
   maxAirAcceleration: 0.5
+  airTurnAssist: 0
   flightSpeed: 10
   flightDrag: 0.05
   strafeWalkAngularThreshold: 2
@@ -35,9 +36,7 @@ MonoBehaviour:
   surfaceMagnetismBySlope: 4
   legWidth: 0.01
   probeDepth: 2
-  probeDepthByFall: 0.1
   probeScale: 1
-  probeCutoffHeight: 10000
   maxProbeOffset: 3
   probeXMinimumOffset: 0.1
   probeZMinimumOffset: 0.1

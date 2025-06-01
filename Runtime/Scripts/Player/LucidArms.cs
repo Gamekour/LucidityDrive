@@ -172,12 +172,12 @@ public class LucidArms : MonoBehaviour
 
         CalcClimbRelative();
 
-        if (PlayerInfo.climbL)
+        if (PlayerInfo.climbL && PlayerInfo.climbing)
             ClimbPose(false);
         else
             ItemPose(false);
 
-        if (PlayerInfo.climbR)
+        if (PlayerInfo.climbR && PlayerInfo.climbing)
             ClimbPose(true);
         else
             ItemPose(true);
@@ -296,6 +296,8 @@ public class LucidArms : MonoBehaviour
     private void ClimbPose(bool isRight)
     {
         float pull = (LucidInputValueShortcuts.crouch ? 1 : 0);
+
+        print("climbpose");
 
         Vector2 inputmove = LucidInputValueShortcuts.movement;
         Vector3 moveflat = Vector3.zero;

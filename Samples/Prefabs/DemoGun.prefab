@@ -238,7 +238,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -409,7 +409,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.2
+      scalar: 0.1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -3745,7 +3745,7 @@ ParticleSystem:
     serializedVersion: 4
     type: 1
     collisionMode: 0
-    colliderForce: 0
+    colliderForce: 5000
     multiplyColliderForceByParticleSize: 0
     multiplyColliderForceByParticleSpeed: 0
     multiplyColliderForceByCollisionAngle: 1
@@ -5042,7 +5042,7 @@ Transform:
   m_GameObject: {fileID: 4962936588683690509}
   serializedVersion: 2
   m_LocalRotation: {x: -0.016289137, y: -0.016289137, z: 0.70691913, w: 0.70691913}
-  m_LocalPosition: {x: -0.138, y: 0, z: 1.055}
+  m_LocalPosition: {x: 0, y: 0, z: 1.055}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5070,7 +5070,7 @@ ParentConstraint:
   m_AffectRotationX: 1
   m_AffectRotationY: 0
   m_AffectRotationZ: 1
-  m_Active: 1
+  m_Active: 0
   m_IsLocked: 1
   m_Sources:
   - sourceTransform: {fileID: 5749754711317863773}
@@ -5311,7 +5311,7 @@ Transform:
   m_GameObject: {fileID: 6237870543703143147}
   serializedVersion: 2
   m_LocalRotation: {x: 0.016289147, y: 0.01628913, z: 0.70691955, w: 0.7069188}
-  m_LocalPosition: {x: 0.138, y: 0, z: 1.055}
+  m_LocalPosition: {x: 2, y: 0, z: 1.055}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5327,12 +5327,12 @@ ParentConstraint:
   m_Enabled: 1
   serializedVersion: 2
   m_Weight: 1
-  m_TranslationAtRest: {x: 0.138, y: 0, z: 1.055}
-  m_RotationAtRest: {x: 0, y: 2.639862, z: 90.00006}
+  m_TranslationAtRest: {x: 2, y: 0, z: 1.055}
+  m_RotationAtRest: {x: 0, y: 2.6400006, z: 90.00007}
   m_TranslationOffsets:
-  - {x: 0.138, y: 0, z: 1.055}
+  - {x: 2, y: 0, z: 1.055}
   m_RotationOffsets:
-  - {x: 0, y: 2.6398618, z: 90.00007}
+  - {x: 0, y: 2.6400003, z: 90.00007}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -5405,7 +5405,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6692666779476322460}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.20359741, y: -0.17219082, z: 0.6771615, w: 0.6858211}
+  m_LocalRotation: {x: 0.2035979, y: -0.17219129, z: 0.67716134, w: 0.6858212}
   m_LocalPosition: {x: -0.138, y: 0, z: 0.62899995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5423,11 +5423,11 @@ ParentConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: -0.138, y: 0, z: 0.62899995}
-  m_RotationAtRest: {x: 30.828104, y: 2.6399956, z: 89.99995}
+  m_RotationAtRest: {x: 30.828175, y: 2.6400013, z: 89.999954}
   m_TranslationOffsets:
   - {x: -0.138, y: 0, z: 0.62899995}
   m_RotationOffsets:
-  - {x: 30.828117, y: 2.6399975, z: 89.999954}
+  - {x: 30.828192, y: 2.6399944, z: 89.99994}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -5501,6 +5501,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5213595569558303813}
   m_LocalEulerAnglesHint: {x: -89.856, y: 0.011, z: -0.011}
+--- !u!1 &8652406096572469327
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4138059221304611344}
+  - component: {fileID: 2143633405257039593}
+  m_Layer: 8
+  m_Name: recoil
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4138059221304611344
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8652406096572469327}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.02108, z: 0.00355}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5213595569558303813}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &2143633405257039593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8652406096572469327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86840c5fb705e6267a294070012cce38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 2714604433038813862}
+  explosionRadius: 1
 --- !u!1001 &5751326458877301678
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5578,7 +5624,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
+      objectReference: {fileID: -3846018093981099296, guid: 0208911d2d56b4a44aaa3d818969eaa4,
+        type: 3}
     - target: {fileID: 919132149155446097, guid: 707829234d257fc46af065d33b501075,
         type: 3}
       propertyPath: m_Name
@@ -5621,6 +5668,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6467280295009624815}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 707829234d257fc46af065d33b501075,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4138059221304611344}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 707829234d257fc46af065d33b501075,
         type: 3}
@@ -5671,7 +5722,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4832847425131704063}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -5727,6 +5778,18 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
           m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2143633405257039593}
+        m_TargetAssemblyTypeName: EasyForceInterface, nostalgiagarden.luciditydrive.runtime
+        m_MethodName: AddForceAtPositionForward
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 2250
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
