@@ -297,6 +297,8 @@ public class LucidArms : MonoBehaviour
     {
         float pull = (LucidInputValueShortcuts.crouch ? 1 : 0);
 
+        print("climbpose");
+
         Vector2 inputmove = LucidInputValueShortcuts.movement;
         Vector3 moveflat = Vector3.zero;
         moveflat.x = inputmove.x;
