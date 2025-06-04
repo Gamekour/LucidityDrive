@@ -443,7 +443,6 @@ public class LucidLegs : MonoBehaviour
         float relativeheight = hipSpace.position.y - footSpace.position.y;
         currentratio = relativeheight;
         float heightratio = relativeheight / legadjust;
-        heightratio = Mathf.Clamp(heightratio, 0, 10000);
 
         float forceadjust = maxForceScale;
         if (LucidInputValueShortcuts.jump && relativeheight <= PlayerInfo.vismodelRef.maxLegScale)
