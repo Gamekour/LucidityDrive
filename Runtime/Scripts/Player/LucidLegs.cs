@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 class GFG : IComparer<RaycastHit>
 {
@@ -44,6 +45,8 @@ public class LucidLegs : MonoBehaviour
     [SerializeField] BoxCollider physBody;
     [SerializeField] SphereCollider physHead;
     [SerializeField] MovementSettings defaultMovementSettings;
+
+    public UnityEvent onFootChanged;
 
     //parameters copied from movementsettings
     private float
@@ -384,6 +387,7 @@ public class LucidLegs : MonoBehaviour
         rb.AddForce(-hipSpace.up * surfaceMagnetism, ForceMode.Acceleration);
 
         bool isRight = animPhase > 0.5f;
+
         Transform tStep = isRight ? PlayerInfo.IK_RF : PlayerInfo.IK_LF;
         Rigidbody tStepped = isRight ? PlayerInfo.connectedRB_RF : PlayerInfo.connectedRB_LF;
         Vector3 pointVelocity = Vector3.zero;
@@ -780,6 +784,12 @@ public class LucidLegs : MonoBehaviour
             animPhase += add;
             animPhase %= 1;
         }
+
+        bool isRight = animPhase > 0.5f;
+        bool wasRight = PlayerInfo.animPhase > 0.5f;
+        if (wasRight != isRight)
+            onFootChanged.Invoke();
+            
         PlayerInfo.animPhase = animPhase;
     }
 
