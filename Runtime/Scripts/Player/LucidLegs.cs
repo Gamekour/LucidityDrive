@@ -402,6 +402,8 @@ public class LucidLegs : MonoBehaviour
         else
             t *= slopeTilt;
 
+        t = Mathf.Clamp(t, 0, PlayerInfo.footspace.up.y);
+
         Vector3 pushdir = Vector3.Lerp(Vector3.up, PlayerInfo.footSurface, t);
 
         float downness = Mathf.Clamp01(1 - footSpace.up.y) * Mathf.Abs(footSpace.up.x);

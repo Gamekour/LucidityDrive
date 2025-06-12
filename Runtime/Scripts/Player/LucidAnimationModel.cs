@@ -510,10 +510,19 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void UpdateFootSpaceAndRotation(bool isLeft, Vector3 normal, Vector3 point)
     {
+        bool highcheck = Physics.SphereCast(point + Vector3.up * 0.2f, 0.1f, Vector3.down, out RaycastHit hitInfo, 0.2f, Shortcuts.geometryMask);
+        if (highcheck)
+        {
+            if (hitInfo.normal.y > normal.y)
+            {
+                normal = hitInfo.normal;
+            }
+        }
+
         if (isLeft)
-            PlayerInfo.footSurfaceL = normal;
-        else
-            PlayerInfo.footSurfaceR = normal;
+                PlayerInfo.footSurfaceL = normal;
+            else
+                PlayerInfo.footSurfaceR = normal;
 
         PlayerInfo.footSurface = normal;
         PlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
