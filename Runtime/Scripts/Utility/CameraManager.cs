@@ -80,6 +80,8 @@ public class CameraManager : MonoBehaviour
     }
     private void ChangeCam(int index)
     {
+        if (!PlayerInfo.headLocked) return;
+        
         cameraPointIndex = index;
         if (index == 0)
             PlayerInfo.mainCamera.cullingMask = layerMaskFP;
