@@ -9,13 +9,15 @@ public class LucidAnimationModel : MonoBehaviour
     [SerializeField] RuntimeAnimatorController controller;
     [SerializeField] Camera fpcam;
 
-    [SerializeField] Transform 
+    [SerializeField]
+    Transform
         IK_LF,
         IK_RF,
         IK_LH,
         IK_RH;
 
-    [SerializeField] float 
+    [SerializeField]
+    float
         velSmoothTime,
         nrmSmoothTime,
         footSmoothTime,
@@ -47,12 +49,12 @@ public class LucidAnimationModel : MonoBehaviour
     private Animator anim;
 
     private Vector2 leanSmoothRef;
-    private Vector3 
+    private Vector3
         velRef,
         nrmRef,
         willRef,
         footRef;
-    private float 
+    private float
         footAngle,
         airtimesmooth,
         angleRef,
@@ -60,7 +62,7 @@ public class LucidAnimationModel : MonoBehaviour
         alignmentRef,
         hipLayerRef,
         crouchRef;
-    private Transform 
+    private Transform
         pelvis,
         head,
         animpelvis,
@@ -136,7 +138,7 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void OnAssignVismodel(LucidVismodel visModel)
     {
-        foreach(Transform t in GetComponentsInChildren<Transform>())
+        foreach (Transform t in GetComponentsInChildren<Transform>())
         {
             if (t != transform)
                 Destroy(t.gameObject); //clear existing playermodel if applicable
@@ -503,7 +505,7 @@ public class LucidAnimationModel : MonoBehaviour
             Cast = footpos;
 
         Cast = Vector3.SmoothDamp(Cast, CastOld, ref footRef, footSmoothTime);
-        
+
 
         return thighCast || shinCast;
     }
@@ -520,9 +522,9 @@ public class LucidAnimationModel : MonoBehaviour
         }
 
         if (isLeft)
-                PlayerInfo.footSurfaceL = normal;
-            else
-                PlayerInfo.footSurfaceR = normal;
+            PlayerInfo.footSurfaceL = normal;
+        else
+            PlayerInfo.footSurfaceR = normal;
 
         PlayerInfo.footSurface = normal;
         PlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
