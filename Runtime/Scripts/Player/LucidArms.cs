@@ -801,6 +801,7 @@ public class LucidArms : MonoBehaviour
         else
         {
             grabbedRB = staticRB;
+            staticRB.transform.SetParent(grabTarget);
             poseOffset = Quaternion.identity;
             dynamicGrabRotationOffset = Quaternion.identity;
         }
