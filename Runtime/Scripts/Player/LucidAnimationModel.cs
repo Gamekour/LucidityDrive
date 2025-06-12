@@ -23,6 +23,7 @@ public class LucidAnimationModel : MonoBehaviour
         footSmoothTime,
         willSmoothTime,
         alignmentSmoothTime,
+        hangSmoothTime,
         castThickness,
         castHeight,
         airTimeMax,
@@ -53,7 +54,8 @@ public class LucidAnimationModel : MonoBehaviour
         velRef,
         nrmRef,
         willRef,
-        footRef;
+        footRef,
+        hangRef;
     private float
         footAngle,
         airtimesmooth,
@@ -242,9 +244,10 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 willFlat = CalculateWillFlat();
         float lastalignment = CalculateAlignment();
         Vector2 lerplean = CalculateLean(localVel, localNrm);
+        Vector3 hang = CalculateHang();
 
         UpdateFootAngle();
-        UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean);
+        UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean, hang);
         UpdateAnimatorBools();
 
         if (PlayerInfo.airTime > airtimesmooth)
@@ -324,6 +327,15 @@ public class LucidAnimationModel : MonoBehaviour
         return Vector3.SmoothDamp(currentWill, moveFlat, ref willRef, willSmoothTime);
     }
 
+    private Vector3 CalculateHang()
+    {
+        Vector3 currentClimbRelative = Vector3.zero;
+        currentClimbRelative.x = anim.GetFloat(_HANG_X);
+        currentClimbRelative.z = anim.GetFloat(_HANG_Z);
+        Vector3 climbRelative = PlayerInfo.climbRelative;
+        return Vector3.SmoothDamp(currentClimbRelative, climbRelative, ref hangRef, hangSmoothTime);
+    }
+
 
     private void UpdateFootAngle()
     {
@@ -341,7 +353,7 @@ public class LucidAnimationModel : MonoBehaviour
         }
     }
 
-    private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float lastalignment, Vector2 lean)
+    private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float lastalignment, Vector2 lean, Vector3 hang)
     {
         float currentcrouch = anim.GetFloat(_CROUCH);
         float crouch = LucidInputValueShortcuts.crouch ? 1 : 0;
@@ -363,8 +375,8 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_AIRTIME, PlayerInfo.airTime);
         anim.SetFloat(_ALIGNMENT, lastalignment);
         anim.SetFloat(_CLIMB, PlayerInfo.climbRelative.y);
-        anim.SetFloat(_HANG_X, PlayerInfo.climbRelative.x);
-        anim.SetFloat(_HANG_Z, PlayerInfo.climbRelative.z);
+        anim.SetFloat(_HANG_X, hang.x);
+        anim.SetFloat(_HANG_Z, hang.z);
         anim.SetFloat(_LEAN_X, lean.x);
         anim.SetFloat(_LEAN_Z, lean.y);
         anim.SetFloat(_FOOT_ANGLE, footAngle / maxFootAngle);
