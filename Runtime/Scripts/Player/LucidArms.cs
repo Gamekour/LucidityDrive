@@ -419,9 +419,9 @@ public class LucidArms : MonoBehaviour
         Vector3 shoulder = campos + (right ? camright * shoulderDistance : -camright * shoulderDistance);
 
         bool initialHit = Physics.SphereCast(shoulder, firstCastWidth, camfwd, out RaycastHit initialHitInfo, castAdjust, CastMask);
-        initialHit &= ((initialHitInfo.normal.y) < maxInitialNrmY);
 
         bool grabbableInitialHit = (initialHit && initialHitInfo.transform.gameObject.CompareTag("Grabbable"));
+        initialHit &= ((initialHitInfo.normal.y) < maxInitialNrmY);
 
         Vector3 projectvector = Vector3.up;
         if (initialHitInfo.normal.y < -0.05f)
