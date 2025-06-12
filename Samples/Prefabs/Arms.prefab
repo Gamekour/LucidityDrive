@@ -64,6 +64,7 @@ MonoBehaviour:
   minDowncastNrmY: 0
   ungrabBoost: 9
   climbModeForceThreshold: 0
+  velocityCheatForLucidTools: 0
   unRotateL: {fileID: 0}
   unRotateR: {fileID: 0}
   handTargetL: {fileID: 1120398679289945129}

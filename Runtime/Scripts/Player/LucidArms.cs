@@ -19,7 +19,8 @@ public class LucidArms : MonoBehaviour
         maxInitialNrmY,
         minDowncastNrmY,
         ungrabBoost,
-        climbModeForceThreshold;
+        climbModeForceThreshold,
+        velocityCheatForLucidTools;
 
     [SerializeField] Transform unRotateL, unRotateR;
     [SerializeField] Transform handTargetL, handTargetR;
@@ -155,6 +156,8 @@ public class LucidArms : MonoBehaviour
         {
             anchorL.anchor += (targetposL - anchorL.anchor) * shoulderStiffness;
             grabForceL = anchorL.currentForce;
+            if (lt_L != null)
+                grabbedRB_L.AddForce((PlayerInfo.mainBody.velocity - grabbedRB_L.velocity) * velocityCheatForLucidTools);
         }
         else
             grabForceL = Vector3.down * 1000;
@@ -162,6 +165,8 @@ public class LucidArms : MonoBehaviour
         {
             anchorR.anchor += (targetposR - anchorR.anchor) * shoulderStiffness;
             grabForceR = anchorR.currentForce;
+            if (lt_R != null)
+                grabbedRB_R.AddForce((PlayerInfo.mainBody.velocity - grabbedRB_R.velocity) * velocityCheatForLucidTools);
         }
         else
             grabForceR = Vector3.down * 1000;
@@ -184,8 +189,6 @@ public class LucidArms : MonoBehaviour
 
         if (grabL || grabR)
             HandPush();
-
-
 
         grabIndicatorL.transform.position = grabPositionL;
         grabIndicatorL.gameObject.SetActive(PlayerInfo.grabValidL && !grabL);
