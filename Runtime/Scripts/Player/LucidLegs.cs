@@ -419,7 +419,9 @@ public class LucidLegs : MonoBehaviour
         float moveupamount = Mathf.Clamp01(footSpace.TransformVector(moveFlat).y);
         moveupamount *= targetHeightByPositiveSlope;
 
-        float legadjust = legLength;
+        float hipheight = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips).position.y;
+        float floorheight = LucidPlayerInfo.animationModel.rootPosition.y;
+        float legadjust = hipheight - floorheight;
         if (LucidPlayerInfo.climbing && !inputJump)
             legadjust = 0;
 

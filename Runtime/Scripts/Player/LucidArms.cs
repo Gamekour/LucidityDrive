@@ -12,7 +12,6 @@ public class LucidArms : MonoBehaviour
         shoulderDistance,
         castDistance,
         limitDistance,
-        animArmLengthMult,
         shoulderStiffness,
         firstCastWidth,
         secondCastWidth,
@@ -112,6 +111,7 @@ public class LucidArms : MonoBehaviour
         hipDrag = LucidPlayerInfo.physBodyRB.angularDrag;
         headDrag = LucidPlayerInfo.physHeadRB.angularDrag;
         animArmLength = CalculateAnimArmLength(visModel);
+        sjlewis.limit = limitDistance * animArmLength;
         currentPoseL = itemPosesL.Find("OneHandedCarry");
         currentPoseR = itemPosesR.Find("OneHandedCarry");
 
@@ -415,7 +415,7 @@ public class LucidArms : MonoBehaviour
         Vector3 campos = cam.position;
         Vector3 camfwd = cam.forward;
         Vector3 camright = cam.right;
-        float castAdjust = animArmLength + castDistance;
+        float castAdjust = castDistance * animArmLength;
 
         Vector3 shoulder = campos + (right ? camright * shoulderDistance : -camright * shoulderDistance);
 
