@@ -214,7 +214,9 @@ public static class PlayerInfo
         moveSpeed,
         groundDistance,
         surfaceAngle,
-        slidePushAngleThreshold
+        slidePushAngleThreshold,
+        thighLength,
+        calfLength
         = 0;
 
     public static bool 

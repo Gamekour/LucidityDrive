@@ -428,7 +428,7 @@ public class LucidAnimationModel : MonoBehaviour
         bool hitL = UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast);
         bool hitR = UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast);
 
-        PlayerInfo.grounded = (hitL || hitR || PlayerInfo.pelvisCollision);
+        PlayerInfo.grounded = hitL || hitR || PlayerInfo.pelvisCollision;
 
         if (PlayerInfo.crawling)
             PlayerInfo.footSurface = PlayerInfo.hipspace.up;
@@ -440,8 +440,12 @@ public class LucidAnimationModel : MonoBehaviour
     private bool UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
     {
         Vector3 thighOrigin = legspace.position + (legspace.up * castHeight);
-        bool thighCast = Physics.SphereCast(thighOrigin, castThickness, kneepos - legspace.position, out RaycastHit hitInfoThigh, Vector3.Distance(legspace.position, kneepos), Shortcuts.geometryMask);
-        bool shinCast = Physics.SphereCast(kneepos, castThickness, footpos - legspace.position, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * PlayerInfo.vismodelRef.groundedForgiveness, Shortcuts.geometryMask);
+        Debug.DrawLine(thighOrigin, thighOrigin + ((kneepos - thighOrigin).normalized * Vector3.Distance(thighOrigin, kneepos)), Color.magenta);
+        Debug.DrawLine(kneepos, kneepos + ((footpos - legspace.position).normalized * (Vector3.Distance(kneepos, footpos) * PlayerInfo.vismodelRef.groundedForgiveness)), Color.magenta);
+        bool thighCast = Physics.SphereCast(thighOrigin, castThickness, (kneepos - thighOrigin).normalized, out RaycastHit hitInfoThigh, Vector3.Distance(thighOrigin, kneepos), Shortcuts.geometryMask);
+        bool shinCast = Physics.SphereCast(kneepos, castThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * PlayerInfo.vismodelRef.groundedForgiveness, Shortcuts.geometryMask);
+        PlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
+        PlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
 
         Vector3 CastOld = Cast;
         if (thighCast)

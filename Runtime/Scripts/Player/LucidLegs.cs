@@ -106,8 +106,6 @@ public class LucidLegs : MonoBehaviour
     private Transform animModelRFoot;
     private Rigidbody rb;
     private Vector3 bodyCollisionNrm;
-    private float legLength;
-    private float hipLength;
     private float animPhase = 0;
     private float currentratio = 1;
 
@@ -135,20 +133,7 @@ public class LucidLegs : MonoBehaviour
 
     public void OnAssignVismodel(LucidVismodel visModel)
     {
-        CalculateLegLength(visModel);
         ConfigurePhysModel(visModel);
-    }
-
-    //uses approximate bone lengths from vismodel to determine total outstretched leg length
-    private void CalculateLegLength(LucidVismodel visModel)
-    {
-        float thighLength = visModel.anim.GetBoneTransform(HumanBodyBones.LeftLowerLeg).localPosition.magnitude;
-        float calfLength = visModel.anim.GetBoneTransform(HumanBodyBones.LeftFoot).localPosition.magnitude;
-        legLength = thighLength + calfLength;
-
-        Vector3 hips = visModel.anim.GetBoneTransform(HumanBodyBones.Hips).position;
-        Vector3 thigh = visModel.anim.GetBoneTransform(HumanBodyBones.LeftUpperLeg).position;
-        hipLength = hips.y - thigh.y;
     }
 
     //copies physmodel configuration from vismodel
@@ -411,14 +396,16 @@ public class LucidLegs : MonoBehaviour
         movedownamount *= targetHeightByNegativeSlope;
         movedownamount -= downness;
 
+        float legLength = (PlayerInfo.thighLength + PlayerInfo.calfLength) * PlayerInfo.vismodelRef.maxLegScale;
+
         float headdist = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head).position.y - physHead.transform.position.y;
         headdist = Mathf.Clamp(headdist, 0, Mathf.Infinity);
-        float legclamp = ((legLength + hipLength) * PlayerInfo.vismodelRef.maxLegScale) - (headdist * 2.5f);
+        float legclamp = legLength - (headdist * 2.5f);
 
         float moveupamount = Mathf.Clamp01(footSpace.TransformVector(moveFlat).y);
         moveupamount *= targetHeightByPositiveSlope;
 
-        float legadjust = (animModelHips.position.y - AnimModelFootSelection().position.y) / ((legLength + hipLength) * PlayerInfo.vismodelRef.maxLegScale);
+        float legadjust = legLength;
         if (PlayerInfo.climbing && !inputJump)
             legadjust = 0;
 
@@ -546,6 +533,8 @@ public class LucidLegs : MonoBehaviour
         if (PlayerInfo.surfaceAngle < slidePushAngleThreshold)
             return;
 
+        float legLength = PlayerInfo.thighLength + PlayerInfo.calfLength * PlayerInfo.vismodelRef.maxLegScale;
+
         Vector3 diffL = legSpaceL.position - PlayerInfo.IK_LF.position;
         Vector3 diffR = legSpaceR.position - PlayerInfo.IK_RF.position;
         Vector3 avg = (diffL + diffR) / 2;
@@ -573,6 +562,8 @@ public class LucidLegs : MonoBehaviour
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
+
+        float legLength = PlayerInfo.thighLength + PlayerInfo.calfLength * PlayerInfo.vismodelRef.maxLegScale;
 
         float stepphase = 0.5f - animPhase;
         stepphase = Mathf.Abs(stepphase) * 2;
