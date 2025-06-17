@@ -619,11 +619,19 @@ public class LucidArms : MonoBehaviour
 
         grabTransform = lt.transform;
 
+        if (isRight)
+            grippyR = true;
+        else
+            grippyL = true;
         Grab(isRight);
     }
 
     public void ForceUngrab(bool isRight)
     {
+        if (isRight)
+            grippyR = false;
+        else
+            grippyL = false;
         Ungrab(isRight);
     }
 
