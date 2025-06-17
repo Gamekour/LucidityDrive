@@ -931,7 +931,7 @@ MonoBehaviour:
   vFloor: {fileID: 2916796221035400664}
   physBody: {fileID: 3845484869066579047}
   physHead: {fileID: 3252273764742618479}
-  defaultMovementSettings: {fileID: 11400000, guid: b460e0abbe261ff4da0c849d2778e2a1,
+  defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
     type: 2}
   onFootChanged:
     m_PersistentCalls:
