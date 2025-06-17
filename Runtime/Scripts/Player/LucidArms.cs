@@ -49,6 +49,8 @@ public class LucidArms : MonoBehaviour
         grabLockR,
         disableDropL,
         disableDropR,
+        grippyL,
+        grippyR,
         isPrimaryL,
         isPrimaryR,
         disabling,
@@ -200,6 +202,20 @@ public class LucidArms : MonoBehaviour
     {
         bool staticGrabL = (grabbedRB_L == null || grabbedRB_L == staticGrabRB_L);
         bool staticGrabR = (grabbedRB_R == null || grabbedRB_R == staticGrabRB_R);
+
+        if (!staticGrabL)
+        {
+            Vector3 handUp = (grabbedRB_L.rotation * grabRotationL * Vector3.up).normalized;
+            Debug.DrawRay(grabPositionL, handUp);
+            if (handUp.y < minDowncastNrmY && !grippyL)
+                Ungrab(false);
+        }
+        if (!staticGrabR)
+        {
+            Vector3 handUp = (grabbedRB_R.rotation * grabRotationR * Vector3.up).normalized;
+            if (handUp.y < minDowncastNrmY && !grippyR)
+                Ungrab(true);
+        }
 
         float totalGrabForce = 0;
         if (grabL)
@@ -484,6 +500,11 @@ public class LucidArms : MonoBehaviour
 
             validgrab = true;
         }
+
+        if (right)
+            grippyR = grabbableInitialHit;
+        else
+            grippyL = grabbableInitialHit;
 
         return validgrab;
     }
