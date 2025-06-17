@@ -18,26 +18,26 @@ public class LucidFreelook : MonoBehaviour
 
     private void Awake()
     {
-        PlayerInfo.head = transform;
+        LucidPlayerInfo.head = transform;
     }
 
     private void OnEnable()
     {
-        PlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
-        PlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
+        LucidPlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
+        LucidPlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
     }
 
     private void OnDisable()
     {
-        PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
-        PlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
+        LucidPlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
+        LucidPlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
     }
 
     private void Update()
     {
         if (head == null) return;
         transform.position = head.position;
-        if (PlayerInfo.mainCamera == null || chest == null || !PlayerInfo.headLocked || !PlayerInfo.animModelInitialized)
+        if (LucidPlayerInfo.mainCamera == null || chest == null || !LucidPlayerInfo.headLocked || !LucidPlayerInfo.animModelInitialized)
             return;
 
         CalculateRotation();
@@ -45,7 +45,7 @@ public class LucidFreelook : MonoBehaviour
 
     private void OnAnimModelInitialized()
     {
-        head = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head);
+        head = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Head);
     }
 
     public void AssignVismodel(LucidVismodel vismodel)
@@ -55,7 +55,7 @@ public class LucidFreelook : MonoBehaviour
 
     private void CalculateRotation()
     {
-        PlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
+        LucidPlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
 
         Vector2 headLookInput = LucidInputValueShortcuts.headLook;
         headLookInput *= sensitivity * sensitivityMultiplier;
@@ -63,7 +63,7 @@ public class LucidFreelook : MonoBehaviour
 
         Vector3 headForwardFlat = transform.forward;
         headForwardFlat.y = 0;
-        Vector3 hipForwardFlat = PlayerInfo.pelvis.forward;
+        Vector3 hipForwardFlat = LucidPlayerInfo.pelvis.forward;
         hipForwardFlat.y = 0;
 
         Vector3 rotation = new(headLookInput.y, headLookInput.x, 0);

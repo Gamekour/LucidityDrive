@@ -115,8 +115,8 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void Start()
     {
-        pelvis = PlayerInfo.pelvis;
-        head = PlayerInfo.head;
+        pelvis = LucidPlayerInfo.pelvis;
+        head = LucidPlayerInfo.head;
     }
     private void Update()
     {
@@ -128,14 +128,14 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-        PlayerInfo.OnRemoveVismodel.AddListener(OnVismodelRemoved);
+        LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+        LucidPlayerInfo.OnRemoveVismodel.AddListener(OnVismodelRemoved);
     }
 
     private void OnDisable()
     {
-        PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
-        PlayerInfo.OnRemoveVismodel.RemoveListener(OnVismodelRemoved);
+        LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+        LucidPlayerInfo.OnRemoveVismodel.RemoveListener(OnVismodelRemoved);
     }
 
     private void OnAssignVismodel(LucidVismodel visModel)
@@ -154,7 +154,7 @@ public class LucidAnimationModel : MonoBehaviour
         anim.runtimeAnimatorController = controller;
         anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
         anim.avatar = targetAvatar;
-        PlayerInfo.playermodelAnim = anim;
+        LucidPlayerInfo.animationModel = anim;
         Component c = newPlayerModel.AddComponent(typeof(AnimatorEventReciever));
         ((AnimatorEventReciever)c).target = this;
 
@@ -167,29 +167,29 @@ public class LucidAnimationModel : MonoBehaviour
         animHandR = anim.GetBoneTransform(HumanBodyBones.RightHand);
         animShoulderL = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
         animShoulderR = anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
-        PlayerInfo.IK_LF = IK_LF;
-        PlayerInfo.IK_RF = IK_RF;
-        PlayerInfo.IK_LH = IK_LH;
-        PlayerInfo.IK_RH = IK_RH;
+        LucidPlayerInfo.IK_LF = IK_LF;
+        LucidPlayerInfo.IK_RF = IK_RF;
+        LucidPlayerInfo.IK_LH = IK_LH;
+        LucidPlayerInfo.IK_RH = IK_RH;
     }
 
     public void OnVismodelRemoved()
     {
-        PlayerInfo.animModelInitialized = false;
+        LucidPlayerInfo.animModelInitialized = false;
         initialized = false;
     }
 
     private void FixedUpdate()
     {
-        if (anim == null || PlayerInfo.vismodelRef == null) return;
+        if (anim == null || LucidPlayerInfo.vismodelRef == null) return;
 
         if (!initialized)
         {
             if (anim.isInitialized)
             {
                 initialized = true;
-                PlayerInfo.animModelInitialized = true;
-                PlayerInfo.OnAnimModellInitialized.Invoke();
+                LucidPlayerInfo.animModelInitialized = true;
+                LucidPlayerInfo.OnAnimModellInitialized.Invoke();
             }
         }
     }
@@ -250,21 +250,21 @@ public class LucidAnimationModel : MonoBehaviour
         UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean, hang);
         UpdateAnimatorBools();
 
-        if (PlayerInfo.airTime > airtimesmooth)
-            airtimesmooth = PlayerInfo.airTime;
+        if (LucidPlayerInfo.airTime > airtimesmooth)
+            airtimesmooth = LucidPlayerInfo.airTime;
         else
-            airtimesmooth = Mathf.SmoothDamp(airtimesmooth, PlayerInfo.airTime, ref landingRef, landTime);
+            airtimesmooth = Mathf.SmoothDamp(airtimesmooth, LucidPlayerInfo.airTime, ref landingRef, landTime);
 
         float legweight = Mathf.Clamp01(airtimesmooth / airTimeMax);
         legweight *= slide ? 0 : 1;
         legweight *= bslide ? 0 : 1;
-        legweight *= PlayerInfo.flying ? 0 : 1;
-        legweight *= PlayerInfo.climbing ? 0 : 1;
+        legweight *= LucidPlayerInfo.flying ? 0 : 1;
+        legweight *= LucidPlayerInfo.climbing ? 0 : 1;
         anim.SetLayerWeight(1, legweight);
 
         float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (bslide ? 0 : 1) * (crouch ? 0 : 1));
         hipweight *= Mathf.Clamp01(velflat.magnitude);
-        hipweight *= PlayerInfo.climbing ? 0 : 1;
+        hipweight *= LucidPlayerInfo.climbing ? 0 : 1;
         float currenthipweight = anim.GetLayerWeight(2);
         hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
         anim.SetLayerWeight(2, hipweight);
@@ -281,7 +281,7 @@ public class LucidAnimationModel : MonoBehaviour
     private float CalculateAlignment()
     {
         float lastalignment = anim.GetFloat(_ALIGNMENT);
-        lastalignment = Mathf.SmoothDamp(PlayerInfo.alignment, lastalignment, ref alignmentRef, alignmentSmoothTime);
+        lastalignment = Mathf.SmoothDamp(LucidPlayerInfo.alignment, lastalignment, ref alignmentRef, alignmentSmoothTime);
         return lastalignment;
     }
 
@@ -297,7 +297,7 @@ public class LucidAnimationModel : MonoBehaviour
 
     private Vector3 CalculateLocalVelocity()
     {
-        Vector3 localVel = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.mainBody.velocity);
+        Vector3 localVel = LucidPlayerInfo.pelvis.InverseTransformVector(LucidPlayerInfo.mainBody.velocity);
         Vector3 currentvellocal = Vector3.zero;
         currentvellocal.x = anim.GetFloat(_VEL_X);
         currentvellocal.y = anim.GetFloat(_VEL_Y);
@@ -307,7 +307,7 @@ public class LucidAnimationModel : MonoBehaviour
 
     private Vector3 CalculateLocalNormal()
     {
-        Vector3 localNrm = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.hipspace.up);
+        Vector3 localNrm = LucidPlayerInfo.pelvis.InverseTransformVector(LucidPlayerInfo.hipspace.up);
         Vector3 currentnrmlocal = Vector3.zero;
         currentnrmlocal.x = anim.GetFloat(_NRM_X);
         currentnrmlocal.y = anim.GetFloat(_NRM_Y);
@@ -332,24 +332,24 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 currentClimbRelative = Vector3.zero;
         currentClimbRelative.x = anim.GetFloat(_HANG_X);
         currentClimbRelative.z = anim.GetFloat(_HANG_Z);
-        Vector3 climbRelative = PlayerInfo.climbRelative;
+        Vector3 climbRelative = LucidPlayerInfo.climbRelative;
         return Vector3.SmoothDamp(currentClimbRelative, climbRelative, ref hangRef, hangSmoothTime);
     }
 
 
     private void UpdateFootAngle()
     {
-        footAngle = Mathf.DeltaAngle(angleRef, PlayerInfo.pelvis.eulerAngles.y);
+        footAngle = Mathf.DeltaAngle(angleRef, LucidPlayerInfo.pelvis.eulerAngles.y);
         footAngle %= 360;
         footAngle = footAngle > 180 ? footAngle - 360 : footAngle;
-        footAngle /= Mathf.Clamp(PlayerInfo.mainBody.velocity.magnitude * unrotateFeetBySpeed, 1, 100);
+        footAngle /= Mathf.Clamp(LucidPlayerInfo.mainBody.velocity.magnitude * unrotateFeetBySpeed, 1, 100);
 
         if (Mathf.Abs(footAngle) > maxFootAngle)
         {
             footAngle = 0;
-            angleRef = PlayerInfo.pelvis.eulerAngles.y;
-            PlayerInfo.animPhase += 0.5f;
-            PlayerInfo.animPhase %= 1;
+            angleRef = LucidPlayerInfo.pelvis.eulerAngles.y;
+            LucidPlayerInfo.animPhase += 0.5f;
+            LucidPlayerInfo.animPhase %= 1;
         }
     }
 
@@ -371,10 +371,10 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_NRM_X, localNrm.x);
         anim.SetFloat(_NRM_Y, localNrm.y);
         anim.SetFloat(_NRM_Z, localNrm.z);
-        anim.SetFloat(_ANIMCYCLE, PlayerInfo.animPhase);
-        anim.SetFloat(_AIRTIME, PlayerInfo.airTime);
+        anim.SetFloat(_ANIMCYCLE, LucidPlayerInfo.animPhase);
+        anim.SetFloat(_AIRTIME, LucidPlayerInfo.airTime);
         anim.SetFloat(_ALIGNMENT, lastalignment);
-        anim.SetFloat(_CLIMB, PlayerInfo.climbRelative.y);
+        anim.SetFloat(_CLIMB, LucidPlayerInfo.climbRelative.y);
         anim.SetFloat(_HANG_X, hang.x);
         anim.SetFloat(_HANG_Z, hang.z);
         anim.SetFloat(_LEAN_X, lean.x);
@@ -387,16 +387,16 @@ public class LucidAnimationModel : MonoBehaviour
     {
         bool slide = LucidInputValueShortcuts.slide;
         bool crawl = LucidInputValueShortcuts.bslide;
-        bool footslide = (PlayerInfo.alignment > footSlideThreshold && PlayerInfo.mainBody.velocity.magnitude > footSlideVelThreshold);
+        bool footslide = (LucidPlayerInfo.alignment > footSlideThreshold && LucidPlayerInfo.mainBody.velocity.magnitude > footSlideVelThreshold);
 
-        anim.SetBool(_GROUNDED, PlayerInfo.grounded);
+        anim.SetBool(_GROUNDED, LucidPlayerInfo.grounded);
         anim.SetBool(_SLIDE, slide);
         anim.SetBool(_BSLIDE, crawl);
-        anim.SetBool(_CRAWL, PlayerInfo.crawling);
-        anim.SetBool(_FLIGHT, PlayerInfo.flying);
-        anim.SetBool(_GRAB_L, PlayerInfo.climbL);
-        anim.SetBool(_GRAB_R, PlayerInfo.climbR);
-        anim.SetBool(_CLIMBING, PlayerInfo.climbing);
+        anim.SetBool(_CRAWL, LucidPlayerInfo.crawling);
+        anim.SetBool(_FLIGHT, LucidPlayerInfo.flying);
+        anim.SetBool(_GRAB_L, LucidPlayerInfo.climbL);
+        anim.SetBool(_GRAB_R, LucidPlayerInfo.climbR);
+        anim.SetBool(_CLIMBING, LucidPlayerInfo.climbing);
         anim.SetBool(_FOOTSLIDE, footslide);
     }
 
@@ -412,7 +412,7 @@ public class LucidAnimationModel : MonoBehaviour
         lean.x = (accel.x * k1) + (slope.x * k2);
         lean.y = (accel.y * k1) + (slope.y * k2);
 
-        if (PlayerInfo.alignment > 0.5f && PlayerInfo.airTime < airtimeThreshold)
+        if (LucidPlayerInfo.alignment > 0.5f && LucidPlayerInfo.airTime < airtimeThreshold)
             lean = -lean;
 
         return lean;
@@ -425,27 +425,27 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 kneeposL = animKneeL.position;
         Vector3 kneeposR = animKneeR.position;
 
-        bool hitL = UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast);
-        bool hitR = UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast);
+        bool hitL = UpdateFootPosition(true, footposL, kneeposL, LucidPlayerInfo.legspaceL, ref LCast);
+        bool hitR = UpdateFootPosition(false, footposR, kneeposR, LucidPlayerInfo.legspaceR, ref RCast);
 
-        PlayerInfo.grounded = hitL || hitR || PlayerInfo.pelvisCollision;
+        LucidPlayerInfo.grounded = hitL || hitR || LucidPlayerInfo.pelvisCollision;
 
-        if (PlayerInfo.crawling)
-            PlayerInfo.footSurface = PlayerInfo.hipspace.up;
+        if (LucidPlayerInfo.crawling)
+            LucidPlayerInfo.footSurface = LucidPlayerInfo.hipspace.up;
 
-        PlayerInfo.IK_LF.position = LCast;
-        PlayerInfo.IK_RF.position = RCast;
+        LucidPlayerInfo.IK_LF.position = LCast;
+        LucidPlayerInfo.IK_RF.position = RCast;
     }
 
     private bool UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
     {
         Vector3 thighOrigin = legspace.position + (legspace.up * castHeight);
         Debug.DrawLine(thighOrigin, thighOrigin + ((kneepos - thighOrigin).normalized * Vector3.Distance(thighOrigin, kneepos)), Color.magenta);
-        Debug.DrawLine(kneepos, kneepos + ((footpos - legspace.position).normalized * (Vector3.Distance(kneepos, footpos) * PlayerInfo.vismodelRef.groundedForgiveness)), Color.magenta);
+        Debug.DrawLine(kneepos, kneepos + ((footpos - legspace.position).normalized * (Vector3.Distance(kneepos, footpos) * LucidPlayerInfo.vismodelRef.groundedForgiveness)), Color.magenta);
         bool thighCast = Physics.SphereCast(thighOrigin, castThickness, (kneepos - thighOrigin).normalized, out RaycastHit hitInfoThigh, Vector3.Distance(thighOrigin, kneepos), Shortcuts.geometryMask);
-        bool shinCast = Physics.SphereCast(kneepos, castThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * PlayerInfo.vismodelRef.groundedForgiveness, Shortcuts.geometryMask);
-        PlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
-        PlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
+        bool shinCast = Physics.SphereCast(kneepos, castThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * LucidPlayerInfo.vismodelRef.groundedForgiveness, Shortcuts.geometryMask);
+        LucidPlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
+        LucidPlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
 
         Vector3 CastOld = Cast;
         if (thighCast)
@@ -461,17 +461,17 @@ public class LucidAnimationModel : MonoBehaviour
                 if (isLeft)
                 {
                     if (rbvalid)
-                        PlayerInfo.connectedRB_LF = rb;
+                        LucidPlayerInfo.connectedRB_LF = rb;
                     else
-                        PlayerInfo.connectedRB_LF = null;
+                        LucidPlayerInfo.connectedRB_LF = null;
                     lastCastHitL = hitInfoThigh.transform;
                 }
                 else
                 {
                     if (rbvalid)
-                        PlayerInfo.connectedRB_RF = rb;
+                        LucidPlayerInfo.connectedRB_RF = rb;
                     else
-                        PlayerInfo.connectedRB_RF = null;
+                        LucidPlayerInfo.connectedRB_RF = null;
                     lastCastHitR = hitInfoThigh.transform;
                 }
             }
@@ -489,13 +489,13 @@ public class LucidAnimationModel : MonoBehaviour
                 if (isLeft)
                 {
                     if (rbvalid)
-                        PlayerInfo.connectedRB_LF = rb;
+                        LucidPlayerInfo.connectedRB_LF = rb;
                     lastCastHitL = hitInfoShin.transform;
                 }
                 else
                 {
                     if (rbvalid)
-                        PlayerInfo.connectedRB_RF = rb;
+                        LucidPlayerInfo.connectedRB_RF = rb;
                     lastCastHitR = hitInfoShin.transform;
                 }
             }
@@ -505,14 +505,14 @@ public class LucidAnimationModel : MonoBehaviour
             Cast = footpos;
             if (isLeft)
             {
-                PlayerInfo.connectedRB_LF = null;
-                PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
+                LucidPlayerInfo.connectedRB_LF = null;
+                LucidPlayerInfo.IK_LF.rotation = Quaternion.LookRotation(LucidPlayerInfo.pelvis.forward);
                 lastCastHitL = null;
             }
             else
             {
-                PlayerInfo.connectedRB_RF = null;
-                PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
+                LucidPlayerInfo.connectedRB_RF = null;
+                LucidPlayerInfo.IK_RF.rotation = Quaternion.LookRotation(LucidPlayerInfo.pelvis.forward);
                 lastCastHitR = null;
             }
         }
@@ -538,35 +538,35 @@ public class LucidAnimationModel : MonoBehaviour
         }
 
         if (isLeft)
-            PlayerInfo.footSurfaceL = normal;
+            LucidPlayerInfo.footSurfaceL = normal;
         else
-            PlayerInfo.footSurfaceR = normal;
+            LucidPlayerInfo.footSurfaceR = normal;
 
-        PlayerInfo.footSurface = normal;
-        PlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
-        PlayerInfo.footspace.up = normal;
+        LucidPlayerInfo.footSurface = normal;
+        LucidPlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
+        LucidPlayerInfo.footspace.up = normal;
 
-        Vector3 footforward = PlayerInfo.pelvis.forward;
+        Vector3 footforward = LucidPlayerInfo.pelvis.forward;
         if (Mathf.Abs(normal.y) < 0.1f)
             footforward = Vector3.up;
 
         if (isLeft)
-            PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, normal);
+            LucidPlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, normal);
         else
-            PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, normal);
+            LucidPlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, normal);
     }
 
     private void UpdateHandPositions()
     {
-        if (!PlayerInfo.grabL)
+        if (!LucidPlayerInfo.grabL)
         {
-            PlayerInfo.handTargetL.SetPositionAndRotation(animHandL.position, animHandL.rotation);
-            UpdateHandPosition(true, animShoulderL, PlayerInfo.handTargetL);
+            LucidPlayerInfo.handTargetL.SetPositionAndRotation(animHandL.position, animHandL.rotation);
+            UpdateHandPosition(true, animShoulderL, LucidPlayerInfo.handTargetL);
         }
-        if (!PlayerInfo.grabR)
+        if (!LucidPlayerInfo.grabR)
         {
-            PlayerInfo.handTargetR.SetPositionAndRotation(animHandR.position, animHandR.rotation);
-            UpdateHandPosition(false, animShoulderR, PlayerInfo.handTargetR);
+            LucidPlayerInfo.handTargetR.SetPositionAndRotation(animHandR.position, animHandR.rotation);
+            UpdateHandPosition(false, animShoulderR, LucidPlayerInfo.handTargetR);
         }
     }
 
@@ -575,31 +575,31 @@ public class LucidAnimationModel : MonoBehaviour
         bool armHit = Physics.SphereCast(shoulder.position, castThickness / 2, hand.position - shoulder.position, out RaycastHit armHitInfo, Vector3.Distance(hand.position, shoulder.position), Shortcuts.geometryMask);
 
         if (isLeft)
-            PlayerInfo.handCollisionL = armHit;
+            LucidPlayerInfo.handCollisionL = armHit;
         else
-            PlayerInfo.handCollisionR = armHit;
+            LucidPlayerInfo.handCollisionR = armHit;
 
         if (armHit)
         {
-            Vector3 handforward = PlayerInfo.pelvis.forward;
+            Vector3 handforward = LucidPlayerInfo.pelvis.forward;
             if (Mathf.Abs(armHitInfo.normal.y) < 0.05f)
                 handforward = Vector3.up;
 
             if (isLeft)
             {
-                PlayerInfo.IK_LH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
+                LucidPlayerInfo.IK_LH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
             }
             else
             {
-                PlayerInfo.IK_RH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
+                LucidPlayerInfo.IK_RH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
             }
         }
         else
         {
             if (isLeft)
-                PlayerInfo.IK_LH.position = Vector3.zero;
+                LucidPlayerInfo.IK_LH.position = Vector3.zero;
             else
-                PlayerInfo.IK_RH.position = Vector3.zero;
+                LucidPlayerInfo.IK_RH.position = Vector3.zero;
         }
     }
 

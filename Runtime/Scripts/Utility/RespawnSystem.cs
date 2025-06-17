@@ -17,7 +17,7 @@ public class RespawnSystem : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (PlayerInfo.pelvis.position.y < respawnHeight)
+        if (LucidPlayerInfo.pelvis.position.y < respawnHeight)
         {
             RespawnInterface.Respawn(spawnPoint);
             StartCoroutine(RespawnInterface.Unlock());
@@ -30,63 +30,63 @@ public static class RespawnInterface
     public static UnityEvent OnRespawn = new UnityEvent();
     public static void Respawn(Vector3 point)
     {
-        PlayerInfo.physBody.isTrigger = true;
-        PlayerInfo.physHead.isTrigger = true;
-        Rigidbody rbHips = PlayerInfo.physBody.GetComponent<Rigidbody>();
-        Rigidbody rbHead = PlayerInfo.physBody.GetComponent<Rigidbody>();
+        LucidPlayerInfo.physBody.isTrigger = true;
+        LucidPlayerInfo.physHead.isTrigger = true;
+        Rigidbody rbHips = LucidPlayerInfo.physBody.GetComponent<Rigidbody>();
+        Rigidbody rbHead = LucidPlayerInfo.physBody.GetComponent<Rigidbody>();
         if (!rbHips.isKinematic)
         {
-            PlayerInfo.physBody.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            PlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = true;
+            LucidPlayerInfo.physBody.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            LucidPlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = true;
         }
         if(!rbHead.isKinematic)
         {
-            PlayerInfo.physHead.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            PlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = true;
+            LucidPlayerInfo.physHead.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            LucidPlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = true;
         }
-        PlayerInfo.physBody.transform.position = point;
-        PlayerInfo.physHead.transform.position = point;
-        if (!PlayerInfo.mainBody.isKinematic)
+        LucidPlayerInfo.physBody.transform.position = point;
+        LucidPlayerInfo.physHead.transform.position = point;
+        if (!LucidPlayerInfo.mainBody.isKinematic)
         {
-            PlayerInfo.mainBody.velocity = Vector3.zero;
-            PlayerInfo.mainBody.isKinematic = true;
+            LucidPlayerInfo.mainBody.velocity = Vector3.zero;
+            LucidPlayerInfo.mainBody.isKinematic = true;
         }
-        PlayerInfo.pelvis.position = point;
+        LucidPlayerInfo.pelvis.position = point;
         OnRespawn.Invoke();
     }
     public static void Respawn(Vector3 point, Vector3 velocity)
     {
-        PlayerInfo.physBody.isTrigger = true;
-        PlayerInfo.physHead.isTrigger = true;
-        Rigidbody rbHips = PlayerInfo.physBody.GetComponent<Rigidbody>();
-        Rigidbody rbHead = PlayerInfo.physBody.GetComponent<Rigidbody>();
+        LucidPlayerInfo.physBody.isTrigger = true;
+        LucidPlayerInfo.physHead.isTrigger = true;
+        Rigidbody rbHips = LucidPlayerInfo.physBody.GetComponent<Rigidbody>();
+        Rigidbody rbHead = LucidPlayerInfo.physBody.GetComponent<Rigidbody>();
         if (!rbHips.isKinematic)
         {
-            PlayerInfo.physBody.GetComponent<Rigidbody>().velocity = velocity;
-            PlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = true;
+            LucidPlayerInfo.physBody.GetComponent<Rigidbody>().velocity = velocity;
+            LucidPlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = true;
         }
         if (!rbHead.isKinematic)
         {
-            PlayerInfo.physHead.GetComponent<Rigidbody>().velocity = velocity;
-            PlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = true;
+            LucidPlayerInfo.physHead.GetComponent<Rigidbody>().velocity = velocity;
+            LucidPlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = true;
         }
-        PlayerInfo.physBody.transform.position = point;
-        PlayerInfo.physHead.transform.position = point;
-        if (!PlayerInfo.mainBody.isKinematic)
+        LucidPlayerInfo.physBody.transform.position = point;
+        LucidPlayerInfo.physHead.transform.position = point;
+        if (!LucidPlayerInfo.mainBody.isKinematic)
         {
-            PlayerInfo.mainBody.velocity = velocity;
-            PlayerInfo.mainBody.isKinematic = true;
+            LucidPlayerInfo.mainBody.velocity = velocity;
+            LucidPlayerInfo.mainBody.isKinematic = true;
         }
-        PlayerInfo.pelvis.position = point;
+        LucidPlayerInfo.pelvis.position = point;
         OnRespawn.Invoke();
     }
     public static IEnumerator Unlock()
     {
         yield return new WaitForSeconds(0.5f);
-        PlayerInfo.physBody.isTrigger = false;
-        PlayerInfo.physHead.isTrigger = false;
-        PlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = false;
-        PlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = false;
-        PlayerInfo.mainBody.isKinematic = false;
+        LucidPlayerInfo.physBody.isTrigger = false;
+        LucidPlayerInfo.physHead.isTrigger = false;
+        LucidPlayerInfo.physBody.GetComponent<Rigidbody>().isKinematic = false;
+        LucidPlayerInfo.physHead.GetComponent<Rigidbody>().isKinematic = false;
+        LucidPlayerInfo.mainBody.isKinematic = false;
     }
 }

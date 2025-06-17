@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Animations;
 
 class GFG : IComparer<RaycastHit>
 {
@@ -44,6 +45,8 @@ public class LucidLegs : MonoBehaviour
     [SerializeField] Transform vFloor;
     [SerializeField] BoxCollider physBody;
     [SerializeField] SphereCollider physHead;
+
+    [SerializeField] CapsuleCollider pelvisCollider;
     [SerializeField] MovementSettings defaultMovementSettings;
 
     public UnityEvent onFootChanged;
@@ -118,17 +121,17 @@ public class LucidLegs : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-        PlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
+        LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+        LucidPlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
     }
 
     private void OnDisable()
     {
-        PlayerInfo.flying = false; //this is a fix for a bug occurring when you switch scenes while in a flight zone - i may eventually have a function to reset all temporary values in playerinfo on scene change
-        PlayerInfo.pelvisCollision = false;
+        LucidPlayerInfo.flying = false; //this is a fix for a bug occurring when you switch scenes while in a flight zone - i may eventually have a function to reset all temporary values in playerinfo on scene change
+        LucidPlayerInfo.pelvisCollision = false;
 
-        PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
-        PlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
+        LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+        LucidPlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
     }
 
     public void OnAssignVismodel(LucidVismodel visModel)
@@ -139,25 +142,35 @@ public class LucidLegs : MonoBehaviour
     //copies physmodel configuration from vismodel
     private void ConfigurePhysModel(LucidVismodel visModel)
     {
-        physBody.size = visModel.bodyCollider.size;
-        physBody.center = visModel.bodyCollider.center;
-        physHead.radius = visModel.headCollider.radius;
-        physHead.center = visModel.headCollider.center;
+        physBody.size = Vector3.Scale(visModel.bodyCollider.size, visModel.bodyCollider.transform.lossyScale);
+        physBody.center = Vector3.Scale(visModel.bodyCollider.center, visModel.bodyCollider.transform.lossyScale);
+        physHead.radius = visModel.headCollider.radius * visModel.headCollider.transform.lossyScale.y;
+        physHead.center = visModel.headCollider.center * visModel.headCollider.transform.lossyScale.y;
         ConfigurableJoint hcj = physHead.GetComponent<ConfigurableJoint>();
         Vector3 headoffset = visModel.headCollider.transform.position - visModel.bodyCollider.transform.position;
         hcj.connectedAnchor = headoffset;
+        Vector3 lefthip = visModel.anim.GetBoneTransform(HumanBodyBones.LeftUpperLeg).position;
+        Vector3 righthip = visModel.anim.GetBoneTransform(HumanBodyBones.RightUpperLeg).position;
+        LucidPlayerInfo.pelvisSize = Vector3.Distance(lefthip, righthip);
+        float newPelvisLength = LucidPlayerInfo.pelvisSize * visModel.pelvisScaleMult;
+        LucidPlayerInfo.pelvisColl.height = newPelvisLength;
+        LucidPlayerInfo.pelvisColl.radius = newPelvisLength / 3;
+        ParentConstraint lscL = LucidPlayerInfo.legspaceL.GetComponent<ParentConstraint>();
+        ParentConstraint lscR = LucidPlayerInfo.legspaceR.GetComponent<ParentConstraint>();
+        lscL.SetTranslationOffset(0, Vector3.left * (LucidPlayerInfo.pelvisSize / 2));
+        lscR.SetTranslationOffset(0, Vector3.right * (LucidPlayerInfo.pelvisSize / 2));
     }
 
     public void OnAnimModelInitialized()
     {
-        animModelHips = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips);
-        animModelLFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.LeftFoot);
-        animModelRFoot = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.RightFoot);
+        animModelHips = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips);
+        animModelLFoot = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.LeftFoot);
+        animModelRFoot = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.RightFoot);
     }
 
     private void FixedUpdate()
     {
-        if (rb.isKinematic || PlayerInfo.vismodelRef == null || !PlayerInfo.animModelInitialized) return; //this could technically be optimized by delegating it to a bool that only updates when isKinematic is updated, but that's too much work and i don't think this is much of a perf hit
+        if (rb.isKinematic || LucidPlayerInfo.vismodelRef == null || !LucidPlayerInfo.animModelInitialized) return; //this could technically be optimized by delegating it to a bool that only updates when isKinematic is updated, but that's too much work and i don't think this is much of a perf hit
 
         PseudoWalk();
         RotationLogic();
@@ -178,11 +191,11 @@ public class LucidLegs : MonoBehaviour
         bool crawling = inputBellyslide && inputCrouch && (velflathip.magnitude < maxCrawlSpeed);
         inputBellyslide &= !crawling;
         inputBackslide &= !crawling;
-        bool doGroundLogic = PlayerInfo.grounded && PlayerInfo.footSurface.y >= -0.001f;
+        bool doGroundLogic = LucidPlayerInfo.grounded && LucidPlayerInfo.footSurface.y >= -0.001f;
         
-        PlayerInfo.crawling = crawling;
+        LucidPlayerInfo.crawling = crawling;
 
-        if (!PlayerInfo.grounded)
+        if (!LucidPlayerInfo.grounded)
         {
             if (!inputJump) rb.AddForce(Vector3.up * (fallGravity - Physics.gravity.y), ForceMode.Acceleration);
             else
@@ -190,7 +203,7 @@ public class LucidLegs : MonoBehaviour
 
             AirCalc();
         }
-        else if (!PlayerInfo.flying && doGroundLogic)
+        else if (!LucidPlayerInfo.flying && doGroundLogic)
         {
             if (inputBellyslide || inputBackslide)
                 SlidePush();
@@ -198,7 +211,7 @@ public class LucidLegs : MonoBehaviour
                 LegPush(inputCrouch, inputJump, inputSprint);
         }
 
-        if (PlayerInfo.flying)
+        if (LucidPlayerInfo.flying)
             FlightCalc();
     }
 
@@ -206,7 +219,7 @@ public class LucidLegs : MonoBehaviour
     {
         if (other.gameObject.layer == 6)
         {
-            PlayerInfo.flying = false;
+            LucidPlayerInfo.flying = false;
             rb.useGravity = true;
         }
     }
@@ -215,7 +228,7 @@ public class LucidLegs : MonoBehaviour
     {
         if (other.gameObject.layer == 6)
         {
-            PlayerInfo.flying = true;
+            LucidPlayerInfo.flying = true;
             rb.useGravity = false;
         }
     }
@@ -223,17 +236,18 @@ public class LucidLegs : MonoBehaviour
     //self explanatory, updates playerinfo with what this script knows
     private void SetPlayerInfoReferences()
     {
-        PlayerInfo.legRef = this;
-        PlayerInfo.mainBody = rb;
-        PlayerInfo.pelvis = transform;
-        PlayerInfo.hipspace = hipSpace;
-        PlayerInfo.footspace = footSpace;
-        PlayerInfo.legspaceL = legSpaceL;
-        PlayerInfo.legspaceR = legSpaceR;
-        PlayerInfo.physBody = physBody;
-        PlayerInfo.physBodyRB = physBody.GetComponent<Rigidbody>();
-        PlayerInfo.physHead = physHead;
-        PlayerInfo.physHeadRB = physHead.GetComponent<Rigidbody>();
+        LucidPlayerInfo.legRef = this;
+        LucidPlayerInfo.mainBody = rb;
+        LucidPlayerInfo.pelvis = transform;
+        LucidPlayerInfo.pelvisColl = pelvisCollider;
+        LucidPlayerInfo.hipspace = hipSpace;
+        LucidPlayerInfo.footspace = footSpace;
+        LucidPlayerInfo.legspaceL = legSpaceL;
+        LucidPlayerInfo.legspaceR = legSpaceR;
+        LucidPlayerInfo.physBody = physBody;
+        LucidPlayerInfo.physBodyRB = physBody.GetComponent<Rigidbody>();
+        LucidPlayerInfo.physHead = physHead;
+        LucidPlayerInfo.physHeadRB = physHead.GetComponent<Rigidbody>();
     }
 
     //copies values from movement settings to this script, using property names to match values
@@ -254,16 +268,16 @@ public class LucidLegs : MonoBehaviour
                 destField.SetValue(this, value);
             }
         }
-        PlayerInfo.moveSpeed = moveSpeed;
-        PlayerInfo.slidePushAngleThreshold = slidePushAngleThreshold;
+        LucidPlayerInfo.moveSpeed = moveSpeed;
+        LucidPlayerInfo.slidePushAngleThreshold = slidePushAngleThreshold;
     }
 
     //calculates rotation forces necessary for aligning hips with head at an appropriate speed
     private void RotationLogic()
     {
         //gets forward head vector
-        Vector3 vecHeadFlat = PlayerInfo.head.forward;
-        if (PlayerInfo.head.up.y < 0)
+        Vector3 vecHeadFlat = LucidPlayerInfo.head.forward;
+        if (LucidPlayerInfo.head.up.y < 0)
             vecHeadFlat = -vecHeadFlat;
         vecHeadFlat.y = 0;
 
@@ -284,7 +298,7 @@ public class LucidLegs : MonoBehaviour
         Vector3 moveFlat = Vector3.zero;
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
-        Vector3 flattened = PlayerInfo.head.TransformVector(moveFlat);
+        Vector3 flattened = LucidPlayerInfo.head.TransformVector(moveFlat);
         flattened.y = 0;
         flattened.Normalize();
 
@@ -316,7 +330,7 @@ public class LucidLegs : MonoBehaviour
         {
             float angle = Vector3.Angle(velflat, flattened) / 180;
             velocityDifference = aerialMovementSpeed * angle * velocityDifference.normalized;
-            velocityDifference += (PlayerInfo.pelvis.forward * angle * velflat.magnitude * airTurnAssist);
+            velocityDifference += (LucidPlayerInfo.pelvis.forward * angle * velflat.magnitude * airTurnAssist);
         }
 
         // Apply the force
@@ -373,32 +387,32 @@ public class LucidLegs : MonoBehaviour
 
         bool isRight = animPhase > 0.5f;
 
-        Transform tStep = isRight ? PlayerInfo.IK_RF : PlayerInfo.IK_LF;
-        Rigidbody tStepped = isRight ? PlayerInfo.connectedRB_RF : PlayerInfo.connectedRB_LF;
+        Transform tStep = isRight ? LucidPlayerInfo.IK_RF : LucidPlayerInfo.IK_LF;
+        Rigidbody tStepped = isRight ? LucidPlayerInfo.connectedRB_RF : LucidPlayerInfo.connectedRB_LF;
         Vector3 pointVelocity = Vector3.zero;
         if (tStep != null && tStepped != null) pointVelocity = tStepped.GetPointVelocity(tStep.position);
 
         float t = hipSpace.TransformVector(moveFlat).normalized.y;
 
-        if (PlayerInfo.climbing)
+        if (LucidPlayerInfo.climbing)
             t = climbTilt;
         else if (inputJump)
             t = jumpTilt;
         else
             t *= slopeTilt;
 
-        t = Mathf.Clamp(t, 0, PlayerInfo.footspace.up.y);
+        t = Mathf.Clamp(t, 0, LucidPlayerInfo.footspace.up.y);
 
-        Vector3 pushdir = Vector3.Lerp(Vector3.up, PlayerInfo.footSurface, t);
+        Vector3 pushdir = Vector3.Lerp(Vector3.up, LucidPlayerInfo.footSurface, t);
 
         float downness = Mathf.Clamp01(1 - footSpace.up.y) * Mathf.Abs(footSpace.up.x);
         float movedownamount = Mathf.Clamp((footSpace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -targetHeightByNegativeSlopeClamp, 0);
         movedownamount *= targetHeightByNegativeSlope;
         movedownamount -= downness;
 
-        float legLength = (PlayerInfo.thighLength + PlayerInfo.calfLength) * PlayerInfo.vismodelRef.maxLegScale;
+        float legLength = (LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength) * LucidPlayerInfo.vismodelRef.maxLegScale;
 
-        float headdist = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Head).position.y - physHead.transform.position.y;
+        float headdist = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Head).position.y - physHead.transform.position.y;
         headdist = Mathf.Clamp(headdist, 0, Mathf.Infinity);
         float legclamp = legLength - (headdist * 2.5f);
 
@@ -406,10 +420,10 @@ public class LucidLegs : MonoBehaviour
         moveupamount *= targetHeightByPositiveSlope;
 
         float legadjust = legLength;
-        if (PlayerInfo.climbing && !inputJump)
+        if (LucidPlayerInfo.climbing && !inputJump)
             legadjust = 0;
 
-        if (PlayerInfo.crawling)
+        if (LucidPlayerInfo.crawling)
             legadjust = crawlHeight;
         else if (inputJump)
         {
@@ -421,7 +435,7 @@ public class LucidLegs : MonoBehaviour
             legadjust *= 1 + movedownamount + moveupamount;
         }
 
-        if(PlayerInfo.physCollision)
+        if(LucidPlayerInfo.physCollision)
             legadjust = Mathf.Clamp(legadjust, 0, legclamp);
 
         float relativeheight = hipSpace.position.y - footSpace.position.y;
@@ -430,7 +444,7 @@ public class LucidLegs : MonoBehaviour
         heightratio = Mathf.Clamp(heightratio, 0, 2);
 
         float forceadjust = maxForceScale;
-        if (LucidInputValueShortcuts.jump && relativeheight <= PlayerInfo.vismodelRef.maxLegScale)
+        if (LucidInputValueShortcuts.jump && relativeheight <= LucidPlayerInfo.vismodelRef.maxLegScale)
             forceadjust *= jumpForceScale;
 
         float currentY = rb.velocity.y;
@@ -449,10 +463,10 @@ public class LucidLegs : MonoBehaviour
         slide += (Vector3.Angle(rb.velocity, dir) / 180) * footSlideStrength * velslide;
         nrm += velnrm;
 
-        PlayerInfo.alignment = (Vector3.Angle(rb.velocity, dir) / 180) * Mathf.Clamp01(rb.velocity.magnitude);
+        LucidPlayerInfo.alignment = (Vector3.Angle(rb.velocity, dir) / 180) * Mathf.Clamp01(rb.velocity.magnitude);
 
         float moveadjust = moveSpeed;
-        if (PlayerInfo.crawling)
+        if (LucidPlayerInfo.crawling)
             moveadjust = moveSpeedCrawling;
         else if (inputCrouch)
             moveadjust = moveSpeedCrouched;
@@ -476,22 +490,22 @@ public class LucidLegs : MonoBehaviour
         nrm = Mathf.Clamp(nrm, 0, Mathf.Infinity);
 
         float fmax = Mathf.Sqrt(nrm) * rb.mass * friction;
-        PlayerInfo.traction = Mathf.Clamp01(fmax / slide.magnitude);
-        Vector3 pushcalc = nrm * PlayerInfo.footSurface;
+        LucidPlayerInfo.traction = Mathf.Clamp01(fmax / slide.magnitude);
+        Vector3 pushcalc = nrm * LucidPlayerInfo.footSurface;
         Vector3 slidecalc = Vector3.ClampMagnitude(-slide, fmax);
-        PlayerInfo.currentFootSlide = slidecalc;
-        PlayerInfo.currentLegPush = pushcalc;
+        LucidPlayerInfo.currentFootSlide = slidecalc;
+        LucidPlayerInfo.currentLegPush = pushcalc;
 
         Vector3 objectforce = -(slidecalc + pushcalc);
 
         rb.AddForce(slidecalc + pushcalc, ForceMode.Force);
 
-        if (isRight && PlayerInfo.connectedRB_RF != null)
+        if (isRight && LucidPlayerInfo.connectedRB_RF != null)
         {
-            PlayerInfo.connectedRB_RF.AddForceAtPosition(objectforce, PlayerInfo.IK_RF.position, ForceMode.Force);
+            LucidPlayerInfo.connectedRB_RF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_RF.position, ForceMode.Force);
         }
-        if (!isRight && PlayerInfo.connectedRB_LF != null)
-            PlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, PlayerInfo.IK_LF.position, ForceMode.Force);
+        if (!isRight && LucidPlayerInfo.connectedRB_LF != null)
+            LucidPlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_LF.position, ForceMode.Force);
     }
 
     private Transform AnimModelFootSelection()
@@ -504,39 +518,39 @@ public class LucidLegs : MonoBehaviour
 
     public void OnPhysCollisionStay(Collision c)
     {
-        PlayerInfo.physCollision = true;
+        LucidPlayerInfo.physCollision = true;
         bodyCollisionNrm = c.contacts[0].normal;
     }
 
     public void OnPhysCollisionExit(Collision c)
     {
-        PlayerInfo.physCollision = false;
+        LucidPlayerInfo.physCollision = false;
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        PlayerInfo.pelvisCollision = true;
+        LucidPlayerInfo.pelvisCollision = true;
         bodyCollisionNrm = collision.contacts[0].normal;
-        PlayerInfo.hipspace.up = bodyCollisionNrm;
-        PlayerInfo.footspace.up = bodyCollisionNrm;
+        LucidPlayerInfo.hipspace.up = bodyCollisionNrm;
+        LucidPlayerInfo.footspace.up = bodyCollisionNrm;
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        PlayerInfo.pelvisCollision = false;
+        LucidPlayerInfo.pelvisCollision = false;
     }
 
     private void SlidePush()
     {
-        PlayerInfo.surfaceAngle = Vector3.Angle(bodyCollisionNrm, PlayerInfo.footspace.up);
+        LucidPlayerInfo.surfaceAngle = Vector3.Angle(bodyCollisionNrm, LucidPlayerInfo.footspace.up);
 
-        if (PlayerInfo.surfaceAngle < slidePushAngleThreshold)
+        if (LucidPlayerInfo.surfaceAngle < slidePushAngleThreshold)
             return;
 
-        float legLength = PlayerInfo.thighLength + PlayerInfo.calfLength * PlayerInfo.vismodelRef.maxLegScale;
+        float legLength = LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength * LucidPlayerInfo.vismodelRef.maxLegScale;
 
-        Vector3 diffL = legSpaceL.position - PlayerInfo.IK_LF.position;
-        Vector3 diffR = legSpaceR.position - PlayerInfo.IK_RF.position;
+        Vector3 diffL = legSpaceL.position - LucidPlayerInfo.IK_LF.position;
+        Vector3 diffR = legSpaceR.position - LucidPlayerInfo.IK_RF.position;
         Vector3 avg = (diffL + diffR) / 2;
         float strength = 1 - Mathf.Clamp01(avg.magnitude / legLength);
         avg = avg.normalized * strength;
@@ -563,13 +577,13 @@ public class LucidLegs : MonoBehaviour
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
 
-        float legLength = PlayerInfo.thighLength + PlayerInfo.calfLength * PlayerInfo.vismodelRef.maxLegScale;
+        float legLength = LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength * LucidPlayerInfo.vismodelRef.maxLegScale;
 
         float stepphase = 0.5f - animPhase;
         stepphase = Mathf.Abs(stepphase) * 2;
-        PlayerInfo.stepPhase = stepphase;
+        LucidPlayerInfo.stepPhase = stepphase;
 
-        Vector3 willflat = (PlayerInfo.pelvis.TransformVector(moveFlat) * (moveSpeed / 2));
+        Vector3 willflat = (LucidPlayerInfo.pelvis.TransformVector(moveFlat) * (moveSpeed / 2));
         willflat.y = 0;
 
         Vector3 velflat = rb.velocity;
@@ -758,32 +772,32 @@ public class LucidLegs : MonoBehaviour
         float grounddist = Vector3.Distance(transform.position, vFloor.position) - legLength;
         if (results.Count < 1)
             grounddist = Mathf.Infinity;
-        PlayerInfo.groundDistance = grounddist;
+        LucidPlayerInfo.groundDistance = grounddist;
 
         float currentratiomult = ratioScale * (1 + (velflat.magnitude * scaleRatioBySpeed));
 
         float ratio = currentratio / currentratiomult;
         ratio = Mathf.Clamp(ratio, ratioFreezeThreshold, 1);
 
-        if (PlayerInfo.grounded && !PlayerInfo.climbing)
-            PlayerInfo.airTime = 0;
+        if (LucidPlayerInfo.grounded && !LucidPlayerInfo.climbing)
+            LucidPlayerInfo.airTime = 0;
         else
-            PlayerInfo.airTime += Time.fixedDeltaTime;
+            LucidPlayerInfo.airTime += Time.fixedDeltaTime;
 
         if (velflat.magnitude > 0.1f)
         {
             float add = (Time.fixedDeltaTime * 0.5f) / ratio;
-            add /= 1 + (PlayerInfo.airTime * dampAnimPhaseByAirtime);
+            add /= 1 + (LucidPlayerInfo.airTime * dampAnimPhaseByAirtime);
             animPhase += add;
             animPhase %= 1;
         }
 
         bool isRight = animPhase > 0.5f;
-        bool wasRight = PlayerInfo.animPhase > 0.5f;
+        bool wasRight = LucidPlayerInfo.animPhase > 0.5f;
         if (wasRight != isRight)
             onFootChanged.Invoke();
             
-        PlayerInfo.animPhase = animPhase;
+        LucidPlayerInfo.animPhase = animPhase;
     }
 
     private void CastWalk(Ray left, Ray right, out RaycastHit hitL, out RaycastHit hitR, float radius = -1)

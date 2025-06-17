@@ -26,12 +26,12 @@ public class LucidTool : MonoBehaviour
 
     public void OnEnable()
     {
-        PlayerInfo.OnAssignVismodel.AddListener(OnVismodelAssigned);
+        LucidPlayerInfo.OnAssignVismodel.AddListener(OnVismodelAssigned);
     }
 
     public void OnDisable()
     {
-        PlayerInfo.OnAssignVismodel.RemoveListener(OnVismodelAssigned);
+        LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnVismodelAssigned);
     }
 
     private void OnVismodelAssigned(LucidVismodel v)

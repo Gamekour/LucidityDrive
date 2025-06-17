@@ -29,14 +29,14 @@ public class BoneRoot : MonoBehaviour
             joint = GetComponent<ConfigurableJoint>();
             rb = GetComponent<Rigidbody>();
         }
-        PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-        PlayerInfo.OnAnimModellInitialized.AddListener(OnInitializeAnimModel);
+        LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+        LucidPlayerInfo.OnAnimModellInitialized.AddListener(OnInitializeAnimModel);
     }
 
     private void OnDisable()
     {
-        PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
-        PlayerInfo.OnAnimModellInitialized.RemoveListener(OnInitializeAnimModel);
+        LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+        LucidPlayerInfo.OnAnimModellInitialized.RemoveListener(OnInitializeAnimModel);
     }
 
     public void OnAssignVismodel(LucidVismodel newModel)
@@ -54,9 +54,9 @@ public class BoneRoot : MonoBehaviour
         if(!usePlayermodel) return;
 
         if (!useForceMatch)
-            HardAttach(PlayerInfo.playermodelAnim);
+            HardAttach(LucidPlayerInfo.animationModel);
         else
-            targetTransform = PlayerInfo.playermodelAnim.GetBoneTransform(targetBone);
+            targetTransform = LucidPlayerInfo.animationModel.GetBoneTransform(targetBone);
     }
 
     private void HardAttach(Animator targetAnim)

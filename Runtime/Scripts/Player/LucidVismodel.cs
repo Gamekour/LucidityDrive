@@ -9,6 +9,8 @@ public class LucidVismodel : MonoBehaviour
     [Header("Options")]
     public float maxLegScale = 1;
     public float groundedForgiveness = 1;
+
+    public float pelvisScaleMult = 1;
     [SerializeField] bool initializeOnStart = true;
     [SerializeField] float grabSpeed = 1;
     [SerializeField] float collisionTransitionTime = 1;
@@ -34,7 +36,7 @@ public class LucidVismodel : MonoBehaviour
 
     private void OnAnimatorIK(int layerIndex)
     {
-        if (initialized && PlayerInfo.animModelInitialized)
+        if (initialized && LucidPlayerInfo.animModelInitialized)
             LocalCalc();
     }
 
@@ -47,18 +49,18 @@ public class LucidVismodel : MonoBehaviour
     {
         if (!initialized) return;
 
-        PlayerInfo.OnRemoveVismodel.Invoke();
-        PlayerInfo.vismodelRef = null;
+        LucidPlayerInfo.OnRemoveVismodel.Invoke();
+        LucidPlayerInfo.vismodelRef = null;
     }
 
     private void FixedUpdate()
     {
-        if (initialized && PlayerInfo.vismodelRef == null)
+        if (initialized && LucidPlayerInfo.vismodelRef == null)
         {
             if (anim.isInitialized)
             {
-                PlayerInfo.vismodelRef = this;
-                PlayerInfo.OnAssignVismodel.Invoke(this);
+                LucidPlayerInfo.vismodelRef = this;
+                LucidPlayerInfo.OnAssignVismodel.Invoke(this);
             }
         }
     }
@@ -66,21 +68,21 @@ public class LucidVismodel : MonoBehaviour
     //creates a pose for the visual model based on the playermodel's animation, active IK points, and collisions with the ground
     private void LocalCalc()
     {
-        if (PlayerInfo.playermodelAnim == null) return;
+        if (LucidPlayerInfo.animationModel == null) return;
 
-        Transform tHips = PlayerInfo.playermodelAnim.GetBoneTransform(HumanBodyBones.Hips);
+        Transform tHips = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips);
 
         Vector3 offset = tHips.position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
         transform.position += offset;
-        Quaternion qPhysHips = PlayerInfo.physBody.transform.rotation;
-        Quaternion qPhysHead = PlayerInfo.physHead.transform.rotation;
-        Quaternion qAnimHips = PlayerInfo.playermodelAnim.bodyRotation;
-        Quaternion qAnimHead = PlayerInfo.head.rotation;
+        Quaternion qPhysHips = LucidPlayerInfo.physBody.transform.rotation;
+        Quaternion qPhysHead = LucidPlayerInfo.physHead.transform.rotation;
+        Quaternion qAnimHips = LucidPlayerInfo.animationModel.bodyRotation;
+        Quaternion qAnimHead = LucidPlayerInfo.head.rotation;
 
-        Quaternion qHips2 = PlayerInfo.physCollision ? qAnimHips : qPhysHips;
-        Quaternion qHips1 = PlayerInfo.physCollision ? qPhysHips : qAnimHips;
-        Quaternion qHead2 = PlayerInfo.physCollision ? qAnimHead : qPhysHead;
-        Quaternion qHead1 = PlayerInfo.physCollision ? qPhysHead : qAnimHead;
+        Quaternion qHips2 = LucidPlayerInfo.physCollision ? qAnimHips : qPhysHips;
+        Quaternion qHips1 = LucidPlayerInfo.physCollision ? qPhysHips : qAnimHips;
+        Quaternion qHead2 = LucidPlayerInfo.physCollision ? qAnimHead : qPhysHead;
+        Quaternion qHead1 = LucidPlayerInfo.physCollision ? qPhysHead : qAnimHead;
 
         anim.SetBoneLocalRotation(HumanBodyBones.Hips, QuaternionUtil.SmoothDamp(qHips1, qHips2, ref hipDeriv, collisionTransitionTime));
         anim.SetBoneLocalRotation(HumanBodyBones.Head, QuaternionUtil.SmoothDamp(qHead1, qHead2, ref headDeriv, collisionTransitionTime));
@@ -91,18 +93,18 @@ public class LucidVismodel : MonoBehaviour
             if (modelSync.boneRots.ContainsKey(hbstring))
                 anim.SetBoneLocalRotation(hb2, modelSync.boneRots[hbstring]);
         }
-        bool doSlideIK = PlayerInfo.surfaceAngle < PlayerInfo.slidePushAngleThreshold;
+        bool doSlideIK = LucidPlayerInfo.surfaceAngle < LucidPlayerInfo.slidePushAngleThreshold;
         bool isSliding = LucidInputValueShortcuts.bslide || LucidInputValueShortcuts.slide;
-        bool enableFootIK = !(PlayerInfo.crawling || (isSliding && !doSlideIK));
+        bool enableFootIK = !(LucidPlayerInfo.crawling || (isSliding && !doSlideIK));
         float footIKWeight = enableFootIK ? 1 : 0;
         anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, footIKWeight);
         anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, footIKWeight);
         anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, footIKWeight);
         anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, footIKWeight);
-        anim.SetIKPosition(AvatarIKGoal.LeftFoot, PlayerInfo.IK_LF.position);
-        anim.SetIKRotation(AvatarIKGoal.LeftFoot, PlayerInfo.IK_LF.rotation);
-        anim.SetIKPosition(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.position);
-        anim.SetIKRotation(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.rotation);
+        anim.SetIKPosition(AvatarIKGoal.LeftFoot, LucidPlayerInfo.IK_LF.position);
+        anim.SetIKRotation(AvatarIKGoal.LeftFoot, LucidPlayerInfo.IK_LF.rotation);
+        anim.SetIKPosition(AvatarIKGoal.RightFoot, LucidPlayerInfo.IK_RF.position);
+        anim.SetIKRotation(AvatarIKGoal.RightFoot, LucidPlayerInfo.IK_RF.rotation);
 
         CalculateHandIK(false);
         CalculateHandIK(true);
@@ -110,9 +112,9 @@ public class LucidVismodel : MonoBehaviour
 
     private void CalculateHandIK(bool isRight)
     {
-        bool grab = isRight ? PlayerInfo.grabR : PlayerInfo.grabL;
-        bool handCollision = isRight ? PlayerInfo.handCollisionR : PlayerInfo.handCollisionL;
-        Transform IKTransform = isRight ? PlayerInfo.IK_RH : PlayerInfo.IK_LH;
+        bool grab = isRight ? LucidPlayerInfo.grabR : LucidPlayerInfo.grabL;
+        bool handCollision = isRight ? LucidPlayerInfo.handCollisionR : LucidPlayerInfo.handCollisionL;
+        Transform IKTransform = isRight ? LucidPlayerInfo.IK_RH : LucidPlayerInfo.IK_LH;
         AvatarIKGoal IKGoal = isRight ? AvatarIKGoal.RightHand : AvatarIKGoal.LeftHand;
         float grabweight = isRight ? grabWeightR : grabWeightL;
 

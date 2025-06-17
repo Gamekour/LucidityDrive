@@ -27,7 +27,7 @@ public class CursorStateHandler : MonoBehaviour
     public void SetState(CursorLockMode state)
     {
         Cursor.lockState = state;
-        PlayerInfo.headLocked = (state == CursorLockMode.Locked);
+        LucidPlayerInfo.headLocked = (state == CursorLockMode.Locked);
     }
 
     public void SetState(string statename)

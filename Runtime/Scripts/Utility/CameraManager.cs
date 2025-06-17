@@ -31,14 +31,14 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
-        PlayerInfo.mainCamera = Camera.main;
+        LucidPlayerInfo.mainCamera = Camera.main;
         LucidInputActionRefs.camSelect1.started += CameraSwitch1;
         LucidInputActionRefs.camSelect2.started += CameraSwitch2;
         LucidInputActionRefs.camSelect3.started += CameraSwitch3;
         LucidInputActionRefs.camSelect4.started += CameraSwitch4;
         LucidInputActionRefs.camCycle.started += CameraCycle;
-        PlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
-        PlayerInfo.FPTransform = cameraPoints[0];
+        LucidPlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
+        LucidPlayerInfo.FPTransform = cameraPoints[0];
     }
 
     private void OnDisable()
@@ -48,13 +48,13 @@ public class CameraManager : MonoBehaviour
         LucidInputActionRefs.camSelect3.started -= CameraSwitch3;
         LucidInputActionRefs.camSelect4.started -= CameraSwitch4;
         LucidInputActionRefs.camCycle.started -= CameraCycle;
-        PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
+        LucidPlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
     }
 
     public void AssignVismodel(LucidVismodel vismodel)
     {
         headrootTarget = vismodel.anim.GetBoneTransform(HumanBodyBones.Head);
-        PlayerInfo.mainCamera.cullingMask = layerMaskFP;
+        LucidPlayerInfo.mainCamera.cullingMask = layerMaskFP;
     }
 
     private void CameraSwitch1(InputAction.CallbackContext obj)
@@ -80,33 +80,33 @@ public class CameraManager : MonoBehaviour
     }
     private void ChangeCam(int index)
     {
-        if (!PlayerInfo.headLocked) return;
+        if (!LucidPlayerInfo.headLocked) return;
         
         cameraPointIndex = index;
         if (index == 0)
-            PlayerInfo.mainCamera.cullingMask = layerMaskFP;
+            LucidPlayerInfo.mainCamera.cullingMask = layerMaskFP;
         else
-            PlayerInfo.mainCamera.cullingMask = layerMaskNormal;
+            LucidPlayerInfo.mainCamera.cullingMask = layerMaskNormal;
         if (index == 3)
         {
             Transform tcam = cameraPoints[3].transform;
-            tcam.position = PlayerInfo.mainCamera.transform.position;
-            tcam.rotation = PlayerInfo.mainCamera.transform.rotation;
+            tcam.position = LucidPlayerInfo.mainCamera.transform.position;
+            tcam.rotation = LucidPlayerInfo.mainCamera.transform.rotation;
         }
     }
 
     private void Update()
     {
-        float speed = PlayerInfo.mainBody.velocity.magnitude;
+        float speed = LucidPlayerInfo.mainBody.velocity.magnitude;
         if (speed < fovMinSpeed)
             speed = 0;
         currentspeed = Mathf.SmoothDamp(currentspeed, speed, ref fovDampRef, fovDampTime);
-        PlayerInfo.mainCamera.fieldOfView = Mathf.Clamp(fovBase + (currentspeed * fovBySpeed), fovBase, fovMax);
+        LucidPlayerInfo.mainCamera.fieldOfView = Mathf.Clamp(fovBase + (currentspeed * fovBySpeed), fovBase, fovMax);
     }
 
     private void LateUpdate()
     {
-        if (!PlayerInfo.animModelInitialized || PlayerInfo.mainCamera == null) return;
+        if (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.mainCamera == null) return;
 
         if (headrootTarget != null && headRoot != null)
         {
@@ -127,7 +127,7 @@ public class CameraManager : MonoBehaviour
             }
 
             // Combine raw rotation with smoothed rotation
-            Quaternion raw = PlayerInfo.head.transform.rotation;
+            Quaternion raw = LucidPlayerInfo.head.transform.rotation;
             Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, currentMouselookBlend);
             float totalAngle = Quaternion.Angle(finalRotation, raw);
             if (totalAngle > minAngle)
@@ -137,8 +137,8 @@ public class CameraManager : MonoBehaviour
         }
 
         // Update camera position and rotation
-        PlayerInfo.mainCamera.transform.position = cameraPoints[cameraPointIndex].position;
-        PlayerInfo.mainCamera.transform.rotation = cameraPoints[cameraPointIndex].rotation;
+        LucidPlayerInfo.mainCamera.transform.position = cameraPoints[cameraPointIndex].position;
+        LucidPlayerInfo.mainCamera.transform.rotation = cameraPoints[cameraPointIndex].rotation;
     }
 
     public void OnHeadCollisionStay(Collision c)

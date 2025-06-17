@@ -154,7 +154,7 @@ public static class Shortcuts
 }
 
 //global player data, used to simplify information access between scripts
-public static class PlayerInfo
+public static class LucidPlayerInfo
 {
     #region Initialization Events
     public static UnityEvent<LucidVismodel> OnAssignVismodel = new();
@@ -188,8 +188,10 @@ public static class PlayerInfo
 
     public static BoxCollider physBody;
     public static SphereCollider physHead;
+
+    public static CapsuleCollider pelvisColl;
     public static Camera mainCamera;
-    public static Animator playermodelAnim;
+    public static Animator animationModel;
     public static LucidLegs legRef;
     public static LucidVismodel vismodelRef;
     #endregion
@@ -216,7 +218,8 @@ public static class PlayerInfo
         surfaceAngle,
         slidePushAngleThreshold,
         thighLength,
-        calfLength
+        calfLength,
+        pelvisSize
         = 0;
 
     public static bool 
