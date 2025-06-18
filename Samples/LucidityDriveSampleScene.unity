@@ -10700,6 +10700,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemoGun
       objectReference: {fileID: 0}
+    - target: {fileID: 2449647605727731706, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3715825657605770633, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
         type: 3}
       propertyPath: m_LocalPosition.x

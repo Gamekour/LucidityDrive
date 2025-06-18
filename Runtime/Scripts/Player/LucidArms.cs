@@ -205,6 +205,8 @@ public class LucidArms : MonoBehaviour
 
         if (!staticGrabL)
         {
+            if (!grabbedRB_L.gameObject.activeInHierarchy)
+                Ungrab(false);
             Vector3 handUp = (grabbedRB_L.rotation * grabRotationL * Vector3.up).normalized;
             Debug.DrawRay(grabPositionL, handUp);
             if (handUp.y < minDowncastNrmY && !grippyL)
@@ -212,6 +214,8 @@ public class LucidArms : MonoBehaviour
         }
         if (!staticGrabR)
         {
+            if (!grabbedRB_R.gameObject.activeInHierarchy)
+                Ungrab(true);
             Vector3 handUp = (grabbedRB_R.rotation * grabRotationR * Vector3.up).normalized;
             if (handUp.y < minDowncastNrmY && !grippyR)
                 Ungrab(true);
