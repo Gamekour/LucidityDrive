@@ -39,14 +39,18 @@ public class LucidTool : MonoBehaviour
         LucidArms la = FindObjectOfType<LucidArms>();
         while (!LucidPlayerInfo.animModelInitialized)
             yield return new WaitForEndOfFrame();
+
+        if (autoGrabL || autoGrabR)
+        {
+            la.ForceUngrab(true);
+            la.ForceUngrab(false);
+        }
         if (autoGrabL)
         {
-            la.ForceUngrab(false);
             la.ForceGrab(this, false);
         }
         else if (autoGrabR)
         {
-            la.ForceUngrab(true);
             la.ForceGrab(this, true);
         }
     }
