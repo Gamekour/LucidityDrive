@@ -143,9 +143,9 @@ public class LucidLegs : MonoBehaviour
     private void ConfigurePhysModel(LucidVismodel visModel)
     {
         physBody.size = Vector3.Scale(visModel.bodyCollider.size, visModel.bodyCollider.transform.lossyScale);
-        //physBody.center = Vector3.Scale(visModel.bodyCollider.center, visModel.bodyCollider.transform.lossyScale);
+        physBody.center = Vector3.Scale(visModel.bodyCollider.center, visModel.bodyCollider.transform.lossyScale);
         physHead.radius = visModel.headCollider.radius * visModel.headCollider.transform.lossyScale.y;
-        //physHead.center = visModel.headCollider.center * visModel.headCollider.transform.lossyScale.y;
+        physHead.center = visModel.headCollider.center * visModel.headCollider.transform.lossyScale.y;
         ConfigurableJoint hcj = physHead.GetComponent<ConfigurableJoint>();
         Vector3 headoffset = visModel.headCollider.transform.position - visModel.bodyCollider.transform.position;
         hcj.connectedAnchor = headoffset;
