@@ -26,22 +26,18 @@ public class LucidTool : MonoBehaviour
 
     public void OnEnable()
     {
-        LucidPlayerInfo.OnAssignVismodel.AddListener(OnVismodelAssigned);
+        StartCoroutine(WaitForInit());
     }
 
     public void OnDisable()
     {
-        LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnVismodelAssigned);
-    }
-
-    private void OnVismodelAssigned(LucidVismodel v)
-    {
-        StartCoroutine(WaitForInit());
+        StopCoroutine(WaitForInit());
     }
 
     IEnumerator WaitForInit()
     {
-        yield return new WaitForFixedUpdate();
+        while (!LucidPlayerInfo.animModelInitialized)
+            yield return new WaitForEndOfFrame();
         if (autoGrabL)
             FindObjectOfType<LucidArms>().ForceGrab(this, false);
         else if (autoGrabR)
