@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84801d359f42b734b9bc39f78c07f3d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoSprint: 1
+  autoSprint: 0
   overrideSprint: 0
   sprintOverride: 0
   legSpaceL: {fileID: 1105449331241879533}

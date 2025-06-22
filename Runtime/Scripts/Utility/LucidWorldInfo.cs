@@ -222,7 +222,7 @@ public static class LucidPlayerInfo
         pelvisSize
         = 0;
 
-    public static bool 
+    public static bool
         grounded,
         pelvisCollision,
         physCollision,
@@ -238,7 +238,11 @@ public static class LucidPlayerInfo
         grabValidL,
         grabValidR,
         headLocked,
-        animModelInitialized
+        animModelInitialized,
+        disableSprint,
+        disableJump,
+        isSprinting,
+        isJumping
         = false;
     #endregion
 }

@@ -183,6 +183,7 @@ public class LucidLegs : MonoBehaviour
         bool inputBackslide = LucidInputValueShortcuts.slide;
         bool inputCrouch = LucidInputValueShortcuts.crouch;
         bool inputJump = LucidInputValueShortcuts.jump;
+        LucidPlayerInfo.isJumping = inputJump && LucidPlayerInfo.grounded;
         bool inputSprint = LucidInputValueShortcuts.sprint;
         if (overrideSprint)
             inputSprint = sprintOverride;
@@ -396,7 +397,7 @@ public class LucidLegs : MonoBehaviour
 
         if (LucidPlayerInfo.climbing)
             t = climbTilt;
-        else if (inputJump)
+        else if (inputJump && !LucidPlayerInfo.disableJump)
             t = jumpTilt;
         else
             t *= slopeTilt;
@@ -427,7 +428,7 @@ public class LucidLegs : MonoBehaviour
 
         if (LucidPlayerInfo.crawling)
             legadjust = crawlHeight;
-        else if (inputJump)
+        else if (inputJump && !LucidPlayerInfo.disableJump)
         {
             legadjust *= jumpHeightScale;
             rb.AddForce(Vector3.up * (jumpGravity - Physics.gravity.y));
@@ -446,7 +447,7 @@ public class LucidLegs : MonoBehaviour
         heightratio = Mathf.Clamp(heightratio, 0, 2);
 
         float forceadjust = maxForceScale;
-        if (LucidInputValueShortcuts.jump && relativeheight <= LucidPlayerInfo.vismodelRef.maxLegScale)
+        if (LucidInputValueShortcuts.jump && relativeheight <= LucidPlayerInfo.vismodelRef.maxLegScale && !LucidPlayerInfo.disableJump)
             forceadjust *= jumpForceScale;
 
         float currentY = rb.velocity.y;
@@ -466,21 +467,22 @@ public class LucidLegs : MonoBehaviour
         nrm += velnrm;
 
         LucidPlayerInfo.alignment = (Vector3.Angle(rb.velocity, dir) / 180) * Mathf.Clamp01(rb.velocity.magnitude);
+        LucidPlayerInfo.isSprinting = inputSprint && !LucidPlayerInfo.disableSprint;
 
         float moveadjust = moveSpeed;
         if (LucidPlayerInfo.crawling)
             moveadjust = moveSpeedCrawling;
         else if (inputCrouch)
             moveadjust = moveSpeedCrouched;
-        if (inputSprint)
+        if (LucidPlayerInfo.isSprinting)
             moveadjust *= sprintScale;
         if (Mathf.Abs(moveFlat.x) > strafeWalkAngularThreshold)
-            moveadjust *= strafeWalkSpeedMult;
+                moveadjust *= strafeWalkSpeedMult;
 
         float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
         moveadjust *= 1 + (diffmag * moveBurst);
 
-        float jumpadjust = inputJump ? directionalJumpStrength : 1;
+        float jumpadjust = (inputJump && !LucidPlayerInfo.disableJump) ? directionalJumpStrength : 1;
         Vector3 movetarget = jumpadjust * moveadjust * hipSpace.TransformVector(moveFlat);
         Vector3 relativevel = hipSpace.InverseTransformVector(rb.velocity);
         relativevel.y = 0;
