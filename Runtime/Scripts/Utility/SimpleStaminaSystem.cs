@@ -51,7 +51,7 @@ public class SimpleStaminaSystem : MonoBehaviour
             stamina = Mathf.Clamp(stamina + (Time.deltaTime * staminaRegenRate), 0, staminaMax);
 
         if (!Mathf.Approximately(previousStamina, stamina) && onStaminaChange != null)
-            onStaminaChange.Invoke(stamina);
+            onStaminaChange.Invoke(stamina / staminaMax);
 
         LucidPlayerInfo.disableSprint = (stamina < staminaMinRequirement && staminaUseRateSprinting > 0);
         LucidPlayerInfo.disableJump = (stamina < staminaMinRequirement && staminaUseRateJumping > 0);
