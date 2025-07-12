@@ -4834,16 +4834,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2531359406154903297, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: MaxDistance
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 2531359406154903297, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2635777386139525533, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4894,64 +4884,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4256133664437597989, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: castDistance
-      value: 1.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4256133664437597989, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: limitDistance
-      value: 1.1
-      objectReference: {fileID: 0}
     - target: {fileID: 6671152753758007464, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Name
       value: PlayerRig
       objectReference: {fileID: 0}
-    - target: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: mouselookBlend
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: headRotationSmoothTime
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 9d5a21555745d03aaa9bfae1f6d47cef, type: 2}
-    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: velSmoothTime
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: hangSmoothTime
-      value: 0.025
-      objectReference: {fileID: 0}
-    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: climbSmoothTime
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: stanceHeightSmoothTime
-      value: 0.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 285475612948793012, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1567050146}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: feb5ffb413408f64bb3e0843d3c27f57, type: 3}
 --- !u!1 &855416701
 GameObject:
@@ -7204,12 +7145,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 93489011}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1294157179 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 283649365809611213, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 825995170}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1344992100
 GameObject:
   m_ObjectHideFlags: 0
@@ -8032,32 +7967,6 @@ Transform:
   - {fileID: 869223806}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1567050143 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 285475612948793012, guid: feb5ffb413408f64bb3e0843d3c27f57,
-    type: 3}
-  m_PrefabInstance: {fileID: 825995170}
-  m_PrefabAsset: {fileID: 0}
---- !u!1818360608 &1567050146
-PositionConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1567050143}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 0, z: 0}
-  m_TranslationOffset: {x: 0, y: 0, z: 0}
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_Active: 1
-  m_IsLocked: 1
-  m_Sources:
-  - sourceTransform: {fileID: 1294157179}
-    weight: 1
 --- !u!1 &1639556202
 GameObject:
   m_ObjectHideFlags: 0
