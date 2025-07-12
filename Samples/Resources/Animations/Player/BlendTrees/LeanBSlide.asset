@@ -48,8 +48,8 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: alignment
     m_Mirror: 0
-  m_BlendParameter: leanX
-  m_BlendParameterY: leanZ
+  m_BlendParameter: nrmX
+  m_BlendParameterY: nrmZ
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
