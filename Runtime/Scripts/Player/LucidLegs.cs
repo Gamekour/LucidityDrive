@@ -195,6 +195,14 @@ public class LucidLegs : MonoBehaviour
         bool doGroundLogic = LucidPlayerInfo.grounded && LucidPlayerInfo.footSurface.y >= -0.001f;
         
         LucidPlayerInfo.crawling = crawling;
+        if (crawling)
+            LucidPlayerInfo.stanceHeight = 0.1f;
+        else if (inputBellyslide)
+            LucidPlayerInfo.stanceHeight = 0;
+        else if (inputCrouch)
+            LucidPlayerInfo.stanceHeight = 0.5f;
+        else
+            LucidPlayerInfo.stanceHeight = 1;
 
         if (!LucidPlayerInfo.grounded)
         {
@@ -798,7 +806,7 @@ public class LucidLegs : MonoBehaviour
 
         bool isRight = animPhase > 0.5f;
         bool wasRight = LucidPlayerInfo.animPhase > 0.5f;
-        if (wasRight != isRight)
+        if (wasRight != isRight && LucidPlayerInfo.grounded)
             onFootChanged.Invoke();
             
         LucidPlayerInfo.animPhase = animPhase;

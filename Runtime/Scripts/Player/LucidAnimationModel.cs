@@ -24,6 +24,8 @@ public class LucidAnimationModel : MonoBehaviour
         willSmoothTime,
         alignmentSmoothTime,
         hangSmoothTime,
+        climbSmoothTime,
+        stanceHeightSmoothTime,
         castThickness,
         castHeight,
         airTimeMax,
@@ -63,7 +65,9 @@ public class LucidAnimationModel : MonoBehaviour
         landingRef,
         alignmentRef,
         hipLayerRef,
-        crouchRef;
+        stanceHeightRef,
+        crouchRef,
+        climbRef;
     private Transform
         pelvis,
         head,
@@ -111,7 +115,9 @@ public class LucidAnimationModel : MonoBehaviour
         _GRAB_R = "grabR",
         _CLIMBING = "climbing",
         _FOOTSLIDE = "footslide",
-        _CROUCH = "crouch";
+        _CROUCH = "crouch",
+        _GROUNDDIST = "groundDistance",
+        _STANCEHEIGHT = "stanceHeight";
 
     private void Start()
     {
@@ -246,8 +252,16 @@ public class LucidAnimationModel : MonoBehaviour
         Vector2 lerplean = CalculateLean(localVel, localNrm);
         Vector3 hang = CalculateHang();
 
+        float currentStanceHeight = anim.GetFloat(_STANCEHEIGHT);
+        float targetStanceHeight = LucidPlayerInfo.stanceHeight;
+        float smoothedStanceHeight = Mathf.SmoothDamp(currentStanceHeight, targetStanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
+
+        float currentClimb = anim.GetFloat(_CLIMB);
+        float targetCimb = LucidPlayerInfo.climbRelative.y;
+        hang.y = Mathf.SmoothDamp(currentClimb, targetCimb, ref climbRef, climbSmoothTime);
+
         UpdateFootAngle();
-        UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean, hang);
+        UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean, hang, smoothedStanceHeight);
         UpdateAnimatorBools();
 
         if (LucidPlayerInfo.airTime > airtimesmooth)
@@ -255,19 +269,12 @@ public class LucidAnimationModel : MonoBehaviour
         else
             airtimesmooth = Mathf.SmoothDamp(airtimesmooth, LucidPlayerInfo.airTime, ref landingRef, landTime);
 
-        float legweight = Mathf.Clamp01(airtimesmooth / airTimeMax);
-        legweight *= slide ? 0 : 1;
-        legweight *= bslide ? 0 : 1;
-        legweight *= LucidPlayerInfo.flying ? 0 : 1;
-        legweight *= LucidPlayerInfo.climbing ? 0 : 1;
-        anim.SetLayerWeight(1, legweight);
-
-        float hipweight = Mathf.Clamp01((slide ? 0 : 1) * (bslide ? 0 : 1) * (crouch ? 0 : 1));
-        hipweight *= Mathf.Clamp01(velflat.magnitude);
+        float hipweight = Mathf.Clamp01(crouch ? 0 : 1);
+        hipweight *= Mathf.Lerp(1, Mathf.Clamp01(velflat.magnitude), Mathf.Min(smoothedStanceHeight, slide ? 0 : smoothedStanceHeight));
         hipweight *= LucidPlayerInfo.climbing ? 0 : 1;
-        float currenthipweight = anim.GetLayerWeight(2);
+        float currenthipweight = anim.GetLayerWeight(1);
         hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
-        anim.SetLayerWeight(2, hipweight);
+        anim.SetLayerWeight(1, hipweight);
 
         Quaternion chest = anim.GetBoneTransform(HumanBodyBones.Chest).rotation;
         Quaternion localSpaceRotationNeck = Quaternion.Inverse(chest) * Quaternion.Slerp(head.rotation, chest, lerp);
@@ -281,7 +288,7 @@ public class LucidAnimationModel : MonoBehaviour
     private float CalculateAlignment()
     {
         float lastalignment = anim.GetFloat(_ALIGNMENT);
-        lastalignment = Mathf.SmoothDamp(LucidPlayerInfo.alignment, lastalignment, ref alignmentRef, alignmentSmoothTime);
+        lastalignment = Mathf.SmoothDamp(lastalignment, LucidPlayerInfo.alignment, ref alignmentRef, alignmentSmoothTime);
         return lastalignment;
     }
 
@@ -353,7 +360,7 @@ public class LucidAnimationModel : MonoBehaviour
         }
     }
 
-    private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float lastalignment, Vector2 lean, Vector3 hang)
+    private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float lastalignment, Vector2 lean, Vector3 hang, float smoothedStanceHeight)
     {
         float currentcrouch = anim.GetFloat(_CROUCH);
         float crouch = LucidInputValueShortcuts.crouch ? 1 : 0;
@@ -373,14 +380,16 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_NRM_Z, localNrm.z);
         anim.SetFloat(_ANIMCYCLE, LucidPlayerInfo.animPhase);
         anim.SetFloat(_AIRTIME, LucidPlayerInfo.airTime);
-        anim.SetFloat(_ALIGNMENT, lastalignment);
-        anim.SetFloat(_CLIMB, LucidPlayerInfo.climbRelative.y);
+        anim.SetFloat(_ALIGNMENT, 1 - lastalignment);
+        anim.SetFloat(_CLIMB, hang.y);
         anim.SetFloat(_HANG_X, hang.x);
         anim.SetFloat(_HANG_Z, hang.z);
         anim.SetFloat(_LEAN_X, lean.x);
         anim.SetFloat(_LEAN_Z, lean.y);
         anim.SetFloat(_FOOT_ANGLE, footAngle / maxFootAngle);
         anim.SetFloat(_CROUCH, crouch);
+        anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
+        anim.SetFloat(_GROUNDDIST, LucidPlayerInfo.groundDistance);
     }
 
     private void UpdateAnimatorBools()

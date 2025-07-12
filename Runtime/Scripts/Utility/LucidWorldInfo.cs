@@ -219,7 +219,8 @@ public static class LucidPlayerInfo
         slidePushAngleThreshold,
         thighLength,
         calfLength,
-        pelvisSize
+        pelvisSize,
+        stanceHeight
         = 0;
 
     public static bool

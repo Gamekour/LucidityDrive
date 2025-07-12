@@ -43,7 +43,7 @@ MonoBehaviour:
   ratioScale: 1
   ratioFreezeThreshold: 0.1
   dampAnimPhaseByAirtime: 2
-  scaleRatioBySpeed: 0.25
+  scaleRatioBySpeed: 0.3
   friction: 0.425
   maxForceScale: 5.4
   pelvisRotationSpeed: 2000
