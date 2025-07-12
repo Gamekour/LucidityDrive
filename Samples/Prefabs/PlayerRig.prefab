@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8399116561206556421}
   - component: {fileID: 2531359406154903297}
+  - component: {fileID: 6392015881782361676}
   m_Layer: 3
   m_Name: footstepSound
   m_TagString: Untagged
@@ -84,7 +85,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 25
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -119,7 +120,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -159,6 +160,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1818360608 &6392015881782361676
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285475612948793012}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffset: {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 283649365809611213}
+    weight: 1
 --- !u!1 &394187697296875945
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,18 +841,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   airtimeThreshold: 0.01
-  controller: {fileID: 9100000, guid: d306c39f8cccab24a8871088ef7f5657, type: 2}
+  controller: {fileID: 9100000, guid: 9d5a21555745d03aaa9bfae1f6d47cef, type: 2}
   fpcam: {fileID: 5496875962166913160}
   IK_LF: {fileID: 8982907529161714512}
   IK_RF: {fileID: 5249457337260208995}
   IK_LH: {fileID: 3483037214520940076}
   IK_RH: {fileID: 4123976296632360821}
-  velSmoothTime: 0.25
+  velSmoothTime: 1
   nrmSmoothTime: 0
   footSmoothTime: 0.5
   willSmoothTime: 0.1
   alignmentSmoothTime: 0.5
-  hangSmoothTime: 0.5
+  hangSmoothTime: 0.025
+  climbSmoothTime: 0.5
+  stanceHeightSmoothTime: 0.5
   castThickness: 0.1
   castHeight: 0.07
   airTimeMax: 0.4
@@ -1718,8 +1741,8 @@ MonoBehaviour:
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
   headRoot: {fileID: 2840716185538071160}
-  headRotationSmoothTime: 1
-  mouselookBlend: 0.1
+  headRotationSmoothTime: 0.25
+  mouselookBlend: 0.3
   mouselookBlendTransitionSpeed: 1
   nonFPCameraSmoothTime: 0.05
   fovBase: 75
@@ -2624,12 +2647,12 @@ PrefabInstance:
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
       propertyPath: castDistance
-      value: 1.5
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
       propertyPath: limitDistance
-      value: 1
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}

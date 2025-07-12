@@ -783,7 +783,7 @@ public class LucidLegs : MonoBehaviour
 
         float grounddist = Vector3.Distance(transform.position, vFloor.position) - legLength;
         if (results.Count < 1)
-            grounddist = Mathf.Infinity;
+            grounddist = LucidPlayerInfo.airTime;
         LucidPlayerInfo.groundDistance = grounddist;
 
         float currentratiomult = ratioScale * (1 + (velflat.magnitude * scaleRatioBySpeed));
