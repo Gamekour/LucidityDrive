@@ -13,7 +13,6 @@ public class LucidFreelook : MonoBehaviour
     private Transform chest;
     private Transform head;
 
-    private float chestXAngle;
     private float currentOffset, targetOffset;
 
     private void Awake()
@@ -69,10 +68,9 @@ public class LucidFreelook : MonoBehaviour
         Vector3 rotation = new(headLookInput.y, headLookInput.x, 0);
 
         float chestX = chest.eulerAngles.x;
-        chestXAngle = chestX;
 
         if (chest.up.y < 0)
-            chestXAngle = AdjustForInvertedState(chestXAngle, 90f, 270f);
+            chestX = -chestX;
 
         float currentX = transform.eulerAngles.x;
 
@@ -80,7 +78,17 @@ public class LucidFreelook : MonoBehaviour
             currentX = AdjustForInvertedState(currentX, 90f, 270f);
 
         currentOffset = CalculateOffset(chestX, currentX);
-        targetOffset = Mathf.Clamp(currentOffset + rotation.x, downAngleLimit, upAngleLimit);
+        if (chest.up.y > 0)
+            targetOffset = Mathf.Clamp(currentOffset + rotation.x, downAngleLimit, upAngleLimit);
+        else
+        {
+            if (currentOffset + rotation.x > 0)
+                targetOffset = Mathf.Clamp(currentOffset + rotation.x, upAngleLimit, 360);
+            else if (currentOffset + rotation.x < upAngleLimit)
+                targetOffset = Mathf.Clamp(currentOffset + rotation.x, -360, downAngleLimit);
+            else
+                targetOffset = currentOffset + rotation.x;
+        }
 
         float offsetDifference = targetOffset - currentOffset;
 
