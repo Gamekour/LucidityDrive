@@ -284,16 +284,14 @@ public class LucidAnimationModel : MonoBehaviour
         Vector2 lerplean = CalculateLean(localVel, localNrm);
         Vector3 hang = CalculateHang();
 
-        float currentStanceHeight = anim.GetFloat(_STANCEHEIGHT);
-        float targetStanceHeight = LucidPlayerInfo.stanceHeight;
-        float smoothedStanceHeight = Mathf.SmoothDamp(currentStanceHeight, targetStanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
-
         float currentClimb = anim.GetFloat(_CLIMB);
         float targetCimb = LucidPlayerInfo.climbRelative.y;
         hang.y = Mathf.SmoothDamp(currentClimb, targetCimb, ref climbRef, climbSmoothTime);
 
+        float stanceHeight = CalculateStanceHeight();
+
         UpdateFootAngle();
-        UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean, hang, smoothedStanceHeight);
+        UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean, hang, stanceHeight);
         UpdateAnimatorBools();
 
         if (LucidPlayerInfo.airTime > airtimesmooth)
@@ -302,7 +300,7 @@ public class LucidAnimationModel : MonoBehaviour
             airtimesmooth = Mathf.SmoothDamp(airtimesmooth, LucidPlayerInfo.airTime, ref landingRef, landTime);
 
         float hipweight = Mathf.Clamp01(crouch ? 0 : 1);
-        hipweight *= Mathf.Lerp(1, Mathf.Clamp01(velflat.magnitude), Mathf.Min(smoothedStanceHeight, slide ? 0 : smoothedStanceHeight));
+        hipweight *= Mathf.Lerp(1, Mathf.Clamp01(velflat.magnitude), Mathf.Min(stanceHeight, slide ? 0 : stanceHeight));
         hipweight *= LucidPlayerInfo.climbing ? 0 : 1;
         float currenthipweight = anim.GetLayerWeight(1);
         hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
@@ -315,6 +313,26 @@ public class LucidAnimationModel : MonoBehaviour
 
         UpdateFootPositions();
         UpdateHandPositions();
+    }
+
+    private float CalculateStanceHeight()
+    {
+        float stanceHeight = LucidPlayerInfo.stanceHeight;
+        float currentStanceHeight = anim.GetFloat(_STANCEHEIGHT);
+        stanceHeight = Mathf.SmoothDamp(currentStanceHeight, stanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
+
+        CapsuleCollider hipColl = LucidPlayerInfo.pelvisColl;
+        Vector3 point1 = hipColl.transform.position + (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
+        Vector3 point2 = hipColl.transform.position - (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
+        bool hit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfo, 100, Shortcuts.geometryMask);
+
+        if (hit)
+        {
+            float heightratio = Mathf.Clamp01(hitInfo.distance / LucidPlayerInfo.vismodelRef.upperBodyHeight);
+            stanceHeight = Mathf.Clamp(stanceHeight, 0, heightratio);
+        }
+
+        return stanceHeight;
     }
 
     private float CalculateAlignment()

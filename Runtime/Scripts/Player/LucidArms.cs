@@ -200,9 +200,14 @@ public class LucidArms : MonoBehaviour
         bool staticGrabL = (grabbedRB_L == null || grabbedRB_L == staticGrabRB_L);
         bool staticGrabR = (grabbedRB_R == null || grabbedRB_R == staticGrabRB_R);
 
+        staticGrabL |= staticGrabRB_L == null;
+        staticGrabR |= staticGrabRB_R == null;
+
         if (!staticGrabL)
         {
-            if (!grabbedRB_L.gameObject.activeInHierarchy)
+            if (grabbedRB_L == null)
+                Ungrab(false);
+            else if (!grabbedRB_L.gameObject.activeInHierarchy)
                 Ungrab(false);
             else
             {
@@ -214,7 +219,9 @@ public class LucidArms : MonoBehaviour
         }
         if (!staticGrabR)
         {
-            if (!grabbedRB_R.gameObject.activeInHierarchy)
+            if (grabbedRB_R == null)
+                Ungrab(true);
+            else if (!grabbedRB_R.gameObject.activeInHierarchy)
                 Ungrab(true);
             else
             {
