@@ -1810,15 +1810,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3471226463212317937, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
+        type: 3}
+      propertyPath: bodyCollider
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3471226463212317937, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
+        type: 3}
+      propertyPath: headCollider
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7587276133036043626, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
         type: 3}
       propertyPath: m_Name
       value: VismodelExample
-      objectReference: {fileID: 0}
-    - target: {fileID: 7587276133036043626, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
