@@ -13,7 +13,6 @@ public class LucidVismodel : MonoBehaviour
     public float pelvisScaleMult = 1;
     [SerializeField] bool initializeOnStart = true;
     [SerializeField] float grabSpeed = 1;
-    [SerializeField] float collisionTransitionTime = 1;
 
     [Header("References")]
     public Transform playerMeshParent;
@@ -76,18 +75,11 @@ public class LucidVismodel : MonoBehaviour
 
         Vector3 offset = animHips.position - visHips.position;
         transform.position += offset;
-        Quaternion qPhysHips = LucidPlayerInfo.physBody.transform.rotation;
-        Quaternion qPhysHead = LucidPlayerInfo.physHead.transform.rotation;
         Quaternion qAnimHips = LucidPlayerInfo.animationModel.bodyRotation;
         Quaternion qAnimHead = LucidPlayerInfo.head.rotation;
 
-        Quaternion qHips2 = LucidPlayerInfo.physCollision ? qAnimHips : qPhysHips;
-        Quaternion qHips1 = LucidPlayerInfo.physCollision ? qPhysHips : qAnimHips;
-        Quaternion qHead2 = LucidPlayerInfo.physCollision ? qAnimHead : qPhysHead;
-        Quaternion qHead1 = LucidPlayerInfo.physCollision ? qPhysHead : qAnimHead;
-
-        anim.SetBoneLocalRotation(HumanBodyBones.Hips, QuaternionUtil.SmoothDamp(qHips1, qHips2, ref hipDeriv, collisionTransitionTime));
-        anim.SetBoneLocalRotation(HumanBodyBones.Head, QuaternionUtil.SmoothDamp(qHead1, qHead2, ref headDeriv, collisionTransitionTime));
+        anim.SetBoneLocalRotation(HumanBodyBones.Hips, qAnimHips);
+        anim.SetBoneLocalRotation(HumanBodyBones.Head, qAnimHead);
 
         foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
         {

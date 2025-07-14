@@ -43,8 +43,6 @@ public class LucidLegs : MonoBehaviour
     [SerializeField] Transform hipSpace;
     [SerializeField] Transform footSpace;
     [SerializeField] Transform vFloor;
-    [SerializeField] BoxCollider physBody;
-    [SerializeField] SphereCollider physHead;
 
     [SerializeField] CapsuleCollider pelvisCollider;
     [SerializeField] MovementSettings defaultMovementSettings;
@@ -133,29 +131,6 @@ public class LucidLegs : MonoBehaviour
 
     public void OnAssignVismodel(LucidVismodel visModel)
     {
-        ConfigurePhysModel(visModel);
-    }
-
-    //copies physmodel configuration from vismodel
-    private void ConfigurePhysModel(LucidVismodel visModel)
-    {
-        physBody.size = Vector3.Scale(visModel.bodyCollider.size, visModel.bodyCollider.transform.lossyScale);
-        physBody.center = Vector3.Scale(visModel.bodyCollider.center, visModel.bodyCollider.transform.lossyScale);
-        physHead.radius = visModel.headCollider.radius * visModel.headCollider.transform.lossyScale.y;
-        physHead.center = visModel.headCollider.center * visModel.headCollider.transform.lossyScale.y;
-        ConfigurableJoint hcj = physHead.GetComponent<ConfigurableJoint>();
-        Vector3 headoffset = visModel.headCollider.transform.position - visModel.bodyCollider.transform.position;
-        hcj.connectedAnchor = headoffset;
-        Vector3 lefthip = visModel.anim.GetBoneTransform(HumanBodyBones.LeftUpperLeg).position;
-        Vector3 righthip = visModel.anim.GetBoneTransform(HumanBodyBones.RightUpperLeg).position;
-        LucidPlayerInfo.pelvisSize = Vector3.Distance(lefthip, righthip);
-        float newPelvisLength = LucidPlayerInfo.pelvisSize * visModel.pelvisScaleMult;
-        LucidPlayerInfo.pelvisColl.height = newPelvisLength;
-        LucidPlayerInfo.pelvisColl.radius = newPelvisLength / 3;
-        ParentConstraint lscL = LucidPlayerInfo.legspaceL.GetComponent<ParentConstraint>();
-        ParentConstraint lscR = LucidPlayerInfo.legspaceR.GetComponent<ParentConstraint>();
-        lscL.SetTranslationOffset(0, Vector3.left * (LucidPlayerInfo.pelvisSize / 2));
-        lscR.SetTranslationOffset(0, Vector3.right * (LucidPlayerInfo.pelvisSize / 2));
     }
 
     public void OnAnimModelInitialized()
@@ -250,10 +225,6 @@ public class LucidLegs : MonoBehaviour
         LucidPlayerInfo.footspace = footSpace;
         LucidPlayerInfo.legspaceL = legSpaceL;
         LucidPlayerInfo.legspaceR = legSpaceR;
-        LucidPlayerInfo.physBody = physBody;
-        LucidPlayerInfo.physBodyRB = physBody.GetComponent<Rigidbody>();
-        LucidPlayerInfo.physHead = physHead;
-        LucidPlayerInfo.physHeadRB = physHead.GetComponent<Rigidbody>();
     }
 
     //copies values from movement settings to this script, using property names to match values
@@ -418,10 +389,6 @@ public class LucidLegs : MonoBehaviour
 
         float legLength = (LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength) * LucidPlayerInfo.vismodelRef.maxLegScale;
 
-        float headdist = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Head).position.y - physHead.transform.position.y;
-        headdist = Mathf.Clamp(headdist, 0, Mathf.Infinity);
-        float legclamp = legLength - (headdist * 2.5f);
-
         float moveupamount = Mathf.Clamp01(footSpace.TransformVector(moveFlat).y);
         moveupamount *= targetHeightByPositiveSlope;
 
@@ -442,9 +409,6 @@ public class LucidLegs : MonoBehaviour
         {
             legadjust *= 1 + movedownamount + moveupamount;
         }
-
-        if(LucidPlayerInfo.physCollision)
-            legadjust = Mathf.Clamp(legadjust, 0, legclamp);
 
         float relativeheight = hipSpace.position.y - footSpace.position.y;
         LucidPlayerInfo.relativeHeight = relativeheight;
@@ -515,17 +479,6 @@ public class LucidLegs : MonoBehaviour
         }
         if (!isRight && LucidPlayerInfo.connectedRB_LF != null)
             LucidPlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_LF.position, ForceMode.Force);
-    }
-
-    public void OnPhysCollisionStay(Collision c)
-    {
-        LucidPlayerInfo.physCollision = true;
-        bodyCollisionNrm = c.contacts[0].normal;
-    }
-
-    public void OnPhysCollisionExit(Collision c)
-    {
-        LucidPlayerInfo.physCollision = false;
     }
 
     private void OnCollisionStay(Collision collision)

@@ -181,13 +181,8 @@ public static class LucidPlayerInfo
 
     public static Rigidbody
         mainBody,
-        physBodyRB,
-        physHeadRB,
         connectedRB_RF,
         connectedRB_LF;
-
-    public static BoxCollider physBody;
-    public static SphereCollider physHead;
 
     public static CapsuleCollider pelvisColl;
     public static Camera mainCamera;
@@ -227,7 +222,6 @@ public static class LucidPlayerInfo
     public static bool
         grounded,
         pelvisCollision,
-        physCollision,
         crawling,
         flying,
         grabL,

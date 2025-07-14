@@ -56,7 +56,6 @@ public class LucidArms : MonoBehaviour
         disabling,
         initialized
         = false;
-    private float hipDrag, headDrag = 0;
     private float animArmLength = 0;
 
     private void OnEnable()
@@ -110,8 +109,6 @@ public class LucidArms : MonoBehaviour
         disabling = false;
         animShoulderL = visModel.anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
         animShoulderR = visModel.anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
-        hipDrag = LucidPlayerInfo.physBodyRB.angularDrag;
-        headDrag = LucidPlayerInfo.physHeadRB.angularDrag;
         animArmLength = CalculateAnimArmLength(visModel);
         sjlewis.limit = limitDistance * animArmLength;
         currentPoseL = itemPosesL.Find("OneHandedCarry");
@@ -771,8 +768,6 @@ public class LucidArms : MonoBehaviour
 
         Vector3 dir = Vector3.ClampMagnitude(LucidPlayerInfo.mainBody.velocity, 1);
         LucidPlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
-        LucidPlayerInfo.physBodyRB.angularDrag = hipDrag;
-        LucidPlayerInfo.physHeadRB.angularDrag = headDrag;
 
         UpdateItemPose(!isRight, "OneHandedCarry");
 
