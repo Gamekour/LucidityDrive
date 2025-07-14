@@ -17,14 +17,10 @@ public class LucidVismodel : MonoBehaviour
 
     [Header("References")]
     public Transform playerMeshParent;
-    public BoxCollider bodyCollider;
-    public SphereCollider headCollider;
 
     private LucidAnimationModel modelSync;
     private float grabWeightL, grabWeightR = 0;
     private bool initialized = false;
-    private Quaternion hipDeriv = Quaternion.identity;
-    private Quaternion headDeriv = Quaternion.identity;
 
     private void Start()
     {
