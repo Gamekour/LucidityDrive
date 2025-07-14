@@ -38,7 +38,13 @@ public class LucidAnimationModel : MonoBehaviour
         maxFootAngle,
         verticalFootAdjust,
         crouchTime,
-        minCastDist;
+        minCastDist,
+        stepRate,
+        scaleStepRateByVelocity,
+        minStepRate,
+        dampAnimPhaseByAirtime;
+
+    public UnityEvent onFootChanged;
 
     [HideInInspector]
     public Dictionary<string, Quaternion> boneRots = new();
@@ -130,6 +136,32 @@ public class LucidAnimationModel : MonoBehaviour
 
         transform.position += pelvis.position - animpelvis.position;
         transform.rotation = pelvis.rotation;
+
+        float animPhase = LucidPlayerInfo.animPhase;
+
+        Vector3 velflat = LucidPlayerInfo.mainBody.velocity;
+        velflat.y = 0;
+
+        float stepRateAdjusted = stepRate / (1 + (LucidPlayerInfo.mainBody.velocity.magnitude * scaleStepRateByVelocity));
+
+        if (velflat.magnitude > 0.1f)
+        {
+            float add = (Time.fixedDeltaTime * 0.5f) / stepRateAdjusted;
+            add /= 1 + (LucidPlayerInfo.airTime * dampAnimPhaseByAirtime);
+            animPhase += add;
+            animPhase %= 1;
+        }
+
+        bool isRight = animPhase > 0.5f;
+        bool wasRight = LucidPlayerInfo.animPhase > 0.5f;
+        if (wasRight != isRight && LucidPlayerInfo.grounded)
+            onFootChanged.Invoke();
+
+        LucidPlayerInfo.animPhase = animPhase;
+
+        float stepphase = 0.5f - animPhase;
+        stepphase = Mathf.Abs(stepphase) * 2;
+        LucidPlayerInfo.stepPhase = stepphase;
     }
 
     private void OnEnable()

@@ -220,7 +220,8 @@ public static class LucidPlayerInfo
         thighLength,
         calfLength,
         pelvisSize,
-        stanceHeight
+        stanceHeight,
+        relativeHeight
         = 0;
 
     public static bool

@@ -70,9 +70,11 @@ public class LucidVismodel : MonoBehaviour
     {
         if (LucidPlayerInfo.animationModel == null) return;
 
-        Transform tHips = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips);
+        Transform animHips = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips);
 
-        Vector3 offset = tHips.position - anim.GetBoneTransform(HumanBodyBones.Hips).position;
+        Transform visHips = anim.GetBoneTransform(HumanBodyBones.Hips);
+
+        Vector3 offset = animHips.position - visHips.position;
         transform.position += offset;
         Quaternion qPhysHips = LucidPlayerInfo.physBody.transform.rotation;
         Quaternion qPhysHead = LucidPlayerInfo.physHead.transform.rotation;

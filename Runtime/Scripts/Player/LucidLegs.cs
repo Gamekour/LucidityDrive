@@ -49,8 +49,6 @@ public class LucidLegs : MonoBehaviour
     [SerializeField] CapsuleCollider pelvisCollider;
     [SerializeField] MovementSettings defaultMovementSettings;
 
-    public UnityEvent onFootChanged;
-
     //parameters copied from movementsettings
     private float
         legWidth,
@@ -110,7 +108,6 @@ public class LucidLegs : MonoBehaviour
     private Rigidbody rb;
     private Vector3 bodyCollisionNrm;
     private float animPhase = 0;
-    private float currentratio = 1;
 
     private void Awake()
     {
@@ -450,7 +447,7 @@ public class LucidLegs : MonoBehaviour
             legadjust = Mathf.Clamp(legadjust, 0, legclamp);
 
         float relativeheight = hipSpace.position.y - footSpace.position.y;
-        currentratio = relativeheight;
+        LucidPlayerInfo.relativeHeight = relativeheight;
         float heightratio = relativeheight / legadjust;
         heightratio = Mathf.Clamp(heightratio, 0, 2);
 
@@ -520,14 +517,6 @@ public class LucidLegs : MonoBehaviour
             LucidPlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_LF.position, ForceMode.Force);
     }
 
-    private Transform AnimModelFootSelection()
-    {
-        if (animPhase > 0.5f)
-            return animModelRFoot;
-        else
-            return animModelLFoot;
-    }
-
     public void OnPhysCollisionStay(Collision c)
     {
         LucidPlayerInfo.physCollision = true;
@@ -590,10 +579,6 @@ public class LucidLegs : MonoBehaviour
         moveFlat.z = moveVector.y;
 
         float legLength = LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength * LucidPlayerInfo.vismodelRef.maxLegScale;
-
-        float stepphase = 0.5f - animPhase;
-        stepphase = Mathf.Abs(stepphase) * 2;
-        LucidPlayerInfo.stepPhase = stepphase;
 
         Vector3 willflat = (LucidPlayerInfo.pelvis.TransformVector(moveFlat) * (moveSpeed / 2));
         willflat.y = 0;
@@ -786,30 +771,10 @@ public class LucidLegs : MonoBehaviour
             grounddist = LucidPlayerInfo.airTime;
         LucidPlayerInfo.groundDistance = grounddist;
 
-        float currentratiomult = ratioScale * (1 + (velflat.magnitude * scaleRatioBySpeed));
-
-        float ratio = currentratio / currentratiomult;
-        ratio = Mathf.Clamp(ratio, ratioFreezeThreshold, 1);
-
         if (LucidPlayerInfo.grounded && !LucidPlayerInfo.climbing)
             LucidPlayerInfo.airTime = 0;
         else
             LucidPlayerInfo.airTime += Time.fixedDeltaTime;
-
-        if (velflat.magnitude > 0.1f)
-        {
-            float add = (Time.fixedDeltaTime * 0.5f) / ratio;
-            add /= 1 + (LucidPlayerInfo.airTime * dampAnimPhaseByAirtime);
-            animPhase += add;
-            animPhase %= 1;
-        }
-
-        bool isRight = animPhase > 0.5f;
-        bool wasRight = LucidPlayerInfo.animPhase > 0.5f;
-        if (wasRight != isRight && LucidPlayerInfo.grounded)
-            onFootChanged.Invoke();
-            
-        LucidPlayerInfo.animPhase = animPhase;
     }
 
     private void CastWalk(Ray left, Ray right, out RaycastHit hitL, out RaycastHit hitR, float radius = -1)
