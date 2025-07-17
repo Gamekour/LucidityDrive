@@ -728,15 +728,15 @@ public class LucidLegs : MonoBehaviour
         if (radius == -1)
             radius = legWidth;
 
-        bool hitLeft1 = Physics.SphereCast(left.origin, radius, left.direction, out RaycastHit hitInfoLeft, 1000, Shortcuts.geometryMask);
-        bool hitRight1 = Physics.SphereCast(right.origin, radius, right.direction, out RaycastHit hitInfoRight, 1000, Shortcuts.geometryMask);
+        bool hitLeft1 = Physics.SphereCast(left.origin, radius, left.direction, out RaycastHit hitInfoLeft, 1000, LucidShortcuts.geometryMask);
+        bool hitRight1 = Physics.SphereCast(right.origin, radius, right.direction, out RaycastHit hitInfoRight, 1000, LucidShortcuts.geometryMask);
         hitL = hitInfoLeft;
         hitR = hitInfoRight;
         if (hitLeft1)
         {
             Vector3 leftup = hitL.point;
             leftup.y = transform.position.y;
-            bool hitLeft2 = Physics.SphereCast(leftup, radius * 0.25f, Vector3.down, out RaycastHit hitInfoLeft2, 1000, Shortcuts.geometryMask);
+            bool hitLeft2 = Physics.SphereCast(leftup, radius * 0.25f, Vector3.down, out RaycastHit hitInfoLeft2, 1000, LucidShortcuts.geometryMask);
             if (hitLeft2 && hitInfoLeft2.point.y > hitL.point.y)
                 hitL = hitInfoLeft2;
         }
@@ -744,7 +744,7 @@ public class LucidLegs : MonoBehaviour
         {
             Vector3 rightup = hitR.point;
             rightup.y = transform.position.y;
-            bool hitRight2 = Physics.SphereCast(rightup, radius * 0.25f, Vector3.down, out RaycastHit hitInfoRight2, 1000, Shortcuts.geometryMask);
+            bool hitRight2 = Physics.SphereCast(rightup, radius * 0.25f, Vector3.down, out RaycastHit hitInfoRight2, 1000, LucidShortcuts.geometryMask);
             if (hitRight2 && hitInfoRight2.point.y > hitR.point.y)
                 hitR = hitInfoRight2;
         }

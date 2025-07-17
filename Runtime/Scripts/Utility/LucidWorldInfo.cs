@@ -10,11 +10,11 @@ public class LucidWorldInfo : MonoBehaviour
     [SerializeField] LayerMask geometryMaskLayers;
     private void Awake()
     {
-        Shortcuts.geometryMask = geometryMaskLayers;
+        LucidShortcuts.geometryMask = geometryMaskLayers;
     }
 }
 
-public static class Shortcuts
+public static class LucidShortcuts
 {
     public static int geometryMask = 0; //determines which layers should be considered for physics casting in most Lucidity Drive scripts
 

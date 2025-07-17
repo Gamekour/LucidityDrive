@@ -847,7 +847,7 @@ public class LucidArms : MonoBehaviour
             dynamicGrabRotationOffset = Quaternion.identity;
         }
 
-        jointTarget = Shortcuts.AddComponent(LucidPlayerInfo.pelvis.gameObject, jointReference);
+        jointTarget = LucidShortcuts.AddComponent(LucidPlayerInfo.pelvis.gameObject, jointReference);
         jointTarget.autoConfigureConnectedAnchor = false;
         jointTarget.linearLimit = sjlewis;
         jointTarget.connectedBody = grabbedRB;

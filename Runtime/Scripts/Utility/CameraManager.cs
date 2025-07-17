@@ -113,8 +113,20 @@ public class CameraManager : MonoBehaviour
             if (cameraPointIndex != 0)
                 headRoot.position = Vector3.SmoothDamp(headRoot.position, headrootTarget.position, ref externalDampRef, nonFPCameraSmoothTime);
             else
-                headRoot.position = headrootTarget.position;
-            
+            {
+                bool hit = Physics.SphereCast(LucidPlayerInfo.pelvis.position, 0.1f, headrootTarget.position - LucidPlayerInfo.pelvis.position, out RaycastHit hitInfo, Vector3.Distance(LucidPlayerInfo.pelvis.position, headrootTarget.position) + 0.05f, LucidShortcuts.geometryMask);
+                if (hit)
+                {
+                    float hitDist = hitInfo.distance;
+                    float totalDist = Vector3.Distance(LucidPlayerInfo.pelvis.position, headrootTarget.position);
+
+                    Vector3 offset = (LucidPlayerInfo.pelvis.position - headrootTarget.position).normalized * (Mathf.Abs(totalDist - hitDist) + 0.05f);
+                    headRoot.position = headrootTarget.position + offset;
+                }
+                else
+                    headRoot.position = headrootTarget.position;
+            }
+
             Quaternion targetRotation = headrootTarget.rotation;
             Quaternion smoothRotation = QuaternionUtil.SmoothDamp(headRoot.rotation, targetRotation, ref smoothDeriv, headRotationSmoothTime);
 

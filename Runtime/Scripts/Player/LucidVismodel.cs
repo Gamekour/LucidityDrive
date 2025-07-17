@@ -78,9 +78,9 @@ public class LucidVismodel : MonoBehaviour
         anim.SetBoneLocalRotation(HumanBodyBones.Hips, qAnimHips);
         anim.SetBoneLocalRotation(HumanBodyBones.Head, qAnimHead);
 
-        foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
+        foreach (HumanBodyBones hb2 in LucidShortcuts.hb2list)
         {
-            string hbstring = Shortcuts.boneNames[hb2];
+            string hbstring = LucidShortcuts.boneNames[hb2];
             if (modelSync.boneRots.ContainsKey(hbstring))
                 anim.SetBoneLocalRotation(hb2, modelSync.boneRots[hbstring]);
         }

@@ -242,10 +242,10 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void CollectBoneRotations()
     {
-        foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
+        foreach (HumanBodyBones hb2 in LucidShortcuts.hb2list)
         {
             Transform t = anim.GetBoneTransform(hb2);
-            string hbstring = Shortcuts.boneNames[hb2];
+            string hbstring = LucidShortcuts.boneNames[hb2];
 
             if (t == null) continue;
 
@@ -324,7 +324,7 @@ public class LucidAnimationModel : MonoBehaviour
         CapsuleCollider hipColl = LucidPlayerInfo.pelvisColl;
         Vector3 point1 = hipColl.transform.position + (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
         Vector3 point2 = hipColl.transform.position - (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
-        bool hit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfo, 100, Shortcuts.geometryMask);
+        bool hit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfo, 100, LucidShortcuts.geometryMask);
 
         if (hit)
         {
@@ -501,8 +501,8 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 thighOrigin = legspace.position + (legspace.up * castHeight);
         Debug.DrawLine(thighOrigin, thighOrigin + ((kneepos - thighOrigin).normalized * Vector3.Distance(thighOrigin, kneepos)), Color.magenta);
         Debug.DrawLine(kneepos, kneepos + ((footpos - legspace.position).normalized * (Vector3.Distance(kneepos, footpos) * LucidPlayerInfo.vismodelRef.groundedForgiveness)), Color.magenta);
-        bool thighCast = Physics.SphereCast(thighOrigin, castThickness, (kneepos - thighOrigin).normalized, out RaycastHit hitInfoThigh, Vector3.Distance(thighOrigin, kneepos), Shortcuts.geometryMask);
-        bool shinCast = Physics.SphereCast(kneepos, castThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * LucidPlayerInfo.vismodelRef.groundedForgiveness, Shortcuts.geometryMask);
+        bool thighCast = Physics.SphereCast(thighOrigin, castThickness, (kneepos - thighOrigin).normalized, out RaycastHit hitInfoThigh, Vector3.Distance(thighOrigin, kneepos), LucidShortcuts.geometryMask);
+        bool shinCast = Physics.SphereCast(kneepos, castThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * LucidPlayerInfo.vismodelRef.groundedForgiveness, LucidShortcuts.geometryMask);
         LucidPlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
         LucidPlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
 
@@ -587,7 +587,7 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void UpdateFootSpaceAndRotation(bool isLeft, Vector3 normal, Vector3 point)
     {
-        bool highcheck = Physics.SphereCast(point + Vector3.up * 0.2f, 0.1f, Vector3.down, out RaycastHit hitInfo, 0.2f, Shortcuts.geometryMask);
+        bool highcheck = Physics.SphereCast(point + Vector3.up * 0.2f, 0.1f, Vector3.down, out RaycastHit hitInfo, 0.2f, LucidShortcuts.geometryMask);
         if (highcheck)
         {
             if (hitInfo.normal.y > normal.y)
@@ -631,7 +631,7 @@ public class LucidAnimationModel : MonoBehaviour
 
     private void UpdateHandPosition(bool isLeft, Transform shoulder, Transform hand)
     {
-        bool armHit = Physics.SphereCast(shoulder.position, castThickness / 2, hand.position - shoulder.position, out RaycastHit armHitInfo, Vector3.Distance(hand.position, shoulder.position), Shortcuts.geometryMask);
+        bool armHit = Physics.SphereCast(shoulder.position, castThickness / 2, hand.position - shoulder.position, out RaycastHit armHitInfo, Vector3.Distance(hand.position, shoulder.position), LucidShortcuts.geometryMask);
 
         if (isLeft)
             LucidPlayerInfo.handCollisionL = armHit;
