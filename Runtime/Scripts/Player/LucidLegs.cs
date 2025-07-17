@@ -363,7 +363,10 @@ public class LucidLegs : MonoBehaviour
         else
             t *= slopeTilt;
 
-        Vector3 pushdir = Vector3.Lerp(Vector3.up, LucidPlayerInfo.footspace.up, t);
+        if (footSpace.up.y < highSlopeThreshold && !inputJump)
+            t = 0;
+
+        Vector3 pushdir = Vector3.Lerp(Vector3.up, footSpace.up, t);
 
         Debug.DrawRay(footSpace.position, pushdir, Color.red);
 
@@ -475,8 +478,8 @@ public class LucidLegs : MonoBehaviour
         if (bodyCollisionNrm.y >= 0)
         {
             LucidPlayerInfo.pelvisCollision = true;
-            LucidPlayerInfo.hipspace.up = bodyCollisionNrm;
-            LucidPlayerInfo.footspace.up = bodyCollisionNrm;
+            LucidPlayerInfo.hipspace.up = Vector3.up;
+            LucidPlayerInfo.footspace.up = Vector3.up;
         }
     }
 
