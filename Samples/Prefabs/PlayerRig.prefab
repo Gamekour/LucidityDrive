@@ -534,7 +534,7 @@ MonoBehaviour:
   IK_LH: {fileID: 3483037214520940076}
   IK_RH: {fileID: 4123976296632360821}
   velSmoothTime: 1
-  nrmSmoothTime: 0
+  nrmSmoothTime: 0.01
   footSmoothTime: 0.5
   willSmoothTime: 0.1
   alignmentSmoothTime: 0.5
@@ -548,14 +548,14 @@ MonoBehaviour:
   landTime: 1
   footSlideThreshold: 0.5
   footSlideVelThreshold: 3
-  leanSmoothTime: 0.5
+  leanSmoothTime: 0.2
   unrotateFeetBySpeed: 1
   maxFootAngle: 60
   verticalFootAdjust: 0.1
   crouchTime: 0.5
   minCastDist: 0.3
   stepRate: 3
-  scaleStepRateByVelocity: 0.3
+  scaleStepRateByVelocity: 0.4
   minStepRate: 0.05
   dampAnimPhaseByAirtime: 2
   onFootChanged:
@@ -646,7 +646,7 @@ MonoBehaviour:
   footSpace: {fileID: 283649365809611213}
   vFloor: {fileID: 2916796221035400664}
   pelvisCollider: {fileID: 1105449760031442629}
-  defaultMovementSettings: {fileID: 11400000, guid: b460e0abbe261ff4da0c849d2778e2a1,
+  defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
     type: 2}
 --- !u!1 &4056114730217282164
 GameObject:

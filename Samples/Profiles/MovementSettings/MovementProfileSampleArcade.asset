@@ -31,9 +31,8 @@ MonoBehaviour:
   strafeWalkAngularThreshold: 2
   strafeWalkSpeedMult: 1
   directionalJumpStrength: 4
-  maxSlopeDefault: 1
-  maxSlopeByYVelocity: 1000
   surfaceMagnetismBySlope: 4
+  highSlopeThreshold: 0.5
   legWidth: 0.01
   probeDepth: 2
   probeScale: 1
@@ -44,7 +43,7 @@ MonoBehaviour:
   ratioFreezeThreshold: 0.1
   dampAnimPhaseByAirtime: 2
   scaleRatioBySpeed: 0.3
-  friction: 0.4
+  friction: 0.45
   maxForceScale: 5.4
   pelvisRotationSpeed: 2000
   hipSpaceRotationSmoothness: 0
@@ -52,11 +51,11 @@ MonoBehaviour:
   forceSmoothness: 20
   jumpHeightScale: 16
   targetHeightByPositiveSlope: 0
-  targetHeightByNegativeSlope: 0
+  targetHeightByNegativeSlope: 0.25
   targetHeightByNegativeSlopeClamp: 2
   maxCrawlSpeed: 14
   crawlHeight: 0.225
   slopeTilt: 0.1
-  jumpTilt: 0.2
+  jumpTilt: 0.15
   climbtilt: 0.3
   slidePushAngleThreshold: 45

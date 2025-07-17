@@ -87,22 +87,16 @@ public class LucidLegs : MonoBehaviour
         strafeWalkAngularThreshold,
         strafeWalkSpeedMult,
         maxAirAcceleration,
-        scaleRatioBySpeed,
         jumpGravity,
         fallGravity,
         aerialMovementSpeed,
         aerialDrag,
         slidePushAngleThreshold,
-        maxSlopeDefault,
-        maxSlopeByYVelocity,
         airTurnAssist,
-        surfaceMagnetismBySlope
+        surfaceMagnetismBySlope,
+        highSlopeThreshold
         = 0;
 
-    //internal variables
-    private Transform animModelHips;
-    private Transform animModelLFoot;
-    private Transform animModelRFoot;
     private Rigidbody rb;
     private Vector3 bodyCollisionNrm;
     private float animPhase = 0;
@@ -117,7 +111,6 @@ public class LucidLegs : MonoBehaviour
     private void OnEnable()
     {
         LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-        LucidPlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
     }
 
     private void OnDisable()
@@ -126,18 +119,10 @@ public class LucidLegs : MonoBehaviour
         LucidPlayerInfo.pelvisCollision = false;
 
         LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
-        LucidPlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
     }
 
     public void OnAssignVismodel(LucidVismodel visModel)
     {
-    }
-
-    public void OnAnimModelInitialized()
-    {
-        animModelHips = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips);
-        animModelLFoot = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.LeftFoot);
-        animModelRFoot = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.RightFoot);
     }
 
     private void FixedUpdate()
@@ -378,12 +363,12 @@ public class LucidLegs : MonoBehaviour
         else
             t *= slopeTilt;
 
-        t = Mathf.Clamp(t, 0, LucidPlayerInfo.footspace.up.y);
+        Vector3 pushdir = Vector3.Lerp(Vector3.up, LucidPlayerInfo.footspace.up, t);
 
-        Vector3 pushdir = Vector3.Lerp(Vector3.up, LucidPlayerInfo.footSurface, t);
+        Debug.DrawRay(footSpace.position, pushdir, Color.red);
 
         float downness = Mathf.Clamp01(1 - footSpace.up.y) * Mathf.Abs(footSpace.up.x);
-        float movedownamount = Mathf.Clamp((footSpace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -targetHeightByNegativeSlopeClamp, 0);
+        float movedownamount = Mathf.Clamp((hipSpace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -targetHeightByNegativeSlopeClamp, 0);
         movedownamount *= targetHeightByNegativeSlope;
         movedownamount -= downness;
 
@@ -408,7 +393,10 @@ public class LucidLegs : MonoBehaviour
         else
         {
             legadjust *= 1 + movedownamount + moveupamount;
+            legadjust = Mathf.Clamp(legadjust, 0, legLength);
         }
+
+        legadjust *= LucidPlayerInfo.vismodelRef.maxLegScale;
 
         float relativeheight = hipSpace.position.y - footSpace.position.y;
         LucidPlayerInfo.relativeHeight = relativeheight;
@@ -484,7 +472,7 @@ public class LucidLegs : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         bodyCollisionNrm = collision.contacts[0].normal;
-        if (bodyCollisionNrm.y > 0)
+        if (bodyCollisionNrm.y >= 0)
         {
             LucidPlayerInfo.pelvisCollision = true;
             LucidPlayerInfo.hipspace.up = bodyCollisionNrm;
@@ -504,7 +492,7 @@ public class LucidLegs : MonoBehaviour
         if (LucidPlayerInfo.surfaceAngle < slidePushAngleThreshold)
             return;
 
-        float legLength = LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength * LucidPlayerInfo.vismodelRef.maxLegScale;
+        float legLength = (LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength) * LucidPlayerInfo.vismodelRef.maxLegScale;
 
         Vector3 diffL = legSpaceL.position - LucidPlayerInfo.IK_LF.position;
         Vector3 diffR = legSpaceR.position - LucidPlayerInfo.IK_RF.position;
@@ -534,7 +522,7 @@ public class LucidLegs : MonoBehaviour
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
 
-        float legLength = LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength * LucidPlayerInfo.vismodelRef.maxLegScale;
+        float legLength = (LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength) * LucidPlayerInfo.vismodelRef.maxLegScale;
 
         Vector3 willflat = (LucidPlayerInfo.pelvis.TransformVector(moveFlat) * (moveSpeed / 2));
         willflat.y = 0;
@@ -549,13 +537,15 @@ public class LucidLegs : MonoBehaviour
 
         float downadjust = transform.position.y - probeDepth;
 
-        Vector3 probeN = transform.position + (transform.forward * Mathf.Clamp(Mathf.Abs(moveFlat.z) * probeScale, probeZMinimumOffset, Mathf.Infinity));
+        float highSlopeProbeMult = LucidInputValueShortcuts.jump ? 2 : 1;
+
+        Vector3 probeN = transform.position + (transform.forward * Mathf.Clamp(Mathf.Abs(moveFlat.z) * probeScale, probeZMinimumOffset * highSlopeProbeMult, Mathf.Infinity));
         probeN.y = (Vector3.up * downadjust).y;
-        Vector3 probeS = transform.position - (transform.forward * Mathf.Clamp(Mathf.Abs(moveFlat.z) * probeScale, probeZMinimumOffset, Mathf.Infinity));
+        Vector3 probeS = transform.position - (transform.forward * Mathf.Clamp(Mathf.Abs(moveFlat.z) * probeScale, probeZMinimumOffset * highSlopeProbeMult, Mathf.Infinity));
         probeS.y = (Vector3.up * downadjust).y;
-        Vector3 probeE = transform.position + (transform.right * Mathf.Clamp(Mathf.Abs(moveFlat.x) * probeScale, probeXMinimumOffset, Mathf.Infinity));
+        Vector3 probeE = transform.position + (transform.right * Mathf.Clamp(Mathf.Abs(moveFlat.x) * probeScale, probeXMinimumOffset * highSlopeProbeMult, Mathf.Infinity));
         probeE.y = (Vector3.up * downadjust).y;
-        Vector3 probeW = transform.position - (transform.right * Mathf.Clamp(Mathf.Abs(moveFlat.x) * probeScale, probeXMinimumOffset, Mathf.Infinity));
+        Vector3 probeW = transform.position - (transform.right * Mathf.Clamp(Mathf.Abs(moveFlat.x) * probeScale, probeXMinimumOffset * highSlopeProbeMult, Mathf.Infinity));
         probeW.y = (Vector3.up * downadjust).y;
 
         //probe Z
@@ -571,29 +561,29 @@ public class LucidLegs : MonoBehaviour
         float diffZ = Mathf.Abs(hitN.point.y - hitS.point.y);
         float diffX = Mathf.Abs(hitW.point.y - hitE.point.y);
 
-        float minNrmY = 1 - (maxSlopeDefault + (Mathf.Clamp(rb.velocity.y, 0, 1 / maxSlopeByYVelocity) * maxSlopeByYVelocity));
+        float minNrmY = LucidInputValueShortcuts.jump ? 0 : highSlopeThreshold;
 
         List<RaycastHit> results = new();
         if (diffZ < diffX)
         {
-            if (hitN.point.sqrMagnitude > float.Epsilon && hitN.distance < maxProbeOffset && hitN.normal.y > minNrmY)
+            if (hitN.point.sqrMagnitude > float.Epsilon && hitN.distance < maxProbeOffset && hitN.normal.y >= minNrmY)
                 results.Add(hitN);
-            if (hitS.point.sqrMagnitude > float.Epsilon && hitS.distance < maxProbeOffset && hitS.normal.y > minNrmY)
+            if (hitS.point.sqrMagnitude > float.Epsilon && hitS.distance < maxProbeOffset && hitS.normal.y >= minNrmY)
                 results.Add(hitS);
-            if (hitE.point.sqrMagnitude > float.Epsilon && hitE.distance < maxProbeOffset && hitE.normal.y > minNrmY)
+            if (hitE.point.sqrMagnitude > float.Epsilon && hitE.distance < maxProbeOffset && hitE.normal.y >= minNrmY)
                 results.Add(hitE);
-            if (hitW.point.sqrMagnitude > float.Epsilon && hitW.distance < maxProbeOffset && hitW.normal.y > minNrmY)
+            if (hitW.point.sqrMagnitude > float.Epsilon && hitW.distance < maxProbeOffset && hitW.normal.y >= minNrmY)
                 results.Add(hitW);
         }
         else
         {
-            if (hitE.point.sqrMagnitude > float.Epsilon && hitE.distance < maxProbeOffset && hitE.normal.y > minNrmY)
+            if (hitE.point.sqrMagnitude > float.Epsilon && hitE.distance < maxProbeOffset && hitE.normal.y >= minNrmY)
                 results.Add(hitE);
-            if (hitW.point.sqrMagnitude > float.Epsilon && hitW.distance < maxProbeOffset && hitW.normal.y > minNrmY)
+            if (hitW.point.sqrMagnitude > float.Epsilon && hitW.distance < maxProbeOffset && hitW.normal.y >= minNrmY)
                 results.Add(hitW);
-            if (hitN.point.sqrMagnitude > float.Epsilon && hitN.distance < maxProbeOffset && hitN.normal.y > minNrmY)
+            if (hitN.point.sqrMagnitude > float.Epsilon && hitN.distance < maxProbeOffset && hitN.normal.y >= minNrmY)
                 results.Add(hitN);
-            if (hitS.point.sqrMagnitude > float.Epsilon && hitS.distance < maxProbeOffset && hitS.normal.y > minNrmY)
+            if (hitS.point.sqrMagnitude > float.Epsilon && hitS.distance < maxProbeOffset && hitS.normal.y >= minNrmY)
                 results.Add(hitS);
         }
 
