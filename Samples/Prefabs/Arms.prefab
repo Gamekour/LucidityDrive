@@ -56,7 +56,6 @@ MonoBehaviour:
   shoulderDistance: 0
   castDistance: 0
   limitDistance: 0.45
-  animArmLengthMult: 1
   shoulderStiffness: 0
   firstCastWidth: 0
   secondCastWidth: 0
@@ -77,6 +76,8 @@ MonoBehaviour:
   CastMask:
     serializedVersion: 2
     m_Bits: 257
+  grippyTags:
+  - Grabbable
 --- !u!1 &665269421678607574
 GameObject:
   m_ObjectHideFlags: 0

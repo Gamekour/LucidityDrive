@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +28,7 @@ public class LucidArms : MonoBehaviour
     [SerializeField] ConfigurableJoint jointReference;
     [SerializeField] Rigidbody staticGrabRB_L, staticGrabRB_R;
     [SerializeField] LayerMask CastMask;
+    [SerializeField] string[] grippyTags;
     private SoftJointLimit sjlewis;
     private EventBox eventBoxL, eventBoxR;
     private ConfigurableJoint anchorL, anchorR;
@@ -452,7 +454,7 @@ public class LucidArms : MonoBehaviour
 
         bool initialHit = Physics.SphereCast(shoulder, firstCastWidth, camfwd, out RaycastHit initialHitInfo, castAdjust, CastMask);
 
-        bool grabbableInitialHit = (initialHit && initialHitInfo.transform.gameObject.CompareTag("Grabbable"));
+        bool grabbableInitialHit = (initialHit && grippyTags.Contains(initialHitInfo.transform.gameObject.tag));
         initialHit &= ((initialHitInfo.normal.y) < maxInitialNrmY);
 
         Vector3 projectvector = Vector3.up;
