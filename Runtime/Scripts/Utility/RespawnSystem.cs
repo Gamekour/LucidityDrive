@@ -6,13 +6,15 @@ using UnityEngine.Events;
 public class RespawnSystem : MonoBehaviour
 {
     public Vector3 spawnPoint = Vector3.zero;
+    [SerializeField] bool useTransformAsSpawnPoint = true;
     [SerializeField] private Vector3 startVel;
     [SerializeField] float respawnHeight = -100;
     public UnityEvent OnRespawn;
 
     private void Start()
     {
-        spawnPoint = transform.position;
+        if (useTransformAsSpawnPoint)
+            spawnPoint = transform.position;
     }
 
     private void FixedUpdate()
@@ -36,6 +38,8 @@ public static class RespawnInterface
             LucidPlayerInfo.mainBody.isKinematic = true;
         }
         LucidPlayerInfo.pelvis.position = point;
+        if (LucidPlayerInfo.vismodelRef != null)
+            LucidPlayerInfo.vismodelRef.transform.position = point;
         OnRespawn.Invoke();
     }
     public static void Respawn(Vector3 point, Vector3 velocity)
@@ -46,6 +50,8 @@ public static class RespawnInterface
             LucidPlayerInfo.mainBody.isKinematic = true;
         }
         LucidPlayerInfo.pelvis.position = point;
+        if (LucidPlayerInfo.vismodelRef != null)
+            LucidPlayerInfo.vismodelRef.transform.position = point;
         OnRespawn.Invoke();
     }
     public static IEnumerator Unlock()
