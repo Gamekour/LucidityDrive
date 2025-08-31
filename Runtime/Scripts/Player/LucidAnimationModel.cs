@@ -42,7 +42,8 @@ public class LucidAnimationModel : MonoBehaviour
         stepRate,
         scaleStepRateByVelocity,
         minStepRate,
-        dampAnimPhaseByAirtime;
+        dampAnimPhaseByAirtime,
+        wobbleScale;
 
     public UnityEvent onFootChanged;
 
@@ -123,7 +124,8 @@ public class LucidAnimationModel : MonoBehaviour
         _FOOTSLIDE = "footslide",
         _CROUCH = "crouch",
         _GROUNDDIST = "groundDistance",
-        _STANCEHEIGHT = "stanceHeight";
+        _STANCEHEIGHT = "stanceHeight",
+        _WOBBLE = "wobble";
 
     private void Start()
     {
@@ -440,12 +442,13 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_CROUCH, crouch);
         anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
         anim.SetFloat(_GROUNDDIST, LucidPlayerInfo.groundDistance);
+        anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(LucidPlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
     }
 
     private void UpdateAnimatorBools()
     {
-        bool slide = LucidInputValueShortcuts.slide;
-        bool crawl = LucidInputValueShortcuts.bslide;
+        bool slide = LucidPlayerInfo.slidingBack;
+        bool crawl = LucidPlayerInfo.slidingForward;
         bool footslide = (LucidPlayerInfo.alignment > footSlideThreshold && LucidPlayerInfo.mainBody.velocity.magnitude > footSlideVelThreshold);
 
         anim.SetBool(_GROUNDED, LucidPlayerInfo.grounded);

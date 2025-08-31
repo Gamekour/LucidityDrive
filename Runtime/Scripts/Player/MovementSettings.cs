@@ -36,13 +36,6 @@ public class MovementSettings : ScriptableObject
         probeXMinimumOffset,
         probeZMinimumOffset;
 
-    [Header("Animation")]
-    public float ratioScale;
-    public float
-        ratioFreezeThreshold,
-        dampAnimPhaseByAirtime,
-        scaleRatioBySpeed;
-
     [Header("Physics")]
     public float friction;
     public float

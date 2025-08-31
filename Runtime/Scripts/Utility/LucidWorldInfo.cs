@@ -238,7 +238,9 @@ public static class LucidPlayerInfo
         disableSprint,
         disableJump,
         isSprinting,
-        isJumping
+        isJumping,
+        slidingBack,
+        slidingForward
         = false;
     #endregion
 }

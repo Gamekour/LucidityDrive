@@ -50,8 +50,6 @@ public class LucidLegs : MonoBehaviour
     //parameters copied from movementsettings
     private float
         legWidth,
-        ratioScale,
-        ratioFreezeThreshold,
         pelvisRotationSpeed,
         probeDepth,
         maxForceScale,
@@ -67,7 +65,6 @@ public class LucidLegs : MonoBehaviour
         probeXMinimumOffset,
         probeZMinimumOffset,
         hipSpaceMaxRotation,
-        dampAnimPhaseByAirtime,
         targetHeightByPositiveSlope,
         targetHeightByNegativeSlope,
         targetHeightByNegativeSlopeClamp,
@@ -100,6 +97,8 @@ public class LucidLegs : MonoBehaviour
     private Rigidbody rb;
     private Vector3 bodyCollisionNrm;
     private float animPhase = 0;
+    private bool stuckBackSlide = false;
+    private bool stuckFrontSlide = false;
 
     private void Awake()
     {
@@ -136,8 +135,20 @@ public class LucidLegs : MonoBehaviour
         velflathip.y = 0;
 
         //all of these need to eventually be delegated to bools
-        bool inputBellyslide = LucidInputValueShortcuts.bslide;
-        bool inputBackslide = LucidInputValueShortcuts.slide;
+        bool inputBellyslide = (LucidInputValueShortcuts.bslide && !stuckBackSlide) || stuckFrontSlide;
+        bool inputBackslide = (LucidInputValueShortcuts.slide && !stuckFrontSlide) || stuckBackSlide;
+
+        if (inputBellyslide && inputBackslide)
+            inputBackslide = false;
+
+        if (inputBellyslide && !LucidPlayerInfo.pelvisCollision)
+            stuckFrontSlide = true;
+        else if (inputBackslide && !LucidPlayerInfo.pelvisCollision)
+            stuckBackSlide = true;
+
+        LucidPlayerInfo.slidingBack = inputBackslide;
+        LucidPlayerInfo.slidingForward = inputBellyslide;
+
         bool inputCrouch = LucidInputValueShortcuts.crouch;
         bool inputJump = LucidInputValueShortcuts.jump;
         LucidPlayerInfo.isJumping = inputJump && LucidPlayerInfo.grounded;
@@ -481,6 +492,8 @@ public class LucidLegs : MonoBehaviour
             LucidPlayerInfo.pelvisCollision = true;
             LucidPlayerInfo.hipspace.up = bodyCollisionNrm;
             LucidPlayerInfo.footspace.up = bodyCollisionNrm;
+            stuckBackSlide = false;
+            stuckFrontSlide = false;
         }
     }
 
