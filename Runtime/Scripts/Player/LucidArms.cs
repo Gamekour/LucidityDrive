@@ -20,7 +20,8 @@ public class LucidArms : MonoBehaviour
         minDowncastNrmY,
         ungrabBoost,
         climbModeForceThreshold,
-        velocityCheatForLucidTools;
+        velocityCheatForLucidTools
+        ;
 
     [SerializeField] Transform unRotateL, unRotateR;
     [SerializeField] Transform handTargetL, handTargetR;

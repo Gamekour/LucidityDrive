@@ -558,6 +558,7 @@ MonoBehaviour:
   scaleStepRateByVelocity: 0.4
   minStepRate: 0.05
   dampAnimPhaseByAirtime: 2
+  wobbleScale: 2
   onFootChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1372,6 +1373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {x: 0, y: 0, z: 0}
+  useTransformAsSpawnPoint: 1
   startVel: {x: 0, y: 0, z: 0}
   respawnHeight: -100
   OnRespawn:

@@ -9,14 +9,6 @@ BlendTree:
   m_Name: ClimbTree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: dfc44403f77cecf44a88348b707266ed, type: 2}
-    m_Threshold: -1
-    m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
-    m_CycleOffset: 0
-    m_DirectBlendParameter: alignment
-    m_Mirror: 0
-  - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 71553b2394cdfa74ba0c09606adabe07, type: 2}
     m_Threshold: -0.5
     m_Position: {x: 0, y: 0}
@@ -25,16 +17,16 @@ BlendTree:
     m_DirectBlendParameter: alignment
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 00f1b79ce25d57643902c2c74921e07d, type: 2}
+    m_Motion: {fileID: 7400000, guid: dfc44403f77cecf44a88348b707266ed, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: alignment
     m_Mirror: 0
-  m_BlendParameter: climb
+  m_BlendParameter: groundDistance
   m_BlendParameterY: Blend
-  m_MinThreshold: -1
+  m_MinThreshold: -0.5
   m_MaxThreshold: 0
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0

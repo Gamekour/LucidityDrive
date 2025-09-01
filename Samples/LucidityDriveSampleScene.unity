@@ -3577,6 +3577,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 93489011}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &559302341 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2531359406154903297, guid: feb5ffb413408f64bb3e0843d3c27f57,
+    type: 3}
+  m_PrefabInstance: {fileID: 825995170}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &562570729
 GameObject:
   m_ObjectHideFlags: 0
@@ -4966,6 +4972,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2531359406154903297, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2635777386139525533, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5043,13 +5054,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
-      propertyPath: wobbleScale
+      propertyPath: onFootChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: onFootChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: onFootChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 559302341}
+    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: onFootChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
-      propertyPath: scaleStepRateByVelocity
-      value: 1.2
+      propertyPath: onFootChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Play
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: onFootChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.AudioSource, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: onFootChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -394,8 +394,6 @@ public class LucidLegs : MonoBehaviour
         float hipheight = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips).position.y;
         float floorheight = LucidPlayerInfo.animationModel.rootPosition.y;
         float legadjust = hipheight - floorheight;
-        if (LucidPlayerInfo.climbing && !inputJump)
-            legadjust = 0;
 
         if (LucidPlayerInfo.crawling)
             legadjust = crawlHeight;
