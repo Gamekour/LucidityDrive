@@ -5,25 +5,39 @@ using UnityEngine.Events;
 
 public class RespawnSystem : MonoBehaviour
 {
-    public Vector3 spawnPoint = Vector3.zero;
-    [SerializeField] bool useTransformAsSpawnPoint = true;
+    public Transform spawnPoint;
     [SerializeField] private Vector3 startVel;
     [SerializeField] float respawnHeight = -100;
     public UnityEvent OnRespawn;
 
+    private void OnEnable()
+    {
+        RespawnInterface.OnRespawn.AddListener(OnStaticRespawnEvent);
+    }
+
+    private void OnDisable()
+    {
+        RespawnInterface.OnRespawn.RemoveListener(OnStaticRespawnEvent);
+    }
+
     private void Start()
     {
-        if (useTransformAsSpawnPoint)
-            spawnPoint = transform.position;
+        if (spawnPoint == null)
+            spawnPoint = transform;
+        RespawnInterface.Respawn(spawnPoint.position, startVel);
     }
 
     private void FixedUpdate()
     {
         if (LucidPlayerInfo.pelvis.position.y < respawnHeight)
         {
-            RespawnInterface.Respawn(spawnPoint);
-            StartCoroutine(RespawnInterface.Unlock());
+            RespawnInterface.Respawn(spawnPoint.position, startVel);
         }
+    }
+
+    private void OnStaticRespawnEvent()
+    {
+        OnRespawn.Invoke();
     }
 }
 
@@ -32,31 +46,18 @@ public static class RespawnInterface
     public static UnityEvent OnRespawn = new UnityEvent();
     public static void Respawn(Vector3 point)
     {
-        if (!LucidPlayerInfo.mainBody.isKinematic)
-        {
-            LucidPlayerInfo.mainBody.velocity = Vector3.zero;
-            LucidPlayerInfo.mainBody.isKinematic = true;
-        }
         LucidPlayerInfo.pelvis.position = point;
+        LucidPlayerInfo.mainBody.velocity = Vector3.zero;
         if (LucidPlayerInfo.vismodelRef != null)
             LucidPlayerInfo.vismodelRef.transform.position = point;
         OnRespawn.Invoke();
     }
     public static void Respawn(Vector3 point, Vector3 velocity)
     {
-        if (!LucidPlayerInfo.mainBody.isKinematic)
-        {
-            LucidPlayerInfo.mainBody.velocity = velocity;
-            LucidPlayerInfo.mainBody.isKinematic = true;
-        }
         LucidPlayerInfo.pelvis.position = point;
+        LucidPlayerInfo.mainBody.velocity = velocity;
         if (LucidPlayerInfo.vismodelRef != null)
             LucidPlayerInfo.vismodelRef.transform.position = point;
         OnRespawn.Invoke();
-    }
-    public static IEnumerator Unlock()
-    {
-        yield return new WaitForSeconds(0.5f);
-        LucidPlayerInfo.mainBody.isKinematic = false;
     }
 }
