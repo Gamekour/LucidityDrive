@@ -554,8 +554,8 @@ MonoBehaviour:
   verticalFootAdjust: 0.1
   crouchTime: 0.5
   minCastDist: 0.3
-  stepRate: 3
-  scaleStepRateByVelocity: 0.4
+  stepRate: 0.8
+  scaleStepRateByVelocity: 0.25
   minStepRate: 0.05
   dampAnimPhaseByAirtime: 2
   wobbleScale: 2

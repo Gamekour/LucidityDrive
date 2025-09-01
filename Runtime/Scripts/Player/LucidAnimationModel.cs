@@ -144,11 +144,11 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 velflat = LucidPlayerInfo.mainBody.velocity;
         velflat.y = 0;
 
-        float stepRateAdjusted = stepRate / (1 + (LucidPlayerInfo.mainBody.velocity.magnitude * scaleStepRateByVelocity));
+        float stepRateAdjusted = stepRate * (1 + (LucidPlayerInfo.mainBody.velocity.magnitude * scaleStepRateByVelocity));
 
         if (velflat.magnitude > 0.1f)
         {
-            float add = (Time.fixedDeltaTime * 0.5f) / stepRateAdjusted;
+            float add = Time.deltaTime * stepRateAdjusted;
             add /= 1 + (LucidPlayerInfo.airTime * dampAnimPhaseByAirtime);
             animPhase += add;
             animPhase %= 1;
@@ -156,7 +156,7 @@ public class LucidAnimationModel : MonoBehaviour
 
         bool isRight = animPhase > 0.5f;
         bool wasRight = LucidPlayerInfo.animPhase > 0.5f;
-        if (wasRight != isRight && LucidPlayerInfo.grounded)
+        if (wasRight != isRight && LucidPlayerInfo.grounded && !LucidPlayerInfo.slidingBack && !LucidPlayerInfo.slidingForward)
             onFootChanged.Invoke();
 
         LucidPlayerInfo.animPhase = animPhase;
