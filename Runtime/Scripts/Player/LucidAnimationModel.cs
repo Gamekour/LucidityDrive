@@ -6,6 +6,8 @@ public class LucidAnimationModel : MonoBehaviour
 {
     public float airtimeThreshold = 0.5f;
 
+    public static bool[] layerOverrides = new bool[3];
+
     [SerializeField] RuntimeAnimatorController controller;
     [SerializeField] Camera fpcam;
 
@@ -43,9 +45,12 @@ public class LucidAnimationModel : MonoBehaviour
         scaleStepRateByVelocity,
         minStepRate,
         dampAnimPhaseByAirtime,
-        wobbleScale;
+        wobbleScale,
+        rollForceThreshold
+        ;
 
     public UnityEvent onFootChanged;
+    public UnityEvent onGrounded;
 
     [HideInInspector]
     public Dictionary<string, Quaternion> boneRots = new();
@@ -58,6 +63,7 @@ public class LucidAnimationModel : MonoBehaviour
 
     private Animator anim;
 
+    private bool queueRoll = false;
     private Vector2 leanSmoothRef;
     private Vector3
         velRef,
@@ -125,7 +131,9 @@ public class LucidAnimationModel : MonoBehaviour
         _CROUCH = "crouch",
         _GROUNDDIST = "groundDistance",
         _STANCEHEIGHT = "stanceHeight",
-        _WOBBLE = "wobble";
+        _WOBBLE = "wobble",
+        _ROLL = "roll"
+        ;
 
     private void Start()
     {
@@ -295,18 +303,29 @@ public class LucidAnimationModel : MonoBehaviour
         UpdateFootAngle();
         UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean, hang, stanceHeight);
         UpdateAnimatorBools();
+        if (queueRoll)
+        {
+            anim.SetTrigger(_ROLL);
+            queueRoll = false;
+        }
 
         if (LucidPlayerInfo.airTime > airtimesmooth)
             airtimesmooth = LucidPlayerInfo.airTime;
         else
             airtimesmooth = Mathf.SmoothDamp(airtimesmooth, LucidPlayerInfo.airTime, ref landingRef, landTime);
 
-        float hipweight = Mathf.Clamp01(crouch ? 0 : 1);
-        hipweight *= Mathf.Lerp(1, Mathf.Clamp01(velflat.magnitude), Mathf.Min(stanceHeight, slide ? 0 : stanceHeight));
-        hipweight *= LucidPlayerInfo.climbing ? 0 : 1;
-        float currenthipweight = anim.GetLayerWeight(1);
-        hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
-        anim.SetLayerWeight(1, hipweight);
+        if (!layerOverrides[1])
+        {
+            float hipweight = Mathf.Clamp01(crouch ? 0 : 1);
+            hipweight *= Mathf.Lerp(1, Mathf.Clamp01(velflat.magnitude), Mathf.Min(stanceHeight, slide ? 0 : stanceHeight));
+            hipweight *= LucidPlayerInfo.climbing ? 0 : 1;
+            float currenthipweight = anim.GetLayerWeight(1);
+            hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
+            anim.SetLayerWeight(1, hipweight);
+        }
+        else
+            anim.SetLayerWeight(1, 0);
+
 
         Quaternion chest = anim.GetBoneTransform(HumanBodyBones.Chest).rotation;
         Quaternion localSpaceRotationNeck = Quaternion.Inverse(chest) * Quaternion.Slerp(head.rotation, chest, lerp);
@@ -490,7 +509,18 @@ public class LucidAnimationModel : MonoBehaviour
         bool hitL = UpdateFootPosition(true, footposL, kneeposL, LucidPlayerInfo.legspaceL, ref LCast);
         bool hitR = UpdateFootPosition(false, footposR, kneeposR, LucidPlayerInfo.legspaceR, ref RCast);
 
+        bool prev_grounded = LucidPlayerInfo.grounded;
+
         LucidPlayerInfo.grounded = hitL || hitR || LucidPlayerInfo.pelvisCollision;
+
+        if (!prev_grounded && LucidPlayerInfo.grounded)
+        {
+            onGrounded.Invoke();
+            Vector3 rel_force = LucidPlayerInfo.footspace.InverseTransformVector(LucidPlayerInfo.mainBody.velocity);
+            LucidPlayerInfo.lastLandingForce = rel_force.y;
+            if (LucidPlayerInfo.lastLandingForce < -rollForceThreshold)
+                queueRoll = true;
+        }
 
         if (LucidPlayerInfo.crawling)
             LucidPlayerInfo.footSurface = LucidPlayerInfo.hipspace.up;

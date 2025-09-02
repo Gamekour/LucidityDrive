@@ -216,7 +216,8 @@ public static class LucidPlayerInfo
         calfLength,
         pelvisSize,
         stanceHeight,
-        relativeHeight
+        relativeHeight,
+        lastLandingForce
         = 0;
 
     public static bool
