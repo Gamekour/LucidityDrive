@@ -50,7 +50,7 @@ public class LucidAnimationModel : MonoBehaviour
         ;
 
     public UnityEvent onFootChanged;
-    public UnityEvent onGrounded;
+    public UnityEvent<float> onGrounded;
 
     [HideInInspector]
     public Dictionary<string, Quaternion> boneRots = new();
@@ -515,9 +515,9 @@ public class LucidAnimationModel : MonoBehaviour
 
         if (!prev_grounded && LucidPlayerInfo.grounded)
         {
-            onGrounded.Invoke();
             Vector3 rel_force = LucidPlayerInfo.footspace.InverseTransformVector(LucidPlayerInfo.mainBody.velocity);
             LucidPlayerInfo.lastLandingForce = rel_force.y;
+            onGrounded.Invoke(LucidPlayerInfo.lastLandingForce);
             if (LucidPlayerInfo.lastLandingForce < -rollForceThreshold)
                 queueRoll = true;
         }
