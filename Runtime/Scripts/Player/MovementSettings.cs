@@ -25,7 +25,8 @@ public class MovementSettings : ScriptableObject
         strafeWalkSpeedMult,
         directionalJumpStrength,
         surfaceMagnetismBySlope,
-        highSlopeThreshold;
+        highSlopeThreshold,
+        directionalJumpBoost;
 
     [Header("Casting")]
     public float legWidth;

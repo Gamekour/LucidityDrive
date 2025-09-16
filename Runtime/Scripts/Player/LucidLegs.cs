@@ -78,6 +78,7 @@ public class LucidLegs : MonoBehaviour
         flightDrag,
         sprintScale,
         directionalJumpStrength,
+        directionalJumpBoost,
         jumpTilt,
         slidePushStrength,
         climbTilt,
@@ -453,6 +454,8 @@ public class LucidLegs : MonoBehaviour
 
         float jumpadjust = (inputJump && !LucidPlayerInfo.disableJump) ? directionalJumpStrength : 1;
         Vector3 movetarget = jumpadjust * moveadjust * hipSpace.TransformVector(moveFlat);
+        Vector3 dirJumpBoost = directionalJumpBoost * hipSpace.TransformVector(moveFlat) * rb.mass;
+        dirJumpBoost *= (inputJump && !LucidPlayerInfo.disableJump) ? 1 : 0;
         Vector3 relativevel = hipSpace.InverseTransformVector(rb.velocity);
         relativevel.y = 0;
         relativevel = hipSpace.TransformVector(relativevel);
@@ -471,12 +474,10 @@ public class LucidLegs : MonoBehaviour
 
         Vector3 objectforce = -(slidecalc + pushcalc);
 
-        rb.AddForce(slidecalc + pushcalc, ForceMode.Force);
+        rb.AddForce(slidecalc + pushcalc + dirJumpBoost, ForceMode.Force);
 
         if (isRight && LucidPlayerInfo.connectedRB_RF != null)
-        {
             LucidPlayerInfo.connectedRB_RF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_RF.position, ForceMode.Force);
-        }
         if (!isRight && LucidPlayerInfo.connectedRB_LF != null)
             LucidPlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_LF.position, ForceMode.Force);
     }

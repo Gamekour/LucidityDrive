@@ -33,6 +33,7 @@ MonoBehaviour:
   directionalJumpStrength: 3.5
   surfaceMagnetismBySlope: 0
   highSlopeThreshold: 0.5
+  directionalJumpBoost: 0
   legWidth: 0.09
   probeDepth: 2
   probeScale: 1
