@@ -30,6 +30,7 @@ public class LucidSetupTool : EditorWindow
 
         Physics.IgnoreLayerCollision(3, 3);
         Physics.IgnoreLayerCollision(3, 8);
+        Physics.IgnoreLayerCollision(8, 8);
 
         Physics.defaultMaxAngularSpeed = 100f;
 

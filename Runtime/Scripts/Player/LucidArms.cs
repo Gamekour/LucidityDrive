@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 
 public class LucidArms : MonoBehaviour
 {
-    public Transform itemPosesR;
-    public Transform itemPosesL;
+    public Transform defaultItemPosesR;
+    public Transform defaultItemPosesL;
     //poses: 0=one handed carry, 1=two handed carry
 
     [SerializeField]
@@ -38,6 +38,7 @@ public class LucidArms : MonoBehaviour
     private Transform animShoulderL, animShoulderR;
     private Transform targetTransformL, targetTransformR;
     private Transform currentPoseL, currentPoseR;
+    private Transform currentPoseParentL, currentPoseParentR;
     private Vector3 grabPositionL, grabPositionR;
     private Vector3 grabForceL, grabForceR;
     private Quaternion grabRotationL, grabRotationR;
@@ -114,8 +115,8 @@ public class LucidArms : MonoBehaviour
         animShoulderR = visModel.anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
         animArmLength = CalculateAnimArmLength(visModel);
         sjlewis.limit = limitDistance * animArmLength;
-        currentPoseL = itemPosesL.Find("OneHandedCarry");
-        currentPoseR = itemPosesR.Find("OneHandedCarry");
+        currentPoseL = defaultItemPosesL.Find("OneHandedCarry");
+        currentPoseR = defaultItemPosesR.Find("OneHandedCarry");
 
         initialized = true;
     }
@@ -124,6 +125,8 @@ public class LucidArms : MonoBehaviour
     {
         ManageInputSubscriptions(true);
         sjlewis.limit = limitDistance;
+        currentPoseParentL = defaultItemPosesL;
+        currentPoseParentR = defaultItemPosesR;
     }
 
     //in short: uses an initial cast to find the nearest "wall", then another cast to find the top of said wall. If all is good and within reach, then we start asking if we're trying to grab and if so we call those functions up
@@ -290,19 +293,25 @@ public class LucidArms : MonoBehaviour
 
     private void UpdateItemPose(bool isRight, string pose)
     {
-        Transform tPoseParent = isRight ? itemPosesR : itemPosesL;
+        ref Transform tPoseParent = ref currentPoseParentL;
+        if (isRight)
+            tPoseParent = ref currentPoseParentR;
         Transform tPose = tPoseParent.Find(pose);
         ref LucidTool lt = ref lt_L;
         if (isRight)
             lt = ref lt_R;
         if (lt != null)
         {
+            tPoseParent = isRight ? lt.itemPosesR : lt.itemPosesL;
             bool doPrimary = isRight ? isPrimaryR : isPrimaryL;
             if (isRight)
                 tPose = doPrimary ? lt.ItemPosePrimaryR : lt.ItemPoseSecondaryR;
             else
                 tPose = doPrimary ? lt.ItemPosePrimaryL : lt.ItemPoseSecondaryL;
         }
+        else
+            tPoseParent = isRight ? defaultItemPosesR : defaultItemPosesL;
+
         if (tPose == null)
             tPose = tPoseParent.GetChild(0);
         ref Transform currentPose = ref currentPoseL;
@@ -313,9 +322,9 @@ public class LucidArms : MonoBehaviour
 
     private void ItemPose(bool isRight)
     {
-        ref Transform itemPoses = ref itemPosesL;
+        ref Transform itemPoses = ref currentPoseParentL;
         if (isRight)
-            itemPoses = ref itemPosesR;
+            itemPoses = ref currentPoseParentR;
 
         ref Transform handTarget = ref handTargetL;
         if (isRight)
@@ -326,8 +335,7 @@ public class LucidArms : MonoBehaviour
         Transform animShoulder = isRight ? animShoulderR : animShoulderL;
 
         itemPoses.SetPositionAndRotation(animShoulder.position, LucidPlayerInfo.pelvis.rotation);
-        Vector3 pos = itemPoses.TransformPoint(currentPose.localPosition * animArmLength);
-        handTarget.SetPositionAndRotation(pos, LucidPlayerInfo.pelvis.rotation * currentPose.localRotation);
+        handTarget.SetPositionAndRotation(currentPose.position, currentPose.rotation);
     }
 
     private void ClimbPose(bool isRight)
@@ -696,6 +704,7 @@ public class LucidArms : MonoBehaviour
             grabLock = isPrimary ? lt.GrabLockPrimary : lt.GrabLockSecondary;
             disableDrop = lt.disableDrop;
             lt.OnGrab.Invoke();
+            lt.held = true;
         }
 
         CreateConfigurableJoint(isRight, grabPosition, grabRotation, targetTransform);
@@ -764,6 +773,9 @@ public class LucidArms : MonoBehaviour
         ref LucidTool lt = ref lt_L;
         if (isRight)
             lt = ref lt_R;
+
+        if (lt != null)
+            lt.held = false;
 
         LucidTool otherLT = isRight ? lt_L : lt_R;
 

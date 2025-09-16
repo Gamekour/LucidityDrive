@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class LucidTool : MonoBehaviour
 {
+    public Transform itemPosesR;
+    public Transform itemPosesL;
     public Transform PrimaryGripL;
     public Transform SecondaryGripL;
     public Transform PrimaryGripR;
@@ -18,6 +20,9 @@ public class LucidTool : MonoBehaviour
     public bool autoGrabL = false;
     public bool autoGrabR = false;
     public bool disableDrop = false;
+
+    [HideInInspector]
+    public bool held = false;
 
     public UnityEvent OnUse;
     public UnityEvent OnUseUp;
