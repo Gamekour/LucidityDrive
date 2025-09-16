@@ -6,8 +6,6 @@ public class LucidFreelook : MonoBehaviour
     [SerializeField] Vector2 sensitivity = Vector2.one;
     [SerializeField] float 
         headRadius,
-        downAngleLimit,
-        upAngleLimit,
         sensitivityMultiplier;
 
     private Transform chest;
@@ -78,17 +76,7 @@ public class LucidFreelook : MonoBehaviour
             currentX = AdjustForInvertedState(currentX, 90f, 270f);
 
         currentOffset = CalculateOffset(chestX, currentX);
-        if (chest.up.y > 0)
-            targetOffset = Mathf.Clamp(currentOffset + rotation.x, downAngleLimit, upAngleLimit);
-        else
-        {
-            if (currentOffset + rotation.x > 0)
-                targetOffset = Mathf.Clamp(currentOffset + rotation.x, upAngleLimit, 360);
-            else if (currentOffset + rotation.x < upAngleLimit)
-                targetOffset = Mathf.Clamp(currentOffset + rotation.x, -360, downAngleLimit);
-            else
-                targetOffset = currentOffset + rotation.x;
-        }
+        targetOffset = currentOffset + rotation.x;
 
         float offsetDifference = targetOffset - currentOffset;
 
