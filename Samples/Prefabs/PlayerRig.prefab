@@ -676,7 +676,7 @@ MonoBehaviour:
   footSpace: {fileID: 283649365809611213}
   vFloor: {fileID: 2916796221035400664}
   pelvisCollider: {fileID: 1105449760031442629}
-  defaultMovementSettings: {fileID: 11400000, guid: b460e0abbe261ff4da0c849d2778e2a1,
+  defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
     type: 2}
 --- !u!1 &4056114730217282164
 GameObject:
