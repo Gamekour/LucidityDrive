@@ -676,7 +676,7 @@ MonoBehaviour:
   footSpace: {fileID: 283649365809611213}
   vFloor: {fileID: 2916796221035400664}
   pelvisCollider: {fileID: 1105449760031442629}
-  defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
+  defaultMovementSettings: {fileID: 11400000, guid: b460e0abbe261ff4da0c849d2778e2a1,
     type: 2}
 --- !u!1 &4056114730217282164
 GameObject:
@@ -6579,8 +6579,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivity: {x: 1, y: 1}
   headRadius: 1
-  downAngleLimit: -80
-  upAngleLimit: 80
   sensitivityMultiplier: 9
 --- !u!1 &7443822214091298102
 GameObject:

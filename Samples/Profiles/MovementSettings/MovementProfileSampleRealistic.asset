@@ -35,14 +35,10 @@ MonoBehaviour:
   highSlopeThreshold: 0.5
   legWidth: 0.09
   probeDepth: 2
-  probeScale: 0.5
-  maxProbeOffset: 1
+  probeScale: 1
+  maxProbeOffset: 3
   probeXMinimumOffset: 0.1
   probeZMinimumOffset: 0.1
-  ratioScale: 1
-  ratioFreezeThreshold: 0.1
-  dampAnimPhaseByAirtime: 2
-  scaleRatioBySpeed: 0.3
   friction: 0.45
   maxForceScale: 5.4
   pelvisRotationSpeed: 2000
