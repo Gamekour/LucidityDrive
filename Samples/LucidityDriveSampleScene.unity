@@ -5010,16 +5010,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: upAngleLimit
-      value: 360
-      objectReference: {fileID: 0}
-    - target: {fileID: 2829915474797417586, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: downAngleLimit
-      value: -360
-      objectReference: {fileID: 0}
     - target: {fileID: 6671152753758007464, guid: feb5ffb413408f64bb3e0843d3c27f57,
         type: 3}
       propertyPath: m_Name
@@ -11108,26 +11098,6 @@ PrefabInstance:
       propertyPath: m_Sources.Array.data[0].sourceTransform
       value: 
       objectReference: {fileID: 1218966378}
-    - target: {fileID: 8841096205746449656, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.44575188
-      objectReference: {fileID: 0}
-    - target: {fileID: 8841096205746449656, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.5268433
-      objectReference: {fileID: 0}
-    - target: {fileID: 8841096205746449656, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.54891276
-      objectReference: {fileID: 0}
-    - target: {fileID: 8841096205746449656, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.47163132
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

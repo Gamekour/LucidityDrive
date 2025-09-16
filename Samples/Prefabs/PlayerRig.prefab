@@ -559,7 +559,7 @@ MonoBehaviour:
   minStepRate: 0.05
   dampAnimPhaseByAirtime: 2
   wobbleScale: 2
-  rollForceThreshold: 8
+  rollForceThreshold: 10
   onFootChanged:
     m_PersistentCalls:
       m_Calls:
@@ -6012,12 +6012,12 @@ MonoBehaviour:
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
   headRoot: {fileID: 2840716185538071160}
-  headRotationSmoothTime: 0.25
-  mouselookBlend: 0.3
+  headRotationSmoothTime: 0.4
+  mouselookBlend: 0.1
   mouselookBlendTransitionSpeed: 1
   nonFPCameraSmoothTime: 0.05
-  fovBase: 75
-  fovBySpeed: 3
+  fovBase: 80
+  fovBySpeed: 5
   fovDampTime: 0.5
   fovMinSpeed: 5
   fovMax: 120
