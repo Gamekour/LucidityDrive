@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class WindCube : MonoBehaviour
 {
-    [SerializeField] float strength, threshold, matchSmoothness;
+    [SerializeField] Vector3 relativeForce;
+    [SerializeField] float threshold, matchSmoothness, drag;
     [SerializeField] bool multiplicative, subVel = false;
     [SerializeField] ForceMode fm = ForceMode.Force;
     private readonly List<Rigidbody> targets = new();
@@ -23,7 +24,7 @@ public class WindCube : MonoBehaviour
         for (int i = 0; i < targets.Count; i++)
         {
             Rigidbody target = targets[i];
-            Vector3 force = transform.up * strength;
+            Vector3 force = transform.TransformVector(relativeForce);
             if (target != null)
             {
                 Vector3 localvel = transform.InverseTransformVector(target.velocity);
@@ -40,6 +41,7 @@ public class WindCube : MonoBehaviour
                         force *= (1 - matchSmoothness);
                     }
                     target.AddForce(force, fm);
+                    target.velocity /= drag + 1;
                 }
             }
             else
