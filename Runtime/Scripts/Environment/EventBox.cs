@@ -14,6 +14,7 @@ public class EventBox : MonoBehaviour, IGrabTrigger
     [Header("Events")]
     public UnityEvent<Collider> onTriggered;
     public UnityEvent<Collision> onCollisionEnter, onCollisionExit, onCollisionStay;
+    public UnityEvent<GameObject> onParticleCollision;
     public UnityEvent onGrabbed, onUngrabbed, onEnabled;
 
     private void OnEnable()
@@ -75,6 +76,11 @@ public class EventBox : MonoBehaviour, IGrabTrigger
             onCollisionExit.Invoke(lastCollision);
             justCollided = false;
         }
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        onParticleCollision.Invoke(other);
     }
 
     public void GrabEvent()
