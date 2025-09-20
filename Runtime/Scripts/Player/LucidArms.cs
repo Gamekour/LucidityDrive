@@ -69,6 +69,7 @@ public class LucidArms : MonoBehaviour
         LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
         LucidPlayerInfo.handTargetL = handTargetL;
         LucidPlayerInfo.handTargetR = handTargetR;
+        RespawnInterface.OnRespawn.AddListener(OnRespawn);
     }
 
     private void OnDisable()
@@ -84,6 +85,7 @@ public class LucidArms : MonoBehaviour
 
         ManageInputSubscriptions(false);
         LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+        RespawnInterface.OnRespawn.RemoveListener(OnRespawn);
     }
 
     private void ManageInputSubscriptions(bool subscribe)
@@ -105,6 +107,20 @@ public class LucidArms : MonoBehaviour
             LucidInputActionRefs.grabR.canceled -= GrabButtonRightUp;
             LucidInputActionRefs.dropL.started -= DropButtonL;
             LucidInputActionRefs.dropR.started -= DropButtonR;
+        }
+    }
+
+    private void OnRespawn()
+    {
+        if (lt_L != null)
+        {
+            lt_L.transform.position = LucidPlayerInfo.pelvis.position;
+            grabbedRB_L.velocity = Vector3.zero;
+        }
+        if (lt_R != null)
+        {
+            lt_R.transform.position = LucidPlayerInfo.pelvis.position;
+            grabbedRB_R.velocity = Vector3.zero;
         }
     }
 

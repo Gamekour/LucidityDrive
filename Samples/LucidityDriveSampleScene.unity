@@ -5671,6 +5671,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemoGun (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3157964181059933058, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7647164091947354947, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
         type: 3}
       propertyPath: m_Sources.Array.data[0].sourceTransform
