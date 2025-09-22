@@ -2232,7 +2232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0da0f064c1b912a439007cb801bf8af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relativeForce: {x: 0, y: 0, z: 10}
+  relativeForce: {x: 0, y: 0, z: 50}
   threshold: 0
   matchSmoothness: 0
   drag: 1

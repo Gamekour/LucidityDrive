@@ -25,6 +25,8 @@ public class WindCube : MonoBehaviour
         {
             Rigidbody target = targets[i];
             Vector3 force = transform.TransformVector(relativeForce);
+            force.Normalize();
+            force *= relativeForce.magnitude;
             if (target != null)
             {
                 Vector3 localvel = transform.InverseTransformVector(target.velocity);
