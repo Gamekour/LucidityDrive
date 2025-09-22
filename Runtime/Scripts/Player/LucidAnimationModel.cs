@@ -132,7 +132,8 @@ public class LucidAnimationModel : MonoBehaviour
         _GROUNDDIST = "groundDistance",
         _STANCEHEIGHT = "stanceHeight",
         _WOBBLE = "wobble",
-        _ROLL = "roll"
+        _ROLL = "roll",
+        _HEAD_X = "headX"
         ;
 
     private void Start()
@@ -345,11 +346,15 @@ public class LucidAnimationModel : MonoBehaviour
         CapsuleCollider hipColl = LucidPlayerInfo.pelvisColl;
         Vector3 point1 = hipColl.transform.position + (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
         Vector3 point2 = hipColl.transform.position - (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
-        bool hit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfo, 100, LucidShortcuts.geometryMask);
+        bool upHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfoUp, 100, LucidShortcuts.geometryMask);
+        bool downHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.down, out RaycastHit hitInfoDown, 100, LucidShortcuts.geometryMask);
 
-        if (hit)
+        if (upHit)
         {
-            float heightratio = Mathf.Clamp01(hitInfo.distance / LucidPlayerInfo.vismodelRef.upperBodyHeight);
+            float totalspace = hitInfoUp.distance + LucidPlayerInfo.calfLength + LucidPlayerInfo.thighLength;
+            if (downHit)
+                totalspace = hitInfoUp.point.y - hitInfoDown.point.y;
+            float heightratio = Mathf.Clamp01(totalspace / LucidPlayerInfo.vismodelRef.stanceHeightFactor);
             stanceHeight = Mathf.Clamp(stanceHeight, 0, heightratio);
         }
 
@@ -437,6 +442,7 @@ public class LucidAnimationModel : MonoBehaviour
         float crouch = LucidInputValueShortcuts.crouch ? 1 : 0;
         crouch = Mathf.SmoothDamp(currentcrouch, crouch, ref crouchRef, crouchTime);
         Vector3 velN = localVel.normalized;
+        float trueHeadX = Vector3.SignedAngle(pelvis.forward, head.forward, pelvis.right);
 
         anim.SetFloat(_VEL_X, localVel.x);
         anim.SetFloat(_VEL_Y, localVel.y);
@@ -462,6 +468,7 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
         anim.SetFloat(_GROUNDDIST, LucidPlayerInfo.groundDistance);
         anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(LucidPlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
+        anim.SetFloat(_HEAD_X, trueHeadX);
     }
 
     private void UpdateAnimatorBools()
