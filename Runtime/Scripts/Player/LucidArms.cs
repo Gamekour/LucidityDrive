@@ -150,17 +150,22 @@ public class LucidArms : MonoBehaviour
     {
         if (disabling || animShoulderL == null || animShoulderR == null || !initialized) return;
 
-        unRotateL.position = grabPositionL;
-        Vector3 targetdirL = staticGrabRB_L.transform.forward;
-        if (staticGrabRB_L.transform.up.y < 0)
-            targetdirL *= -1;
-        unRotateL.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(targetdirL, Vector3.up), Vector3.up);
-
-        unRotateR.position = grabPositionR;
-        Vector3 targetdirR = staticGrabRB_R.transform.forward;
-        if (staticGrabRB_R.transform.up.y < 0)
-            targetdirR *= -1;
-        unRotateR.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(targetdirR, Vector3.up), Vector3.up);
+        if (LucidPlayerInfo.grabValidL)
+        {
+            unRotateL.position = grabPositionL;
+            Vector3 targetdirL = staticGrabRB_L.transform.forward;
+            if (staticGrabRB_L.transform.up.y < 0)
+                targetdirL *= -1;
+            unRotateL.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(targetdirL, Vector3.up), Vector3.up);
+        }
+        if (LucidPlayerInfo.grabValidR)
+        {
+            unRotateR.position = grabPositionR;
+            Vector3 targetdirR = staticGrabRB_R.transform.forward;
+            if (staticGrabRB_R.transform.up.y < 0)
+                targetdirR *= -1;
+            unRotateR.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(targetdirR, Vector3.up), Vector3.up);
+        }
 
         if (grabL && (targetTransformL == null || !targetTransformL.gameObject.activeInHierarchy))
             Ungrab(false);

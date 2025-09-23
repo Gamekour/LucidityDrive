@@ -99,7 +99,6 @@ public class LucidLegs : MonoBehaviour
     private Vector3 bodyCollisionNrm;
     private float animPhase = 0;
     private bool stuckBackSlide = false;
-    private bool stuckFrontSlide = false;
 
     private void Awake()
     {
@@ -136,15 +135,13 @@ public class LucidLegs : MonoBehaviour
         velflathip.y = 0;
 
         //all of these need to eventually be delegated to bools
-        bool inputBellyslide = (LucidInputValueShortcuts.bslide && !stuckBackSlide) || stuckFrontSlide;
-        bool inputBackslide = (LucidInputValueShortcuts.slide && !stuckFrontSlide) || stuckBackSlide;
+        bool inputBellyslide = (LucidInputValueShortcuts.bslide && !stuckBackSlide);
+        bool inputBackslide = LucidInputValueShortcuts.slide || stuckBackSlide;
 
         if (inputBellyslide && inputBackslide)
             inputBackslide = false;
 
-        if (inputBellyslide && !LucidPlayerInfo.pelvisCollision)
-            stuckFrontSlide = true;
-        else if (inputBackslide && !LucidPlayerInfo.pelvisCollision)
+        if (inputBackslide && !LucidPlayerInfo.pelvisCollision)
             stuckBackSlide = true;
 
         LucidPlayerInfo.slidingBack = inputBackslide;
@@ -158,15 +155,11 @@ public class LucidLegs : MonoBehaviour
             inputSprint = sprintOverride;
         else if (autoSprint)
             inputSprint = !inputSprint;
-        bool crawling = inputBellyslide && inputCrouch && (velflathip.magnitude < maxCrawlSpeed);
-        inputBellyslide &= !crawling;
-        inputBackslide &= !crawling;
         bool doGroundLogic = LucidPlayerInfo.grounded && LucidPlayerInfo.footSurface.y >= -0.001f;
         
-        LucidPlayerInfo.crawling = crawling;
-        if (crawling)
+        if (inputBellyslide)
             LucidPlayerInfo.stanceHeight = 0.1f;
-        else if (inputBellyslide)
+        else if (inputBackslide)
             LucidPlayerInfo.stanceHeight = 0;
         else if (inputCrouch)
             LucidPlayerInfo.stanceHeight = 0.5f;
@@ -183,7 +176,7 @@ public class LucidLegs : MonoBehaviour
         }
         else if (!LucidPlayerInfo.flying && doGroundLogic)
         {
-            if (inputBellyslide || inputBackslide)
+            if (inputBackslide)
                 SlidePush();
             else
                 LegPush(inputCrouch, inputJump, inputSprint);
@@ -492,7 +485,6 @@ public class LucidLegs : MonoBehaviour
             LucidPlayerInfo.hipspace.up = bodyCollisionNrm;
             LucidPlayerInfo.footspace.up = bodyCollisionNrm;
             stuckBackSlide = false;
-            stuckFrontSlide = false;
         }
     }
 
@@ -724,6 +716,8 @@ public class LucidLegs : MonoBehaviour
         Quaternion q3 = Quaternion.RotateTowards(q1, q2, deltaQ * (1 - hipSpaceRotationSmoothness));
 
         hipSpace.rotation = q3;
+        if (normal == Vector3.zero)
+            normal = LucidPlayerInfo.pelvis.forward;
         vFloor.forward = -normal;
 
         vFloor.position = center;

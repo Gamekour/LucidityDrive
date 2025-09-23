@@ -315,17 +315,13 @@ public class LucidAnimationModel : MonoBehaviour
         else
             airtimesmooth = Mathf.SmoothDamp(airtimesmooth, LucidPlayerInfo.airTime, ref landingRef, landTime);
 
+        float currenthipweight = anim.GetLayerWeight(1);
         if (!layerOverrides[1])
         {
             float hipweight = Mathf.Clamp01(crouch ? 0 : 1);
-            hipweight *= Mathf.Lerp(1, Mathf.Clamp01(velflat.magnitude), Mathf.Min(stanceHeight, slide ? 0 : stanceHeight));
-            hipweight *= LucidPlayerInfo.climbing ? 0 : 1;
-            float currenthipweight = anim.GetLayerWeight(1);
             hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
             anim.SetLayerWeight(1, hipweight);
         }
-        else
-            anim.SetLayerWeight(1, 0);
 
 
         Quaternion chest = anim.GetBoneTransform(HumanBodyBones.Chest).rotation;
