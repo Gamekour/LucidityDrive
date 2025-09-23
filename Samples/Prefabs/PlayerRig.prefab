@@ -527,6 +527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   airtimeThreshold: 0.01
+  camUpsideDownThreshold: -0.1
   controller: {fileID: 9100000, guid: 9d5a21555745d03aaa9bfae1f6d47cef, type: 2}
   fpcam: {fileID: 5496875962166913160}
   IK_LF: {fileID: 8982907529161714512}
@@ -6992,7 +6993,7 @@ PrefabInstance:
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
       propertyPath: climbModeForceThreshold
-      value: 469
+      value: Infinity
       objectReference: {fileID: 0}
     - target: {fileID: 8598322749894854093, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}

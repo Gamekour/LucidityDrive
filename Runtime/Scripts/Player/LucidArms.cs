@@ -355,7 +355,7 @@ public class LucidArms : MonoBehaviour
 
         Transform animShoulder = isRight ? animShoulderR : animShoulderL;
 
-        itemPoses.SetPositionAndRotation(animShoulder.position, LucidPlayerInfo.pelvis.rotation);
+        itemPoses.SetPositionAndRotation(animShoulder.position, LucidPlayerInfo.head.rotation);
         handTarget.SetPositionAndRotation(currentPose.position, currentPose.rotation);
     }
 

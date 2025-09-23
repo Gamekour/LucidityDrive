@@ -135,17 +135,17 @@ public class LucidLegs : MonoBehaviour
         velflathip.y = 0;
 
         //all of these need to eventually be delegated to bools
-        bool inputBellyslide = (LucidInputValueShortcuts.bslide && !stuckBackSlide);
+        bool inputCrawl = (LucidInputValueShortcuts.bslide && !stuckBackSlide);
         bool inputBackslide = LucidInputValueShortcuts.slide || stuckBackSlide;
 
-        if (inputBellyslide && inputBackslide)
+        if (inputCrawl && inputBackslide)
             inputBackslide = false;
 
         if (inputBackslide && !LucidPlayerInfo.pelvisCollision)
             stuckBackSlide = true;
 
         LucidPlayerInfo.slidingBack = inputBackslide;
-        LucidPlayerInfo.slidingForward = inputBellyslide;
+        LucidPlayerInfo.slidingForward = inputCrawl;
 
         bool inputCrouch = LucidInputValueShortcuts.crouch;
         bool inputJump = LucidInputValueShortcuts.jump;
@@ -156,11 +156,11 @@ public class LucidLegs : MonoBehaviour
         else if (autoSprint)
             inputSprint = !inputSprint;
         bool doGroundLogic = LucidPlayerInfo.grounded && LucidPlayerInfo.footSurface.y >= -0.001f;
-        
-        if (inputBellyslide)
-            LucidPlayerInfo.stanceHeight = 0.1f;
-        else if (inputBackslide)
+
+        if (inputBackslide || LucidPlayerInfo.head.up.y < LucidPlayerInfo.camUpsideDownThreshold)
             LucidPlayerInfo.stanceHeight = 0;
+        else if (inputCrawl)
+            LucidPlayerInfo.stanceHeight = 0.1f;
         else if (inputCrouch)
             LucidPlayerInfo.stanceHeight = 0.5f;
         else
@@ -176,7 +176,7 @@ public class LucidLegs : MonoBehaviour
         }
         else if (!LucidPlayerInfo.flying && doGroundLogic)
         {
-            if (inputBackslide)
+            if (LucidPlayerInfo.stanceHeight < 0.09f)
                 SlidePush();
             else
                 LegPush(inputCrouch, inputJump, inputSprint);

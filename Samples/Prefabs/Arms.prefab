@@ -51,8 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a79874f871de7b45ab63db4d069d0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPosesR: {fileID: 294864657842894458}
-  itemPosesL: {fileID: 544684904302560919}
+  defaultItemPosesR: {fileID: 0}
+  defaultItemPosesL: {fileID: 0}
   shoulderDistance: 0
   castDistance: 0
   limitDistance: 0.45
@@ -62,7 +62,7 @@ MonoBehaviour:
   maxInitialNrmY: 0
   minDowncastNrmY: 0
   ungrabBoost: 9
-  climbModeForceThreshold: 0
+  climbModeForceThreshold: 100000
   velocityCheatForLucidTools: 0
   unRotateL: {fileID: 0}
   unRotateR: {fileID: 0}

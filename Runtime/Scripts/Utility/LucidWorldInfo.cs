@@ -217,7 +217,8 @@ public static class LucidPlayerInfo
         pelvisSize,
         stanceHeight,
         relativeHeight,
-        lastLandingForce
+        lastLandingForce,
+        camUpsideDownThreshold
         = 0;
 
     public static bool

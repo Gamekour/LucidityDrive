@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class LucidAnimationModel : MonoBehaviour
 {
     public float airtimeThreshold = 0.5f;
+    public float camUpsideDownThreshold = -0.1f;
 
     public static bool[] layerOverrides = new bool[3];
 
@@ -133,9 +134,14 @@ public class LucidAnimationModel : MonoBehaviour
         _STANCEHEIGHT = "stanceHeight",
         _WOBBLE = "wobble",
         _ROLL = "roll",
-        _HEAD_X = "headX"
+        _HEAD_POLARITY_FWD = "headPolFwd",
+        _HEAD_POLARITY_UP = "headPolUp",
+        _LOOK_DELTA_Y = "lookDeltaY"
         ;
-
+    private void Awake()
+    {
+        LucidPlayerInfo.camUpsideDownThreshold = camUpsideDownThreshold;   
+    }
     private void Start()
     {
         pelvis = LucidPlayerInfo.pelvis;
@@ -339,19 +345,22 @@ public class LucidAnimationModel : MonoBehaviour
         float currentStanceHeight = anim.GetFloat(_STANCEHEIGHT);
         stanceHeight = Mathf.SmoothDamp(currentStanceHeight, stanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
 
-        CapsuleCollider hipColl = LucidPlayerInfo.pelvisColl;
-        Vector3 point1 = hipColl.transform.position + (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
-        Vector3 point2 = hipColl.transform.position - (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
-        bool upHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfoUp, 100, LucidShortcuts.geometryMask);
-        bool downHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.down, out RaycastHit hitInfoDown, 100, LucidShortcuts.geometryMask);
-
-        if (upHit)
+        if (LucidPlayerInfo.head.up.y > 0)
         {
-            float totalspace = hitInfoUp.distance + LucidPlayerInfo.calfLength + LucidPlayerInfo.thighLength;
-            if (downHit)
-                totalspace = hitInfoUp.point.y - hitInfoDown.point.y;
-            float heightratio = Mathf.Clamp01(totalspace / LucidPlayerInfo.vismodelRef.stanceHeightFactor);
-            stanceHeight = Mathf.Clamp(stanceHeight, 0, heightratio);
+            CapsuleCollider hipColl = LucidPlayerInfo.pelvisColl;
+            Vector3 point1 = hipColl.transform.position + (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
+            Vector3 point2 = hipColl.transform.position - (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
+            bool upHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfoUp, 100, LucidShortcuts.geometryMask);
+            bool downHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.down, out RaycastHit hitInfoDown, 100, LucidShortcuts.geometryMask);
+
+            if (upHit)
+            {
+                float totalspace = hitInfoUp.distance + LucidPlayerInfo.calfLength + LucidPlayerInfo.thighLength;
+                if (downHit)
+                    totalspace = hitInfoUp.point.y - hitInfoDown.point.y;
+                float heightratio = Mathf.Clamp01(totalspace / LucidPlayerInfo.vismodelRef.stanceHeightFactor);
+                stanceHeight = Mathf.Clamp(stanceHeight, 0, heightratio);
+            }
         }
 
         return stanceHeight;
@@ -464,7 +473,7 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
         anim.SetFloat(_GROUNDDIST, LucidPlayerInfo.groundDistance);
         anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(LucidPlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
-        anim.SetFloat(_HEAD_X, trueHeadX);
+        anim.SetFloat(_LOOK_DELTA_Y, LucidInputValueShortcuts.headLook.y);
     }
 
     private void UpdateAnimatorBools()
@@ -482,6 +491,8 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBool(_GRAB_R, LucidPlayerInfo.climbR);
         anim.SetBool(_CLIMBING, LucidPlayerInfo.climbing);
         anim.SetBool(_FOOTSLIDE, footslide);
+        anim.SetBool(_HEAD_POLARITY_FWD, LucidPlayerInfo.head.forward.y >= camUpsideDownThreshold);
+        anim.SetBool(_HEAD_POLARITY_UP, LucidPlayerInfo.head.up.y >= camUpsideDownThreshold);
     }
 
     private Vector2 LeanCalc(Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
