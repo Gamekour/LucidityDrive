@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
   m_Name: MovementProfileSampleRealistic
   m_EditorClassIdentifier: 
-  moveSpeed: 3
-  sprintScale: 2
+  moveSpeed: 2
+  sprintScale: 3
   moveSpeedCrawling: 1
   moveSpeedCrouched: 1.5
   moveBurst: 40
