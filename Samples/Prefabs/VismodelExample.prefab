@@ -1837,8 +1837,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
-  maxLegScale: 0.91
-  groundedForgiveness: 1.2
+  maxLegScale: 1
+  groundedForgiveness: 1
   stanceHeightFactor: 2.1
   pelvisScaleMult: 1.5
   initializeOnStart: 1

@@ -1085,21 +1085,6 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 2
---- !u!114 &-5784154937955292631
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c57fa878c0233f48a796e05c9355820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerIndices: 01000000
-  layerWeights:
-  - 0
 --- !u!206 &-5679330884268008254
 BlendTree:
   m_ObjectHideFlags: 1
@@ -1598,6 +1583,7 @@ AnimatorState:
   m_StateMachineBehaviours:
   - {fileID: -1881422483810487900}
   - {fileID: 6061172796325987871}
+  - {fileID: 6978139438984721401}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -2287,8 +2273,7 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
-  m_StateMachineBehaviours:
-  - {fileID: -5784154937955292631}
+  m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -5292,6 +5277,21 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &6978139438984721401
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c57fa878c0233f48a796e05c9355820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerIndices: 01000000
+  layerWeights:
+  - 1
 --- !u!206 &7280788692188173717
 BlendTree:
   m_ObjectHideFlags: 1

@@ -107,21 +107,10 @@ public class LucidLegs : MonoBehaviour
         SetPlayerInfoReferences();
     }
 
-    private void OnEnable()
-    {
-        LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-    }
-
     private void OnDisable()
     {
         LucidPlayerInfo.flying = false; //this is a fix for a bug occurring when you switch scenes while in a flight zone - i may eventually have a function to reset all temporary values in playerinfo on scene change
         LucidPlayerInfo.pelvisCollision = false;
-
-        LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
-    }
-
-    public void OnAssignVismodel(LucidVismodel visModel)
-    {
     }
 
     private void FixedUpdate()
@@ -380,7 +369,7 @@ public class LucidLegs : MonoBehaviour
         movedownamount *= targetHeightByNegativeSlope;
         movedownamount -= downness;
 
-        float legLength = (LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength) * LucidPlayerInfo.vismodelRef.maxLegScale;
+        float legLength = LucidPlayerInfo.totalLegLength;
 
         float moveupamount = Mathf.Clamp01(footSpace.TransformVector(moveFlat).y);
         moveupamount *= targetHeightByPositiveSlope;

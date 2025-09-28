@@ -321,15 +321,6 @@ public class LucidAnimationModel : MonoBehaviour
         else
             airtimesmooth = Mathf.SmoothDamp(airtimesmooth, LucidPlayerInfo.airTime, ref landingRef, landTime);
 
-        float currenthipweight = anim.GetLayerWeight(1);
-        if (!layerOverrides[1])
-        {
-            float hipweight = Mathf.Clamp01(crouch ? 0 : 1);
-            hipweight = Mathf.SmoothDamp(currenthipweight, hipweight, ref hipLayerRef, 0.5f);
-            anim.SetLayerWeight(1, hipweight);
-        }
-
-
         Quaternion chest = anim.GetBoneTransform(HumanBodyBones.Chest).rotation;
         Quaternion localSpaceRotationNeck = Quaternion.Inverse(chest) * Quaternion.Slerp(head.rotation, chest, lerp);
         anim.SetBoneLocalRotation(HumanBodyBones.Neck, localSpaceRotationNeck);
@@ -552,6 +543,7 @@ public class LucidAnimationModel : MonoBehaviour
         bool shinCast = Physics.SphereCast(kneepos, castThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * LucidPlayerInfo.vismodelRef.groundedForgiveness, LucidShortcuts.geometryMask);
         LucidPlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
         LucidPlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
+        LucidPlayerInfo.totalLegLength = LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength - castThickness;
 
         Vector3 CastOld = Cast;
         if (thighCast)

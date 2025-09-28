@@ -214,6 +214,7 @@ public static class LucidPlayerInfo
         slidePushAngleThreshold,
         thighLength,
         calfLength,
+        totalLegLength,
         pelvisSize,
         stanceHeight,
         relativeHeight,
