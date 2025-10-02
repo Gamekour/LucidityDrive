@@ -41,12 +41,12 @@ MonoBehaviour:
   probeXMinimumOffset: 0.1
   probeZMinimumOffset: 0.1
   friction: 0.45
-  maxForceScale: 5.4
+  maxForceScale: 7
   pelvisRotationSpeed: 2000
   hipSpaceRotationSmoothness: 0
   hipSpaceMaxRotation: -0.9
   forceSmoothness: 20
-  jumpHeightScale: 16
+  jumpHeightScale: 100
   targetHeightByPositiveSlope: 0
   targetHeightByNegativeSlope: 0.25
   targetHeightByNegativeSlopeClamp: 2

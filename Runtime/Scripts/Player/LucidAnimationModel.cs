@@ -47,7 +47,8 @@ public class LucidAnimationModel : MonoBehaviour
         minStepRate,
         dampAnimPhaseByAirtime,
         wobbleScale,
-        rollForceThreshold
+        rollForceThreshold,
+        leanScale
         ;
 
     public UnityEvent onFootChanged;
@@ -71,7 +72,8 @@ public class LucidAnimationModel : MonoBehaviour
         nrmRef,
         willRef,
         footRef,
-        hangRef;
+        hangRef,
+        leanOffset;
     private float
         footAngle,
         airtimesmooth,
@@ -153,6 +155,7 @@ public class LucidAnimationModel : MonoBehaviour
 
         transform.position += pelvis.position - animpelvis.position;
         transform.rotation = pelvis.rotation;
+        transform.Rotate(leanOffset * leanScale, Space.Self);
 
         float animPhase = LucidPlayerInfo.animPhase;
 
@@ -299,6 +302,7 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 willFlat = CalculateWillFlat();
         float lastalignment = CalculateAlignment();
         Vector2 lerplean = CalculateLean(localVel, localNrm);
+        leanOffset = new Vector3(lerplean.y, 0, lerplean.x);
         Vector3 hang = CalculateHang();
 
         float currentClimb = anim.GetFloat(_CLIMB);
