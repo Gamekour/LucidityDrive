@@ -92,7 +92,8 @@ public class LucidLegs : MonoBehaviour
         slidePushAngleThreshold,
         airTurnAssist,
         surfaceMagnetismBySlope,
-        highSlopeThreshold
+        highSlopeThreshold,
+        targetHeightScale
         = 0;
 
     private Rigidbody rb;
@@ -377,10 +378,8 @@ public class LucidLegs : MonoBehaviour
         float hipheight = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips).position.y;
         float floorheight = LucidPlayerInfo.animationModel.rootPosition.y;
         float legadjust = hipheight - floorheight;
-
-        if (LucidPlayerInfo.crawling)
-            legadjust = crawlHeight;
-        else if (inputJump && !LucidPlayerInfo.disableJump)
+        
+        if (inputJump && !LucidPlayerInfo.disableJump)
         {
             legadjust *= jumpHeightScale;
             rb.AddForce(Vector3.up * (jumpGravity - Physics.gravity.y));
@@ -391,7 +390,7 @@ public class LucidLegs : MonoBehaviour
             legadjust = Mathf.Clamp(legadjust, 0, legLength);
         }
 
-        legadjust *= LucidPlayerInfo.vismodelRef.maxLegScale;
+        legadjust *= targetHeightScale;
 
         float relativeheight = hipSpace.position.y - footSpace.position.y;
         LucidPlayerInfo.relativeHeight = relativeheight;

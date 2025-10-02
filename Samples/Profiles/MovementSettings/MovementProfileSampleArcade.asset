@@ -56,3 +56,4 @@ MonoBehaviour:
   jumpTilt: 0.15
   climbtilt: 0.3
   slidePushAngleThreshold: 45
+  targetHeightScale: 0.91

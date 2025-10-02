@@ -54,5 +54,6 @@ public class MovementSettings : ScriptableObject
         slopeTilt,
         jumpTilt,
         climbtilt,
-        slidePushAngleThreshold;
+        slidePushAngleThreshold,
+        targetHeightScale;
 }
