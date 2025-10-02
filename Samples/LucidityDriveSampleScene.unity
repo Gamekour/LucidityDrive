@@ -5322,11 +5322,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRig
       objectReference: {fileID: 0}
-    - target: {fileID: 8076339388166272961, guid: feb5ffb413408f64bb3e0843d3c27f57,
-        type: 3}
-      propertyPath: leanScale
-      value: 50
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
