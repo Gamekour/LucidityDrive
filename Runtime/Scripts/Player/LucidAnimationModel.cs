@@ -302,7 +302,7 @@ public class LucidAnimationModel : MonoBehaviour
         Vector3 willFlat = CalculateWillFlat();
         float lastalignment = CalculateAlignment();
         Vector2 lerplean = CalculateLean(localVel, localNrm);
-        leanOffset = new Vector3(lerplean.y, 0, lerplean.x);
+        leanOffset = new Vector3(lerplean.y, 0, -lerplean.x);
         Vector3 hang = CalculateHang();
 
         float currentClimb = anim.GetFloat(_CLIMB);
@@ -498,12 +498,11 @@ public class LucidAnimationModel : MonoBehaviour
         Vector2 slope = Vector2.zero;
         slope.x = localnrm.x;
         slope.y = localnrm.z;
+        if (LucidPlayerInfo.alignment > 0.5f && LucidPlayerInfo.airTime < airtimeThreshold)
+            accel = -accel;
         Vector2 lean = Vector2.zero;
         lean.x = (accel.x * k1) + (slope.x * k2);
         lean.y = (accel.y * k1) + (slope.y * k2);
-
-        if (LucidPlayerInfo.alignment > 0.5f && LucidPlayerInfo.airTime < airtimeThreshold)
-            lean = -lean;
 
         return lean;
     }
