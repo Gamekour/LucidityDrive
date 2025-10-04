@@ -562,6 +562,7 @@ MonoBehaviour:
   wobbleScale: 2
   rollForceThreshold: 10
   leanScale: 50
+  maxLeanAngle: 45
   onFootChanged:
     m_PersistentCalls:
       m_Calls:

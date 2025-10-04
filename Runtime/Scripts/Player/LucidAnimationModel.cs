@@ -48,7 +48,8 @@ public class LucidAnimationModel : MonoBehaviour
         dampAnimPhaseByAirtime,
         wobbleScale,
         rollForceThreshold,
-        leanScale
+        leanScale,
+        maxLeanAngle
         ;
 
     public UnityEvent onFootChanged;
@@ -155,7 +156,7 @@ public class LucidAnimationModel : MonoBehaviour
 
         transform.position += pelvis.position - animpelvis.position;
         transform.rotation = pelvis.rotation;
-        transform.Rotate(leanOffset * leanScale, Space.Self);
+        transform.Rotate(Vector3.ClampMagnitude(leanOffset * leanScale, maxLeanAngle), Space.Self);
 
         float animPhase = LucidPlayerInfo.animPhase;
 
