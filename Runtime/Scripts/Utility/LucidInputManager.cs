@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Inputs : MonoBehaviour
+public class LucidInputManager : MonoBehaviour
 {
     [SerializeField] InputActionAsset m_ActionAsset;
     public InputActionAsset ActionAsset { get => m_ActionAsset; set => m_ActionAsset = value; }
@@ -12,14 +12,12 @@ public class Inputs : MonoBehaviour
     private readonly Dictionary<InputAction, FieldInfo> actionValueMapping = new();
     private readonly List<InputAction> activeValueInputs = new();
 
-    private void Awake()
-    {
-        Setup();
-    }
+    private void Awake() => Setup();
 
     private void OnEnable()
     {
-        if (m_ActionAsset != null) m_ActionAsset.Enable();
+        if (m_ActionAsset != null)
+            m_ActionAsset.Enable();
     }
 
     private void Update()
@@ -57,6 +55,8 @@ public class Inputs : MonoBehaviour
                 }
             }
             field.SetValue(this, action);
+            if (actionValueMapping.ContainsKey(action))
+                InitializeShortcutValue(action);
         }
     }
 
@@ -83,6 +83,25 @@ public class Inputs : MonoBehaviour
         FieldInfo valueField = actionValueMapping[action];
         object value = action.ReadValueAsObject();
         valueField.SetValue(this, value);
+    }
+
+    private void InitializeShortcutValue(InputAction action)
+    {
+        FieldInfo valueField = actionValueMapping[action];
+        Type fieldType = valueField.FieldType;
+
+        if (fieldType == typeof(Vector2))
+        {
+            valueField.SetValue(this, Vector2.zero);
+        }
+        else if (fieldType == typeof(bool))
+        {
+            valueField.SetValue(this, false);
+        }
+        else
+        {
+            valueField.SetValue(this, null);
+        }
     }
 }
 
