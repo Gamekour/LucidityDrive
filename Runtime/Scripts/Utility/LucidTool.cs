@@ -19,6 +19,7 @@ public class LucidTool : MonoBehaviour
     public bool GrabLockSecondary = false;
     public bool autoGrabL = false;
     public bool autoGrabR = false;
+    public bool switchGrabOrder = false;
     public bool disableDrop = false;
 
     [HideInInspector]
@@ -50,13 +51,31 @@ public class LucidTool : MonoBehaviour
             la.ForceUngrab(true);
             la.ForceUngrab(false);
         }
-        if (autoGrabL)
+        if (!switchGrabOrder)
         {
-            la.ForceGrab(this, false);
+            if (autoGrabR)
+            {
+                transform.position = LucidPlayerInfo.pelvis.position;
+                la.ForceGrab(this, true);
+            }
+            if (autoGrabL)
+            {
+                transform.position = LucidPlayerInfo.pelvis.position;
+                la.ForceGrab(this, false);
+            }
         }
-        else if (autoGrabR)
+        else
         {
-            la.ForceGrab(this, true);
+            if (autoGrabL)
+            {
+                transform.position = LucidPlayerInfo.pelvis.position;
+                la.ForceGrab(this, false);
+            }
+            if (autoGrabR)
+            {
+                transform.position = LucidPlayerInfo.pelvis.position;
+                la.ForceGrab(this, true);
+            }
         }
     }
 }
