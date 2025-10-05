@@ -4,9 +4,12 @@ using UnityEngine.InputSystem;
 
 public class LucidArms : MonoBehaviour
 {
+    public static LucidArms instance;
+
     public Transform defaultItemPosesR;
     public Transform defaultItemPosesL;
     //poses: 0=one handed carry, 1=two handed carry
+    public bool initialized = false;
 
     [SerializeField]
     float
@@ -57,10 +60,14 @@ public class LucidArms : MonoBehaviour
         grippyR,
         isPrimaryL,
         isPrimaryR,
-        disabling,
-        initialized
+        disabling
         = false;
     private float animArmLength = 0;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void OnEnable()
     {
