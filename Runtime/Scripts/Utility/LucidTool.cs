@@ -43,7 +43,7 @@ public class LucidTool : MonoBehaviour
     IEnumerator WaitForInit()
     {
         LucidArms la = FindObjectOfType<LucidArms>();
-        while (!LucidPlayerInfo.animModelInitialized)
+        while (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.pelvis == null)
             yield return null;
 
         if (autoGrabL || autoGrabR)
