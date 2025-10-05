@@ -37,14 +37,14 @@ public class LucidTool : MonoBehaviour
 
     public void OnDisable()
     {
-        StopCoroutine(WaitForInit());
+        StopAllCoroutines();
     }
 
     IEnumerator WaitForInit()
     {
         LucidArms la = FindObjectOfType<LucidArms>();
         while (!LucidPlayerInfo.animModelInitialized)
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
         if (autoGrabL || autoGrabR)
         {
