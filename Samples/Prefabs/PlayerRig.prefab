@@ -6982,6 +6982,26 @@ PrefabInstance:
       propertyPath: m_ProjectionMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6667567213998687262, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: m_AngularXDrive.positionDamper
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6667567213998687262, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: m_AngularXDrive.positionSpring
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6667567213998687262, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: m_AngularYZDrive.positionDamper
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6667567213998687262, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: m_AngularYZDrive.positionSpring
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 6841075831018155558, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
       propertyPath: m_Name

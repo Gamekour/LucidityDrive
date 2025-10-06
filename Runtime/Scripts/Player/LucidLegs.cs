@@ -455,12 +455,29 @@ public class LucidLegs : MonoBehaviour
 
         Vector3 objectforce = -(slidecalc + pushcalc);
 
-        rb.AddForce(slidecalc + pushcalc + dirJumpBoost, ForceMode.Force);
+        if (LucidPlayerInfo.connectedRB_LF == null && LucidPlayerInfo.connectedRB_RF == null)
+            rb.AddForce(slidecalc + pushcalc + dirJumpBoost, ForceMode.Force);
+        else
+        {
+            if (isRight && LucidPlayerInfo.connectedRB_RF != null)
+            {
+                LucidPlayerInfo.connectedRB_RF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_RF.position, ForceMode.Force);
 
-        if (isRight && LucidPlayerInfo.connectedRB_RF != null)
-            LucidPlayerInfo.connectedRB_RF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_RF.position, ForceMode.Force);
-        if (!isRight && LucidPlayerInfo.connectedRB_LF != null)
-            LucidPlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_LF.position, ForceMode.Force);
+                Vector3 resistance = objectforce - (LucidPlayerInfo.connectedRB_RF.GetPointVelocity(LucidPlayerInfo.IK_RF.position) / LucidPlayerInfo.connectedRB_RF.mass);
+                resistance *= -1;
+                resistance = Vector3.ClampMagnitude(resistance, objectforce.magnitude);
+                LucidPlayerInfo.mainBody.AddForce(resistance, ForceMode.Force);
+            }
+            if (!isRight && LucidPlayerInfo.connectedRB_LF != null)
+            {
+                LucidPlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_LF.position, ForceMode.Force);
+
+                Vector3 resistance = objectforce - (LucidPlayerInfo.connectedRB_LF.GetPointVelocity(LucidPlayerInfo.IK_LF.position) / LucidPlayerInfo.connectedRB_LF.mass);
+                resistance *= -1;
+                resistance = Vector3.ClampMagnitude(resistance, objectforce.magnitude);
+                LucidPlayerInfo.mainBody.AddForce(resistance, ForceMode.Force);
+            }
+        }
     }
 
     private void OnCollisionStay(Collision collision)
