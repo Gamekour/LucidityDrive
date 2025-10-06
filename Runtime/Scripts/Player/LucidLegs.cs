@@ -484,11 +484,16 @@ public class LucidLegs : MonoBehaviour
     {
         bodyCollisionNrm = collision.contacts[0].normal;
         bool tooSteep = !LucidInputValueShortcuts.jump && bodyCollisionNrm.y < highSlopeThreshold;
-        if (bodyCollisionNrm.y >= 0 && !tooSteep)
+        if (bodyCollisionNrm.y >= highSlopeThreshold && !tooSteep)
         {
             LucidPlayerInfo.pelvisCollision = true;
-            LucidPlayerInfo.hipspace.up = bodyCollisionNrm;
-            LucidPlayerInfo.footspace.up = bodyCollisionNrm;
+
+            if (!LucidPlayerInfo.grounded)
+            {
+                LucidPlayerInfo.hipspace.up = bodyCollisionNrm;
+                LucidPlayerInfo.footspace.up = bodyCollisionNrm;
+            }
+
             stuckBackSlide = false;
         }
     }

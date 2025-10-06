@@ -139,7 +139,8 @@ public class LucidAnimationModel : MonoBehaviour
         _ROLL = "roll",
         _HEAD_POLARITY_FWD = "headPolFwd",
         _HEAD_POLARITY_UP = "headPolUp",
-        _LOOK_DELTA_Y = "lookDeltaY"
+        _LOOK_DELTA_Y = "lookDeltaY",
+        _PELVIS_COLLISION = "pelvisCollision"
         ;
     private void Awake()
     {
@@ -489,6 +490,7 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetBool(_FOOTSLIDE, footslide);
         anim.SetBool(_HEAD_POLARITY_FWD, LucidPlayerInfo.head.forward.y >= camUpsideDownThreshold);
         anim.SetBool(_HEAD_POLARITY_UP, LucidPlayerInfo.head.up.y >= camUpsideDownThreshold);
+        anim.SetBool(_PELVIS_COLLISION, LucidPlayerInfo.pelvisCollision);
     }
 
     private Vector2 LeanCalc(Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
@@ -520,7 +522,7 @@ public class LucidAnimationModel : MonoBehaviour
 
         bool prev_grounded = LucidPlayerInfo.grounded;
 
-        LucidPlayerInfo.grounded = hitL || hitR || LucidPlayerInfo.pelvisCollision;
+        LucidPlayerInfo.grounded = hitL || hitR;
 
         if (!prev_grounded && LucidPlayerInfo.grounded)
         {
