@@ -23,7 +23,8 @@ public class LucidArms : MonoBehaviour
         minDowncastNrmY,
         ungrabBoost,
         climbModeForceThreshold,
-        velocityCheatForLucidTools
+        velocityCheatForLucidTools,
+        swingStabilization
         ;
 
     [SerializeField] Transform unRotateL, unRotateR;
@@ -375,6 +376,16 @@ public class LucidArms : MonoBehaviour
         moveflat.x = inputmove.x;
         moveflat.z = inputmove.y;
         Vector3 motion = LucidPlayerInfo.pelvis.TransformVector(moveflat);
+
+        Vector3 desiredDir = motion.normalized;
+        Vector3 currentVelFlat = LucidPlayerInfo.mainBody.velocity;
+        currentVelFlat.y = 0;
+        if (motion == Vector3.zero) 
+            desiredDir = LucidPlayerInfo.pelvis.forward;
+        Vector3 perpVelocity = currentVelFlat - Vector3.Project(currentVelFlat, desiredDir);
+
+        motion -= perpVelocity * swingStabilization;
+
         motion.y += pull;
         motion *= animArmLength;
 
