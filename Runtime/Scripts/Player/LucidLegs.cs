@@ -292,6 +292,9 @@ public class LucidLegs : MonoBehaviour
 
         // Apply the force
         rb.AddForce(velocityDifference, ForceMode.Acceleration);
+
+        LucidPlayerInfo.connectedRB_LF = null;
+        LucidPlayerInfo.connectedRB_RF = null;
     }
 
     //handles movement while flying
