@@ -53,9 +53,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultItemPosesR: {fileID: 0}
   defaultItemPosesL: {fileID: 0}
+  initialized: 0
   shoulderDistance: 0
   castDistance: 0
-  limitDistance: 0.45
+  limitDistance: 1.3
   shoulderStiffness: 0
   firstCastWidth: 0
   secondCastWidth: 0
@@ -64,6 +65,7 @@ MonoBehaviour:
   ungrabBoost: 9
   climbModeForceThreshold: 100000
   velocityCheatForLucidTools: 0
+  swingStabilization: 0
   unRotateL: {fileID: 0}
   unRotateR: {fileID: 0}
   handTargetL: {fileID: 1120398679289945129}
