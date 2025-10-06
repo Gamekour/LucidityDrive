@@ -7124,6 +7124,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
+      propertyPath: swingStabilization
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
       propertyPath: climbForceThreshold
       value: 469
       objectReference: {fileID: 0}
