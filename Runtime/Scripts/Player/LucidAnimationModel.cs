@@ -544,9 +544,9 @@ public class LucidAnimationModel : MonoBehaviour
     {
         Vector3 thighOrigin = legspace.position + (legspace.up * castHeight);
         Debug.DrawLine(thighOrigin, thighOrigin + ((kneepos - thighOrigin).normalized * Vector3.Distance(thighOrigin, kneepos)), Color.magenta);
-        Debug.DrawLine(kneepos, kneepos + ((footpos - legspace.position).normalized * (Vector3.Distance(kneepos, footpos) * LucidPlayerInfo.vismodelRef.groundedForgiveness)), Color.magenta);
+        Debug.DrawLine(kneepos, kneepos + ((footpos - legspace.position).normalized * (Vector3.Distance(kneepos, footpos))), Color.magenta);
         bool thighCast = Physics.SphereCast(thighOrigin, castThickness, (kneepos - thighOrigin).normalized, out RaycastHit hitInfoThigh, Vector3.Distance(thighOrigin, kneepos), LucidShortcuts.geometryMask);
-        bool shinCast = Physics.SphereCast(kneepos, castThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos) * LucidPlayerInfo.vismodelRef.groundedForgiveness, LucidShortcuts.geometryMask);
+        bool shinCast = Physics.SphereCast(kneepos, castThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos), LucidShortcuts.geometryMask);
         LucidPlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
         LucidPlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
         LucidPlayerInfo.totalLegLength = LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength - castThickness;

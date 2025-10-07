@@ -23,7 +23,7 @@ MonoBehaviour:
   jumpGravity: -6
   fallGravity: -14
   aerialMovementSpeed: 30
-  aerialDrag: 0.99
+  aerialDrag: 1.5
   maxAirAcceleration: 5
   airTurnAssist: 0
   flightSpeed: 10
@@ -50,8 +50,6 @@ MonoBehaviour:
   targetHeightByPositiveSlope: 0
   targetHeightByNegativeSlope: 0.25
   targetHeightByNegativeSlopeClamp: 2
-  maxCrawlSpeed: 14
-  crawlHeight: 0.225
   slopeTilt: 0.1
   jumpTilt: 0.15
   climbtilt: 0.3

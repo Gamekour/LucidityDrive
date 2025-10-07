@@ -17,41 +17,36 @@ MonoBehaviour:
   moveSpeedCrawling: 1
   moveSpeedCrouched: 1.5
   moveBurst: 40
-  footSlideStrength: 14
   slidePushStrength: 16
   jumpForceScale: 1
   jumpGravity: -9.81
   fallGravity: -9.81
+  friction: 0.45
   aerialMovementSpeed: 0
-  aerialDrag: 1
+  aerialDrag: 0
   maxAirAcceleration: 0
   airTurnAssist: 0
   flightSpeed: 10
   flightDrag: 0.05
-  strafeWalkAngularThreshold: 0.75
+  strafeWalkStartThreshold: 0.5
   strafeWalkSpeedMult: 0.75
   directionalJumpStrength: 3.5
+  directionalJumpBoost: 0
   surfaceMagnetismBySlope: 0
   highSlopeThreshold: 0.5
-  directionalJumpBoost: 0
-  legWidth: 0.09
   probeDepth: 2
   probeScale: 1
   maxProbeOffset: 3
   probeXMinimumOffset: 0.1
   probeZMinimumOffset: 0.1
-  friction: 0.45
+  footSlideStrength: 14
   maxForceScale: 7
+  forceSmoothness: 20
   pelvisRotationSpeed: 2000
   hipSpaceRotationSmoothness: 0
-  hipSpaceMaxRotation: -0.9
-  forceSmoothness: 20
-  jumpHeightScale: 100
   targetHeightByPositiveSlope: 0
   targetHeightByNegativeSlope: 0.25
   targetHeightByNegativeSlopeClamp: 2
-  maxCrawlSpeed: 14
-  crawlHeight: 0.225
   slopeTilt: 0.1
   jumpTilt: 0.15
   climbtilt: 0.3

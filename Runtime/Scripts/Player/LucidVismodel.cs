@@ -7,9 +7,8 @@ public class LucidVismodel : MonoBehaviour
     public Animator anim;
 
     [Header("Options")]
-    public float maxLegScale = 1;
-    public float groundedForgiveness = 1;
     public float stanceHeightFactor = 1;
+    public float legWidth = 0.1f;
 
     public float pelvisScaleMult = 1;
     [SerializeField] bool initializeOnStart = true;

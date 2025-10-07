@@ -49,13 +49,11 @@ public class LucidLegs : MonoBehaviour
 
     //parameters copied from movementsettings
     private float
-        legWidth,
         pelvisRotationSpeed,
         probeDepth,
         maxForceScale,
         forceSmoothness,
         maxProbeOffset,
-        jumpHeightScale,
         jumpForceScale,
         probeScale,
         moveSpeed,
@@ -64,16 +62,13 @@ public class LucidLegs : MonoBehaviour
         slopeTilt,
         probeXMinimumOffset,
         probeZMinimumOffset,
-        hipSpaceMaxRotation,
         targetHeightByPositiveSlope,
         targetHeightByNegativeSlope,
         targetHeightByNegativeSlopeClamp,
         hipSpaceRotationSmoothness,
         moveBurst,
-        maxCrawlSpeed,
         moveSpeedCrawling,
         moveSpeedCrouched,
-        crawlHeight,
         flightSpeed,
         flightDrag,
         sprintScale,
@@ -82,7 +77,7 @@ public class LucidLegs : MonoBehaviour
         jumpTilt,
         slidePushStrength,
         climbTilt,
-        strafeWalkAngularThreshold,
+        strafeWalkStartThreshold,
         strafeWalkSpeedMult,
         maxAirAcceleration,
         jumpGravity,
@@ -263,10 +258,11 @@ public class LucidLegs : MonoBehaviour
             flattened = Vector3.zero;
 
         // Apply air drag
-        if (aerialDrag != 1)
+        if (aerialDrag != 0)
         {
+            float aerialDragMultiplier = 1f / (1f + (aerialDrag * Time.fixedDeltaTime));
             float vely = rb.velocity.y;
-            rb.velocity *= aerialDrag;
+            rb.velocity *= aerialDragMultiplier;
             Vector3 vel = rb.velocity;
             vel.y = vely;
             rb.velocity = vel;
@@ -314,11 +310,11 @@ public class LucidLegs : MonoBehaviour
         if (jump)
         {
             yclampmax = Mathf.Infinity;
-            yclampmin = 2;
+            yclampmin = 1;
         }
         else if (crouch)
         {
-            yclampmax = -2;
+            yclampmax = -1;
             yclampmin = -Mathf.Infinity;
         }
         else
@@ -327,7 +323,8 @@ public class LucidLegs : MonoBehaviour
             yclampmin = -Mathf.Infinity;
         }
         moveFlat.y = Mathf.Clamp(moveFlat.y, yclampmin, yclampmax);
-        rb.velocity *= (1 - flightDrag);
+        float flightDragMultiplier = 1f / (1f + (flightDrag * Time.fixedDeltaTime));
+        rb.velocity *= flightDragMultiplier;
         rb.AddForce(moveFlat * flightSpeed, ForceMode.Acceleration);
     }
 
@@ -384,7 +381,7 @@ public class LucidLegs : MonoBehaviour
         
         if (inputJump && !LucidPlayerInfo.disableJump)
         {
-            legadjust *= jumpHeightScale;
+            legadjust = Mathf.Infinity;
             rb.AddForce(Vector3.up * (jumpGravity - Physics.gravity.y));
         }
         else
@@ -398,10 +395,10 @@ public class LucidLegs : MonoBehaviour
         float relativeheight = hipSpace.position.y - footSpace.position.y;
         LucidPlayerInfo.relativeHeight = relativeheight;
         float heightratio = relativeheight / legadjust;
-        heightratio = Mathf.Clamp(heightratio, 0, 2);
+        heightratio = Mathf.Clamp(heightratio, 0, Mathf.Infinity);
 
         float forceadjust = maxForceScale;
-        if (LucidInputValueShortcuts.jump && relativeheight <= LucidPlayerInfo.vismodelRef.maxLegScale && !LucidPlayerInfo.disableJump)
+        if (LucidInputValueShortcuts.jump && !LucidPlayerInfo.disableJump)
             forceadjust *= jumpForceScale;
 
         float currentY = rb.velocity.y;
@@ -430,8 +427,9 @@ public class LucidLegs : MonoBehaviour
             moveadjust = moveSpeedCrouched;
         if (LucidPlayerInfo.isSprinting)
             moveadjust *= sprintScale;
-        if (Mathf.Abs(moveFlat.x) > strafeWalkAngularThreshold)
-                moveadjust *= strafeWalkSpeedMult;
+
+        float t_strafe = Mathf.Clamp01(Mathf.Abs(moveFlat.normalized.x / (1 - strafeWalkStartThreshold)) - strafeWalkStartThreshold);
+        moveadjust *= Mathf.Lerp(1, strafeWalkSpeedMult, t_strafe);
 
         float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
         moveadjust *= 1 + (diffmag * moveBurst);
@@ -513,12 +511,10 @@ public class LucidLegs : MonoBehaviour
         if (LucidPlayerInfo.surfaceAngle < slidePushAngleThreshold)
             return;
 
-        float legLength = (LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength) * LucidPlayerInfo.vismodelRef.maxLegScale;
-
         Vector3 diffL = legSpaceL.position - LucidPlayerInfo.IK_LF.position;
         Vector3 diffR = legSpaceR.position - LucidPlayerInfo.IK_RF.position;
         Vector3 avg = (diffL + diffR) / 2;
-        float strength = 1 - Mathf.Clamp01(avg.magnitude / legLength);
+        float strength = 1 - Mathf.Clamp01(avg.magnitude / LucidPlayerInfo.totalLegLength);
         avg = avg.normalized * strength;
 
         rb.AddForce(avg * slidePushStrength, ForceMode.Acceleration);
@@ -543,7 +539,6 @@ public class LucidLegs : MonoBehaviour
         moveFlat.x = moveVector.x;
         moveFlat.z = moveVector.y;
 
-        float legLength = (LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength) * LucidPlayerInfo.vismodelRef.maxLegScale;
 
         Vector3 willflat = (LucidPlayerInfo.pelvis.TransformVector(moveFlat) * (moveSpeed / 2));
         willflat.y = 0;
@@ -706,22 +701,21 @@ public class LucidLegs : MonoBehaviour
 
             case 0:
                 normal = Vector3.up;
-                center = transform.position + (Vector3.down * legLength);
+                center = transform.position + (Vector3.down * LucidPlayerInfo.totalLegLength);
                 break;
         }
 
-        //if (Vector3.Distance(transform.position, hitN.point) < maxProbeOffset)
-            Debug.DrawLine(transform.position, hitN.point, Color.green);
-        //if (Vector3.Distance(transform.position, hitS.point) < maxProbeOffset)
-            Debug.DrawLine(transform.position, hitS.point, Color.green);
-        //if (Vector3.Distance(legR, hitE.point) < maxProbeOffset)
-            Debug.DrawLine(legR, hitE.point, Color.green);
-        //if (Vector3.Distance(legL, hitW.point) < maxProbeOffset)
-            Debug.DrawLine(legL, hitW.point, Color.green);
+        Debug.DrawLine(transform.position, hitN.point, Color.green);
+        Debug.DrawLine(transform.position, hitS.point, Color.green);
+        Debug.DrawLine(legR, hitE.point, Color.green);
+        Debug.DrawLine(legL, hitW.point, Color.green);
 
         Vector3 hfwd = Vector3.ProjectOnPlane(transform.forward, normal);
-        if (Vector3.Dot(transform.forward, normal) <= hipSpaceMaxRotation)
+
+        //fix for gimbal lock when trying to figure out hipspace on high slopes
+        if (Vector3.Dot(transform.forward, normal) <= -0.9f)
             hfwd += Vector3.up;
+
         Quaternion q1 = hipSpace.rotation;
         Quaternion q2 = Quaternion.LookRotation(hfwd, normal);
         float deltaQ = Quaternion.Angle(q1, q2);
@@ -735,7 +729,7 @@ public class LucidLegs : MonoBehaviour
 
         vFloor.position = center;
 
-        float grounddist = Vector3.Distance(transform.position, vFloor.position) - legLength;
+        float grounddist = Vector3.Distance(transform.position, vFloor.position) - LucidPlayerInfo.totalLegLength;
         if (results.Count < 1)
             grounddist = LucidPlayerInfo.airTime;
         LucidPlayerInfo.groundDistance = grounddist;
@@ -749,7 +743,7 @@ public class LucidLegs : MonoBehaviour
     private void CastWalk(Ray left, Ray right, out RaycastHit hitL, out RaycastHit hitR, float radius = -1)
     {
         if (radius == -1)
-            radius = legWidth;
+            radius = LucidPlayerInfo.vismodelRef.legWidth;
 
         bool hitLeft1 = Physics.SphereCast(left.origin, radius, left.direction, out RaycastHit hitInfoLeft, 1000, LucidShortcuts.geometryMask);
         bool hitRight1 = Physics.SphereCast(right.origin, radius, right.direction, out RaycastHit hitInfoRight, 1000, LucidShortcuts.geometryMask);
