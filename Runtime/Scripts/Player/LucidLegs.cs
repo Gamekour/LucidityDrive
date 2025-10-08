@@ -716,13 +716,7 @@ public class LucidLegs : MonoBehaviour
         if (Vector3.Dot(transform.forward, normal) <= -0.9f)
             hfwd += Vector3.up;
 
-        Quaternion q1 = hipSpace.rotation;
-        Quaternion q2 = Quaternion.LookRotation(hfwd, normal);
-        float deltaQ = Quaternion.Angle(q1, q2);
-
-        Quaternion q3 = Quaternion.RotateTowards(q1, q2, deltaQ * (1 - hipSpaceRotationSmoothness));
-
-        hipSpace.rotation = q3;
+        hipSpace.rotation = Quaternion.LookRotation(hfwd, normal);
         if (normal == Vector3.zero)
             normal = LucidPlayerInfo.pelvis.forward;
         vFloor.forward = -normal;

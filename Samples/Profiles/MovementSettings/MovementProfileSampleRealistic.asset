@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: MovementProfileSampleRealistic
   m_EditorClassIdentifier: 
   moveSpeed: 2
-  sprintScale: 3
   moveSpeedCrawling: 1
   moveSpeedCrouched: 1.5
+  sprintScale: 3
   moveBurst: 40
   slidePushStrength: 16
   jumpForceScale: 1
@@ -30,7 +30,7 @@ MonoBehaviour:
   flightDrag: 0.05
   strafeWalkStartThreshold: 0.5
   strafeWalkSpeedMult: 0.75
-  directionalJumpStrength: 3.5
+  directionalJumpStrength: 6
   directionalJumpBoost: 0
   surfaceMagnetismBySlope: 0
   highSlopeThreshold: 0.5
@@ -43,7 +43,6 @@ MonoBehaviour:
   maxForceScale: 7
   forceSmoothness: 20
   pelvisRotationSpeed: 2000
-  hipSpaceRotationSmoothness: 0
   targetHeightByPositiveSlope: 0
   targetHeightByNegativeSlope: 0.25
   targetHeightByNegativeSlopeClamp: 2
