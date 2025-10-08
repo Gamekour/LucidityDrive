@@ -25,8 +25,7 @@ public class LucidArms : MonoBehaviour
         ungrabBoost,
         climbModeForceThreshold,
         velocityCheatForLucidTools,
-        swingStabilization,
-        grabCheckFlipInterval
+        swingStabilization
         ;
 
     [SerializeField] Transform unRotateL, unRotateR;
@@ -63,8 +62,7 @@ public class LucidArms : MonoBehaviour
         grippyR,
         isPrimaryL,
         isPrimaryR,
-        disabling,
-        checkRightGrab
+        disabling
         = false;
     private float animArmLength = 0;
 
@@ -154,7 +152,6 @@ public class LucidArms : MonoBehaviour
         sjlewis.limit = limitDistance;
         currentPoseParentL = defaultItemPosesL;
         currentPoseParentR = defaultItemPosesR;
-        StartCoroutine(FlipGrabCheck());
     }
 
     //in short: uses an initial cast to find the nearest "wall", then another cast to find the top of said wall. If all is good and within reach, then we start asking if we're trying to grab and if so we call those functions up
@@ -484,11 +481,8 @@ public class LucidArms : MonoBehaviour
                 LucidPlayerInfo.grabValidL = validgrab;
 
             bool grabwait = (isRight ? grabWaitR : grabWaitL);
-            bool correctCycle = (isRight == checkRightGrab);
-            if (validgrab && grabwait && correctCycle)
-            {
+            if (validgrab && grabwait)
                 Grab(isRight);
-            }
 
             staticRB.transform.SetPositionAndRotation(grabPosition, grabRotation);
         }
@@ -617,7 +611,7 @@ public class LucidArms : MonoBehaviour
             lt_L.OnUse.Invoke();
         else
         {
-            if (LucidPlayerInfo.grabValidL && !checkRightGrab)
+            if (LucidPlayerInfo.grabValidL)
                 Grab(false);
             else
                 grabWaitL = true;
@@ -630,7 +624,7 @@ public class LucidArms : MonoBehaviour
             lt_R.OnUse.Invoke();
         else
         {
-            if (LucidPlayerInfo.grabValidR && checkRightGrab)
+            if (LucidPlayerInfo.grabValidR)
                 Grab(true);
             else
                 grabWaitR = true;
@@ -919,6 +913,14 @@ public class LucidArms : MonoBehaviour
         jointTarget.enableCollision = true;
         if (dynamic)
             jointTarget.connectedAnchor = grabTarget.InverseTransformPoint(grabPosition);
+        else
+        {
+            JointDrive disableDrive = new JointDrive();
+            disableDrive.positionSpring = 0;
+            disableDrive.positionDamper = 0;
+            jointTarget.angularXDrive = disableDrive;
+            jointTarget.angularYZDrive = disableDrive;
+        }
     }
 
     public void CollisionExitCallbackL(Collision c)
@@ -929,14 +931,5 @@ public class LucidArms : MonoBehaviour
     public void CollisionExitCallbackR(Collision c)
     {
         ClimbCheck(true);
-    }
-
-    public IEnumerator FlipGrabCheck()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(grabCheckFlipInterval);
-            checkRightGrab = !checkRightGrab;
-        }
     }
 }

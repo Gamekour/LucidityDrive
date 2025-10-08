@@ -66,7 +66,7 @@ MonoBehaviour:
   climbModeForceThreshold: 100000
   velocityCheatForLucidTools: 0
   swingStabilization: 0
-  grabCheckFlipInterval: 0.15
+  grabCheckFlipInterval: 0.01
   unRotateL: {fileID: 0}
   unRotateR: {fileID: 0}
   handTargetL: {fileID: 1120398679289945129}
