@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Animations;
+using UnityEditor;
+using UnityEngine.InputSystem;
 
 class GFG : IComparer<RaycastHit>
 {
@@ -47,6 +49,8 @@ public class LucidLegs : MonoBehaviour
     [SerializeField] CapsuleCollider pelvisCollider;
     [SerializeField] MovementSettings defaultMovementSettings;
 
+    [SerializeField] InputAction reloadMovementSettings;
+
     //parameters copied from movementsettings
     private float
         pelvisRotationSpeed,
@@ -65,7 +69,6 @@ public class LucidLegs : MonoBehaviour
         targetHeightByPositiveSlope,
         targetHeightByNegativeSlope,
         targetHeightByNegativeSlopeClamp,
-        hipSpaceRotationSmoothness,
         moveBurst,
         moveSpeedCrawling,
         moveSpeedCrouched,
@@ -88,7 +91,8 @@ public class LucidLegs : MonoBehaviour
         airTurnAssist,
         surfaceMagnetismBySlope,
         highSlopeThreshold,
-        targetHeightScale
+        targetHeightScale,
+        minLegAdjust
         = 0;
 
     private Rigidbody rb;
@@ -103,8 +107,16 @@ public class LucidLegs : MonoBehaviour
         SetPlayerInfoReferences();
     }
 
+    private void OnEnable()
+    {
+        reloadMovementSettings.Enable();
+        reloadMovementSettings.started += (InputAction.CallbackContext obj) => CopyValues();
+    }
+
     private void OnDisable()
     {
+        reloadMovementSettings.Disable();
+        reloadMovementSettings.started -= null;
         LucidPlayerInfo.flying = false; //this is a fix for a bug occurring when you switch scenes while in a flight zone - i may eventually have a function to reset all temporary values in playerinfo on scene change
         LucidPlayerInfo.pelvisCollision = false;
     }
@@ -392,9 +404,13 @@ public class LucidLegs : MonoBehaviour
 
         legadjust *= targetHeightScale;
 
+        legadjust = Mathf.Clamp(legadjust, minLegAdjust, Mathf.Infinity);
+
         float relativeheight = hipSpace.position.y - footSpace.position.y;
         LucidPlayerInfo.relativeHeight = relativeheight;
         float heightratio = relativeheight / legadjust;
+        if (legadjust <= 0)
+            heightratio = 0;
         heightratio = Mathf.Clamp(heightratio, 0, Mathf.Infinity);
 
         float forceadjust = maxForceScale;

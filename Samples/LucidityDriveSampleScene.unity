@@ -5322,6 +5322,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRig
       objectReference: {fileID: 0}
+    - target: {fileID: 6962469843135845524, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: reloadMovementSettings.m_Name
+      value: Reload Movement Settings
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962469843135845524, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: reloadMovementSettings.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962469843135845524, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: reloadMovementSettings.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 9ac25fcf-df64-497f-b808-d192025c86f3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962469843135845524, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: reloadMovementSettings.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Keyboard>/f1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962469843135845524, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: reloadMovementSettings.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Reload Movement Settings
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

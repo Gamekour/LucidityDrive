@@ -84,4 +84,6 @@ public class MovementSettings : ScriptableObject
     public float slidePushAngleThreshold = 45;
     [Tooltip("Scale the target height by this value")]
     public float targetHeightScale = 0.91f;
+    [Tooltip("Below this height, calculate push as if legs were still at this height")]
+    public float minLegAdjust = 0.1f;
 }
