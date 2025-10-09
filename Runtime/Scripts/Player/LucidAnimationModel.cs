@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 public class LucidAnimationModel : MonoBehaviour
 {
-    public float airtimeThreshold = 0.5f;
+    public float groundDistanceThreshold = 0.5f;
     public float camUpsideDownThreshold = -0.1f;
 
     public static bool[] layerOverrides = new bool[3];
@@ -31,7 +31,6 @@ public class LucidAnimationModel : MonoBehaviour
         stanceHeightSmoothTime,
         castThickness,
         castHeight,
-        airTimeMax,
         lerp,
         landTime,
         footSlideThreshold,
@@ -140,7 +139,8 @@ public class LucidAnimationModel : MonoBehaviour
         _HEAD_POLARITY_FWD = "headPolFwd",
         _HEAD_POLARITY_UP = "headPolUp",
         _LOOK_DELTA_Y = "lookDeltaY",
-        _PELVIS_COLLISION = "pelvisCollision"
+        _PELVIS_COLLISION = "pelvisCollision",
+        _PROBE_PATTERN = "probePattern"
         ;
     private void Awake()
     {
@@ -471,6 +471,7 @@ public class LucidAnimationModel : MonoBehaviour
         anim.SetFloat(_GROUNDDIST, LucidPlayerInfo.groundDistance);
         anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(LucidPlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
         anim.SetFloat(_LOOK_DELTA_Y, LucidInputValueShortcuts.headLook.y);
+        anim.SetInteger(_PROBE_PATTERN, LucidPlayerInfo.probePattern);
     }
 
     private void UpdateAnimatorBools()
@@ -501,7 +502,7 @@ public class LucidAnimationModel : MonoBehaviour
         Vector2 slope = Vector2.zero;
         slope.x = localnrm.x;
         slope.y = localnrm.z;
-        if (LucidPlayerInfo.alignment > 0.5f && LucidPlayerInfo.airTime < airtimeThreshold)
+        if (LucidPlayerInfo.alignment > 0.5f && LucidPlayerInfo.groundDistance < groundDistanceThreshold)
             accel = -accel;
         Vector2 lean = Vector2.zero;
         lean.x = (accel.x * k1) + (slope.x * k2);

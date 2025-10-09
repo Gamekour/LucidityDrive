@@ -626,7 +626,20 @@ public class LucidLegs : MonoBehaviour
                 results.Add(hitS);
         }
 
-        Vector3 normal = Vector3.zero;
+        byte probePattern = 0;
+        bool containsN = results.Contains(hitN);
+        bool containsS = results.Contains(hitS);
+        bool containsE = results.Contains(hitE);
+        bool containsW = results.Contains(hitW);
+        if (containsN && containsS && !containsE && !containsW)
+            probePattern = 1;
+        else if (!containsN && !containsS && containsE && containsW)
+            probePattern = 2;
+        else if (results.Count == 0)
+            probePattern = 3;
+        LucidPlayerInfo.probePattern = probePattern;
+
+            Vector3 normal = Vector3.zero;
         Vector3 center = Vector3.zero;
         switch (results.Count)
         {

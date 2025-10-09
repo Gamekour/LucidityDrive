@@ -37,7 +37,7 @@ MonoBehaviour:
   probeDepth: 2
   probeScale: 1
   maxProbeOffset: 3
-  probeXMinimumOffset: 0.1
+  probeXMinimumOffset: 0.5
   probeZMinimumOffset: 0.1
   footSlideStrength: 14
   maxForceScale: 6

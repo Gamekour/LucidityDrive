@@ -245,5 +245,7 @@ public static class LucidPlayerInfo
         slidingBack,
         slidingForward
         = false;
+
+    public static byte probePattern = 0;
     #endregion
 }
