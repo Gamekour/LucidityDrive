@@ -17,14 +17,22 @@ BlendTree:
     m_DirectBlendParameter: alignment
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: dfc44403f77cecf44a88348b707266ed, type: 2}
+    m_Motion: {fileID: 7400000, guid: ec13b35ba0d97c84c925ffaf095045c4, type: 2}
+    m_Threshold: -0.25
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: alignment
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: 7308e37bf28216142820fd64141e542a, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: alignment
     m_Mirror: 0
-  m_BlendParameter: groundDistance
+  m_BlendParameter: climb
   m_BlendParameterY: Blend
   m_MinThreshold: -0.5
   m_MaxThreshold: 0

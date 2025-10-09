@@ -509,7 +509,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.14
+  m_Radius: 0.1
   m_Height: 0.4
   m_Direction: 0
   m_Center: {x: 0, y: 0.014694362, z: 0.013081908}
@@ -795,6 +795,15 @@ MonoBehaviour:
   pelvisCollider: {fileID: 1105449760031442629}
   defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
     type: 2}
+  reloadMovementSettings:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: d75e4f56-e33d-4dc2-83b3-eac287015887
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!1 &4056114730217282164
 GameObject:
   m_ObjectHideFlags: 0
@@ -7044,6 +7053,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
+      propertyPath: pullSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
       propertyPath: unRotateL
       value: 
       objectReference: {fileID: 2557857802932487432}
@@ -7062,6 +7076,11 @@ PrefabInstance:
       propertyPath: unrotateR
       value: 
       objectReference: {fileID: 3957675543709543255}
+    - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
+        type: 3}
+      propertyPath: ungrabBoost
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 8130835057257280844, guid: 8c0e92cb77193bf4e91b4c156239fb07,
         type: 3}
       propertyPath: castDistance

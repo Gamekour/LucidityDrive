@@ -92,7 +92,8 @@ public class LucidLegs : MonoBehaviour
         surfaceMagnetismBySlope,
         highSlopeThreshold,
         targetHeightScale,
-        minLegAdjust
+        minLegAdjust,
+        climbLegAdjust
         = 0;
 
     private Rigidbody rb;
@@ -370,7 +371,7 @@ public class LucidLegs : MonoBehaviour
         else
             t *= slopeTilt;
 
-        if (footSpace.up.y < highSlopeThreshold && !inputJump)
+        if (footSpace.up.y < highSlopeThreshold && !inputJump && !LucidPlayerInfo.climbing)
             t = 0;
 
         Vector3 pushdir = Vector3.Lerp(Vector3.up, footSpace.up, t);
@@ -391,10 +392,14 @@ public class LucidLegs : MonoBehaviour
         float floorheight = LucidPlayerInfo.animationModel.rootPosition.y;
         float legadjust = hipheight - floorheight;
         
-        if (inputJump && !LucidPlayerInfo.disableJump)
+        if (inputJump && !LucidPlayerInfo.disableJump && !LucidPlayerInfo.climbing)
         {
             legadjust = Mathf.Infinity;
             rb.AddForce(Vector3.up * (jumpGravity - Physics.gravity.y));
+        }
+        else if (LucidPlayerInfo.climbing)
+        {
+            legadjust = climbLegAdjust;
         }
         else
         {
@@ -406,11 +411,11 @@ public class LucidLegs : MonoBehaviour
 
         legadjust = Mathf.Clamp(legadjust, minLegAdjust, Mathf.Infinity);
 
-        float relativeheight = hipSpace.position.y - footSpace.position.y;
+        float relativeheight = Vector3.Project(hipSpace.position - footSpace.position, pushdir).magnitude;
         LucidPlayerInfo.relativeHeight = relativeheight;
         float heightratio = relativeheight / legadjust;
         if (legadjust <= 0)
-            heightratio = 0;
+            legadjust = minLegAdjust;
         heightratio = Mathf.Clamp(heightratio, 0, Mathf.Infinity);
 
         float forceadjust = maxForceScale;
@@ -421,7 +426,9 @@ public class LucidLegs : MonoBehaviour
         float targetY = Mathf.LerpUnclamped(forceadjust, 0, heightratio);
         float diff = targetY - currentY;
 
-        Vector3 calc = pushdir * (-Physics.gravity.y + (diff * forceSmoothness) + pointVelocity.y);
+        float gravfactor = Vector3.Project(-Physics.gravity, pushdir).y;
+
+        Vector3 calc = pushdir * (gravfactor + (diff * forceSmoothness) + pointVelocity.y);
         NrmSlide(calc * rb.mass, out Vector3 slide, out float nrm);
         slide = -slide;
         Vector3 dir = hipSpace.TransformVector(moveFlat);

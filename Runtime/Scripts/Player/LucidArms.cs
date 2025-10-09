@@ -25,7 +25,8 @@ public class LucidArms : MonoBehaviour
         ungrabBoost,
         climbModeForceThreshold,
         velocityCheatForLucidTools,
-        swingStabilization
+        swingStabilization,
+        pullSpeed
         ;
 
     [SerializeField] Transform unRotateL, unRotateR;
@@ -65,6 +66,7 @@ public class LucidArms : MonoBehaviour
         disabling
         = false;
     private float animArmLength = 0;
+    private float currentPull = 0;
 
     private void Awake()
     {
@@ -376,7 +378,8 @@ public class LucidArms : MonoBehaviour
 
     private void ClimbPose(bool isRight)
     {
-        float pull = (LucidInputValueShortcuts.crouch ? 1 : 0);
+        float pull = (LucidInputValueShortcuts.jump ? 1 : 0);
+        float unpull = (LucidInputValueShortcuts.crouch ? 1 : 0);
 
         Vector2 inputmove = LucidInputValueShortcuts.movement;
         Vector3 moveflat = Vector3.zero;
@@ -393,7 +396,12 @@ public class LucidArms : MonoBehaviour
 
         motion -= perpVelocity * swingStabilization;
 
-        motion.y += pull;
+        float pull_add = (pull * pullSpeed * Time.fixedDeltaTime);
+        float pull_sub = (unpull * pullSpeed * Time.fixedDeltaTime);
+
+        currentPull = Mathf.Clamp01(currentPull + pull_add - pull_sub);
+
+        motion.y += currentPull;
         motion *= animArmLength;
 
         if (isRight)
@@ -832,7 +840,7 @@ public class LucidArms : MonoBehaviour
             grabbedRB = null;
         }
 
-        Vector3 dir = Vector3.ClampMagnitude(LucidPlayerInfo.mainBody.velocity, 1);
+        Vector3 dir = LucidPlayerInfo.head.forward;
         LucidPlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
 
         UpdateItemPose(!isRight, "OneHandedCarry");
@@ -845,6 +853,8 @@ public class LucidArms : MonoBehaviour
 
         grabForce = Vector3.zero;
         ClimbCheck(true);
+
+        currentPull = 0;
     }
 
     private void CreateConfigurableJoint(bool isRight, Vector3 grabPosition, Quaternion grabRotation, Transform grabTarget)

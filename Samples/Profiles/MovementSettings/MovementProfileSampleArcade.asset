@@ -13,45 +13,43 @@ MonoBehaviour:
   m_Name: MovementProfileSampleArcade
   m_EditorClassIdentifier: 
   moveSpeed: 4
-  sprintScale: 1.5
   moveSpeedCrawling: 1.5
   moveSpeedCrouched: 3.5
+  sprintScale: 1.5
   moveBurst: 50
-  footSlideStrength: 28
   slidePushStrength: 4
   jumpForceScale: 1.5
   jumpGravity: -6
   fallGravity: -14
+  friction: 0.45
   aerialMovementSpeed: 30
   aerialDrag: 1.5
   maxAirAcceleration: 5
   airTurnAssist: 0
   flightSpeed: 10
   flightDrag: 0.05
-  strafeWalkAngularThreshold: 2
+  strafeWalkStartThreshold: 0.5
   strafeWalkSpeedMult: 1
   directionalJumpStrength: 4
+  directionalJumpBoost: 30
   surfaceMagnetismBySlope: 4
   highSlopeThreshold: 0.5
-  directionalJumpBoost: 30
-  legWidth: 0.01
   probeDepth: 2
   probeScale: 1
   maxProbeOffset: 3
   probeXMinimumOffset: 0.1
   probeZMinimumOffset: 0.1
-  friction: 0.45
-  maxForceScale: 5.4
-  pelvisRotationSpeed: 2000
-  hipSpaceRotationSmoothness: 0
-  hipSpaceMaxRotation: -0.9
+  footSlideStrength: 28
+  maxForceScale: 6
   forceSmoothness: 20
-  jumpHeightScale: 16
+  pelvisRotationSpeed: 2000
   targetHeightByPositiveSlope: 0
   targetHeightByNegativeSlope: 0.25
   targetHeightByNegativeSlopeClamp: 2
   slopeTilt: 0.1
   jumpTilt: 0.15
-  climbtilt: 0.3
+  climbTilt: 0.3
   slidePushAngleThreshold: 45
   targetHeightScale: 0.91
+  minLegAdjust: 0.2
+  climbLegAdjust: 0.3

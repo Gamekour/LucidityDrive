@@ -40,14 +40,16 @@ MonoBehaviour:
   probeXMinimumOffset: 0.1
   probeZMinimumOffset: 0.1
   footSlideStrength: 14
-  maxForceScale: 7
+  maxForceScale: 6
   forceSmoothness: 20
   pelvisRotationSpeed: 2000
   targetHeightByPositiveSlope: 0
   targetHeightByNegativeSlope: 0.25
   targetHeightByNegativeSlopeClamp: 2
   slopeTilt: 0.1
-  jumpTilt: 0.15
-  climbtilt: 0.1
+  jumpTilt: 0.3
+  climbTilt: 1
   slidePushAngleThreshold: 45
   targetHeightScale: 0.91
+  minLegAdjust: 0.2
+  climbLegAdjust: 0.3

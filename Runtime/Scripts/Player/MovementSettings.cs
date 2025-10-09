@@ -79,11 +79,13 @@ public class MovementSettings : ScriptableObject
     [Tooltip("Lean away from steep surfaces by this much (while jumping)")]
     public float jumpTilt = 0.15f;
     [Tooltip("Lean away from steep surfaces by this much (while climbing)")]
-    public float climbtilt = 0.3f;
+    public float climbTilt = 0.3f;
     [Tooltip("At this angle, don't push off of the surface while sliding")]
     public float slidePushAngleThreshold = 45;
     [Tooltip("Scale the target height by this value")]
     public float targetHeightScale = 0.91f;
     [Tooltip("Below this height, calculate push as if legs were still at this height")]
-    public float minLegAdjust = 0.1f;
+    public float minLegAdjust = 0.2f;
+    [Tooltip("Adjust the target leg length while climbing")]
+    public float climbLegAdjust = 0.3f;
 }

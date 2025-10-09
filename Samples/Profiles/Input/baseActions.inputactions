@@ -36,7 +36,7 @@
                     "name": "slide",
                     "type": "Button",
                     "id": "9e87bbdb-08b2-4cc4-9079-ce3eea93ae4f",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -262,7 +262,7 @@
                 {
                     "name": "",
                     "id": "ff301805-0b04-4069-967e-0b0d4829672f",
-                    "path": "<Keyboard>/leftShift",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
@@ -361,7 +361,7 @@
                 {
                     "name": "",
                     "id": "a432a128-7381-4d39-97b1-02335bb0d66b",
-                    "path": "<Keyboard>/leftCtrl",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
