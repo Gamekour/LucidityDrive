@@ -336,10 +336,7 @@ public class LucidArms : MonoBehaviour
         {
             tPoseParent = isRight ? lt.itemPosesR : lt.itemPosesL;
             bool doPrimary = isRight ? isPrimaryR : isPrimaryL;
-            if (isRight)
-                tPose = doPrimary ? lt.ItemPosePrimaryR : lt.ItemPoseSecondaryR;
-            else
-                tPose = doPrimary ? lt.ItemPosePrimaryL : lt.ItemPoseSecondaryL;
+            tPose = doPrimary ? lt.ItemPosePrimaryR : lt.ItemPoseSecondaryR;
         }
         else
             tPoseParent = isRight ? defaultItemPosesR : defaultItemPosesL;
@@ -361,19 +358,24 @@ public class LucidArms : MonoBehaviour
         ref Transform handTarget = ref handTargetL;
         if (isRight)
             handTarget = ref handTargetR;
+        
+        bool isPrimary = isRight ? isPrimaryR : isPrimaryL;
 
         Transform currentPose = isRight ? currentPoseR : currentPoseL;
 
         Transform animShoulder = isRight ? animShoulderR : animShoulderL;
 
-        Quaternion targetRotation = LucidPlayerInfo.pelvis.rotation;
-        if (isRight && lt_R != null)
-            targetRotation = LucidPlayerInfo.head.rotation;
-        if (!isRight && lt_L != null)
-            targetRotation = LucidPlayerInfo.head.rotation;
-
-        itemPoses.SetPositionAndRotation(animShoulder.position, targetRotation);
-        handTarget.SetPositionAndRotation(currentPose.position, currentPose.rotation);
+        Quaternion targetRotation = currentPose.rotation;
+        Vector3 posePos = currentPose.position;
+        print(isPrimary + "," + isRight);
+        if (isPrimary != isRight)
+        {
+            Vector3 relPos = LucidPlayerInfo.head.InverseTransformPoint(posePos);
+            relPos.x *= -1;
+            posePos = LucidPlayerInfo.head.TransformPoint(relPos);
+            targetRotation *= Quaternion.Euler(transform.forward * 180);
+        }
+        handTarget.SetPositionAndRotation(posePos, targetRotation);
     }
 
     private void ClimbPose(bool isRight)
@@ -748,11 +750,16 @@ public class LucidArms : MonoBehaviour
         if (targetTransform.TryGetComponent(out lt))
         {
             isPrimary = (lt != otherLT);
-            Transform targetGrip = isPrimary ? lt.PrimaryGripL : lt.SecondaryGripL;
-            if (isRight)
-                targetGrip = isPrimary ? lt.PrimaryGripR : lt.SecondaryGripR;
+            Transform targetGrip = isPrimary ? lt.PrimaryGripR : lt.SecondaryGripR;
             grabPosition = targetGrip.position;
             grabRotation = targetGrip.rotation;
+            if (isRight != isPrimary)
+            {
+                Vector3 inverseGrabPosition = lt.transform.InverseTransformPoint(grabPosition);
+                inverseGrabPosition.x *= -1;
+                grabPosition = lt.transform.TransformPoint(inverseGrabPosition);
+                grabRotation *= Quaternion.Euler(transform.forward * 180);
+            }    
             grabLock = isPrimary ? lt.GrabLockPrimary : lt.GrabLockSecondary;
             disableDrop = lt.disableDrop;
             lt.OnGrab.Invoke();
