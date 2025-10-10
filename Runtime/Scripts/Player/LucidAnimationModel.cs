@@ -80,7 +80,6 @@ public class LucidAnimationModel : MonoBehaviour
         angleRef,
         landingRef,
         alignmentRef,
-        hipLayerRef,
         stanceHeightRef,
         crouchRef,
         climbRef;
@@ -100,6 +99,11 @@ public class LucidAnimationModel : MonoBehaviour
         lastCastHitR;
 
     private bool initialized = false;
+    private bool oldPolUp;
+    private bool queueFlipForward;
+    private bool queueFlipBackward;
+    private bool queueResetForward;
+    private bool queueResetBackward;
 
     private const string
         _VEL_X = "velX",
@@ -140,7 +144,11 @@ public class LucidAnimationModel : MonoBehaviour
         _HEAD_POLARITY_UP = "headPolUp",
         _LOOK_DELTA_Y = "lookDeltaY",
         _PELVIS_COLLISION = "pelvisCollision",
-        _PROBE_PATTERN = "probePattern"
+        _PROBE_PATTERN = "probePattern",
+        _FLIP_FORWARD_TRIGGER = "flipForward",
+        _FLIP_BACKWARD_TRIGGER = "flipBackward",
+        _UNFLIP_FORWARD_TRIGGER = "resetForward",
+        _UNFLIP_BACKWARD_TRIGGER = "resetBackward"
         ;
     private void Awake()
     {
@@ -184,6 +192,25 @@ public class LucidAnimationModel : MonoBehaviour
         float stepphase = 0.5f - animPhase;
         stepphase = Mathf.Abs(stepphase) * 2;
         LucidPlayerInfo.stepPhase = stepphase;
+
+        bool currentPolUp = LucidPlayerInfo.head.up.y >= camUpsideDownThreshold;
+        if (!currentPolUp && oldPolUp)
+        {
+            bool polForward = LucidPlayerInfo.head.forward.y >= camUpsideDownThreshold;
+            if (polForward)
+                queueFlipBackward = true;
+            else
+                queueFlipForward = true;
+        }
+        else if (currentPolUp && !oldPolUp)
+        {
+            bool polForward = LucidPlayerInfo.head.forward.y >= camUpsideDownThreshold;
+            if (polForward)
+                queueResetForward = true;
+            else
+                queueResetBackward = true;
+        }
+        oldPolUp = currentPolUp;
     }
 
     private void OnEnable()
@@ -321,6 +348,19 @@ public class LucidAnimationModel : MonoBehaviour
             anim.SetTrigger(_ROLL);
             queueRoll = false;
         }
+        else if (queueFlipForward)
+            anim.SetTrigger(_FLIP_FORWARD_TRIGGER);
+        else if (queueFlipBackward)
+            anim.SetTrigger(_FLIP_BACKWARD_TRIGGER);
+        if (queueResetForward)
+            anim.SetTrigger(_UNFLIP_FORWARD_TRIGGER);
+        else if (queueResetBackward)
+            anim.SetTrigger (_UNFLIP_BACKWARD_TRIGGER);
+
+        queueFlipForward = false;
+        queueFlipBackward = false;
+        queueResetForward = false;
+        queueResetBackward = false;
 
         if (LucidPlayerInfo.airTime > airtimesmooth)
             airtimesmooth = LucidPlayerInfo.airTime;
