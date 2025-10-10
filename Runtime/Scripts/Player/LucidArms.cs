@@ -367,7 +367,6 @@ public class LucidArms : MonoBehaviour
 
         Quaternion targetRotation = currentPose.rotation;
         Vector3 posePos = currentPose.position;
-        print(isPrimary + "," + isRight);
         if (isPrimary != isRight)
         {
             Vector3 relPos = LucidPlayerInfo.head.InverseTransformPoint(posePos);
