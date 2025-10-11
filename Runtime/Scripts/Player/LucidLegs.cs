@@ -414,8 +414,6 @@ public class LucidLegs : MonoBehaviour
         float relativeheight = Vector3.Project(hipSpace.position - footSpace.position, pushdir).magnitude;
         LucidPlayerInfo.relativeHeight = relativeheight;
         float heightratio = relativeheight / legadjust;
-        if (legadjust <= 0)
-            legadjust = minLegAdjust;
         heightratio = Mathf.Clamp(heightratio, 0, Mathf.Infinity);
 
         float forceadjust = maxForceScale;

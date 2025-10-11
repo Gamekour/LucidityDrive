@@ -1122,6 +1122,8 @@ MonoBehaviour:
   rollForceThreshold: 10
   leanScale: 50
   maxLeanAngle: 45
+  flipSmoothTime: 0.1
+  highSlopeThreshold: 0.5
   onFootChanged:
     m_PersistentCalls:
       m_Calls:

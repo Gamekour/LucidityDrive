@@ -48,7 +48,9 @@ public class LucidAnimationModel : MonoBehaviour
         wobbleScale,
         rollForceThreshold,
         leanScale,
-        maxLeanAngle
+        maxLeanAngle,
+        flipSmoothTime,
+        highSlopeThreshold
         ;
 
     public UnityEvent onFootChanged;
@@ -73,7 +75,8 @@ public class LucidAnimationModel : MonoBehaviour
         willRef,
         footRef,
         hangRef,
-        leanOffset;
+        leanOffset
+        ;
     private float
         footAngle,
         airtimesmooth,
@@ -82,7 +85,10 @@ public class LucidAnimationModel : MonoBehaviour
         alignmentRef,
         stanceHeightRef,
         crouchRef,
-        climbRef;
+        climbRef,
+        flipRef,
+        oldFlip
+        ;
     private Transform
         pelvis,
         head,
@@ -96,7 +102,8 @@ public class LucidAnimationModel : MonoBehaviour
         animShoulderL,
         animShoulderR,
         lastCastHitL,
-        lastCastHitR;
+        lastCastHitR
+        ;
 
     private bool initialized = false;
     private bool oldPolUp;
@@ -165,7 +172,12 @@ public class LucidAnimationModel : MonoBehaviour
 
         transform.position += pelvis.position - animpelvis.position;
         transform.rotation = pelvis.rotation;
-        transform.Rotate(Vector3.ClampMagnitude(leanOffset * leanScale, maxLeanAngle), Space.Self);
+        float targetFlip = 0;
+        if (LucidPlayerInfo.head.up.y < camUpsideDownThreshold)
+            targetFlip = Vector3.SignedAngle(LucidPlayerInfo.pelvis.forward, LucidPlayerInfo.head.forward, LucidPlayerInfo.pelvis.right);
+        float flipamount = Mathf.SmoothDampAngle(oldFlip, targetFlip, ref flipRef, flipSmoothTime);
+        transform.Rotate(Vector3.ClampMagnitude(leanOffset * leanScale, maxLeanAngle) + (Vector3.right * flipamount), Space.Self);
+        oldFlip = flipamount;
 
         float animPhase = LucidPlayerInfo.animPhase;
 
@@ -682,14 +694,17 @@ public class LucidAnimationModel : MonoBehaviour
             }
         }
 
-        if (isLeft)
-            LucidPlayerInfo.footSurfaceL = normal;
-        else
-            LucidPlayerInfo.footSurfaceR = normal;
+        if (normal.y > highSlopeThreshold || LucidInputValueShortcuts.jump)
+        {
+            if (isLeft)
+                LucidPlayerInfo.footSurfaceL = normal;
+            else
+                LucidPlayerInfo.footSurfaceR = normal;
 
-        LucidPlayerInfo.footSurface = normal;
-        LucidPlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
-        LucidPlayerInfo.footspace.up = normal;
+            LucidPlayerInfo.footSurface = normal;
+            LucidPlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
+            LucidPlayerInfo.footspace.up = normal;
+        }
 
         Vector3 footforward = LucidPlayerInfo.pelvis.forward;
         if (Mathf.Abs(normal.y) < 0.1f)
