@@ -156,7 +156,8 @@ namespace LucidityDrive
             _UNFLIP_FORWARD_TRIGGER = "resetForward",
             _UNFLIP_BACKWARD_TRIGGER = "resetBackward",
             _SWINGING = "swinging",
-            _HEAD_UP_Y = "headUpY"
+            _HEAD_UP_Y = "headUpY",
+            _HEAD_FWD_Y = "headForwardY"
             ;
         private void Awake()
         {
@@ -177,6 +178,8 @@ namespace LucidityDrive
             if (LucidPlayerInfo.head.up.y < camUpsideDownThreshold)
                 targetFlip = Vector3.SignedAngle(LucidPlayerInfo.pelvis.forward, LucidPlayerInfo.head.forward, LucidPlayerInfo.pelvis.right);
             float flipamount = Mathf.SmoothDampAngle(oldFlip, targetFlip, ref flipRef, flipSmoothTime);
+            if (LucidPlayerInfo.groundDistance < groundDistanceThreshold)
+                flipamount = 0;
             transform.Rotate(Vector3.ClampMagnitude(leanOffset * leanScale, maxLeanAngle) + (Vector3.right * flipamount), Space.Self);
             oldFlip = flipamount;
 
@@ -342,7 +345,7 @@ namespace LucidityDrive
             velflat.y = 0;
             Vector3 localNrm = CalculateLocalNormal();
             Vector3 willFlat = CalculateWillFlat();
-            float lastalignment = CalculateAlignment();
+            float alignment = CalculateAlignment();
             Vector2 lerplean = CalculateLean(localVel, localNrm);
             leanOffset = new Vector3(lerplean.y, 0, -lerplean.x);
             Vector3 hang = CalculateHang();
@@ -354,7 +357,7 @@ namespace LucidityDrive
             float stanceHeight = CalculateStanceHeight();
 
             UpdateFootAngle();
-            UpdateAnimatorFloats(localVel, willFlat, localNrm, lastalignment, lerplean, hang, stanceHeight);
+            UpdateAnimatorFloats(localVel, willFlat, localNrm, alignment, lerplean, hang, stanceHeight);
             UpdateAnimatorBools();
             if (queueRoll)
             {
@@ -419,8 +422,8 @@ namespace LucidityDrive
         private float CalculateAlignment()
         {
             float lastalignment = anim.GetFloat(_ALIGNMENT);
-            lastalignment = Mathf.SmoothDamp(lastalignment, LucidPlayerInfo.alignment, ref alignmentRef, alignmentSmoothTime);
-            return lastalignment;
+            float alignmentSmooth = Mathf.SmoothDamp(lastalignment, LucidPlayerInfo.alignment, ref alignmentRef, alignmentSmoothTime);
+            return alignmentSmooth;
         }
 
         private Vector2 CalculateLean(Vector3 localVel, Vector3 localNrm)
@@ -491,7 +494,7 @@ namespace LucidityDrive
             }
         }
 
-        private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float lastalignment, Vector2 lean, Vector3 hang, float smoothedStanceHeight)
+        private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float alignment, Vector2 lean, Vector3 hang, float smoothedStanceHeight)
         {
             float currentcrouch = anim.GetFloat(_CROUCH);
             float crouch = LucidInputValueShortcuts.crouch ? 1 : 0;
@@ -512,7 +515,7 @@ namespace LucidityDrive
             anim.SetFloat(_NRM_Z, localNrm.z);
             anim.SetFloat(_ANIMCYCLE, LucidPlayerInfo.animPhase);
             anim.SetFloat(_AIRTIME, LucidPlayerInfo.airTime);
-            anim.SetFloat(_ALIGNMENT, 1 - lastalignment);
+            anim.SetFloat(_ALIGNMENT, 1 - alignment);
             anim.SetFloat(_CLIMB, hang.y);
             anim.SetFloat(_HANG_X, hang.x);
             anim.SetFloat(_HANG_Z, hang.z);
@@ -524,6 +527,7 @@ namespace LucidityDrive
             anim.SetFloat(_GROUNDDIST, LucidPlayerInfo.groundDistance);
             anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(LucidPlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
             anim.SetFloat(_HEAD_UP_Y, LucidPlayerInfo.head.up.y);
+            anim.SetFloat(_HEAD_FWD_Y, LucidPlayerInfo.head.forward.y);
             anim.SetInteger(_PROBE_PATTERN, LucidPlayerInfo.probePattern);
         }
 
@@ -559,7 +563,7 @@ namespace LucidityDrive
             if (LucidPlayerInfo.probePattern == 1)
                 slope = Vector2.zero;
             if (LucidPlayerInfo.alignment > 0.5f && LucidPlayerInfo.groundDistance < groundDistanceThreshold)
-                accel = -accel;
+                accel = -accel * 2;
             Vector2 lean = Vector2.zero;
             lean.x = (accel.x * k1) + (slope.x * k2);
             lean.y = (accel.y * k1) + (slope.y * k2);

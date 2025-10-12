@@ -1100,7 +1100,7 @@ MonoBehaviour:
   nrmSmoothTime: 0.01
   footSmoothTime: 0.5
   willSmoothTime: 0.1
-  alignmentSmoothTime: 0.5
+  alignmentSmoothTime: 0.01
   hangSmoothTime: 0.025
   climbSmoothTime: 0.5
   stanceHeightSmoothTime: 0.5
