@@ -241,7 +241,7 @@ namespace LucidityDrive
             }
         }
 
-        private void ClimbCheck(bool allowUnclimb = false)
+        public void ClimbCheck(bool allowUnclimb = false)
         {
             bool staticGrabL = (grabbedRB_L == null || grabbedRB_L == staticGrabRB_L);
             bool staticGrabR = (grabbedRB_R == null || grabbedRB_R == staticGrabRB_R);

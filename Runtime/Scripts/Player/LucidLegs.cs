@@ -510,6 +510,7 @@ namespace LucidityDrive
             if (bodyCollisionNrm.y >= highSlopeThreshold && !tooSteep)
             {
                 LucidPlayerInfo.pelvisCollision = true;
+                LucidArms.instance.ClimbCheck(true);
 
                 if (!LucidPlayerInfo.grounded)
                 {
