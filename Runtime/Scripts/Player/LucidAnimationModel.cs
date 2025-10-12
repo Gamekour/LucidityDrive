@@ -6,6 +6,8 @@ namespace LucidityDrive
 {
     public class LucidAnimationModel : MonoBehaviour
     {
+        public static LucidAnimationModel instance;
+
         public float groundDistanceThreshold = 0.5f;
         public float camUpsideDownThreshold = -0.1f;
 
@@ -161,6 +163,7 @@ namespace LucidityDrive
             ;
         private void Awake()
         {
+            instance = this;
             LucidPlayerInfo.camUpsideDownThreshold = camUpsideDownThreshold;
         }
         private void Start()
@@ -251,7 +254,10 @@ namespace LucidityDrive
             GameObject newPlayerModel = Instantiate(visModel.gameObject, transform);
             LucidVismodel newVisModel = newPlayerModel.GetComponent<LucidVismodel>();
             Avatar targetAvatar = newVisModel.anim.avatar;
-            newVisModel.playerMeshParent.gameObject.SetActive(false);
+            foreach(Renderer r in newVisModel.gameObject.GetComponentsInChildren<Renderer>())
+            {
+                Destroy(r.gameObject);
+            }
             Destroy(newVisModel);
             anim = newPlayerModel.GetComponent<Animator>();
             anim.runtimeAnimatorController = controller;

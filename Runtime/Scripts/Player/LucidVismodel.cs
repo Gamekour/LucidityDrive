@@ -13,32 +13,36 @@ namespace LucidityDrive
         public float legWidth = 0.1f;
 
         public float pelvisScaleMult = 1;
-        [SerializeField] bool initializeOnStart = true;
         [SerializeField] float grabSpeed = 1;
+        [SerializeField] bool initializeOnStart = true;
 
-        [Header("References")]
-        public Transform playerMeshParent;
-
-        private LucidAnimationModel modelSync;
+        private Transform headRef;
         private float grabWeightL, grabWeightR = 0;
         private bool initialized = false;
+        private Vector3 defaultHeadScale;
 
         private void Start()
         {
             anim = GetComponent<Animator>();
-            modelSync = FindObjectOfType<LucidAnimationModel>();
 
             if (initializeOnStart) Init();
         }
 
         private void OnAnimatorIK(int layerIndex)
         {
-            if (initialized && LucidPlayerInfo.animModelInitialized)
+            if (!initialized) return;
+            if (LucidPlayerInfo.animModelInitialized)
                 LocalCalc();
+            if (LucidPlayerInfo.inFirstPerson)
+                headRef.localScale = Vector3.one * 0.001f;
+            else
+                headRef.localScale = defaultHeadScale;
         }
 
         public void Init()
         {
+            headRef = anim.GetBoneTransform(HumanBodyBones.Head);
+            defaultHeadScale = headRef.localScale;
             initialized = true;
         }
 
@@ -82,8 +86,8 @@ namespace LucidityDrive
             foreach (HumanBodyBones hb2 in LucidShortcuts.hb2list)
             {
                 string hbstring = LucidShortcuts.boneNames[hb2];
-                if (modelSync.boneRots.ContainsKey(hbstring))
-                    anim.SetBoneLocalRotation(hb2, modelSync.boneRots[hbstring]);
+                if (LucidAnimationModel.instance.boneRots.ContainsKey(hbstring))
+                    anim.SetBoneLocalRotation(hb2, LucidAnimationModel.instance.boneRots[hbstring]);
             }
             bool doSlideIK = LucidPlayerInfo.surfaceAngle < LucidPlayerInfo.slidePushAngleThreshold;
             bool isSliding = LucidInputValueShortcuts.bslide || LucidInputValueShortcuts.slide;

@@ -9,6 +9,7 @@ namespace LucidityDrive
 
         [SerializeField] Transform[] cameraPoints;
         [SerializeField] Transform headRoot;
+        [SerializeField] int defaultCameraPoint = 0;
         [SerializeField]
         float
             headRotationSmoothTime,
@@ -61,6 +62,7 @@ namespace LucidityDrive
         {
             headrootTarget = vismodel.anim.GetBoneTransform(HumanBodyBones.Head);
             LucidPlayerInfo.mainCamera.cullingMask = layerMaskFP;
+            ChangeCam(defaultCameraPoint);
         }
 
         private void CameraSwitch1(InputAction.CallbackContext obj)
@@ -89,7 +91,8 @@ namespace LucidityDrive
             if (!LucidPlayerInfo.headLocked) return;
 
             cameraPointIndex = index;
-            if (index == 0)
+            LucidPlayerInfo.inFirstPerson = index == 0;
+            if (LucidPlayerInfo.inFirstPerson)
                 LucidPlayerInfo.mainCamera.cullingMask = layerMaskFP;
             else
                 LucidPlayerInfo.mainCamera.cullingMask = layerMaskNormal;
