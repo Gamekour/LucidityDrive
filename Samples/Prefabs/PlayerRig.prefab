@@ -588,7 +588,7 @@ MonoBehaviour:
   swingStabilization: 0.5
   pullSpeed: 4
   pullDamp: 1
-  maxPullHeight: 1.5
+  maxPullHeight: 3
   unRotateL: {fileID: 2514462217036454194}
   unRotateR: {fileID: 7846883258637758168}
   handTargetL: {fileID: 4805471699546250404}
