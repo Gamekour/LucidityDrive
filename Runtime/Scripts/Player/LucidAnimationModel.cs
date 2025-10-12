@@ -515,7 +515,7 @@ namespace LucidityDrive
             anim.SetFloat(_NRM_Z, localNrm.z);
             anim.SetFloat(_ANIMCYCLE, LucidPlayerInfo.animPhase);
             anim.SetFloat(_AIRTIME, LucidPlayerInfo.airTime);
-            anim.SetFloat(_ALIGNMENT, 1 - alignment);
+            anim.SetFloat(_ALIGNMENT, alignment);
             anim.SetFloat(_CLIMB, hang.y);
             anim.SetFloat(_HANG_X, hang.x);
             anim.SetFloat(_HANG_Z, hang.z);
@@ -562,7 +562,7 @@ namespace LucidityDrive
             slope.y = localnrm.z;
             if (LucidPlayerInfo.probePattern == 1)
                 slope = Vector2.zero;
-            if (LucidPlayerInfo.alignment > 0.5f && LucidPlayerInfo.groundDistance < groundDistanceThreshold)
+            if (LucidPlayerInfo.alignment < 0.5f && LucidPlayerInfo.groundDistance < groundDistanceThreshold)
                 accel = -accel * 2;
             Vector2 lean = Vector2.zero;
             lean.x = (accel.x * k1) + (slope.x * k2);
