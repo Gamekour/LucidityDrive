@@ -437,7 +437,7 @@ namespace LucidityDrive
             slide += (Vector3.Angle(rb.velocity, dir) / 180) * footSlideStrength * velslide;
             nrm += velnrm;
 
-            LucidPlayerInfo.alignment = 1 - ((Vector3.Angle(velflat, dir) / 180) * Mathf.Clamp01(velflat.magnitude / (moveSpeed * sprintScale)));
+            LucidPlayerInfo.alignment = 1 - (Mathf.Clamp01(Vector3.Angle(velflat, dir) / 90) * Mathf.Clamp01(velflat.magnitude / (moveSpeed * sprintScale)));
             if (velflat.magnitude < 0.1f)
                 LucidPlayerInfo.alignment = 1;
             LucidPlayerInfo.isSprinting = inputSprint && !LucidPlayerInfo.disableSprint;
