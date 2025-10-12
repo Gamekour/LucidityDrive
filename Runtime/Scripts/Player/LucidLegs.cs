@@ -154,7 +154,7 @@ namespace LucidityDrive
                 inputSprint = !inputSprint;
             bool doGroundLogic = LucidPlayerInfo.grounded && LucidPlayerInfo.footSurface.y >= -0.001f;
 
-            if (inputBackslide || LucidPlayerInfo.head.up.y < LucidPlayerInfo.camUpsideDownThreshold)
+            if (inputBackslide || LucidPlayerInfo.head.up.y < LucidPlayerInfo.camUpsideDownThreshold || LucidPlayerInfo.swinging)
                 LucidPlayerInfo.stanceHeight = 0;
             else if (inputCrawl)
                 LucidPlayerInfo.stanceHeight = 0.1f;

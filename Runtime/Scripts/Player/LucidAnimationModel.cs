@@ -9,8 +9,6 @@ namespace LucidityDrive
         public float groundDistanceThreshold = 0.5f;
         public float camUpsideDownThreshold = -0.1f;
 
-        public static bool[] layerOverrides = new bool[3];
-
         [SerializeField] RuntimeAnimatorController controller;
         [SerializeField] Camera fpcam;
 
@@ -157,7 +155,8 @@ namespace LucidityDrive
             _FLIP_FORWARD_TRIGGER = "flipForward",
             _FLIP_BACKWARD_TRIGGER = "flipBackward",
             _UNFLIP_FORWARD_TRIGGER = "resetForward",
-            _UNFLIP_BACKWARD_TRIGGER = "resetBackward"
+            _UNFLIP_BACKWARD_TRIGGER = "resetBackward",
+            _SWINGING = "swinging"
             ;
         private void Awake()
         {
@@ -546,6 +545,7 @@ namespace LucidityDrive
             anim.SetBool(_HEAD_POLARITY_FWD, LucidPlayerInfo.head.forward.y >= camUpsideDownThreshold);
             anim.SetBool(_HEAD_POLARITY_UP, LucidPlayerInfo.head.up.y >= camUpsideDownThreshold);
             anim.SetBool(_PELVIS_COLLISION, LucidPlayerInfo.pelvisCollision);
+            anim.SetBool(_SWINGING, LucidPlayerInfo.swinging);
         }
 
         private Vector2 LeanCalc(Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)

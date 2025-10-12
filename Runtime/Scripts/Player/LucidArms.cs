@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 namespace LucidityDrive
 {
@@ -408,13 +409,16 @@ namespace LucidityDrive
             float pull_sub = (unpull * pullSpeed * Time.fixedDeltaTime);
 
             currentPull = Mathf.Clamp(currentPull + pull_add - pull_sub, 0, maxPullHeight);
+            LucidPlayerInfo.swinging = currentPull < 0.05f;
 
             float handY = isRight ? grabPositionR.y : grabPositionL.y;
 
             motion.y = ((handY - LucidPlayerInfo.pelvis.position.y) / animArmLength) - maxPullHeight + (currentPull * 2);
             motion *= animArmLength;
-            if (currentPull > 0.1f)
+            if (!LucidPlayerInfo.swinging)
                 motion.y -= LucidPlayerInfo.mainBody.velocity.y * pullDamp;
+            else
+                motion.y = 0;
             if (LucidInputValueShortcuts.jump)
                 motion.y = Mathf.Clamp(motion.y, 0, Mathf.Infinity);
             if (LucidInputValueShortcuts.crouch)
@@ -937,7 +941,9 @@ namespace LucidityDrive
                 eventBox = grabTarget.gameObject.GetComponent<EventBox>();
                 if (eventBox == null)
                     eventBox = grabTarget.gameObject.AddComponent<EventBox>();
-                eventBox.onCollisionExit = new UnityEngine.Events.UnityEvent<Collision>();
+                eventBox.onCollisionExit = new UnityEvent<Collision>();
+                eventBox.onHover = new UnityEvent();
+                eventBox.onUnHover = new UnityEvent();
                 if (isRight)
                     eventBox.onCollisionExit.AddListener(CollisionExitCallbackR);
                 else

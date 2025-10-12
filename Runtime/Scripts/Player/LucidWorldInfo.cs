@@ -245,7 +245,8 @@ namespace LucidityDrive
             isSprinting,
             isJumping,
             slidingBack,
-            slidingForward
+            slidingForward,
+            swinging
             = false;
 
         public static byte probePattern = 0;
