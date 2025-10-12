@@ -83,6 +83,11 @@ PrefabInstance:
       propertyPath: m_CullingMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8928490115074050906, guid: 927560fe81a19e249973b25d609e3d2f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a3ab4bff86049f645b70196c54cfa968, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -92,6 +97,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: -7520532615093810326}
   m_SourcePrefab: {fileID: 100100000, guid: 927560fe81a19e249973b25d609e3d2f, type: 3}
+--- !u!1 &1160551292185828319 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 635547659545568360, guid: 927560fe81a19e249973b25d609e3d2f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1786504613265948599}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1444417065679913702 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 927560fe81a19e249973b25d609e3d2f,
@@ -114,5 +125,15 @@ MonoBehaviour:
   stanceHeightFactor: 2.1
   legWidth: 0.1
   pelvisScaleMult: 0.5
+  FirstPersonOnly:
+  - {fileID: 8495566574576929238}
+  NonFirstPersonOnly:
+  - {fileID: 1160551292185828319}
   grabSpeed: 2
   initializeOnStart: 1
+--- !u!1 &8495566574576929238 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1356532696078666143, guid: 927560fe81a19e249973b25d609e3d2f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1786504613265948599}
+  m_PrefabAsset: {fileID: 0}

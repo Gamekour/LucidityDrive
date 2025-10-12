@@ -160,6 +160,7 @@ namespace LucidityDrive
     {
         #region Initialization Events
         public static UnityEvent<LucidVismodel> OnAssignVismodel = new();
+        public static UnityEvent<int> onChangeCameraPoint = new();
         public static UnityEvent OnAnimModellInitialized = new();
         public static UnityEvent OnRemoveVismodel = new();
         #endregion

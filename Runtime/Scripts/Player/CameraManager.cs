@@ -62,7 +62,7 @@ namespace LucidityDrive
         {
             headrootTarget = vismodel.anim.GetBoneTransform(HumanBodyBones.Head);
             LucidPlayerInfo.mainCamera.cullingMask = layerMaskFP;
-            ChangeCam(defaultCameraPoint);
+            ChangeCam(defaultCameraPoint, true);
         }
 
         private void CameraSwitch1(InputAction.CallbackContext obj)
@@ -86,9 +86,9 @@ namespace LucidityDrive
             cameraPointIndex = (cameraPointIndex + 1) % 4;
             ChangeCam(cameraPointIndex);
         }
-        private void ChangeCam(int index)
+        private void ChangeCam(int index, bool ignoreHeadlocked = false)
         {
-            if (!LucidPlayerInfo.headLocked) return;
+            if (!LucidPlayerInfo.headLocked && !ignoreHeadlocked) return;
 
             cameraPointIndex = index;
             LucidPlayerInfo.inFirstPerson = index == 0;
@@ -102,6 +102,8 @@ namespace LucidityDrive
                 tcam.position = LucidPlayerInfo.mainCamera.transform.position;
                 tcam.rotation = LucidPlayerInfo.mainCamera.transform.rotation;
             }
+
+            LucidPlayerInfo.onChangeCameraPoint.Invoke(cameraPointIndex);
         }
 
         private void Update()

@@ -11,8 +11,10 @@ namespace LucidityDrive
         [Header("Options")]
         public float stanceHeightFactor = 1;
         public float legWidth = 0.1f;
-
         public float pelvisScaleMult = 1;
+
+        [SerializeField] GameObject[] FirstPersonOnly;
+        [SerializeField] GameObject[] NonFirstPersonOnly;
         [SerializeField] float grabSpeed = 1;
         [SerializeField] bool initializeOnStart = true;
 
@@ -20,6 +22,20 @@ namespace LucidityDrive
         private float grabWeightL, grabWeightR = 0;
         private bool initialized = false;
         private Vector3 defaultHeadScale;
+
+        private void OnEnable()
+        {
+            LucidPlayerInfo.onChangeCameraPoint.AddListener(OnCameraPointChanged);
+        }
+
+        private void OnDisable()
+        {
+            if (!initialized) return;
+
+            LucidPlayerInfo.OnRemoveVismodel.Invoke();
+            LucidPlayerInfo.vismodelRef = null;
+            LucidPlayerInfo.onChangeCameraPoint.RemoveListener(OnCameraPointChanged);
+        }
 
         private void Start()
         {
@@ -33,10 +49,6 @@ namespace LucidityDrive
             if (!initialized) return;
             if (LucidPlayerInfo.animModelInitialized)
                 LocalCalc();
-            if (LucidPlayerInfo.inFirstPerson)
-                headRef.localScale = Vector3.one * 0.001f;
-            else
-                headRef.localScale = defaultHeadScale;
         }
 
         public void Init()
@@ -46,12 +58,19 @@ namespace LucidityDrive
             initialized = true;
         }
 
-        private void OnDisable()
+        private void OnCameraPointChanged(int index)
         {
             if (!initialized) return;
 
-            LucidPlayerInfo.OnRemoveVismodel.Invoke();
-            LucidPlayerInfo.vismodelRef = null;
+            if (LucidPlayerInfo.inFirstPerson)
+                headRef.localScale = Vector3.one * 0.001f;
+            else
+                headRef.localScale = defaultHeadScale;
+
+            foreach (GameObject g in FirstPersonOnly)
+                g.SetActive(LucidPlayerInfo.inFirstPerson);
+            foreach (GameObject g in NonFirstPersonOnly)
+                g.SetActive(!LucidPlayerInfo.inFirstPerson);
         }
 
         private void FixedUpdate()
