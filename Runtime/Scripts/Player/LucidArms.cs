@@ -373,14 +373,21 @@ namespace LucidityDrive
 
             Transform animShoulder = isRight ? animShoulderR : animShoulderL;
 
+            LucidTool lt = isRight ? lt_R : lt_L;
+
             Quaternion targetRotation = currentPose.rotation;
             Vector3 posePos = currentPose.position;
-            if (isPrimary != isRight)
+            if (isPrimary != isRight && lt != null)
             {
                 Vector3 relPos = LucidPlayerInfo.head.InverseTransformPoint(posePos);
                 relPos.x *= -1;
                 posePos = LucidPlayerInfo.head.TransformPoint(relPos);
                 targetRotation *= Quaternion.Euler(transform.forward * 180);
+            }
+            if (itemPoses == defaultItemPosesL || itemPoses == defaultItemPosesR)
+            {
+                itemPoses.position = animShoulder.position;
+                itemPoses.rotation = LucidPlayerInfo.pelvis.rotation;
             }
             handTarget.SetPositionAndRotation(posePos, targetRotation);
         }
