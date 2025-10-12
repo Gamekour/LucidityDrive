@@ -2,22 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CamRoot : MonoBehaviour
+namespace LucidityDrive.Extras
 {
-    public bool useHead = false;
-    private void Update()
+    public class CamRoot : MonoBehaviour
     {
-        if (Camera.main != null)
+        public bool useHead = false;
+        private void Update()
         {
-            if (!useHead)
+            if (Camera.main != null)
             {
-                transform.position = Camera.main.transform.position;
-                transform.rotation = Camera.main.transform.rotation;
-            }
-            else if (LucidPlayerInfo.head != null)
-            {
-                transform.position = LucidPlayerInfo.head.position;
-                transform.rotation = LucidPlayerInfo.head.rotation;
+                if (!useHead)
+                {
+                    transform.position = Camera.main.transform.position;
+                    transform.rotation = Camera.main.transform.rotation;
+                }
+                else if (LucidPlayerInfo.head != null)
+                {
+                    transform.position = LucidPlayerInfo.head.position;
+                    transform.rotation = LucidPlayerInfo.head.rotation;
+                }
             }
         }
     }

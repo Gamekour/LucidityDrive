@@ -1,18 +1,21 @@
 using UnityEngine;
 
-public class AnimatorEventReciever : MonoBehaviour
+namespace LucidityDrive
 {
-    public LucidAnimationModel target;
-
-    private void OnAnimatorIK(int layerIndex)
+    public class AnimatorEventReciever : MonoBehaviour
     {
-        if(target != null)
-            target.AnimatorIKDelegate(layerIndex);
-    }
+        public LucidAnimationModel target;
 
-    private void OnAnimatorMove()
-    {
-        if (target != null)
-            target.AnimatorMoveDelegate();
+        private void OnAnimatorIK(int layerIndex)
+        {
+            if (target != null)
+                target.AnimatorIKDelegate(layerIndex);
+        }
+
+        private void OnAnimatorMove()
+        {
+            if (target != null)
+                target.AnimatorMoveDelegate();
+        }
     }
 }
