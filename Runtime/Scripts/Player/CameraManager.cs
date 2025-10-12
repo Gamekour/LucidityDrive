@@ -20,15 +20,19 @@ namespace LucidityDrive
             fovDampTime,
             fovMinSpeed,
             fovMax,
-            minAngle;
+            minAngle,
+            FPCollisionRadius
+            ;
         [SerializeField] LayerMask layerMaskNormal, layerMaskFP;
 
         private Transform headrootTarget;
         private bool forceMouselook = false;
+        private bool FPCollision;
         private float currentMouselookBlend = 0;
         private float currentspeed;
         private Quaternion smoothDeriv = Quaternion.identity;
         private Vector3 externalDampRef = Vector3.zero;
+        private Vector3 FPcollisionOffset;
         private float fovDampRef;
 
         private void Start()
@@ -106,6 +110,33 @@ namespace LucidityDrive
             LucidPlayerInfo.mainCamera.fieldOfView = Mathf.Clamp(fovBase + (currentspeed * fovBySpeed), fovBase, fovMax);
         }
 
+        private void FixedUpdate()
+        {
+            if (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.mainCamera == null) return;
+
+            Vector3 FPCamPos = cameraPoints[0].position;
+
+            bool cast1 = Physics.SphereCast(LucidPlayerInfo.pelvis.position, FPCollisionRadius, headrootTarget.position - LucidPlayerInfo.pelvis.position, out RaycastHit hitInfo, Vector3.Distance(LucidPlayerInfo.pelvis.position, headrootTarget.position) + 0.05f, LucidShortcuts.geometryMask);
+                Debug.DrawLine(LucidPlayerInfo.pelvis.position, headrootTarget.position);
+            bool cast2 = Physics.SphereCast(headrootTarget.position, FPCollisionRadius, FPCamPos - headrootTarget.position, out RaycastHit hitInfo2, Vector3.Distance(FPCamPos, headrootTarget.position) + 0.05f, LucidShortcuts.geometryMask);
+                Debug.DrawLine(headrootTarget.position, FPCamPos);
+
+            FPCollision = cast1 || cast2;
+            if (FPCollision)
+            {
+                float hitDist = hitInfo.distance;
+                if (!cast1)
+                    hitDist = hitInfo2.distance;
+                float totalDist = Vector3.Distance(LucidPlayerInfo.pelvis.position, headrootTarget.position);
+                if (!cast1)
+                    totalDist = Vector3.Distance(FPCamPos, headrootTarget.position);
+
+                FPcollisionOffset = (LucidPlayerInfo.pelvis.position - headrootTarget.position).normalized * (Mathf.Abs(totalDist - hitDist) + FPCollisionRadius);
+                if (!cast1)
+                    FPcollisionOffset = (headrootTarget.position - FPCamPos).normalized * (Mathf.Abs(totalDist - hitDist) + FPCollisionRadius);
+            }
+        }
+
         private void LateUpdate()
         {
             if (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.mainCamera == null) return;
@@ -115,19 +146,8 @@ namespace LucidityDrive
                 if (cameraPointIndex != 0)
                     headRoot.position = Vector3.SmoothDamp(headRoot.position, headrootTarget.position, ref externalDampRef, nonFPCameraSmoothTime);
                 else
-                {
-                    bool hit = Physics.SphereCast(LucidPlayerInfo.pelvis.position, 0.1f, headrootTarget.position - LucidPlayerInfo.pelvis.position, out RaycastHit hitInfo, Vector3.Distance(LucidPlayerInfo.pelvis.position, headrootTarget.position) + 0.05f, LucidShortcuts.geometryMask);
-                    if (hit)
-                    {
-                        float hitDist = hitInfo.distance;
-                        float totalDist = Vector3.Distance(LucidPlayerInfo.pelvis.position, headrootTarget.position);
+                    headRoot.position = headrootTarget.position;
 
-                        Vector3 offset = (LucidPlayerInfo.pelvis.position - headrootTarget.position).normalized * (Mathf.Abs(totalDist - hitDist) + 0.05f);
-                        headRoot.position = headrootTarget.position + offset;
-                    }
-                    else
-                        headRoot.position = headrootTarget.position;
-                }
 
                 Quaternion targetRotation = headrootTarget.rotation;
                 Quaternion smoothRotation = SmoothDamp(headRoot.rotation, targetRotation, ref smoothDeriv, headRotationSmoothTime);
@@ -152,6 +172,8 @@ namespace LucidityDrive
 
             // Update camera position and rotation
             LucidPlayerInfo.mainCamera.transform.position = cameraPoints[cameraPointIndex].position;
+            if (cameraPointIndex == 0 && FPCollision)
+                LucidPlayerInfo.mainCamera.transform.position += FPcollisionOffset;
             LucidPlayerInfo.mainCamera.transform.rotation = cameraPoints[cameraPointIndex].rotation;
         }
 
