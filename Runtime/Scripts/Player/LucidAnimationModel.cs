@@ -694,7 +694,7 @@ public class LucidAnimationModel : MonoBehaviour
             }
         }
 
-        if (normal.y > highSlopeThreshold || LucidInputValueShortcuts.jump)
+        if (normal.y > highSlopeThreshold || LucidInputValueShortcuts.jump || LucidPlayerInfo.climbing)
         {
             if (isLeft)
                 LucidPlayerInfo.footSurfaceL = normal;

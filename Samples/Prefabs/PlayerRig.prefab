@@ -1123,7 +1123,7 @@ MonoBehaviour:
   leanScale: 50
   maxLeanAngle: 45
   flipSmoothTime: 0.1
-  highSlopeThreshold: 0.5
+  highSlopeThreshold: 0.2
   onFootChanged:
     m_PersistentCalls:
       m_Calls:
