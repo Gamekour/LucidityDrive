@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,11 +7,11 @@ namespace LucidityDrive
     public class LucidArms : MonoBehaviour
     {
         public static LucidArms instance;
+        [HideInInspector]
+        public bool initialized = false;
 
         public Transform defaultItemPosesR;
         public Transform defaultItemPosesL;
-        //poses: 0=one handed carry, 1=two handed carry
-        public bool initialized = false;
 
         [SerializeField]
         float
@@ -28,7 +27,9 @@ namespace LucidityDrive
             climbModeForceThreshold,
             velocityCheatForLucidTools,
             swingStabilization,
-            pullSpeed
+            pullSpeed,
+            pullDamp,
+            maxPullHeight
             ;
 
         [SerializeField] Transform unRotateL, unRotateR;
@@ -70,10 +71,7 @@ namespace LucidityDrive
         private float animArmLength = 0;
         private float currentPull = 0;
 
-        private void Awake()
-        {
-            instance = this;
-        }
+        private void Awake() => instance = this;
 
         private void OnEnable()
         {
@@ -402,10 +400,17 @@ namespace LucidityDrive
             float pull_add = (pull * pullSpeed * Time.fixedDeltaTime);
             float pull_sub = (unpull * pullSpeed * Time.fixedDeltaTime);
 
-            currentPull = Mathf.Clamp01(currentPull + pull_add - pull_sub);
+            currentPull = Mathf.Clamp(currentPull + pull_add - pull_sub, 0, maxPullHeight);
 
-            motion.y += currentPull;
+            float handY = isRight ? grabPositionR.y : grabPositionL.y;
+
+            motion.y = ((handY - LucidPlayerInfo.pelvis.position.y) / animArmLength) - 1 + (currentPull * 2);
             motion *= animArmLength;
+            motion.y -= LucidPlayerInfo.mainBody.velocity.y * pullDamp;
+            if (LucidInputValueShortcuts.jump)
+                motion.y = Mathf.Clamp(motion.y, 0, Mathf.Infinity);
+            if (LucidInputValueShortcuts.crouch)
+                motion.y = Mathf.Clamp(motion.y, -Mathf.Infinity, 0);
 
             if (isRight)
                 handTargetR.transform.position = grabPositionR - motion;
