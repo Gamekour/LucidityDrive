@@ -1103,7 +1103,7 @@ MonoBehaviour:
   alignmentSmoothTime: 0.1
   hangSmoothTime: 0.025
   climbSmoothTime: 0.5
-  stanceHeightSmoothTime: 0.25
+  stanceHeightSmoothTime: 0.175
   castThickness: 0.1
   castHeight: 0.07
   lerp: 0.5
@@ -6630,7 +6630,7 @@ MonoBehaviour:
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
   headRoot: {fileID: 2840716185538071160}
-  headRotationSmoothTime: 0.4
+  headRotationSmoothTime: 0.6
   mouselookBlend: 0.1
   mouselookBlendTransitionSpeed: 1
   nonFPCameraSmoothTime: 0.05
