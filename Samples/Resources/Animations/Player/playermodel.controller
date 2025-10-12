@@ -408,21 +408,6 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 3
---- !u!114 &-7295378628002638179
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c57fa878c0233f48a796e05c9355820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerIndices: 01000000
-  layerWeights:
-  - 0
 --- !u!206 &-7073327958667174724
 BlendTree:
   m_ObjectHideFlags: 1
@@ -1514,7 +1499,6 @@ AnimatorState:
   m_StateMachineBehaviours:
   - {fileID: -1881422483810487900}
   - {fileID: 6061172796325987871}
-  - {fileID: 6978139438984721401}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1529,21 +1513,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: animcycle
---- !u!114 &-4604293330414001875
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c57fa878c0233f48a796e05c9355820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerIndices: 01000000
-  layerWeights:
-  - 0
 --- !u!206 &-4288792480034610184
 BlendTree:
   m_ObjectHideFlags: 1
@@ -3936,8 +3905,7 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
-  m_StateMachineBehaviours:
-  - {fileID: -4604293330414001875}
+  m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -3990,7 +3958,6 @@ AnimatorState:
   m_Transitions:
   - {fileID: 6077562046660000807}
   m_StateMachineBehaviours:
-  - {fileID: -7295378628002638179}
   - {fileID: -3159614879227670966}
   - {fileID: -5100663899031593417}
   m_Position: {x: 50, y: 50, z: 0}
@@ -4077,21 +4044,6 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 3
---- !u!114 &3884567997367350738
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c57fa878c0233f48a796e05c9355820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerIndices: 01000000
-  layerWeights:
-  - 0
 --- !u!206 &3905424879079845543
 BlendTree:
   m_ObjectHideFlags: 1
@@ -4926,21 +4878,6 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 3
---- !u!114 &6978139438984721401
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c57fa878c0233f48a796e05c9355820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerIndices: 01000000
-  layerWeights:
-  - 1
 --- !u!206 &7280788692188173717
 BlendTree:
   m_ObjectHideFlags: 1
@@ -5527,7 +5464,6 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours:
-  - {fileID: 3884567997367350738}
   - {fileID: -3791776454550344958}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
