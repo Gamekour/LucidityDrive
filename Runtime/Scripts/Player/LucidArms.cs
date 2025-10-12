@@ -904,7 +904,10 @@ namespace LucidityDrive
             ClimbCheck(true);
 
             if (!otherClimb)
+            {
                 currentPull = 0;
+                LucidPlayerInfo.swinging = false;
+            }
         }
 
         private void CreateConfigurableJoint(bool isRight, Vector3 grabPosition, Quaternion grabRotation, Transform grabTarget)
