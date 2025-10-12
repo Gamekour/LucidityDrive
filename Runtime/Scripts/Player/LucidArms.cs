@@ -867,7 +867,8 @@ namespace LucidityDrive
             grabForce = Vector3.zero;
             ClimbCheck(true);
 
-            currentPull = 0;
+            if (!otherClimb)
+                currentPull = 0;
         }
 
         private void CreateConfigurableJoint(bool isRight, Vector3 grabPosition, Quaternion grabRotation, Transform grabTarget)
