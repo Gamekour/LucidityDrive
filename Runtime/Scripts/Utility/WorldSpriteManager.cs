@@ -31,6 +31,9 @@ public class WorldSpriteManager : MonoBehaviour
 
     public void RemoveItem(WorldSprite worldSprite)
     {
+        if (worldSprite == null) return;
+        if (!spritePairs.ContainsKey(worldSprite)) return;
+
         RectTransform rect = spritePairs[worldSprite];
         spritePairs.Remove(worldSprite);
         Destroy(rect.gameObject);

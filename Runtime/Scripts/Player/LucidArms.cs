@@ -48,6 +48,7 @@ namespace LucidityDrive
         private Transform targetTransformL, targetTransformR;
         private Transform currentPoseL, currentPoseR;
         private Transform currentPoseParentL, currentPoseParentR;
+        private IGrabTrigger lastGrabTriggerL, lastGrabTriggerR;
         private Vector3 grabPositionL, grabPositionR;
         private Vector3 grabForceL, grabForceR;
         private Quaternion grabRotationL, grabRotationR;
@@ -227,10 +228,16 @@ namespace LucidityDrive
             if (grabL || grabR)
                 HandPush();
 
-            grabIndicatorL.transform.position = grabPositionL;
-            grabIndicatorL.gameObject.SetActive(LucidPlayerInfo.grabValidL && !grabL);
-            grabIndicatorR.transform.position = grabPositionR;
-            grabIndicatorR.gameObject.SetActive(LucidPlayerInfo.grabValidR && !grabR);
+            if (grabIndicatorL != null)
+            {
+                grabIndicatorL.transform.position = grabPositionL;
+                grabIndicatorL.gameObject.SetActive(LucidPlayerInfo.grabValidL && !grabL);
+            }
+            if (grabIndicatorR != null)
+            {
+                grabIndicatorR.transform.position = grabPositionR;
+                grabIndicatorR.gameObject.SetActive(LucidPlayerInfo.grabValidR && !grabR);
+            }
         }
 
         private void ClimbCheck(bool allowUnclimb = false)
@@ -481,17 +488,34 @@ namespace LucidityDrive
 
             if (!grabToCheck)
             {
-
+                bool oldgrab = isRight ? LucidPlayerInfo.grabValidR : LucidPlayerInfo.grabValidL;
                 bool validgrab = ClimbScan(isRight, out Vector3 position, out Quaternion rotation, out Transform hitTransform);
+                ref IGrabTrigger oldGrabTrigger = ref lastGrabTriggerL;
+                if (isRight)
+                    oldGrabTrigger = ref lastGrabTriggerR;
+                ref IGrabTrigger oldGrabTriggerAlt = ref lastGrabTriggerR;
+                if (isRight)
+                    oldGrabTriggerAlt = ref lastGrabTriggerL;
 
                 if (validgrab)
                 {
                     grabPosition = position;
                     grabRotation = rotation;
                     targetTransform = hitTransform;
+                    if (!oldgrab && targetTransform.TryGetComponent(out IGrabTrigger gt))
+                    {
+                        gt.HoverEvent();
+                        oldGrabTrigger = gt;
+                    }
+                }
+                else if (oldgrab && oldGrabTrigger != null)
+                {
+                    if (oldGrabTrigger != oldGrabTriggerAlt)
+                        oldGrabTrigger.UnHoverEvent();
+
+                    oldGrabTrigger = null;
                 }
 
-                bool oldgrab = isRight ? LucidPlayerInfo.grabValidR : LucidPlayerInfo.grabValidL;
                 if (isRight)
                     LucidPlayerInfo.grabValidR = validgrab;
                 else

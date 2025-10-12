@@ -15,7 +15,7 @@ public class EventBox : MonoBehaviour, IGrabTrigger
     public UnityEvent<Collider> onTriggered;
     public UnityEvent<Collision> onCollisionEnter, onCollisionExit, onCollisionStay;
     public UnityEvent<GameObject> onParticleCollision;
-    public UnityEvent onGrabbed, onUngrabbed, onEnabled;
+    public UnityEvent onGrabbed, onUngrabbed, onHover, onUnHover, onEnabled;
 
     private void OnEnable()
     {
@@ -93,5 +93,17 @@ public class EventBox : MonoBehaviour, IGrabTrigger
     {
         if (!initialized) return;
         onUngrabbed.Invoke();
+    }
+
+    public void HoverEvent()
+    {
+        if (!initialized) return;
+        onHover.Invoke();
+    }
+
+    public void UnHoverEvent()
+    {
+        if (!initialized) return;
+        onUnHover.Invoke();
     }
 }
