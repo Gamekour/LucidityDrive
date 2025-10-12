@@ -556,6 +556,8 @@ namespace LucidityDrive
             Vector2 slope = Vector2.zero;
             slope.x = localnrm.x;
             slope.y = localnrm.z;
+            if (LucidPlayerInfo.probePattern == 1)
+                slope = Vector2.zero;
             if (LucidPlayerInfo.alignment > 0.5f && LucidPlayerInfo.groundDistance < groundDistanceThreshold)
                 accel = -accel;
             Vector2 lean = Vector2.zero;

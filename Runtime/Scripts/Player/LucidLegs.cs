@@ -370,7 +370,7 @@ namespace LucidityDrive
             else
                 t *= slopeTilt;
 
-            if (footSpace.up.y < highSlopeThreshold && !inputJump && !LucidPlayerInfo.climbing)
+            if ((footSpace.up.y < highSlopeThreshold && !inputJump && !LucidPlayerInfo.climbing) || LucidPlayerInfo.probePattern == 1)
                 t = 0;
 
             Vector3 pushdir = Vector3.Lerp(Vector3.up, footSpace.up, t);
@@ -698,7 +698,12 @@ namespace LucidityDrive
                         Vector3 diff2 = results[1].point - transform.position;
                         float diffangle1 = Vector3.Angle(dir, diff1);
                         float diffangle2 = Vector3.Angle(dir, diff2);
-                        if (diffangle1 < diffangle2)
+                        if (probePattern == 1)
+                        {
+                            normal = Vector3.up;
+                            center = results[0].point;
+                        }
+                        else if (diffangle1 < diffangle2)
                         {
                             normal = results[0].normal;
                             center = results[0].point;

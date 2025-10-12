@@ -34,10 +34,10 @@ MonoBehaviour:
   directionalJumpBoost: 30
   surfaceMagnetismBySlope: 4
   highSlopeThreshold: 0.2
-  probeDepth: 2
+  probeDepth: 1
   probeScale: 1
-  maxProbeOffset: 3
-  probeXMinimumOffset: 0.1
+  maxProbeOffset: 1.5
+  probeXMinimumOffset: 0.5
   probeZMinimumOffset: 0.1
   footSlideStrength: 28
   maxForceScale: 6
