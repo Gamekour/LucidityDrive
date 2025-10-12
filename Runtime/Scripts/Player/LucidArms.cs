@@ -301,7 +301,10 @@ namespace LucidityDrive
             if ((LucidPlayerInfo.climbL || LucidPlayerInfo.climbR) && selfsufficient)
                 LucidPlayerInfo.climbing = true;
             else if (allowUnclimb)
+            {
                 LucidPlayerInfo.climbing = false;
+                LucidPlayerInfo.swinging = false;
+            }
         }
 
         private void LateUpdate()

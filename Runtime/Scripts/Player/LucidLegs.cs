@@ -505,12 +505,12 @@ namespace LucidityDrive
 
         private void OnCollisionStay(Collision collision)
         {
+            LucidArms.instance.ClimbCheck(true);
             bodyCollisionNrm = collision.contacts[0].normal;
             bool tooSteep = !LucidInputValueShortcuts.jump && bodyCollisionNrm.y < highSlopeThreshold;
             if (bodyCollisionNrm.y >= highSlopeThreshold && !tooSteep)
             {
                 LucidPlayerInfo.pelvisCollision = true;
-                LucidArms.instance.ClimbCheck(true);
 
                 if (!LucidPlayerInfo.grounded)
                 {
