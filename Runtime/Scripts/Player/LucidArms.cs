@@ -404,9 +404,10 @@ namespace LucidityDrive
 
             float handY = isRight ? grabPositionR.y : grabPositionL.y;
 
-            motion.y = ((handY - LucidPlayerInfo.pelvis.position.y) / animArmLength) - 1 + (currentPull * 2);
+            motion.y = ((handY - LucidPlayerInfo.pelvis.position.y) / animArmLength) - maxPullHeight + (currentPull * 2);
             motion *= animArmLength;
-            motion.y -= LucidPlayerInfo.mainBody.velocity.y * pullDamp;
+            if (currentPull > 0.1f)
+                motion.y -= LucidPlayerInfo.mainBody.velocity.y * pullDamp;
             if (LucidInputValueShortcuts.jump)
                 motion.y = Mathf.Clamp(motion.y, 0, Mathf.Infinity);
             if (LucidInputValueShortcuts.crouch)
@@ -807,9 +808,9 @@ namespace LucidityDrive
             if (isRight)
                 climb = ref LucidPlayerInfo.climbR;
 
-            ref bool otherClimb = ref LucidPlayerInfo.climbL;
+            ref bool otherClimb = ref LucidPlayerInfo.climbR;
             if (isRight)
-                otherClimb = ref LucidPlayerInfo.climbR;
+                otherClimb = ref LucidPlayerInfo.climbL;
 
             ref bool grabLock = ref grabLockL;
             if (isRight)
