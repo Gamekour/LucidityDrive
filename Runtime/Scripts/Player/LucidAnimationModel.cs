@@ -149,14 +149,14 @@ namespace LucidityDrive
             _ROLL = "roll",
             _HEAD_POLARITY_FWD = "headPolFwd",
             _HEAD_POLARITY_UP = "headPolUp",
-            _LOOK_DELTA_Y = "lookDeltaY",
             _PELVIS_COLLISION = "pelvisCollision",
             _PROBE_PATTERN = "probePattern",
             _FLIP_FORWARD_TRIGGER = "flipForward",
             _FLIP_BACKWARD_TRIGGER = "flipBackward",
             _UNFLIP_FORWARD_TRIGGER = "resetForward",
             _UNFLIP_BACKWARD_TRIGGER = "resetBackward",
-            _SWINGING = "swinging"
+            _SWINGING = "swinging",
+            _HEAD_UP_Y = "headUpY"
             ;
         private void Awake()
         {
@@ -523,7 +523,7 @@ namespace LucidityDrive
             anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
             anim.SetFloat(_GROUNDDIST, LucidPlayerInfo.groundDistance);
             anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(LucidPlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
-            anim.SetFloat(_LOOK_DELTA_Y, LucidInputValueShortcuts.headLook.y);
+            anim.SetFloat(_HEAD_UP_Y, LucidPlayerInfo.head.up.y);
             anim.SetInteger(_PROBE_PATTERN, LucidPlayerInfo.probePattern);
         }
 

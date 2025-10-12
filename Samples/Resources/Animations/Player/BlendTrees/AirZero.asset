@@ -9,7 +9,7 @@ BlendTree:
   m_Name: AirZero
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: d9f494c2c61b60d45ad744eaf524dc50, type: 2}
+    m_Motion: {fileID: 7400000, guid: 6bd84c5a664b55b40a4e6cf70ab48af5, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
