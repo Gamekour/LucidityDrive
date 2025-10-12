@@ -703,24 +703,34 @@ namespace LucidityDrive
 
         private void DropButtonL(InputAction.CallbackContext obj)
         {
-            if (lt_L != null)
+            if (grabL && lt_L != null && lt_R != lt_L)
+            {
                 lt_L.OnDrop.Invoke();
+                lt_L.OnUseUp.Invoke();
+            }
             if (grabL && grabLockL && !disableDropL)
             {
                 grabWaitL = false;
                 Ungrab(false);
             }
+            else if (lt_R != null)
+                ForceGrab(lt_R, false);
         }
 
         private void DropButtonR(InputAction.CallbackContext obj)
         {
-            if (lt_R != null)
+            if (grabR && lt_R != null && lt_R != lt_L)
+            {
                 lt_R.OnDrop.Invoke();
+                lt_R.OnUseUp.Invoke();
+            }
             if (grabR && grabLockR && !disableDropR)
             {
                 grabWaitR = false;
                 Ungrab(true);
             }
+            else if (lt_L != null)
+                ForceGrab(lt_L, true);
         }
         #endregion
 
@@ -802,7 +812,7 @@ namespace LucidityDrive
                     grabPosition = lt.transform.TransformPoint(inverseGrabPosition);
                     grabRotation *= Quaternion.Euler(transform.forward * 180);
                 }
-                grabLock = isPrimary ? lt.GrabLockPrimary : lt.GrabLockSecondary;
+                grabLock = lt.GrabLockPrimary;
                 disableDrop = lt.disableDrop;
                 lt.OnGrab.Invoke();
                 lt.held = true;

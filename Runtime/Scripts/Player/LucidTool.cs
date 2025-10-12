@@ -14,7 +14,6 @@ namespace LucidityDrive
         public Transform ItemPosePrimaryR;
         public Transform ItemPoseSecondaryR;
         public bool GrabLockPrimary = true;
-        public bool GrabLockSecondary = false;
         public bool autoGrabL = false;
         public bool autoGrabR = false;
         public bool switchGrabOrder = false;
