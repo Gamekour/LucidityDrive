@@ -637,6 +637,8 @@ namespace LucidityDrive
                 probePattern = 2;
             else if (results.Count == 0)
                 probePattern = 3;
+            else
+                probePattern = 0;
             LucidPlayerInfo.probePattern = probePattern;
 
             Vector3 normal = Vector3.zero;
