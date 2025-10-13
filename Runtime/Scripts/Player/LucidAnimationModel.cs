@@ -624,27 +624,30 @@ namespace LucidityDrive
                 Cast = hitInfoThigh.point;
                 UpdateFootSpaceAndRotation(isLeft, hitInfoThigh.normal, hitInfoThigh.point);
 
-                Transform lastCastHit = isLeft ? lastCastHitL : lastCastHitR;
+                ref Transform lastCastHit = ref lastCastHitR;
+                if (isLeft)
+                    lastCastHit = ref lastCastHitR;
+                ref Rigidbody connectedRB = ref LucidPlayerInfo.connectedRB_RF;
+                if (isLeft)
+                    connectedRB = ref LucidPlayerInfo.connectedRB_LF;
+                ref Collider connectedColl = ref LucidPlayerInfo.connectedColl_RF;
+                if (isLeft)
+                    connectedColl = ref LucidPlayerInfo.connectedColl_LF;
+
                 if (hitInfoThigh.transform != lastCastHit)
                 {
-                    Rigidbody rb = hitInfoThigh.transform.GetComponent<Rigidbody>();
-                    bool rbvalid = rb != null;
-                    if (isLeft)
-                    {
-                        if (rbvalid)
-                            LucidPlayerInfo.connectedRB_LF = rb;
-                        else
-                            LucidPlayerInfo.connectedRB_LF = null;
-                        lastCastHitL = hitInfoThigh.transform;
-                    }
+                    bool rbvalid = hitInfoThigh.transform.TryGetComponent(out Rigidbody rb);
+                    bool collvalid = hitInfoThigh.transform.TryGetComponent(out Collider c);
+
+                    if (rbvalid)
+                        connectedRB = rb;
                     else
-                    {
-                        if (rbvalid)
-                            LucidPlayerInfo.connectedRB_RF = rb;
-                        else
-                            LucidPlayerInfo.connectedRB_RF = null;
-                        lastCastHitR = hitInfoThigh.transform;
-                    }
+                        connectedRB = null;
+                    if (collvalid)
+                        connectedColl = c;
+                    else
+                        connectedColl = null;
+                    lastCastHit = hitInfoThigh.transform;
                 }
             }
             else if (shinCast)

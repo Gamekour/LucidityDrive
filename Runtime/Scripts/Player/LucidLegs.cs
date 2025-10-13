@@ -469,6 +469,8 @@ namespace LucidityDrive
 
             nrm = Mathf.Clamp(nrm, 0, Mathf.Infinity);
 
+            float frictioncalc = friction;
+
             float fmax = Mathf.Sqrt(nrm) * rb.mass * friction;
             LucidPlayerInfo.traction = Mathf.Clamp01(fmax / slide.magnitude);
             Vector3 pushcalc = nrm * LucidPlayerInfo.footSurface;
@@ -482,20 +484,13 @@ namespace LucidityDrive
                 rb.AddForce(slidecalc + pushcalc + dirJumpBoost, ForceMode.Force);
             else
             {
-                if (isRight && LucidPlayerInfo.connectedRB_RF != null)
+                Transform footIK = isRight ? LucidPlayerInfo.IK_RF : LucidPlayerInfo.IK_LF;
+                Rigidbody connectedRB = isRight ? LucidPlayerInfo.connectedRB_RF : LucidPlayerInfo.connectedRB_LF;
+                if (footIK != null && connectedRB != null)
                 {
-                    LucidPlayerInfo.connectedRB_RF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_RF.position, ForceMode.Force);
+                    connectedRB.AddForceAtPosition(objectforce, footIK.position, ForceMode.Force);
 
-                    Vector3 resistance = objectforce - (LucidPlayerInfo.connectedRB_RF.GetPointVelocity(LucidPlayerInfo.IK_RF.position) / LucidPlayerInfo.connectedRB_RF.mass);
-                    resistance *= -1;
-                    resistance = Vector3.ClampMagnitude(resistance, objectforce.magnitude);
-                    LucidPlayerInfo.mainBody.AddForce(resistance, ForceMode.Force);
-                }
-                if (!isRight && LucidPlayerInfo.connectedRB_LF != null)
-                {
-                    LucidPlayerInfo.connectedRB_LF.AddForceAtPosition(objectforce, LucidPlayerInfo.IK_LF.position, ForceMode.Force);
-
-                    Vector3 resistance = objectforce - (LucidPlayerInfo.connectedRB_LF.GetPointVelocity(LucidPlayerInfo.IK_LF.position) / LucidPlayerInfo.connectedRB_LF.mass);
+                    Vector3 resistance = objectforce - (connectedRB.GetPointVelocity(footIK.position) / connectedRB.mass);
                     resistance *= -1;
                     resistance = Vector3.ClampMagnitude(resistance, objectforce.magnitude);
                     LucidPlayerInfo.mainBody.AddForce(resistance, ForceMode.Force);

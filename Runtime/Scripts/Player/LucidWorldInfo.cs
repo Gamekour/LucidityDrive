@@ -187,6 +187,9 @@ namespace LucidityDrive
             connectedRB_RF,
             connectedRB_LF;
 
+        public static Collider connectedColl_RF;
+        public static Collider connectedColl_LF;
+
         public static CapsuleCollider pelvisColl;
         public static Camera mainCamera;
         public static Animator animationModel;
