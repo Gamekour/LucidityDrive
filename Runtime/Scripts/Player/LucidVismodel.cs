@@ -55,6 +55,8 @@ namespace LucidityDrive
         {
             headRef = anim.GetBoneTransform(HumanBodyBones.Head);
             defaultHeadScale = headRef.localScale;
+            foreach (SkinnedMeshRenderer smr in GetComponentsInChildren<SkinnedMeshRenderer>())
+                smr.updateWhenOffscreen = true;
             initialized = true;
         }
 

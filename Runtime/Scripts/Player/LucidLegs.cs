@@ -165,6 +165,7 @@ namespace LucidityDrive
             else
                 LucidPlayerInfo.stanceHeight = 1;
 
+            bool doingLegPush = false;
             if (LucidPlayerInfo.flying)
                 FlightCalc();
             else if (!LucidPlayerInfo.grounded)
@@ -180,7 +181,10 @@ namespace LucidityDrive
                 if (LucidPlayerInfo.stanceHeight < 0.09f)
                     SlidePush();
                 else
+                {
                     LegPush(inputCrouch, inputJump, inputSprint);
+                    doingLegPush = true;
+                }
             }
             if (inputBackslide && !LucidPlayerInfo.pelvisCollision)
             {
@@ -189,7 +193,9 @@ namespace LucidityDrive
                     horizontalForce = Vector3.zero;
                 Vector3 verticalForce = Vector3.up * slideBoostVertical;
                 rb.AddForce(verticalForce + horizontalForce, ForceMode.Acceleration);
-            }    
+            }
+            if (!doingLegPush)
+                LucidPlayerInfo.probePattern = 0;
         }
 
         private void OnTriggerExit(Collider other)
