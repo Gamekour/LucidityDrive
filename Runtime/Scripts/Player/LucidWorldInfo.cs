@@ -163,6 +163,7 @@ namespace LucidityDrive
         public static UnityEvent<int> onChangeCameraPoint = new();
         public static UnityEvent OnAnimModellInitialized = new();
         public static UnityEvent OnRemoveVismodel = new();
+        public static UnityEvent OnInputsReady = new();
         #endregion
 
         #region References

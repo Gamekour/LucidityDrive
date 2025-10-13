@@ -35,6 +35,7 @@ namespace LucidityDrive
 
         public bool autoSprint = true;
         public bool overrideSprint = false;
+        public bool jumpPrepare = false;
 
         [HideInInspector]
         public bool sprintOverride = false;
@@ -101,6 +102,8 @@ namespace LucidityDrive
         private Vector3 bodyCollisionNrm;
         private float animPhase = 0;
         private bool stuckBackSlide = false;
+        private bool preparingJump = false;
+        private bool releaseJumping = false;
 
         private void Awake()
         {
@@ -113,12 +116,20 @@ namespace LucidityDrive
         {
             reloadMovementSettings.Enable();
             reloadMovementSettings.started += (InputAction.CallbackContext obj) => CopyValues();
+            LucidPlayerInfo.OnInputsReady.AddListener(OnInputsReady);
+        }
+
+        private void OnInputsReady()
+        {
+            LucidInputActionRefs.jump.canceled += OnJumpCancelled;
         }
 
         private void OnDisable()
         {
             reloadMovementSettings.Disable();
             reloadMovementSettings.started -= null;
+            LucidInputActionRefs.jump.canceled -= OnJumpCancelled;
+            LucidPlayerInfo.OnInputsReady.RemoveListener(OnInputsReady);
             LucidPlayerInfo.flying = false; //this is a fix for a bug occurring when you switch scenes while in a flight zone - i may eventually have a function to reset all temporary values in playerinfo on scene change
             LucidPlayerInfo.pelvisCollision = false;
         }
@@ -148,7 +159,9 @@ namespace LucidityDrive
 
             bool inputCrouch = LucidInputValueShortcuts.crouch;
             bool inputJump = LucidInputValueShortcuts.jump;
-            LucidPlayerInfo.isJumping = inputJump && LucidPlayerInfo.grounded;
+            if (inputJump && !releaseJumping && !preparingJump && LucidPlayerInfo.grounded && !LucidPlayerInfo.climbing)
+                preparingJump = true;
+            LucidPlayerInfo.isJumping = LucidPlayerInfo.grounded && ((inputJump && !jumpPrepare) || releaseJumping);
             bool inputSprint = LucidInputValueShortcuts.sprint;
             if (overrideSprint)
                 inputSprint = sprintOverride;
@@ -160,7 +173,7 @@ namespace LucidityDrive
                 LucidPlayerInfo.stanceHeight = 0;
             else if (inputCrawl)
                 LucidPlayerInfo.stanceHeight = 0.1f;
-            else if (inputCrouch)
+            else if (inputCrouch || (inputJump && jumpPrepare))
                 LucidPlayerInfo.stanceHeight = 0.5f;
             else
                 LucidPlayerInfo.stanceHeight = 1;
@@ -195,7 +208,20 @@ namespace LucidityDrive
                 rb.AddForce(verticalForce + horizontalForce, ForceMode.Acceleration);
             }
             if (!doingLegPush)
+            {
                 LucidPlayerInfo.probePattern = 0;
+                releaseJumping = false;
+                preparingJump = false;
+            }
+        }
+
+        private void OnJumpCancelled(InputAction.CallbackContext obj)
+        {
+            if (!releaseJumping && preparingJump)
+            {
+                releaseJumping = true;
+                preparingJump = false;
+            }
         }
 
         private void OnTriggerExit(Collider other)
@@ -406,7 +432,7 @@ namespace LucidityDrive
             float floorheight = LucidPlayerInfo.animationModel.rootPosition.y;
             float legadjust = hipheight - floorheight;
 
-            if (inputJump && !LucidPlayerInfo.disableJump && !LucidPlayerInfo.climbing)
+            if (LucidPlayerInfo.isJumping && !LucidPlayerInfo.disableJump && !LucidPlayerInfo.climbing)
             {
                 legadjust = Mathf.Infinity;
                 rb.AddForce(Vector3.up * (jumpGravity - Physics.gravity.y));

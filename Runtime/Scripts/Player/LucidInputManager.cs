@@ -38,6 +38,7 @@ namespace LucidityDrive
             foreach (var field in fields)
             {
                 InputAction action = ActionAsset.FindAction(field.Name, true);
+                action.Enable();
                 FieldInfo valueField = actionValueType.GetField(field.Name);
                 if (valueField != null)
                 {
@@ -60,6 +61,7 @@ namespace LucidityDrive
                 if (actionValueMapping.ContainsKey(action))
                     InitializeShortcutValue(action);
             }
+            LucidPlayerInfo.OnInputsReady.Invoke();
         }
 
         //generic event for setting the input value shortcut when the action is modified

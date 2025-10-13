@@ -1126,6 +1126,7 @@ MonoBehaviour:
   maxLeanAngle: 45
   flipSmoothTime: 0.1
   highSlopeThreshold: 0.2
+  airVelNFix: 0.25
   onFootChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1234,6 +1235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoSprint: 0
   overrideSprint: 0
+  jumpPrepare: 0
   sprintOverride: 0
   legSpaceL: {fileID: 1105449331241879533}
   legSpaceR: {fileID: 1573725869684149393}

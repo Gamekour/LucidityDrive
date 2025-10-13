@@ -52,7 +52,8 @@ namespace LucidityDrive
             leanScale,
             maxLeanAngle,
             flipSmoothTime,
-            highSlopeThreshold
+            highSlopeThreshold,
+            airVelNFix
             ;
 
         public UnityEvent onFootChanged;
@@ -494,6 +495,8 @@ namespace LucidityDrive
             Vector3 velN = localVel.normalized;
             if (localVel.magnitude < 0.1f)
                 velN = Vector3.zero;
+            if (localVel.x < 0.1f && localVel.z < 0.1f)
+                velN.y = localVel.y * airVelNFix;
 
             anim.SetFloat(_VEL_X, localVel.x);
             anim.SetFloat(_VEL_Y, localVel.y);
