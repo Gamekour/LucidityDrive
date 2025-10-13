@@ -34,6 +34,8 @@ MonoBehaviour:
   directionalJumpBoost: 4
   surfaceMagnetismBySlope: 4
   highSlopeThreshold: 0.2
+  slideBoostVertical: -1
+  slideBoostHorizontal: 15
   probeDepth: 1
   probeScale: 1
   maxProbeOffset: 1.5

@@ -1191,7 +1191,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1404511730419628789}
-  - {fileID: 3627928141138777910}
   m_Father: {fileID: 2635777386139525533}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &5558137487855974142
@@ -1540,6 +1539,7 @@ GameObject:
   - component: {fileID: 3627928141138777910}
   - component: {fileID: 3356010194119598751}
   - component: {fileID: 7985057013613257735}
+  - component: {fileID: 2720679182346602725}
   m_Layer: 3
   m_Name: RespawnEffect
   m_TagString: Untagged
@@ -1555,12 +1555,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4992819295832494023}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8279943886381286131}
+  m_Father: {fileID: 2635777386139525533}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &3356010194119598751
 ParticleSystem:
@@ -6417,6 +6417,33 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1773428102 &2720679182346602725
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4992819295832494023}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffsets:
+  - {x: 0, y: 0, z: 0}
+  m_RotationOffsets:
+  - {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 8279943886381286131}
+    weight: 1
 --- !u!1 &5261179546089669801
 GameObject:
   m_ObjectHideFlags: 0
@@ -6817,6 +6844,7 @@ Transform:
   - {fileID: 4817675790358543164}
   - {fileID: 5461510513538166120}
   - {fileID: 8399116561206556421}
+  - {fileID: 3627928141138777910}
   - {fileID: 3486554514615435315}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

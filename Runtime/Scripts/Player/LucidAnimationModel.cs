@@ -492,6 +492,8 @@ namespace LucidityDrive
         private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float alignment, Vector2 lean, Vector3 hang, float smoothedStanceHeight)
         {
             Vector3 velN = localVel.normalized;
+            if (localVel.magnitude < 0.1f)
+                velN = Vector3.zero;
 
             anim.SetFloat(_VEL_X, localVel.x);
             anim.SetFloat(_VEL_Y, localVel.y);
@@ -547,7 +549,9 @@ namespace LucidityDrive
             slope.y = localnrm.z;
             if (LucidPlayerInfo.probePattern == 1)
                 slope = Vector2.zero;
-            if (LucidPlayerInfo.alignment < 0.5f && LucidPlayerInfo.groundDistance < groundDistanceThreshold)
+            if (LucidPlayerInfo.stanceHeight < 0.11f)
+                accel = Vector2.zero;
+            else if (LucidPlayerInfo.alignment < 0.5f && LucidPlayerInfo.groundDistance < groundDistanceThreshold)
                 accel = -accel * 2;
             Vector2 lean = Vector2.zero;
             lean.x = (accel.x * k1) + (slope.x * k2);

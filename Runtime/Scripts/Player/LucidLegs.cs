@@ -92,7 +92,9 @@ namespace LucidityDrive
             highSlopeThreshold,
             targetHeightScale,
             minLegAdjust,
-            climbLegAdjust
+            climbLegAdjust,
+            slideBoostVertical,
+            slideBoostHorizontal
             = 0;
 
         private Rigidbody rb;
@@ -163,7 +165,9 @@ namespace LucidityDrive
             else
                 LucidPlayerInfo.stanceHeight = 1;
 
-            if (!LucidPlayerInfo.grounded)
+            if (LucidPlayerInfo.flying)
+                FlightCalc();
+            else if (!LucidPlayerInfo.grounded)
             {
                 if (!inputJump) rb.AddForce(Vector3.up * (fallGravity - Physics.gravity.y), ForceMode.Acceleration);
                 else
@@ -171,16 +175,21 @@ namespace LucidityDrive
 
                 AirCalc();
             }
-            else if (!LucidPlayerInfo.flying && doGroundLogic)
+            else if (doGroundLogic)
             {
                 if (LucidPlayerInfo.stanceHeight < 0.09f)
                     SlidePush();
                 else
                     LegPush(inputCrouch, inputJump, inputSprint);
             }
-
-            if (LucidPlayerInfo.flying)
-                FlightCalc();
+            if (inputBackslide && !LucidPlayerInfo.pelvisCollision)
+            {
+                Vector3 horizontalForce = LucidPlayerInfo.pelvis.forward * slideBoostHorizontal;
+                if (!doGroundLogic)
+                    horizontalForce = Vector3.zero;
+                Vector3 verticalForce = Vector3.up * slideBoostVertical;
+                rb.AddForce(verticalForce + horizontalForce, ForceMode.Acceleration);
+            }    
         }
 
         private void OnTriggerExit(Collider other)

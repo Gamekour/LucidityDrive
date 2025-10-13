@@ -50,6 +50,10 @@ namespace LucidityDrive
         public float surfaceMagnetismBySlope = 0;
         [Tooltip("Cutoff between slopes that can be walked on normally and slopes that will only be walked on if holding space")]
         public float highSlopeThreshold = 0.5f;
+        [Tooltip("Force to apply vertically when holding the slide button")]
+        public float slideBoostVertical = 0;
+        [Tooltip("Force to apply in the movement direction when holding the slide button")]
+        public float slideBoostHorizontal = 0;
 
         [Header("Advanced")]
         [Tooltip("How far down the floor probe will try to extend")]
