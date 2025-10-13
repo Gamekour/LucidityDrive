@@ -95,7 +95,8 @@ namespace LucidityDrive
             minLegAdjust,
             climbLegAdjust,
             slideBoostVertical,
-            slideBoostHorizontal
+            slideBoostHorizontal,
+            maxFreeLookAngle
             = 0;
 
         private Rigidbody rb;
@@ -139,7 +140,11 @@ namespace LucidityDrive
             if (rb.isKinematic || LucidPlayerInfo.vismodelRef == null || !LucidPlayerInfo.animModelInitialized) return; //this could technically be optimized by delegating it to a bool that only updates when isKinematic is updated, but that's too much work and i don't think this is much of a perf hit
 
             PseudoWalk();
-            RotationLogic();
+
+            Vector3 headflat = LucidPlayerInfo.head.forward;
+            headflat.y = 0;
+            if (!LucidInputValueShortcuts.freeLook || Vector3.Angle(headflat.normalized, transform.forward) > maxFreeLookAngle)
+                RotationLogic();
 
             Vector3 velflathip = hipSpace.InverseTransformVector(rb.velocity);
             velflathip.y = 0;

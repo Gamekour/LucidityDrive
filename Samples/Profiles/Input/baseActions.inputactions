@@ -18,7 +18,7 @@
                     "name": "jump",
                     "type": "Button",
                     "id": "86dbbba1-91a5-4e00-8b99-fffe0118c79c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -154,6 +154,15 @@
                     "type": "Button",
                     "id": "05c570bc-69dd-4ff9-92a2-ef704bf7a54f",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "freeLook",
+                    "type": "Button",
+                    "id": "995d3d50-d13b-489d-ac24-ca8a7e70028b",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -575,6 +584,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "camCycle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "58202e71-82d7-47d1-af7a-ee19de99acfd",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "freeLook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

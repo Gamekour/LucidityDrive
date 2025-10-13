@@ -130,7 +130,9 @@ namespace LucidityDrive
             camSelect3,
             camSelect4,
             camCycle,
-            mouseUnlock;
+            mouseUnlock,
+            freeLook
+            ;
     }
 
     //used to easily access values from the input actions above without constantly calling readvalue
@@ -139,7 +141,8 @@ namespace LucidityDrive
         public static Vector2
             movement,
             headLook,
-            mousePos;
+            mousePos
+            ;
 
         public static bool
             jump,
@@ -148,6 +151,8 @@ namespace LucidityDrive
             slide,
             bslide,
             grabL,
-            grabR;
+            grabR,
+            freeLook
+            ;
     }
 }

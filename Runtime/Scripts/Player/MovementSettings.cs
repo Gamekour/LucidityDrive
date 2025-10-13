@@ -94,5 +94,7 @@ namespace LucidityDrive
         public float minLegAdjust = 0.2f;
         [Tooltip("Adjust the target leg length while climbing")]
         public float climbLegAdjust = 0.3f;
+        [Tooltip("Maximum angle for freelook before hips start to rotate anyways")]
+        public float maxFreeLookAngle = 60;
     }
 }
