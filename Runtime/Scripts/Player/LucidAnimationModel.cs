@@ -394,7 +394,7 @@ namespace LucidityDrive
             float currentStanceHeight = anim.GetFloat(_STANCEHEIGHT);
             stanceHeight = Mathf.SmoothDamp(currentStanceHeight, stanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
 
-            if (LucidPlayerInfo.head.up.y > 0)
+            if (LucidPlayerInfo.head.up.y > camUpsideDownThreshold)
             {
                 CapsuleCollider hipColl = LucidPlayerInfo.pelvisColl;
                 Vector3 point1 = hipColl.transform.position + (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
@@ -404,7 +404,7 @@ namespace LucidityDrive
 
                 if (upHit)
                 {
-                    float totalspace = hitInfoUp.distance + LucidPlayerInfo.calfLength + LucidPlayerInfo.thighLength;
+                    float totalspace = hitInfoUp.distance + LucidPlayerInfo.totalLegLength + 0.1f;
                     if (downHit)
                         totalspace = hitInfoUp.point.y - hitInfoDown.point.y;
                     float heightratio = Mathf.Clamp01(totalspace / LucidPlayerInfo.vismodelRef.stanceHeightFactor);

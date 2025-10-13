@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
-  stanceHeightFactor: 2.1
+  stanceHeightFactor: 1.7
   legWidth: 0.1
   pelvisScaleMult: 0.5
   FirstPersonOnly:
