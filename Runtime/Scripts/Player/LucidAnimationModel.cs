@@ -658,22 +658,32 @@ namespace LucidityDrive
                 if (isLeft)
                 {
                     LucidPlayerInfo.connectedRB_LF = null;
-                    LucidPlayerInfo.IK_LF.rotation = Quaternion.LookRotation(LucidPlayerInfo.pelvis.forward);
+                    LucidPlayerInfo.IK_LF.localRotation = Quaternion.LookRotation(LucidPlayerInfo.pelvis.forward);
                     lastCastHitL = null;
                 }
                 else
                 {
                     LucidPlayerInfo.connectedRB_RF = null;
-                    LucidPlayerInfo.IK_RF.rotation = Quaternion.LookRotation(LucidPlayerInfo.pelvis.forward);
+                    LucidPlayerInfo.IK_RF.localRotation = Quaternion.LookRotation(LucidPlayerInfo.pelvis.forward);
                     lastCastHitR = null;
                 }
             }
 
-            if (Vector3.Distance(thighOrigin, Cast) < minCastDist)
-                Cast = footpos;
+            if (LucidPlayerInfo.stanceHeight > 0.11f && Vector3.Distance(thighOrigin, Cast) < minCastDist)
+                Cast = thighOrigin + (LucidPlayerInfo.pelvis.forward * LucidPlayerInfo.totalLegLength);
+            else if (LucidPlayerInfo.stanceHeight < 0.11f)
+            {
+                Vector3 footNormal = Vector3.up;
+                if (thighCast)
+                    footNormal = hitInfoThigh.normal;
+                else if (shinCast)
+                    footNormal = hitInfoShin.normal;
+
+                if (Vector3.Angle(Vector3.up, footNormal) < LucidPlayerInfo.slidePushAngleThreshold)
+                    Cast = footpos;
+            }
 
             Cast = Vector3.SmoothDamp(Cast, CastOld, ref footRef, footSmoothTime);
-
 
             return thighCast || shinCast;
         }
@@ -689,7 +699,7 @@ namespace LucidityDrive
                 }
             }
 
-            if (normal.y > highSlopeThreshold || LucidInputValueShortcuts.jump || LucidPlayerInfo.climbing)
+            if (normal.y > highSlopeThreshold || LucidInputValueShortcuts.jump || LucidPlayerInfo.climbing || LucidPlayerInfo.stanceHeight < 0.09f)
             {
                 if (isLeft)
                     LucidPlayerInfo.footSurfaceL = normal;

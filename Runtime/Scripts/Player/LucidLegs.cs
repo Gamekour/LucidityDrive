@@ -524,7 +524,7 @@ namespace LucidityDrive
 
         private void SlidePush()
         {
-            LucidPlayerInfo.surfaceAngle = Vector3.Angle(bodyCollisionNrm, LucidPlayerInfo.footspace.up);
+            LucidPlayerInfo.surfaceAngle = Vector3.Angle(Vector3.up, LucidPlayerInfo.footspace.up);
 
             if (LucidPlayerInfo.surfaceAngle < slidePushAngleThreshold)
                 return;
