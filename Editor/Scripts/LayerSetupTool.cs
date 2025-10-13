@@ -1,64 +1,62 @@
 using UnityEngine;
 using UnityEditor;
 
-public class LucidSetupTool : EditorWindow
+namespace LucidityDrive
 {
-    [MenuItem("LucidityDrive/Automatic Setup")]
-    public static void ShowWindow()
+    public class LucidSetupTool : EditorWindow
     {
-        GetWindow<LucidSetupTool>("Automatic setup");
-    }
+        private const int LAYER_PLAYER = 3;
+        private const int LAYER_FLIGHTZONE = 6;
+        private const int LAYER_GRABBABLENOPLAYER = 7;
 
-    void OnGUI()
-    {
-        GUILayout.Label("Automatic Setup", EditorStyles.boldLabel);
-
-        if (GUILayout.Button("Automatic Setup"))
+        [MenuItem("LucidityDrive/Automatic Setup")]
+        public static void Setup()
         {
-            Setup();
+            SetLayerName(LAYER_PLAYER, "Player");
+            SetLayerName(LAYER_FLIGHTZONE, "FlightZone");
+            SetLayerName(LAYER_GRABBABLENOPLAYER, "GrabbableNoPlayer");
+
+            AddTag("Grabbable");
+
+            Physics.IgnoreLayerCollision(LAYER_PLAYER, LAYER_PLAYER);
+            Physics.IgnoreLayerCollision(LAYER_PLAYER, LAYER_GRABBABLENOPLAYER);
+            Physics.IgnoreLayerCollision(LAYER_GRABBABLENOPLAYER, LAYER_GRABBABLENOPLAYER);
+
+            Physics.defaultMaxAngularSpeed = 100f;
+
+            Debug.Log("Project set up successfully");
         }
-    }
 
-    void Setup()
-    {
-        SetLayerName(3, "Player");
-        SetLayerName(6, "FlightZone");
-        SetLayerName(7, "HideInFirstPerson");
-        SetLayerName(8, "GrabbableNoPlayer");
-
-        AddTag("Grabbable");
-
-        Physics.IgnoreLayerCollision(3, 3);
-        Physics.IgnoreLayerCollision(3, 8);
-        Physics.IgnoreLayerCollision(8, 8);
-
-        Physics.defaultMaxAngularSpeed = 100f;
-
-        Debug.Log("Project set up successfully");
-    }
-
-    void SetLayerName(int layerNumber, string layerName)
-    {
-        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-        SerializedProperty layersProperty = tagManager.FindProperty("layers");
-
-        if (layersProperty.arraySize > layerNumber)
+        public static void SetLayerName(int layerNumber, string layerName)
         {
-            SerializedProperty layerSP = layersProperty.GetArrayElementAtIndex(layerNumber);
-            layerSP.stringValue = layerName;
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            SerializedProperty layersProperty = tagManager.FindProperty("layers");
+
+            if (layersProperty.arraySize > layerNumber)
+            {
+                SerializedProperty layerSP = layersProperty.GetArrayElementAtIndex(layerNumber);
+                layerSP.stringValue = layerName;
+                tagManager.ApplyModifiedProperties();
+            }
+        }
+
+        public static void AddTag(string newTag)
+        {
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            SerializedProperty tagsProp = tagManager.FindProperty("tags");
+
+            for (int i = 0; i < tagsProp.arraySize; i++)
+            {
+                SerializedProperty existingTag = tagsProp.GetArrayElementAtIndex(i);
+                if (existingTag.stringValue == newTag)
+                    return;
+            }
+
+            int index = tagsProp.arraySize;
+            tagsProp.InsertArrayElementAtIndex(index);
+            SerializedProperty sp = tagsProp.GetArrayElementAtIndex(index);
+            sp.stringValue = newTag;
             tagManager.ApplyModifiedProperties();
         }
-    }
-
-    void AddTag(string newTag)
-    {
-        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-        SerializedProperty tagsProp = tagManager.FindProperty("tags");
-
-        int index = tagsProp.arraySize;
-        tagsProp.InsertArrayElementAtIndex(index);
-        SerializedProperty sp = tagsProp.GetArrayElementAtIndex(index);
-        sp.stringValue = newTag;
-        tagManager.ApplyModifiedProperties();
     }
 }

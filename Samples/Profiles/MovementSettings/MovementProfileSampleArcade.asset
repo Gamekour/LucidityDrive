@@ -30,8 +30,8 @@ MonoBehaviour:
   flightDrag: 0.05
   strafeWalkStartThreshold: 0.5
   strafeWalkSpeedMult: 1
-  directionalJumpStrength: 4
-  directionalJumpBoost: 30
+  directionalJumpStrength: 12
+  directionalJumpBoost: 4
   surfaceMagnetismBySlope: 4
   highSlopeThreshold: 0.2
   probeDepth: 1

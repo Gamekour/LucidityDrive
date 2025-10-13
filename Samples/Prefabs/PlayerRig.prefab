@@ -600,7 +600,7 @@ MonoBehaviour:
   staticGrabRB_R: {fileID: 7413648164269627048}
   CastMask:
     serializedVersion: 2
-    m_Bits: 257
+    m_Bits: 129
   grippyTags:
   - Grabbable
 --- !u!1 &1907113413672772466
@@ -6630,6 +6630,7 @@ MonoBehaviour:
   - {fileID: 8426387203322566352}
   - {fileID: 7122878084898831839}
   headRoot: {fileID: 2840716185538071160}
+  defaultCameraPoint: 0
   headRotationSmoothTime: 0.6
   mouselookBlend: 0.1
   mouselookBlendTransitionSpeed: 1

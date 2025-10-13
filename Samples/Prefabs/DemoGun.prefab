@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 5493529867641536575}
   - component: {fileID: 6755577544584595784}
   - component: {fileID: 6775420714371434234}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: tool
   m_TagString: Grabbable
   m_Icon: {fileID: 0}
@@ -410,7 +410,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1856850127813678479}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: DemoGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
