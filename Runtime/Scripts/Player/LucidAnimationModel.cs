@@ -137,8 +137,6 @@ namespace LucidityDrive
             _FOOT_ANGLE = "footAngle",
             _GROUNDED = "grounded",
             _SLIDE = "slide",
-            _BSLIDE = "bslide",
-            _CRAWL = "crawl",
             _FLIGHT = "flight",
             _GRAB_L = "grabL",
             _GRAB_R = "grabR",
@@ -149,14 +147,10 @@ namespace LucidityDrive
             _STANCEHEIGHT = "stanceHeight",
             _WOBBLE = "wobble",
             _ROLL = "roll",
-            _HEAD_POLARITY_FWD = "headPolFwd",
-            _HEAD_POLARITY_UP = "headPolUp",
             _PELVIS_COLLISION = "pelvisCollision",
             _PROBE_PATTERN = "probePattern",
             _FLIP_FORWARD_TRIGGER = "flipForward",
             _FLIP_BACKWARD_TRIGGER = "flipBackward",
-            _UNFLIP_FORWARD_TRIGGER = "resetForward",
-            _UNFLIP_BACKWARD_TRIGGER = "resetBackward",
             _SWINGING = "swinging",
             _HEAD_UP_Y = "headUpY",
             _HEAD_FWD_Y = "headForwardY"
@@ -339,7 +333,6 @@ namespace LucidityDrive
 
             bool bslide = LucidInputValueShortcuts.bslide;
             bool slide = LucidInputValueShortcuts.slide;
-            bool crouch = LucidInputValueShortcuts.crouch;
 
             Vector2 moveVector = LucidInputValueShortcuts.movement;
             Vector3 moveFlat = Vector3.zero;
@@ -374,10 +367,6 @@ namespace LucidityDrive
                 anim.SetTrigger(_FLIP_FORWARD_TRIGGER);
             else if (queueFlipBackward)
                 anim.SetTrigger(_FLIP_BACKWARD_TRIGGER);
-            if (queueResetForward)
-                anim.SetTrigger(_UNFLIP_FORWARD_TRIGGER);
-            else if (queueResetBackward)
-                anim.SetTrigger(_UNFLIP_BACKWARD_TRIGGER);
 
             queueFlipForward = false;
             queueFlipBackward = false;
@@ -502,11 +491,7 @@ namespace LucidityDrive
 
         private void UpdateAnimatorFloats(Vector3 localVel, Vector3 willFlat, Vector3 localNrm, float alignment, Vector2 lean, Vector3 hang, float smoothedStanceHeight)
         {
-            float currentcrouch = anim.GetFloat(_CROUCH);
-            float crouch = LucidInputValueShortcuts.crouch ? 1 : 0;
-            crouch = Mathf.SmoothDamp(currentcrouch, crouch, ref crouchRef, crouchTime);
             Vector3 velN = localVel.normalized;
-            float trueHeadX = Vector3.SignedAngle(pelvis.forward, head.forward, pelvis.right);
 
             anim.SetFloat(_VEL_X, localVel.x);
             anim.SetFloat(_VEL_Y, localVel.y);
@@ -528,7 +513,6 @@ namespace LucidityDrive
             anim.SetFloat(_LEAN_X, lean.x);
             anim.SetFloat(_LEAN_Z, lean.y);
             anim.SetFloat(_FOOT_ANGLE, footAngle / maxFootAngle);
-            anim.SetFloat(_CROUCH, crouch);
             anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
             anim.SetFloat(_GROUNDDIST, LucidPlayerInfo.groundDistance);
             anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(LucidPlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
@@ -540,20 +524,15 @@ namespace LucidityDrive
         private void UpdateAnimatorBools()
         {
             bool slide = LucidPlayerInfo.slidingBack;
-            bool crawl = LucidPlayerInfo.slidingForward;
             bool footslide = (LucidPlayerInfo.alignment > footSlideThreshold && LucidPlayerInfo.mainBody.velocity.magnitude > footSlideVelThreshold);
 
             anim.SetBool(_GROUNDED, LucidPlayerInfo.grounded);
             anim.SetBool(_SLIDE, slide);
-            anim.SetBool(_BSLIDE, crawl);
-            anim.SetBool(_CRAWL, LucidPlayerInfo.crawling);
             anim.SetBool(_FLIGHT, LucidPlayerInfo.flying);
             anim.SetBool(_GRAB_L, LucidPlayerInfo.climbL);
             anim.SetBool(_GRAB_R, LucidPlayerInfo.climbR);
             anim.SetBool(_CLIMBING, LucidPlayerInfo.climbing);
             anim.SetBool(_FOOTSLIDE, footslide);
-            anim.SetBool(_HEAD_POLARITY_FWD, LucidPlayerInfo.head.forward.y >= camUpsideDownThreshold);
-            anim.SetBool(_HEAD_POLARITY_UP, LucidPlayerInfo.head.up.y >= camUpsideDownThreshold);
             anim.SetBool(_PELVIS_COLLISION, LucidPlayerInfo.pelvisCollision);
             anim.SetBool(_SWINGING, LucidPlayerInfo.swinging);
         }
@@ -593,8 +572,7 @@ namespace LucidityDrive
 
             if (!prev_grounded && LucidPlayerInfo.grounded)
             {
-                Vector3 rel_force = LucidPlayerInfo.footspace.InverseTransformVector(LucidPlayerInfo.mainBody.velocity);
-                LucidPlayerInfo.lastLandingForce = rel_force.y;
+                LucidPlayerInfo.lastLandingForce = LucidPlayerInfo.mainBody.velocity.y;
                 onGrounded.Invoke(LucidPlayerInfo.lastLandingForce);
                 if (LucidPlayerInfo.lastLandingForce < -rollForceThreshold)
                     queueRoll = true;
