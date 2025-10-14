@@ -583,7 +583,7 @@ MonoBehaviour:
   maxInitialNrmY: 1
   minDowncastNrmY: 0.8
   ungrabBoost: 50
-  climbModeForceThreshold: 420
+  climbModeForceThreshold: Infinity
   velocityCheatForLucidTools: 0
   swingStabilization: 0.5
   pullSpeed: 4

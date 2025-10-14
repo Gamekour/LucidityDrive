@@ -457,9 +457,12 @@ namespace LucidityDrive
             legadjust = Mathf.Clamp(legadjust, minLegAdjust, Mathf.Infinity);
 
             float relativeheight = Vector3.Project(hipSpace.position - footSpace.position, pushdir).magnitude;
+            if (Vector3.Distance(hipSpace.position, footSpace.position) < 0.1f)
+                relativeheight = 0;
             LucidPlayerInfo.relativeHeight = relativeheight;
             float heightratio = relativeheight / legadjust;
             heightratio = Mathf.Clamp(heightratio, 0, Mathf.Infinity);
+            print(pushdir.y);
 
             float forceadjust = maxForceScale;
             if (LucidInputValueShortcuts.jump && !LucidPlayerInfo.disableJump)
@@ -527,7 +530,10 @@ namespace LucidityDrive
             Vector3 objectforce = -(slidecalc + pushcalc);
 
             if (LucidPlayerInfo.connectedRB_LF == null && LucidPlayerInfo.connectedRB_RF == null)
+            {
                 rb.AddForce(slidecalc + pushcalc + dirJumpBoost, ForceMode.Force);
+                print("no RB");
+            }
             else
             {
                 Transform footIK = isRight ? LucidPlayerInfo.IK_RF : LucidPlayerInfo.IK_LF;

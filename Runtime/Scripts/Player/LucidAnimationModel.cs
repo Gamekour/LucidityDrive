@@ -677,7 +677,14 @@ namespace LucidityDrive
             }
 
             if (LucidPlayerInfo.stanceHeight > 0.11f && Vector3.Distance(thighOrigin, Cast) < minCastDist)
+            {
                 Cast = thighOrigin + (LucidPlayerInfo.pelvis.forward * LucidPlayerInfo.totalLegLength);
+                LucidPlayerInfo.footspace.position = LucidPlayerInfo.pelvis.position;
+                LucidPlayerInfo.footspace.up = Vector3.up;
+                LucidPlayerInfo.footSurface = Vector3.up;
+                LucidPlayerInfo.connectedRB_LF = null;
+                LucidPlayerInfo.connectedRB_RF = null;
+            }
             else if (LucidPlayerInfo.stanceHeight < 0.11f)
             {
                 Vector3 footNormal = Vector3.up;

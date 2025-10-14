@@ -50,8 +50,9 @@ MonoBehaviour:
   targetHeightByNegativeSlopeClamp: 2
   slopeTilt: 0.1
   jumpTilt: 0.15
-  climbTilt: 0.3
-  slidePushAngleThreshold: 45
+  climbTilt: 1
+  slidePushAngleThreshold: 15
   targetHeightScale: 0.91
   minLegAdjust: 0.2
   climbLegAdjust: 0.3
+  maxFreeLookAngle: 60
