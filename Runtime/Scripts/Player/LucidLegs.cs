@@ -106,6 +106,9 @@ namespace LucidityDrive
         private bool preparingJump = false;
         private bool releaseJumping = false;
 
+        public const float stanceHeightCrouched = 0.5f;
+        public const float stanceHeightCrawl = 0.1f;
+
         private void Awake()
         {
             MovementSettings = defaultMovementSettings;
@@ -174,14 +177,18 @@ namespace LucidityDrive
                 inputSprint = !inputSprint;
             bool doGroundLogic = LucidPlayerInfo.grounded && LucidPlayerInfo.footSurface.y >= -0.001f;
 
+            float newStanceHeight = 1;
+
             if (inputBackslide || LucidPlayerInfo.head.up.y < LucidPlayerInfo.camUpsideDownThreshold || LucidPlayerInfo.swinging)
-                LucidPlayerInfo.stanceHeight = 0;
+                newStanceHeight = 0;
             else if (inputCrawl)
-                LucidPlayerInfo.stanceHeight = 0.1f;
+                newStanceHeight = stanceHeightCrawl;
             else if (inputCrouch || (inputJump && jumpPrepare))
-                LucidPlayerInfo.stanceHeight = 0.5f;
-            else
-                LucidPlayerInfo.stanceHeight = 1;
+                newStanceHeight = stanceHeightCrouched;
+
+            newStanceHeight = Mathf.Clamp(newStanceHeight, 0, LucidPlayerInfo.maxStanceHeight);
+
+            LucidPlayerInfo.stanceHeight = newStanceHeight;
 
             bool doingLegPush = false;
             if (LucidPlayerInfo.flying)
@@ -212,7 +219,7 @@ namespace LucidityDrive
                 Vector3 verticalForce = Vector3.up * slideBoostVertical;
                 rb.AddForce(verticalForce + horizontalForce, ForceMode.Acceleration);
             }
-            if (!doingLegPush)
+            if (!doingLegPush || inputCrouch)
             {
                 LucidPlayerInfo.probePattern = 0;
                 releaseJumping = false;
@@ -462,7 +469,6 @@ namespace LucidityDrive
             LucidPlayerInfo.relativeHeight = relativeheight;
             float heightratio = relativeheight / legadjust;
             heightratio = Mathf.Clamp(heightratio, 0, Mathf.Infinity);
-            print(pushdir.y);
 
             float forceadjust = maxForceScale;
             if (LucidInputValueShortcuts.jump && !LucidPlayerInfo.disableJump)
@@ -492,10 +498,15 @@ namespace LucidityDrive
             LucidPlayerInfo.isSprinting = inputSprint && !LucidPlayerInfo.disableSprint;
 
             float moveadjust = moveSpeed;
-            if (LucidPlayerInfo.crawling)
+            if (LucidPlayerInfo.stanceHeight >= stanceHeightCrouched - 0.01f)
+            {
+                float tStance = LucidPlayerInfo.stanceHeight;
+                tStance -= stanceHeightCrouched;
+                tStance *= 2;
+                moveadjust = Mathf.Lerp(moveSpeedCrouched, moveSpeed, tStance);
+            }
+            else
                 moveadjust = moveSpeedCrawling;
-            else if (inputCrouch)
-                moveadjust = moveSpeedCrouched;
             if (LucidPlayerInfo.isSprinting)
                 moveadjust *= sprintScale;
 
@@ -532,7 +543,6 @@ namespace LucidityDrive
             if (LucidPlayerInfo.connectedRB_LF == null && LucidPlayerInfo.connectedRB_RF == null)
             {
                 rb.AddForce(slidecalc + pushcalc + dirJumpBoost, ForceMode.Force);
-                print("no RB");
             }
             else
             {

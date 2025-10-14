@@ -9,7 +9,8 @@ namespace LucidityDrive
         [SerializeField]
         float
             headRadius,
-            sensitivityMultiplier;
+            sensitivityMultiplier,
+            maxDeltaTime;
 
         private Transform chest;
         private Transform head;
@@ -59,7 +60,7 @@ namespace LucidityDrive
 
             Vector2 headLookInput = LucidInputValueShortcuts.headLook;
             headLookInput *= sensitivity * sensitivityMultiplier;
-            headLookInput *= Time.deltaTime;
+            headLookInput *= Mathf.Clamp(Time.deltaTime, 0, maxDeltaTime);
 
             Vector3 headForwardFlat = transform.forward;
             headForwardFlat.y = 0;

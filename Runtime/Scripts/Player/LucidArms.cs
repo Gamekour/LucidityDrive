@@ -390,7 +390,7 @@ namespace LucidityDrive
             if (itemPoses == defaultItemPosesL || itemPoses == defaultItemPosesR)
             {
                 itemPoses.position = animShoulder.position;
-                itemPoses.rotation = LucidPlayerInfo.pelvis.rotation;
+                itemPoses.rotation = LucidPlayerInfo.head.rotation;
             }
             handTarget.SetPositionAndRotation(posePos, targetRotation);
         }

@@ -34,6 +34,8 @@ MonoBehaviour:
   directionalJumpBoost: 0
   surfaceMagnetismBySlope: 0
   highSlopeThreshold: 0.2
+  slideBoostVertical: 0
+  slideBoostHorizontal: 0
   probeDepth: 1
   probeScale: 1
   maxProbeOffset: 1.5
@@ -53,3 +55,4 @@ MonoBehaviour:
   targetHeightScale: 0.91
   minLegAdjust: 0.2
   climbLegAdjust: 0.3
+  maxFreeLookAngle: 60

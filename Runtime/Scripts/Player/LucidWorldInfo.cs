@@ -224,6 +224,7 @@ namespace LucidityDrive
             totalLegLength,
             pelvisSize,
             stanceHeight,
+            maxStanceHeight,
             relativeHeight,
             lastLandingForce,
             camUpsideDownThreshold

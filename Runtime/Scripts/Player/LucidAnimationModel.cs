@@ -408,8 +408,10 @@ namespace LucidityDrive
                     if (downHit)
                         totalspace = hitInfoUp.point.y - hitInfoDown.point.y;
                     float heightratio = Mathf.Clamp01(totalspace / LucidPlayerInfo.vismodelRef.stanceHeightFactor);
-                    stanceHeight = Mathf.Clamp(stanceHeight, 0, heightratio);
+                    LucidPlayerInfo.maxStanceHeight = heightratio;
                 }
+                else
+                    LucidPlayerInfo.maxStanceHeight = 1;
             }
 
             return stanceHeight;
@@ -679,9 +681,6 @@ namespace LucidityDrive
             if (LucidPlayerInfo.stanceHeight > 0.11f && Vector3.Distance(thighOrigin, Cast) < minCastDist)
             {
                 Cast = thighOrigin + (LucidPlayerInfo.pelvis.forward * LucidPlayerInfo.totalLegLength);
-                LucidPlayerInfo.footspace.position = LucidPlayerInfo.pelvis.position;
-                LucidPlayerInfo.footspace.up = Vector3.up;
-                LucidPlayerInfo.footSurface = Vector3.up;
                 LucidPlayerInfo.connectedRB_LF = null;
                 LucidPlayerInfo.connectedRB_RF = null;
             }

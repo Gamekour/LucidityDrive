@@ -7170,6 +7170,7 @@ MonoBehaviour:
   sensitivity: {x: 1, y: 1}
   headRadius: 1
   sensitivityMultiplier: 9
+  maxDeltaTime: 0.06
 --- !u!1 &7443822214091298102
 GameObject:
   m_ObjectHideFlags: 0
