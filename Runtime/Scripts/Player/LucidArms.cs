@@ -921,15 +921,16 @@ namespace LucidityDrive
 
             Destroy(jointTarget);
 
+            Vector3 dir = LucidPlayerInfo.head.forward;
+            if (grabbedRB == null)
+                LucidPlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
+
             if (targetTransform != null)
             {
                 IGrabTrigger trig = targetTransform.GetComponent<IGrabTrigger>();
                 trig?.UngrabEvent();
                 grabbedRB = null;
             }
-
-            Vector3 dir = LucidPlayerInfo.head.forward;
-            LucidPlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
 
             UpdateItemPose(!isRight, "OneHandedCarry");
 
