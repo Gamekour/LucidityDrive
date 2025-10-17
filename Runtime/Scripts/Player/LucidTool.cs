@@ -4,28 +4,24 @@ using UnityEngine.Events;
 
 namespace LucidityDrive
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class LucidTool : MonoBehaviour
     {
-        public Transform itemPosesR;
-        public Transform itemPosesL;
-        public Transform PrimaryGripR;
-        public Transform SecondaryGripR;
         public Transform targetTransform;
-        public Transform ItemPosePrimaryR;
-        public Transform ItemPoseSecondaryR;
-        public bool GrabLockPrimary = true;
-        public bool autoGrabL = false;
-        public bool autoGrabR = false;
+        public Transform itemPoses;
+        public Transform PrimaryGrip, SecondaryGrip;
+        public Transform ItemPosePrimary, ItemPoseSecondary;
         public bool switchGrabOrder = false;
         public bool disableDrop = false;
-        public bool queueForceGrabPrimary = false;
-        public bool queueForceGrabSecondary = false;
-        public bool queueUngrabPrimary = false;
-        public bool queueUngrabSecondary = false;
-        private Vector3 posOffsetPrimaryR;
-        private Vector3 posOffsetSecondaryR;
-        private Quaternion rotOffsetPrimaryR;
-        private Quaternion rotOffsetSecondaryR;
+        public bool autoGrabL, autoGrabR = false;
+        public bool queueForceGrabPrimary, queueForceGrabSecondary = false;
+        public bool queueForceGrabAnimationPrimary, queueForceGrabAnimationSecondary = false;
+        public bool queueUngrabPrimary, queueUngrabSecondary = false;
+        [Header("Optional")]
+        public Rigidbody animationTargetPrimary, animationTargetSecondary;
+        private Vector3 posOffsetPrimary, posOffsetSecondary;
+        private Quaternion rotOffsetPrimary, rotOffsetSecondary;
+        private Rigidbody rb;
 
         [HideInInspector]
         public bool held, leftHanded = false;
@@ -38,10 +34,11 @@ namespace LucidityDrive
         public void OnEnable()
         {
             StartCoroutine(WaitForInit());
-            posOffsetPrimaryR = transform.InverseTransformPoint(PrimaryGripR.position);
-            posOffsetSecondaryR = transform.InverseTransformPoint(SecondaryGripR.position);
-            rotOffsetPrimaryR = Quaternion.Inverse(transform.rotation) * PrimaryGripR.rotation;
-            rotOffsetSecondaryR = Quaternion.Inverse(transform.rotation) * SecondaryGripR.rotation;
+            posOffsetPrimary = transform.InverseTransformPoint(PrimaryGrip.position);
+            posOffsetSecondary = transform.InverseTransformPoint(SecondaryGrip.position);
+            rotOffsetPrimary = Quaternion.Inverse(transform.rotation) * PrimaryGrip.rotation;
+            rotOffsetSecondary = Quaternion.Inverse(transform.rotation) * SecondaryGrip.rotation;
+            rb = GetComponent<Rigidbody>();
         }
 
         public void OnDisable()
@@ -54,30 +51,40 @@ namespace LucidityDrive
             if (targetTransform != null)
             {
 
-                ItemPosePrimaryR.position = targetTransform.TransformPoint(posOffsetPrimaryR);
-                ItemPosePrimaryR.rotation = targetTransform.rotation * rotOffsetPrimaryR;
+                ItemPosePrimary.position = targetTransform.TransformPoint(posOffsetPrimary);
+                ItemPosePrimary.rotation = targetTransform.rotation * rotOffsetPrimary;
 
-                ItemPoseSecondaryR.position = targetTransform.TransformPoint(posOffsetSecondaryR);
-                ItemPoseSecondaryR.rotation = targetTransform.rotation * rotOffsetSecondaryR;
+                ItemPoseSecondary.position = targetTransform.TransformPoint(posOffsetSecondary);
+                ItemPoseSecondary.rotation = targetTransform.rotation * rotOffsetSecondary;
             }
+
+            bool queueGrabActionPrimary = (queueForceGrabPrimary || queueForceGrabAnimationPrimary || queueUngrabPrimary);
+            bool queueGrabActionSecondary = (queueForceGrabSecondary || queueForceGrabAnimationSecondary || queueUngrabSecondary);
+
             if (queueForceGrabPrimary)
-            {
                 ForceGrab(true);
-                queueForceGrabPrimary = false;
-            }
-            if (queueForceGrabSecondary)
-            {
-                ForceGrab(false);
-                queueForceGrabSecondary = false;
-            }
-            if (queueUngrabPrimary)
-            {
+            else if (queueForceGrabAnimationPrimary)
+                ForceGrabAnimationTransform(true);
+            else if (queueUngrabPrimary)
                 ForceUngrab(true);
+
+            if (queueForceGrabSecondary)
+                ForceGrab(false);
+            else if (queueForceGrabAnimationSecondary)
+                ForceGrabAnimationTransform(false);
+            else if (queueUngrabSecondary)
+                ForceUngrab(false);
+
+            if (queueGrabActionPrimary)
+            {
+                queueForceGrabPrimary = false;
+                queueForceGrabAnimationPrimary = false;
                 queueUngrabPrimary = false;
             }
-            if (queueUngrabSecondary)
+            if (queueGrabActionSecondary)
             {
-                ForceUngrab(false);
+                queueForceGrabSecondary = false;
+                queueForceGrabAnimationSecondary = false;
                 queueUngrabSecondary = false;
             }
         }
@@ -98,12 +105,12 @@ namespace LucidityDrive
                 if (autoGrabR)
                 {
                     transform.position = LucidPlayerInfo.pelvis.position;
-                    la.ForceGrab(this, true);
+                    la.ForceGrab(rb, true);
                 }
                 if (autoGrabL)
                 {
                     transform.position = LucidPlayerInfo.pelvis.position;
-                    la.ForceGrab(this, false);
+                    la.ForceGrab(rb, false);
                 }
             }
             else
@@ -111,17 +118,23 @@ namespace LucidityDrive
                 if (autoGrabL)
                 {
                     transform.position = LucidPlayerInfo.pelvis.position;
-                    la.ForceGrab(this, false);
+                    la.ForceGrab(rb, false);
                 }
                 if (autoGrabR)
                 {
                     transform.position = LucidPlayerInfo.pelvis.position;
-                    la.ForceGrab(this, true);
+                    la.ForceGrab(rb, true);
                 }
             }
         }
 
         public void ForceUngrab(bool isPrimary) => LucidArms.instance.ForceUngrab(leftHanded ? !isPrimary : isPrimary);
-        public void ForceGrab(bool isPrimary) => LucidArms.instance.ForceGrab(this, leftHanded ? !isPrimary : isPrimary);
+        public void ForceGrab(bool isPrimary) => LucidArms.instance.ForceGrab(rb, leftHanded ? !isPrimary : isPrimary);
+        public void ForceGrabAnimationTransform(bool isPrimary)
+        {
+            bool isRight = leftHanded ? !isPrimary : isPrimary;
+            Rigidbody targetRigidbody = isPrimary ? animationTargetPrimary : animationTargetSecondary;
+            LucidArms.instance.ForceGrab(targetRigidbody, isRight, true);
+        }
     }
 }

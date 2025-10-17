@@ -24,7 +24,6 @@ namespace LucidityDrive
             minAngle,
             FPCollisionRadius
             ;
-        [SerializeField] LayerMask layerMaskNormal, layerMaskFP;
 
         private Transform headrootTarget;
         private bool forceMouselook = false;
@@ -61,7 +60,6 @@ namespace LucidityDrive
         public void AssignVismodel(LucidVismodel vismodel)
         {
             headrootTarget = vismodel.anim.GetBoneTransform(HumanBodyBones.Head);
-            LucidPlayerInfo.mainCamera.cullingMask = layerMaskFP;
             ChangeCam(defaultCameraPoint, true);
         }
 
@@ -92,10 +90,6 @@ namespace LucidityDrive
 
             cameraPointIndex = index;
             LucidPlayerInfo.inFirstPerson = index == 0;
-            if (LucidPlayerInfo.inFirstPerson)
-                LucidPlayerInfo.mainCamera.cullingMask = layerMaskFP;
-            else
-                LucidPlayerInfo.mainCamera.cullingMask = layerMaskNormal;
             if (index == 3)
             {
                 Transform tcam = cameraPoints[3].transform;

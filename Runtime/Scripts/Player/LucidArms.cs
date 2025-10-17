@@ -68,7 +68,9 @@ namespace LucidityDrive
             grippyR,
             isPrimaryL,
             isPrimaryR,
-            disabling
+            disabling,
+            isAnimatedL,
+            isAnimatedR
             = false;
         private float animArmLength = 0;
         private float currentPull = 0;
@@ -345,9 +347,9 @@ namespace LucidityDrive
                 lt = ref lt_R;
             if (lt != null)
             {
-                tPoseParent = isRight ? lt.itemPosesR : lt.itemPosesL;
+                tPoseParent = lt.itemPoses;
                 bool doPrimary = isRight ? isPrimaryR : isPrimaryL;
-                tPose = doPrimary ? lt.ItemPosePrimaryR : lt.ItemPoseSecondaryR;
+                tPose = doPrimary ? lt.ItemPosePrimary : lt.ItemPoseSecondary;
             }
             else
                 tPoseParent = isRight ? defaultItemPosesR : defaultItemPosesL;
@@ -392,7 +394,12 @@ namespace LucidityDrive
                 itemPoses.position = animShoulder.position;
                 itemPoses.rotation = LucidPlayerInfo.head.rotation;
             }
-            handTarget.SetPositionAndRotation(posePos, targetRotation);
+            bool isAnimated = isRight ? isAnimatedR : isAnimatedL;
+            Transform targetTransform = isRight ? targetTransformR : targetTransformL;
+            if (!isAnimated)
+                handTarget.SetPositionAndRotation(posePos, targetRotation);
+            else
+                handTarget.SetPositionAndRotation(targetTransform.position, targetTransform.rotation);
         }
 
         private void ClimbPose(bool isRight)
@@ -434,10 +441,15 @@ namespace LucidityDrive
             if (LucidInputValueShortcuts.crouch)
                 motion.y = Mathf.Clamp(motion.y, -Mathf.Infinity, 0);
 
-            if (isRight)
-                handTargetR.transform.position = grabPositionR - motion;
+            bool isAnimated = isRight ? isAnimatedR : isAnimatedL;
+            Transform handTarget = isRight ? handTargetR : handTargetL;
+            Transform targetTransform = isRight ? targetTransformR : targetTransformL;
+            Vector3 grabPosition = isRight ? grabPositionR : grabPositionL;
+
+            if (!isAnimated)
+                handTarget.transform.position = grabPosition - motion;
             else
-                handTargetL.transform.position = grabPositionL - motion;
+                handTarget.SetPositionAndRotation(targetTransform.position, targetTransform.rotation);
         }
 
         private void HandPush()
@@ -717,7 +729,7 @@ namespace LucidityDrive
                 Ungrab(false);
             }
             else if (lt_R != null)
-                ForceGrab(lt_R, false);
+                ForceGrab(grabbedRB_R, false);
         }
 
         private void DropButtonR(InputAction.CallbackContext obj)
@@ -733,11 +745,11 @@ namespace LucidityDrive
                 Ungrab(true);
             }
             else if (lt_L != null)
-                ForceGrab(lt_L, true);
+                ForceGrab(grabbedRB_L, true);
         }
         #endregion
 
-        public void ForceGrab(LucidTool lt, bool isRight)
+        public void ForceGrab(Rigidbody rb, bool isRight, bool isAnimatedTransform = false)
         {
             ref Transform grabTransform = ref targetTransformL;
             if (isRight)
@@ -751,13 +763,19 @@ namespace LucidityDrive
             if (isRight)
                 grabbedRB = ref grabbedRB_R;
 
-            grabTransform = lt.transform;
+            ref bool isAnimated = ref isAnimatedL;
+            if (isRight)
+                isAnimated = ref isAnimatedR;
+
+            grabTransform = rb.transform;
+            isAnimated = isAnimatedTransform;
 
             if (isRight)
                 grippyR = true;
             else
                 grippyL = true;
-            Grab(isRight);
+
+            Grab(isRight, true);
         }
 
         public void ForceUngrab(bool isRight)
@@ -769,7 +787,7 @@ namespace LucidityDrive
             Ungrab(isRight);
         }
 
-        private void Grab(bool isRight)
+        private void Grab(bool isRight, bool defaultOffset = false)
         {
             bool grablock = isRight ? grabLockR : grabLockL;
             if (!initialized || grablock) return;
@@ -802,10 +820,16 @@ namespace LucidityDrive
 
             Transform targetTransform = isRight ? targetTransformR : targetTransformL;
 
+            if (defaultOffset)
+            {
+                grabPosition = targetTransform.position;
+                grabRotation = targetTransform.rotation;
+            }
+
             if (targetTransform.TryGetComponent(out lt))
             {
                 isPrimary = (lt != otherLT);
-                Transform targetGrip = isPrimary ? lt.PrimaryGripR : lt.SecondaryGripR;
+                Transform targetGrip = isPrimary ? lt.PrimaryGrip : lt.SecondaryGrip;
                 grabPosition = targetGrip.position;
                 grabRotation = targetGrip.rotation;
                 if (isRight != isPrimary)
@@ -815,7 +839,7 @@ namespace LucidityDrive
                     grabPosition = lt.transform.TransformPoint(inverseGrabPosition);
                     grabRotation *= Quaternion.Euler(transform.forward * 180);
                 }
-                grabLock = lt.GrabLockPrimary;
+                grabLock = true;
                 disableDrop = lt.disableDrop;
                 lt.OnGrab.Invoke();
                 lt.held = true;
@@ -922,6 +946,12 @@ namespace LucidityDrive
                 currentPull = 0;
                 LucidPlayerInfo.swinging = false;
             }
+
+            ref bool isAnimated = ref isAnimatedL;
+            if (isRight)
+                isAnimated = ref isAnimatedR;
+
+            isAnimated = false;
         }
 
         private void CreateConfigurableJoint(bool isRight, Vector3 grabPosition, Quaternion grabRotation, Transform grabTarget)

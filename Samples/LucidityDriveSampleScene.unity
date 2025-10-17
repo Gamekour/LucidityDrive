@@ -5231,6 +5231,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRig
       objectReference: {fileID: 0}
+    - target: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: layerMaskFP.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908729269746180530, guid: feb5ffb413408f64bb3e0843d3c27f57,
+        type: 3}
+      propertyPath: layerMaskNormal.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11680,7 +11690,7 @@ PrefabInstance:
     - target: {fileID: 1856850127813678479, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -31.752
+      value: -29.452
       objectReference: {fileID: 0}
     - target: {fileID: 1856850127813678479, guid: 61d339ec85044e0469ffc1cbabc6eaf4,
         type: 3}

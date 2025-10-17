@@ -6,7 +6,7 @@ public class ParamSetter : StateMachineBehaviour
     [SerializeField] ParamType paramType = ParamType.Bool;
     [SerializeField] string paramName;
     [SerializeField] bool onExit = false;
-    [Header("If using bool, use 0 or 1")]
+    [Header("If using bool / trigger, use 0 or 1")]
     [SerializeField] float value;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -30,7 +30,10 @@ public class ParamSetter : StateMachineBehaviour
                 animator.SetInteger(paramName, Mathf.RoundToInt(value));
                 break;
             case ParamType.Trigger:
-                animator.SetTrigger(paramName);
+                if (value == 0)
+                    animator.ResetTrigger(paramName);
+                else
+                    animator.SetTrigger(paramName);
                 break;
         }
     }

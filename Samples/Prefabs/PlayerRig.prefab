@@ -1444,7 +1444,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -6671,12 +6671,6 @@ MonoBehaviour:
   fovMax: 120
   minAngle: 0
   FPCollisionRadius: 0.03
-  layerMaskNormal:
-    serializedVersion: 2
-    m_Bits: 479
-  layerMaskFP:
-    serializedVersion: 2
-    m_Bits: 351
 --- !u!1 &6532721719779654200
 GameObject:
   m_ObjectHideFlags: 0
