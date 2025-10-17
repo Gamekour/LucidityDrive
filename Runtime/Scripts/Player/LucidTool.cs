@@ -11,6 +11,7 @@ namespace LucidityDrive
         public Transform itemPoses;
         public Transform PrimaryGrip, SecondaryGrip;
         public Transform ItemPosePrimary, ItemPoseSecondary;
+        public GameObject DisableIfNotPriority;
         public bool switchGrabOrder = false;
         public bool disableDrop = false;
         public bool autoGrabL, autoGrabR = false;
@@ -24,7 +25,7 @@ namespace LucidityDrive
         private Rigidbody rb;
 
         [HideInInspector]
-        public bool held, leftHanded = false;
+        public bool held, leftHanded, isPriority = false;
 
         public UnityEvent OnUse;
         public UnityEvent OnUseUp;
@@ -87,6 +88,12 @@ namespace LucidityDrive
                 queueForceGrabAnimationSecondary = false;
                 queueUngrabSecondary = false;
             }
+        }
+
+        public void UpdatePriority(bool priority)
+        {
+            isPriority = priority;
+            DisableIfNotPriority.SetActive(priority);
         }
 
         IEnumerator WaitForInit()

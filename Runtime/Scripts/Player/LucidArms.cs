@@ -844,6 +844,7 @@ namespace LucidityDrive
                 lt.OnGrab.Invoke();
                 lt.held = true;
                 lt.leftHanded = (isPrimary && !isRight);
+                lt.UpdatePriority(otherLT == null || otherLT == lt);
             }
 
             CreateConfigurableJoint(isRight, grabPosition, grabRotation, targetTransform);
@@ -946,6 +947,8 @@ namespace LucidityDrive
                 currentPull = 0;
                 LucidPlayerInfo.swinging = false;
             }
+            if (otherLT != null)
+                otherLT.UpdatePriority(true);
 
             ref bool isAnimated = ref isAnimatedL;
             if (isRight)

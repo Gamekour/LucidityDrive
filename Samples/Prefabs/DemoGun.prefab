@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6840252615780843862
 Transform:
   m_ObjectHideFlags: 0
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 8935035535051018529}
   - component: {fileID: 7367337906657011557}
   m_Layer: 7
-  m_Name: hipRoot
+  m_Name: chestRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   usePlayermodel: 0
-  targetBone: 0
+  targetBone: 8
   useForceMatch: 0
   positionForce: 10
   torque: 10
@@ -337,6 +337,7 @@ MonoBehaviour:
   SecondaryGrip: {fileID: 7325561567021303899}
   ItemPosePrimary: {fileID: 11623622269771811}
   ItemPoseSecondary: {fileID: 2381617106023207876}
+  DisableIfNotPriority: {fileID: 597615101972545166}
   switchGrabOrder: 0
   disableDrop: 0
   autoGrabL: 0
@@ -351,6 +352,7 @@ MonoBehaviour:
   animationTargetSecondary: {fileID: 151837856934623355}
   held: 0
   leftHanded: 0
+  isPriority: 0
   OnUse:
     m_PersistentCalls:
       m_Calls:
@@ -755,7 +757,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5235272366354454041}
   m_Layer: 7
-  m_Name: magTarget_hip
+  m_Name: magTarget_chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -769,13 +771,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3240774016477705679}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.70710707, y: -0, z: -0, w: 0.70710653}
-  m_LocalPosition: {x: -0.148, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.069, y: 0.096, z: 0.058}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2875468194936658201}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &3907606462866481502
 GameObject:
   m_ObjectHideFlags: 0
