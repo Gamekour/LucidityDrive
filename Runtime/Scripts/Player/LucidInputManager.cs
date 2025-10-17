@@ -140,8 +140,7 @@ namespace LucidityDrive
     {
         public static Vector2
             movement,
-            headLook,
-            mousePos
+            headLook
             ;
 
         public static bool

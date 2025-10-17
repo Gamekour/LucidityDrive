@@ -205,7 +205,8 @@ namespace LucidityDrive
             footSurfaceR,
             climbRelative,
             currentLegPush,
-            currentFootSlide
+            currentFootSlide,
+            autoPilotDestination
             = Vector3.zero;
 
         public static float traction = 1;
@@ -253,7 +254,8 @@ namespace LucidityDrive
             slidingBack,
             slidingForward,
             swinging,
-            inFirstPerson
+            inFirstPerson,
+            autoPilot
             = false;
 
         public static byte probePattern = 0;

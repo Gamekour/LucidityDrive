@@ -126,6 +126,8 @@ namespace LucidityDrive
         private void OnInputsReady()
         {
             LucidInputActionRefs.jump.canceled += OnJumpCancelled;
+            LucidPlayerInfo.autoPilot = true;
+            LucidPlayerInfo.autoPilotDestination = new Vector3(10, 0.1f, 22);
         }
 
         private void OnDisable()
@@ -187,6 +189,8 @@ namespace LucidityDrive
                 newStanceHeight = stanceHeightCrouched;
 
             newStanceHeight = Mathf.Clamp(newStanceHeight, 0, LucidPlayerInfo.maxStanceHeight);
+            if (LucidPlayerInfo.autoPilot && Vector3.Distance(transform.position, LucidPlayerInfo.autoPilotDestination) < (LucidPlayerInfo.totalLegLength * 3))
+                newStanceHeight = Mathf.Clamp01(((LucidPlayerInfo.autoPilotDestination.y - transform.position.y) / LucidPlayerInfo.totalLegLength) + 0.5f);
 
             LucidPlayerInfo.stanceHeight = newStanceHeight;
 
@@ -403,6 +407,12 @@ namespace LucidityDrive
             Vector3 moveFlat = Vector3.zero;
             moveFlat.x = moveVector.x;
             moveFlat.z = moveVector.y;
+            if (LucidPlayerInfo.autoPilot)
+            {
+                moveFlat = transform.InverseTransformDirection(LucidPlayerInfo.autoPilotDestination - transform.position);
+                moveFlat.y = 0;
+                moveFlat = Vector3.ClampMagnitude(moveFlat, 1);
+            }
 
             float surfaceMagnetism = (1 - Mathf.Abs(hipSpace.up.y)) * surfaceMagnetismBySlope;
             rb.AddForce(-hipSpace.up * surfaceMagnetism, ForceMode.Acceleration);
