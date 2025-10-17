@@ -1088,45 +1088,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e088b1b071aba4a8a1ac2b31d7dd60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundDistanceThresholdScale: 0.1
-  camUpsideDownThreshold: -0.1
+  defaultAnimationSettings: {fileID: 11400000, guid: 902253bb87bcfe04394d99018ad0a4bd,
+    type: 2}
   controller: {fileID: 9100000, guid: 9d5a21555745d03aaa9bfae1f6d47cef, type: 2}
   fpcam: {fileID: 5496875962166913160}
   IK_LF: {fileID: 8982907529161714512}
   IK_RF: {fileID: 5249457337260208995}
   IK_LH: {fileID: 3483037214520940076}
   IK_RH: {fileID: 4123976296632360821}
-  velSmoothTime: 1
-  nrmSmoothTime: 0.01
-  footSmoothTime: 0.5
-  willSmoothTime: 0.1
-  alignmentSmoothTime: 0.1
-  hangSmoothTime: 0.025
-  climbSmoothTime: 0.5
-  stanceHeightSmoothTime: 0.175
-  castThickness: 0.1
-  castHeight: 0.07
-  lerp: 0.5
-  landTime: 1
-  footSlideThreshold: 0.5
-  footSlideVelThreshold: 3
-  leanSmoothTime: 0.2
-  unrotateFeetBySpeed: 1
-  maxFootAngle: 60
-  verticalFootAdjust: 0.1
-  crouchTime: 0.5
-  minCastDist: 0.3
-  stepRate: 0.8
-  scaleStepRateByVelocity: 0.25
-  minStepRate: 0.05
-  dampAnimPhaseByAirtime: 2
-  wobbleScale: 2
-  rollForceThreshold: 10
-  leanScale: 50
-  maxLeanAngle: 45
-  flipSmoothTime: 0.1
-  highSlopeThreshold: 0.2
-  airVelNFix: 0.25
   onFootChanged:
     m_PersistentCalls:
       m_Calls:

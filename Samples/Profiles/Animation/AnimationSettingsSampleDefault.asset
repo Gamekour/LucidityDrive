@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e45e315090b80004482cd90efc183cd9, type: 3}
+  m_Name: AnimationSettingsSampleDefault
+  m_EditorClassIdentifier: 
+  groundDistanceThresholdScale: 0.1
+  camUpsideDownThreshold: -0.1
+  velSmoothTime: 1
+  footSmoothTime: 0.5
+  alignmentSmoothTime: 0.1
+  hangSmoothTime: 0.025
+  climbSmoothTime: 0.5
+  leanSmoothTime: 0.2
+  flipSmoothTime: 0.1
+  stanceHeightSmoothTime: 0.175
+  legCastThickness: 0.1
+  legCastStartHeightOffset: 0.07
+  verticalFootAdjust: 0.1
+  minCastDist: 0.3
+  stepRate: 0.8
+  scaleStepRateByVelocity: 0.25
+  wobbleScale: 2
+  hardLandingForce: 10
+  leanScale: 50
+  maxLeanAngle: 45
+  highSlopeThreshold: 0.2
+  velNFallback: 0.25

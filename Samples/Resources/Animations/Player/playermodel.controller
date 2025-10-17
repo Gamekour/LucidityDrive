@@ -1306,7 +1306,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: roll
+    m_ConditionEvent: hardLanding
     m_EventTreshold: 0
   - m_ConditionMode: 3
     m_ConditionEvent: velZ
@@ -1610,7 +1610,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: roll
+    m_ConditionEvent: hardLanding
     m_EventTreshold: 0
   - m_ConditionMode: 4
     m_ConditionEvent: velZ
@@ -3030,9 +3030,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: stanceHeight
     m_EventTreshold: 0.09
-  - m_ConditionMode: 4
-    m_ConditionEvent: groundDistance
-    m_EventTreshold: 0.3
   - m_ConditionMode: 3
     m_ConditionEvent: headForwardY
     m_EventTreshold: -0.5
@@ -3080,19 +3077,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: airtime
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
   - m_Name: velX
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: velY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -3140,6 +3125,36 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: stanceHeight
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: wobble
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: headUpY
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: headForwardY
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: probePattern
+    m_Type: 3
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   - m_Name: grounded
     m_Type: 4
     m_DefaultFloat: 0
@@ -3170,56 +3185,8 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: footslide
-    m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: stanceHeight
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: groundDistance
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: slide
-    m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: wobble
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: roll
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
   - m_Name: disableAnyState
     m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: pelvisCollision
-    m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: probePattern
-    m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -3230,14 +3197,8 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: headUpY
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: headForwardY
-    m_Type: 1
+  - m_Name: hardLanding
+    m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -4294,17 +4255,11 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 3
-    m_ConditionEvent: groundDistance
-    m_EventTreshold: 0.3
   - m_ConditionMode: 2
     m_ConditionEvent: flight
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: climbing
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: slide
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: disableAnyState
@@ -4476,9 +4431,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: stanceHeight
     m_EventTreshold: 0.09
-  - m_ConditionMode: 3
-    m_ConditionEvent: groundDistance
-    m_EventTreshold: 0.3
   - m_ConditionMode: 2
     m_ConditionEvent: flight
     m_EventTreshold: 0
@@ -4541,9 +4493,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 4
-    m_ConditionEvent: groundDistance
-    m_EventTreshold: 0.3
   - m_ConditionMode: 2
     m_ConditionEvent: flight
     m_EventTreshold: 0
@@ -4562,6 +4511,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 7
     m_ConditionEvent: probePattern
     m_EventTreshold: 2
+  - m_ConditionMode: 1
+    m_ConditionEvent: grounded
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4673449810457700624}
   m_Solo: 0
@@ -4647,9 +4599,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 4
-    m_ConditionEvent: groundDistance
-    m_EventTreshold: 0.3
   - m_ConditionMode: 2
     m_ConditionEvent: flight
     m_EventTreshold: 0
@@ -4662,6 +4611,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: headForwardY
     m_EventTreshold: -0.5
+  - m_ConditionMode: 1
+    m_ConditionEvent: grounded
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4673449810457700624}
   m_Solo: 0
