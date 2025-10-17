@@ -181,7 +181,8 @@ namespace LucidityDrive
             IK_LF,
             FPTransform,
             handTargetL,
-            handTargetR;
+            handTargetR,
+            autoPilotTransformDestination;
 
         public static Rigidbody
             mainBody,

@@ -126,8 +126,6 @@ namespace LucidityDrive
         private void OnInputsReady()
         {
             LucidInputActionRefs.jump.canceled += OnJumpCancelled;
-            LucidPlayerInfo.autoPilot = true;
-            LucidPlayerInfo.autoPilotDestination = new Vector3(10, 0.1f, 22);
         }
 
         private void OnDisable()
@@ -189,8 +187,12 @@ namespace LucidityDrive
                 newStanceHeight = stanceHeightCrouched;
 
             newStanceHeight = Mathf.Clamp(newStanceHeight, 0, LucidPlayerInfo.maxStanceHeight);
-            if (LucidPlayerInfo.autoPilot && Vector3.Distance(transform.position, LucidPlayerInfo.autoPilotDestination) < (LucidPlayerInfo.totalLegLength * 3))
-                newStanceHeight = Mathf.Clamp01(((LucidPlayerInfo.autoPilotDestination.y - transform.position.y) / LucidPlayerInfo.totalLegLength) + 0.5f);
+
+            Vector3 destination = LucidPlayerInfo.autoPilotDestination;
+            if (LucidPlayerInfo.autoPilotTransformDestination != null)
+                destination = LucidPlayerInfo.autoPilotTransformDestination.position;
+            if (LucidPlayerInfo.autoPilot && Vector3.Distance(transform.position, destination) < (LucidPlayerInfo.totalLegLength * 3))
+                newStanceHeight = Mathf.Clamp01(((destination.y - transform.position.y) / LucidPlayerInfo.totalLegLength) + 0.5f);
 
             LucidPlayerInfo.stanceHeight = newStanceHeight;
 
@@ -291,6 +293,25 @@ namespace LucidityDrive
             }
             LucidPlayerInfo.moveSpeed = moveSpeed;
             LucidPlayerInfo.slidePushAngleThreshold = slidePushAngleThreshold;
+        }
+
+        public void ActivateAutopilot(Vector3 destination)
+        {
+            LucidPlayerInfo.autoPilotTransformDestination = null;
+            LucidPlayerInfo.autoPilotDestination = destination;
+            LucidPlayerInfo.autoPilot = true;
+        }
+
+        public void ActivateAutopilot(Transform destination)
+        {
+            LucidPlayerInfo.autoPilotTransformDestination = destination;
+            LucidPlayerInfo.autoPilotDestination = Vector3.zero;
+            LucidPlayerInfo.autoPilot = true;
+        }
+
+        public void DeactivateAutopilot()
+        {
+            LucidPlayerInfo.autoPilot = false;
         }
 
         //calculates rotation forces necessary for aligning hips with head at an appropriate speed
@@ -409,9 +430,17 @@ namespace LucidityDrive
             moveFlat.z = moveVector.y;
             if (LucidPlayerInfo.autoPilot)
             {
-                moveFlat = transform.InverseTransformDirection(LucidPlayerInfo.autoPilotDestination - transform.position);
-                moveFlat.y = 0;
-                moveFlat = Vector3.ClampMagnitude(moveFlat, 1);
+                if (moveVector.magnitude > 0.1f)
+                    LucidPlayerInfo.autoPilot = false;
+                else
+                {
+                    Vector3 destination = LucidPlayerInfo.autoPilotDestination;
+                    if (LucidPlayerInfo.autoPilotTransformDestination != null)
+                        destination = LucidPlayerInfo.autoPilotTransformDestination.position;
+                    moveFlat = transform.InverseTransformDirection(destination - transform.position);
+                    moveFlat.y = 0;
+                    moveFlat = Vector3.ClampMagnitude(moveFlat, 1);
+                }
             }
 
             float surfaceMagnetism = (1 - Mathf.Abs(hipSpace.up.y)) * surfaceMagnetismBySlope;
