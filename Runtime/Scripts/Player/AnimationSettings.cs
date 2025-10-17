@@ -5,14 +5,12 @@ namespace LucidityDrive
     [CreateAssetMenu(fileName = "UntitledAnimationSettings", menuName = "LucidityDrive/AnimationSettings", order = 1)]
     public class AnimationSettings : ScriptableObject
     {
-        [Tooltip("How close to the ground do we consider the player to be grounded?")] 
-        public float groundDistanceThreshold = 0.1f;
-        [Tooltip("")] 
+        [Tooltip("At this distance from the ground (scaled by leg length), consider the player to be grounded")] 
+        public float groundDistanceThresholdScale = 0.1f;
+        [Tooltip("At this Y value of the head's up direction, consider the camera upside down")] 
         public float camUpsideDownThreshold;
-        [Tooltip("")] 
+        [Tooltip("Smooth the animated velocity parameter by this value")] 
         public float velSmoothTime;
-        [Tooltip("")] 
-        public float nrmSmoothTime;
         [Tooltip("")] 
         public float footSmoothTime;
         [Tooltip("")] 

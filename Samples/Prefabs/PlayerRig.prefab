@@ -1088,7 +1088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e088b1b071aba4a8a1ac2b31d7dd60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundDistanceThreshold: 0.1
+  groundDistanceThresholdScale: 0.1
   camUpsideDownThreshold: -0.1
   controller: {fileID: 9100000, guid: 9d5a21555745d03aaa9bfae1f6d47cef, type: 2}
   fpcam: {fileID: 5496875962166913160}

@@ -8,7 +8,7 @@ namespace LucidityDrive
     {
         public static LucidAnimationModel instance;
 
-        public float groundDistanceThreshold = 0.5f;
+        public float groundDistanceThresholdScale = 0.1f;
         public float camUpsideDownThreshold = -0.1f;
 
         [SerializeField] RuntimeAnimatorController controller;
@@ -110,10 +110,6 @@ namespace LucidityDrive
 
         private bool initialized = false;
         private bool oldPolUp;
-        private bool queueFlipForward;
-        private bool queueFlipBackward;
-        private bool queueResetForward;
-        private bool queueResetBackward;
 
         private const string
             _VEL_X = "velX",
@@ -143,15 +139,12 @@ namespace LucidityDrive
             _GRAB_R = "grabR",
             _CLIMBING = "climbing",
             _FOOTSLIDE = "footslide",
-            _CROUCH = "crouch",
             _GROUNDDIST = "groundDistance",
             _STANCEHEIGHT = "stanceHeight",
             _WOBBLE = "wobble",
             _ROLL = "roll",
             _PELVIS_COLLISION = "pelvisCollision",
             _PROBE_PATTERN = "probePattern",
-            _FLIP_FORWARD_TRIGGER = "flipForward",
-            _FLIP_BACKWARD_TRIGGER = "flipBackward",
             _SWINGING = "swinging",
             _HEAD_UP_Y = "headUpY",
             _HEAD_FWD_Y = "headForwardY"
@@ -176,7 +169,7 @@ namespace LucidityDrive
             if (LucidPlayerInfo.head.up.y < camUpsideDownThreshold)
                 targetFlip = Vector3.SignedAngle(LucidPlayerInfo.pelvis.forward, LucidPlayerInfo.head.forward, LucidPlayerInfo.pelvis.right);
             float flipamount = Mathf.SmoothDampAngle(oldFlip, targetFlip, ref flipRef, flipSmoothTime);
-            if (LucidPlayerInfo.groundDistance < groundDistanceThreshold)
+            if (LucidPlayerInfo.groundDistance < LucidPlayerInfo.totalLegLength * groundDistanceThresholdScale)
                 flipamount = 0;
             transform.Rotate(Vector3.ClampMagnitude(leanOffset * leanScale, maxLeanAngle) + (Vector3.right * flipamount), Space.Self);
             oldFlip = flipamount;
@@ -208,22 +201,6 @@ namespace LucidityDrive
             LucidPlayerInfo.stepPhase = stepphase;
 
             bool currentPolUp = LucidPlayerInfo.head.up.y >= camUpsideDownThreshold;
-            if (!currentPolUp && oldPolUp)
-            {
-                bool polForward = LucidPlayerInfo.head.forward.y >= camUpsideDownThreshold;
-                if (polForward)
-                    queueFlipBackward = true;
-                else
-                    queueFlipForward = true;
-            }
-            else if (currentPolUp && !oldPolUp)
-            {
-                bool polForward = LucidPlayerInfo.head.forward.y >= camUpsideDownThreshold;
-                if (polForward)
-                    queueResetForward = true;
-                else
-                    queueResetBackward = true;
-            }
             oldPolUp = currentPolUp;
         }
 
@@ -364,15 +341,6 @@ namespace LucidityDrive
                 anim.SetTrigger(_ROLL);
                 queueRoll = false;
             }
-            else if (queueFlipForward)
-                anim.SetTrigger(_FLIP_FORWARD_TRIGGER);
-            else if (queueFlipBackward)
-                anim.SetTrigger(_FLIP_BACKWARD_TRIGGER);
-
-            queueFlipForward = false;
-            queueFlipBackward = false;
-            queueResetForward = false;
-            queueResetBackward = false;
 
             if (LucidPlayerInfo.airTime > airtimesmooth)
                 airtimesmooth = LucidPlayerInfo.airTime;
@@ -427,8 +395,8 @@ namespace LucidityDrive
         private Vector2 CalculateLean(Vector3 localVel, Vector3 localNrm)
         {
             Vector2 oldlean = Vector2.zero;
-            oldlean.x = anim.GetFloat(_LEAN_X);
-            oldlean.y = anim.GetFloat(_LEAN_Z);
+            oldlean.x = -leanOffset.z;
+            oldlean.y = leanOffset.x;
             Vector2 lean = LeanCalc(localVel * 0.25f, localNrm);
             Vector2 lerplean = Vector2.SmoothDamp(oldlean, lean, ref leanSmoothRef, leanSmoothTime);
             return lerplean;
@@ -533,7 +501,7 @@ namespace LucidityDrive
             bool slide = LucidPlayerInfo.slidingBack;
             bool footslide = (LucidPlayerInfo.alignment > footSlideThreshold && LucidPlayerInfo.mainBody.velocity.magnitude > footSlideVelThreshold);
 
-            anim.SetBool(_GROUNDED, LucidPlayerInfo.grounded);
+            anim.SetBool(_GROUNDED, LucidPlayerInfo.groundDistance < LucidPlayerInfo.totalLegLength * groundDistanceThresholdScale);
             anim.SetBool(_SLIDE, slide);
             anim.SetBool(_FLIGHT, LucidPlayerInfo.flying);
             anim.SetBool(_GRAB_L, LucidPlayerInfo.climbL);
@@ -556,7 +524,7 @@ namespace LucidityDrive
                 slope = Vector2.zero;
             if (LucidPlayerInfo.stanceHeight < 0.11f)
                 accel = Vector2.zero;
-            else if (LucidPlayerInfo.alignment < 0.5f && LucidPlayerInfo.groundDistance < groundDistanceThreshold)
+            else if (LucidPlayerInfo.alignment < 0.5f && LucidPlayerInfo.groundDistance < LucidPlayerInfo.totalLegLength * groundDistanceThresholdScale)
                 accel = -accel * 2;
             Vector2 lean = Vector2.zero;
             lean.x = (accel.x * k1) + (slope.x * k2);
