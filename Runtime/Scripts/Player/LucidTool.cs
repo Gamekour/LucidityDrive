@@ -18,13 +18,17 @@ namespace LucidityDrive
         public bool autoGrabR = false;
         public bool switchGrabOrder = false;
         public bool disableDrop = false;
+        public bool queueForceGrabPrimary = false;
+        public bool queueForceGrabSecondary = false;
+        public bool queueUngrabPrimary = false;
+        public bool queueUngrabSecondary = false;
         private Vector3 posOffsetPrimaryR;
         private Vector3 posOffsetSecondaryR;
         private Quaternion rotOffsetPrimaryR;
         private Quaternion rotOffsetSecondaryR;
 
         [HideInInspector]
-        public bool held = false;
+        public bool held, leftHanded = false;
 
         public UnityEvent OnUse;
         public UnityEvent OnUseUp;
@@ -56,13 +60,33 @@ namespace LucidityDrive
                 ItemPoseSecondaryR.position = targetTransform.TransformPoint(posOffsetSecondaryR);
                 ItemPoseSecondaryR.rotation = targetTransform.rotation * rotOffsetSecondaryR;
             }
+            if (queueForceGrabPrimary)
+            {
+                ForceGrab(true);
+                queueForceGrabPrimary = false;
+            }
+            if (queueForceGrabSecondary)
+            {
+                ForceGrab(false);
+                queueForceGrabSecondary = false;
+            }
+            if (queueUngrabPrimary)
+            {
+                ForceUngrab(true);
+                queueUngrabPrimary = false;
+            }
+            if (queueUngrabSecondary)
+            {
+                ForceUngrab(false);
+                queueUngrabSecondary = false;
+            }
         }
 
         IEnumerator WaitForInit()
         {
-            LucidArms la = FindObjectOfType<LucidArms>();
             while (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.pelvis == null || !LucidArms.instance.initialized)
                 yield return null;
+            LucidArms la = LucidArms.instance;
 
             if (autoGrabL || autoGrabR)
             {
@@ -96,5 +120,8 @@ namespace LucidityDrive
                 }
             }
         }
+
+        public void ForceUngrab(bool isPrimary) => LucidArms.instance.ForceUngrab(leftHanded ? !isPrimary : isPrimary);
+        public void ForceGrab(bool isPrimary) => LucidArms.instance.ForceGrab(this, leftHanded ? !isPrimary : isPrimary);
     }
 }

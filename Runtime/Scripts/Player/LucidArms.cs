@@ -819,6 +819,7 @@ namespace LucidityDrive
                 disableDrop = lt.disableDrop;
                 lt.OnGrab.Invoke();
                 lt.held = true;
+                lt.leftHanded = (isPrimary && !isRight);
             }
 
             CreateConfigurableJoint(isRight, grabPosition, grabRotation, targetTransform);
