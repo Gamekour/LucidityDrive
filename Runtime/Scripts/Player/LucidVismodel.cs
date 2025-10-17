@@ -53,6 +53,8 @@ namespace LucidityDrive
 
         public void Init()
         {
+            if (anim.runtimeAnimatorController == null)
+                Debug.LogError("Vismodel is missing an animator controller - make sure the runtime animator controller is set to RawAnim (see example in plugin folder)");
             headRef = anim.GetBoneTransform(HumanBodyBones.Head);
             defaultHeadScale = headRef.localScale;
             foreach (SkinnedMeshRenderer smr in GetComponentsInChildren<SkinnedMeshRenderer>())
