@@ -26,8 +26,8 @@ namespace LucidityDrive
         }
 
         [Header("References")]
-        private MovementSettings m_movementSettings;
-        public MovementSettings MovementSettings
+        private LDSettings m_movementSettings;
+        public LDSettings MovementSettings
         {
             get { return m_movementSettings; }
             set { m_movementSettings = value; CopyValues(); } //copy values any time the movement settings are changed
@@ -47,7 +47,7 @@ namespace LucidityDrive
         [SerializeField] Transform vFloor;
 
         [SerializeField] CapsuleCollider pelvisCollider;
-        [SerializeField] MovementSettings defaultMovementSettings;
+        [SerializeField] LDSettings defaultMovementSettings;
 
         [SerializeField] InputAction reloadMovementSettings;
 
@@ -276,7 +276,7 @@ namespace LucidityDrive
         //copies values from movement settings to this script, using property names to match values
         public void CopyValues()
         {
-            Type TMoveSettings = typeof(MovementSettings);
+            Type TMoveSettings = typeof(LDSettings);
             Type TLegs = typeof(LucidLegs);
             FieldInfo[] fields = TMoveSettings.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             foreach (var field in fields)
