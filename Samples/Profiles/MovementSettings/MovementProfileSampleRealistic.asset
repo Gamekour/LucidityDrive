@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0bad054ed454bf46a0dbebbe5f49037, type: 3}
-  m_Name: LDProfile_Realistic
+  m_Script: {fileID: 11500000, guid: 8c4264cd40247bd4c9eee7757c6a50e2, type: 3}
+  m_Name: MovementProfileSampleRealistic
   m_EditorClassIdentifier: 
   moveSpeed: 2
   moveSpeedCrawling: 1
@@ -33,25 +33,25 @@ MonoBehaviour:
   directionalJumpStrength: 6
   directionalJumpBoost: 0
   surfaceMagnetismBySlope: 0
-  highSlopeThreshold: 0.5
+  highSlopeThreshold: 0.2
   slideBoostVertical: 0
   slideBoostHorizontal: 0
-  probeDepth: 2
+  probeDepth: 1
   probeScale: 1
-  maxProbeOffset: 3
-  probeXMinimumOffset: 0.1
-  probeZMinimumOffset: 0.1
+  maxProbeOffset: 1.5
+  probeXMinimumOffset: 0.4
+  probeZMinimumOffset: 0.4
   footSlideStrength: 14
-  maxForceScale: 7
+  maxForceScale: 6
   forceSmoothness: 20
   pelvisRotationSpeed: 2000
   targetHeightByPositiveSlope: 0
   targetHeightByNegativeSlope: 0.25
   targetHeightByNegativeSlopeClamp: 2
   slopeTilt: 0.1
-  jumpTilt: 0.15
-  climbTilt: 0.3
-  slidePushAngleThreshold: 45
+  jumpTilt: 0.3
+  climbTilt: 1
+  slidePushAngleThreshold: 15
   targetHeightScale: 0.91
   minLegAdjust: 0.2
   climbLegAdjust: 0.3

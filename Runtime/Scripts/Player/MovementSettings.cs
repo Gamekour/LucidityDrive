@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace LucidityDrive
 {
-    [CreateAssetMenu(fileName = "UntitledSettings", menuName = "LucidityDrive/Settings", order = 1)]
-    public class LDSettings : ScriptableObject
+    [CreateAssetMenu(fileName = "UntitledMovementSettings", menuName = "LucidityDrive/MovementSettings", order = 1)]
+    public class MovementSettings : ScriptableObject
     {
         [Header("Simple")]
         [Tooltip("How fast the player should move")]
