@@ -211,7 +211,7 @@ namespace LucidityDrive
             }
         }
 
-        private void OnAssignVismodel(LucidVismodel visModel)
+        private void OnAssignVismodel(Vismodel visModel)
         {
             foreach (Transform t in GetComponentsInChildren<Transform>())
             {
@@ -219,7 +219,7 @@ namespace LucidityDrive
                     Destroy(t.gameObject); //clear existing playermodel if applicable
             }
             GameObject newPlayerModel = Instantiate(visModel.gameObject, transform);
-            LucidVismodel newVisModel = newPlayerModel.GetComponent<LucidVismodel>();
+            Vismodel newVisModel = newPlayerModel.GetComponent<Vismodel>();
             Avatar targetAvatar = newVisModel.anim.avatar;
             foreach(Renderer r in newVisModel.gameObject.GetComponentsInChildren<Renderer>())
             {

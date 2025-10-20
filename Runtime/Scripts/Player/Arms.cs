@@ -166,7 +166,7 @@ namespace LucidityDrive
             }
         }
 
-        private void OnAssignVismodel(LucidVismodel visModel)
+        private void OnAssignVismodel(Vismodel visModel)
         {
             disabling = false;
             animShoulderL = visModel.anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
@@ -505,7 +505,7 @@ namespace LucidityDrive
             }
         }
 
-        private float CalculateAnimArmLength(LucidVismodel visModel)
+        private float CalculateAnimArmLength(Vismodel visModel)
         {
             Vector3 shoulderPos = visModel.anim.GetBoneTransform(HumanBodyBones.RightUpperArm).position;
             Vector3 elbowPos = visModel.anim.GetBoneTransform(HumanBodyBones.RightLowerArm).position;

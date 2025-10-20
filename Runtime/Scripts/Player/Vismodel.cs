@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace LucidityDrive
 {
-    [RequireComponent(typeof(Animator))]
-    public class LucidVismodel : MonoBehaviour
+    public class Vismodel : MonoBehaviour
     {
         [HideInInspector]
         public Animator anim;

@@ -61,7 +61,7 @@ namespace LucidityDrive
             LucidPlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
         }
 
-        public void AssignVismodel(LucidVismodel vismodel)
+        public void AssignVismodel(Vismodel vismodel)
         {
             headrootTarget = vismodel.anim.GetBoneTransform(HumanBodyBones.Head);
             ChangeCam(defaultCameraPoint, true);

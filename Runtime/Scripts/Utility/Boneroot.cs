@@ -39,7 +39,7 @@ namespace LucidityDrive.Extras
             LucidPlayerInfo.OnAnimModellInitialized.RemoveListener(OnInitializeAnimModel);
         }
 
-        public void OnAssignVismodel(LucidVismodel newModel)
+        public void OnAssignVismodel(Vismodel newModel)
         {
             if (usePlayermodel) return;
 

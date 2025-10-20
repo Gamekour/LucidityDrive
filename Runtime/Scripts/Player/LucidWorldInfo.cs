@@ -159,7 +159,7 @@ namespace LucidityDrive
     public static class LucidPlayerInfo
     {
         #region Initialization Events
-        public static UnityEvent<LucidVismodel> OnAssignVismodel = new();
+        public static UnityEvent<Vismodel> OnAssignVismodel = new();
         public static UnityEvent<int> onChangeCameraPoint = new();
         public static UnityEvent OnAnimModellInitialized = new();
         public static UnityEvent OnRemoveVismodel = new();
@@ -195,7 +195,7 @@ namespace LucidityDrive
         public static CapsuleCollider pelvisColl;
         public static Animator animationModel;
         public static Legs legRef;
-        public static LucidVismodel vismodelRef;
+        public static Vismodel vismodelRef;
         #endregion
 
         #region Motion Data

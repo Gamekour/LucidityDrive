@@ -47,7 +47,7 @@ namespace LucidityDrive
             head = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Head);
         }
 
-        public void AssignVismodel(LucidVismodel vismodel)
+        public void AssignVismodel(Vismodel vismodel)
         {
             chest = vismodel.anim.GetBoneTransform(HumanBodyBones.Chest);
         }
