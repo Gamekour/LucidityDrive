@@ -26,7 +26,7 @@ namespace LucidityDrive
         {
             if (spawnPoint == null)
                 spawnPoint = transform;
-            RespawnInterface.Respawn(spawnPoint.position, startVel);
+            StartCoroutine(WaitToSpawn());
         }
 
         private void FixedUpdate()
@@ -41,6 +41,15 @@ namespace LucidityDrive
         {
             OnRespawn.Invoke();
         }
+
+        IEnumerator WaitToSpawn()
+        {
+            while (!LucidPlayerInfo.animModelInitialized)
+                yield return null;
+
+            yield return new WaitForFixedUpdate();
+            RespawnInterface.Respawn(spawnPoint.position, startVel);
+        }
     }
 
     public static class RespawnInterface
@@ -49,6 +58,7 @@ namespace LucidityDrive
         public static void Respawn(Vector3 point)
         {
             LucidPlayerInfo.pelvis.position = point;
+            Arms.instance.transform.position = point;
             LucidPlayerInfo.mainBody.velocity = Vector3.zero;
             if (LucidPlayerInfo.vismodelRef != null)
                 LucidPlayerInfo.vismodelRef.transform.position = point;
@@ -57,6 +67,7 @@ namespace LucidityDrive
         public static void Respawn(Vector3 point, Vector3 velocity)
         {
             LucidPlayerInfo.pelvis.position = point;
+            Arms.instance.transform.position = point;
             LucidPlayerInfo.mainBody.velocity = velocity;
             if (LucidPlayerInfo.vismodelRef != null)
                 LucidPlayerInfo.vismodelRef.transform.position = point;

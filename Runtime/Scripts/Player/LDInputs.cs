@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace LucidityDrive
 {
-    public class LucidInputManager : MonoBehaviour
+    public class LDInputs : MonoBehaviour
     {
         [SerializeField] InputActionAsset m_ActionAsset;
         public InputActionAsset ActionAsset { get => m_ActionAsset; set => m_ActionAsset = value; }
