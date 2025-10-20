@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 2531359406154903297}
   - component: {fileID: 6392015881782361676}
   m_Layer: 3
-  m_Name: footstepSound
+  m_Name: Footstep Sound Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1039,9 +1039,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2772788577198160390}
-  - component: {fileID: 8076339388166272961}
+  - component: {fileID: 7015537069595875372}
   m_Layer: 0
-  m_Name: playermodel
+  m_Name: Animation Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1062,7 +1062,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2635777386139525533}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8076339388166272961
+--- !u!114 &7015537069595875372
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1071,7 +1071,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3256450155571339452}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05e088b1b071aba4a8a1ac2b31d7dd60, type: 3}
+  m_Script: {fileID: 11500000, guid: 919de0bd57898c0468b3e726fca0813c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   defaultAnimationSettings: {fileID: 11400000, guid: 902253bb87bcfe04394d99018ad0a4bd,
@@ -1087,11 +1087,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2531359406154903297}
         m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
+        m_MethodName: PlayOneShot
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 8300000, guid: b7a5db94c2adf60ebbfab400237bcfed,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1102,18 +1103,19 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2531359406154903297}
         m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
+        m_MethodName: PlayOneShot
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 8300000, guid: b7a5db94c2adf60ebbfab400237bcfed,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  LCast: {x: 4.319404, y: -2.3021216, z: 43.07542}
-  RCast: {x: 4.230167, y: -2.3021216, z: 43.240364}
+  LCast: {x: 0, y: 0, z: 0}
+  RCast: {x: 0, y: 0, z: 0}
   hiprot: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1 &3481516828095479701
 GameObject:
@@ -1127,7 +1129,7 @@ GameObject:
   - component: {fileID: 5558137487855974142}
   - component: {fileID: 6962469843135845524}
   m_Layer: 3
-  m_Name: pelvis
+  m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6571,7 +6573,7 @@ GameObject:
   - component: {fileID: 5602527510175425128}
   - component: {fileID: 6908729269746180530}
   m_Layer: 3
-  m_Name: camerasystem
+  m_Name: Camera Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6636,7 +6638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7374277382603538708}
   m_Layer: 3
-  m_Name: spaces
+  m_Name: Transform Spaces
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7083,7 +7085,7 @@ GameObject:
   - component: {fileID: 1092267664428137102}
   - component: {fileID: 2829915474797417586}
   m_Layer: 3
-  m_Name: head
+  m_Name: Freelook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -54,7 +54,7 @@ namespace LucidityDrive
         public void Init()
         {
             if (anim.runtimeAnimatorController == null)
-                Debug.LogError("Vismodel is missing an animator controller - make sure the runtime animator controller is set to RawAnim (see example in plugin folder)");
+                Debug.LogError("Vismodel is missing an animator controller - make sure the runtime animator controller is set to blankAnim (see example in plugin folder)");
             headRef = anim.GetBoneTransform(HumanBodyBones.Head);
             defaultHeadScale = headRef.localScale;
             foreach (SkinnedMeshRenderer smr in GetComponentsInChildren<SkinnedMeshRenderer>())
@@ -109,8 +109,8 @@ namespace LucidityDrive
             foreach (HumanBodyBones hb2 in LucidShortcuts.hb2list)
             {
                 string hbstring = LucidShortcuts.boneNames[hb2];
-                if (LucidAnimationModel.instance.boneRots.ContainsKey(hbstring))
-                    anim.SetBoneLocalRotation(hb2, LucidAnimationModel.instance.boneRots[hbstring]);
+                if (AnimationModel.instance.boneRots.ContainsKey(hbstring))
+                    anim.SetBoneLocalRotation(hb2, AnimationModel.instance.boneRots[hbstring]);
             }
             bool doSlideIK = LucidPlayerInfo.surfaceAngle < LucidPlayerInfo.slidePushAngleThreshold;
             bool isSliding = LucidInputValueShortcuts.bslide || LucidInputValueShortcuts.slide;

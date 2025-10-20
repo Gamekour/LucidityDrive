@@ -4,7 +4,7 @@ namespace LucidityDrive
 {
     public class AnimatorEventReciever : MonoBehaviour
     {
-        public LucidAnimationModel target;
+        public AnimationModel target;
 
         private void OnAnimatorIK(int layerIndex)
         {

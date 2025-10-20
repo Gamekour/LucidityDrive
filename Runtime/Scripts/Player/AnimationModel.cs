@@ -6,9 +6,9 @@ using UnityEngine.Events;
 
 namespace LucidityDrive
 {
-    public class LucidAnimationModel : MonoBehaviour
+    public class AnimationModel : MonoBehaviour
     {
-        public static LucidAnimationModel instance;
+        public static AnimationModel instance;
 
         public AnimationSettings defaultAnimationSettings;
 
@@ -195,7 +195,7 @@ namespace LucidityDrive
         public void CopyValues()
         {
             Type TAnimSettings = typeof(AnimationSettings);
-            Type TAnimModel = typeof(LucidAnimationModel);
+            Type TAnimModel = typeof(AnimationModel);
             FieldInfo[] fields = TAnimSettings.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             foreach (var field in fields)
             {
