@@ -51,7 +51,7 @@ namespace LucidityDrive
         private EventBox eventBoxL, eventBoxR;
         private ConfigurableJoint anchorL, anchorR;
         private Rigidbody grabbedRB_R, grabbedRB_L;
-        private LucidTool lt_R, lt_L;
+        private Tool lt_R, lt_L;
         private Transform animShoulderL, animShoulderR;
         private Transform targetTransformL, targetTransformR;
         private Transform currentPoseL, currentPoseR;
@@ -369,7 +369,7 @@ namespace LucidityDrive
             if (isRight)
                 tPoseParent = ref currentPoseParentR;
             Transform tPose = tPoseParent.Find(pose);
-            ref LucidTool lt = ref lt_L;
+            ref Tool lt = ref lt_L;
             if (isRight)
                 lt = ref lt_R;
             if (lt != null)
@@ -405,7 +405,7 @@ namespace LucidityDrive
 
             Transform animShoulder = isRight ? animShoulderR : animShoulderL;
 
-            LucidTool lt = isRight ? lt_R : lt_L;
+            Tool lt = isRight ? lt_R : lt_L;
 
             Quaternion targetRotation = currentPose.rotation;
             Vector3 posePos = currentPose.position;
@@ -838,11 +838,11 @@ namespace LucidityDrive
             if (isRight)
                 isPrimary = ref isPrimaryR;
 
-            ref LucidTool lt = ref lt_L;
+            ref Tool lt = ref lt_L;
             if (isRight)
                 lt = ref lt_R;
 
-            LucidTool otherLT = isRight ? lt_L : lt_R;
+            Tool otherLT = isRight ? lt_L : lt_R;
 
             Transform targetTransform = isRight ? targetTransformR : targetTransformL;
 
@@ -936,14 +936,14 @@ namespace LucidityDrive
             if (isRight)
                 jointTarget = ref anchorR;
 
-            ref LucidTool lt = ref lt_L;
+            ref Tool lt = ref lt_L;
             if (isRight)
                 lt = ref lt_R;
 
             if (lt != null)
                 lt.held = false;
 
-            LucidTool otherLT = isRight ? lt_L : lt_R;
+            Tool otherLT = isRight ? lt_L : lt_R;
 
             Destroy(jointTarget);
 

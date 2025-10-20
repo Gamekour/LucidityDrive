@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace LucidityDrive
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class LucidTool : MonoBehaviour
+    public class Tool : MonoBehaviour
     {
         public Transform targetTransform;
         public Transform itemPoses;
