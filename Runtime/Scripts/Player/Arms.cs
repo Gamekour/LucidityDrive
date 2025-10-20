@@ -88,9 +88,9 @@ namespace LucidityDrive
         {
             if (LucidInputActionRefs.grabL != null)
                 ManageInputSubscriptions(true);
-            LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-            LucidPlayerInfo.handTargetL = handTargetL;
-            LucidPlayerInfo.handTargetR = handTargetR;
+            PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+            PlayerInfo.handTargetL = handTargetL;
+            PlayerInfo.handTargetR = handTargetR;
             RespawnInterface.OnRespawn.AddListener(OnRespawn);
             ActiveArmSettings = defaultArmSettings;
         }
@@ -102,12 +102,12 @@ namespace LucidityDrive
             grabWaitR = false;
             Ungrab(false);
             Ungrab(true);
-            LucidPlayerInfo.climbL = false;
-            LucidPlayerInfo.climbR = false;
-            LucidPlayerInfo.climbing = false;
+            PlayerInfo.climbL = false;
+            PlayerInfo.climbR = false;
+            PlayerInfo.climbing = false;
 
             ManageInputSubscriptions(false);
-            LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+            PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
             RespawnInterface.OnRespawn.RemoveListener(OnRespawn);
         }
 
@@ -156,12 +156,12 @@ namespace LucidityDrive
         {
             if (lt_L != null)
             {
-                lt_L.transform.position = LucidPlayerInfo.pelvis.position;
+                lt_L.transform.position = PlayerInfo.pelvis.position;
                 grabbedRB_L.velocity = Vector3.zero;
             }
             if (lt_R != null)
             {
-                lt_R.transform.position = LucidPlayerInfo.pelvis.position;
+                lt_R.transform.position = PlayerInfo.pelvis.position;
                 grabbedRB_R.velocity = Vector3.zero;
             }
         }
@@ -192,7 +192,7 @@ namespace LucidityDrive
         {
             if (disabling || animShoulderL == null || animShoulderR == null || !initialized) return;
 
-            if (LucidPlayerInfo.grabValidL)
+            if (PlayerInfo.grabValidL)
             {
                 unRotateL.position = grabPositionL;
                 Vector3 targetdirL = staticGrabRB_L.transform.forward;
@@ -200,7 +200,7 @@ namespace LucidityDrive
                     targetdirL *= -1;
                 unRotateL.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(targetdirL, Vector3.up), Vector3.up);
             }
-            if (LucidPlayerInfo.grabValidR)
+            if (PlayerInfo.grabValidR)
             {
                 unRotateR.position = grabPositionR;
                 Vector3 targetdirR = staticGrabRB_R.transform.forward;
@@ -217,15 +217,15 @@ namespace LucidityDrive
             GrabLogic(false);
             GrabLogic(true);
 
-            Vector3 targetposL = LucidPlayerInfo.pelvis.transform.InverseTransformPoint(animShoulderL.position);
-            Vector3 targetposR = LucidPlayerInfo.pelvis.transform.InverseTransformPoint(animShoulderR.position);
+            Vector3 targetposL = PlayerInfo.pelvis.transform.InverseTransformPoint(animShoulderL.position);
+            Vector3 targetposR = PlayerInfo.pelvis.transform.InverseTransformPoint(animShoulderR.position);
 
             if (anchorL != null)
             {
                 anchorL.anchor = targetposL;
                 grabForceL = anchorL.currentForce;
                 if (lt_L != null)
-                    grabbedRB_L.AddForce((LucidPlayerInfo.mainBody.velocity - grabbedRB_L.velocity) * velocityCheatForLucidTools);
+                    grabbedRB_L.AddForce((PlayerInfo.mainBody.velocity - grabbedRB_L.velocity) * velocityCheatForLucidTools);
             }
             else
                 grabForceL = Vector3.down * 1000;
@@ -234,23 +234,23 @@ namespace LucidityDrive
                 anchorR.anchor = targetposR;
                 grabForceR = anchorR.currentForce;
                 if (lt_R != null)
-                    grabbedRB_R.AddForce((LucidPlayerInfo.mainBody.velocity - grabbedRB_R.velocity) * velocityCheatForLucidTools);
+                    grabbedRB_R.AddForce((PlayerInfo.mainBody.velocity - grabbedRB_R.velocity) * velocityCheatForLucidTools);
             }
             else
                 grabForceR = Vector3.down * 1000;
 
-            LucidPlayerInfo.grabL = grabL;
-            LucidPlayerInfo.grabR = grabR;
+            PlayerInfo.grabL = grabL;
+            PlayerInfo.grabR = grabR;
             ClimbCheck();
 
             CalcClimbRelative();
 
-            if (LucidPlayerInfo.climbL && LucidPlayerInfo.climbing)
+            if (PlayerInfo.climbL && PlayerInfo.climbing)
                 ClimbPose(false);
             else
                 ItemPose(false);
 
-            if (LucidPlayerInfo.climbR && LucidPlayerInfo.climbing)
+            if (PlayerInfo.climbR && PlayerInfo.climbing)
                 ClimbPose(true);
             else
                 ItemPose(true);
@@ -261,12 +261,12 @@ namespace LucidityDrive
             if (grabIndicatorL != null)
             {
                 grabIndicatorL.transform.position = grabPositionL;
-                grabIndicatorL.gameObject.SetActive(LucidPlayerInfo.grabValidL && !grabL);
+                grabIndicatorL.gameObject.SetActive(PlayerInfo.grabValidL && !grabL);
             }
             if (grabIndicatorR != null)
             {
                 grabIndicatorR.transform.position = grabPositionR;
-                grabIndicatorR.gameObject.SetActive(LucidPlayerInfo.grabValidR && !grabR);
+                grabIndicatorR.gameObject.SetActive(PlayerInfo.grabValidR && !grabR);
             }
         }
 
@@ -319,20 +319,20 @@ namespace LucidityDrive
             bool supportR = grabForceR.y > climbModeForceThreshold / 2;
 
             if ((supportL || staticGrabL) && grabL)
-                LucidPlayerInfo.climbL = true;
+                PlayerInfo.climbL = true;
             else if (allowUnclimb)
-                LucidPlayerInfo.climbL = false;
+                PlayerInfo.climbL = false;
             if ((supportR || staticGrabR) && grabR)
-                LucidPlayerInfo.climbR = true;
+                PlayerInfo.climbR = true;
             else if (allowUnclimb)
-                LucidPlayerInfo.climbR = false;
+                PlayerInfo.climbR = false;
 
-            if ((LucidPlayerInfo.climbL || LucidPlayerInfo.climbR) && selfsufficient)
-                LucidPlayerInfo.climbing = true;
+            if ((PlayerInfo.climbL || PlayerInfo.climbR) && selfsufficient)
+                PlayerInfo.climbing = true;
             else if (allowUnclimb)
             {
-                LucidPlayerInfo.climbing = false;
-                LucidPlayerInfo.swinging = false;
+                PlayerInfo.climbing = false;
+                PlayerInfo.swinging = false;
             }
         }
 
@@ -349,7 +349,7 @@ namespace LucidityDrive
                     grabPositionR = grabbedRB_R.transform.TransformPoint(anchorR.connectedAnchor);
                     effectiveRotationR = grabbedRB_R.rotation * dynamicGrabRotationOffsetR;
                 }
-                LucidPlayerInfo.IK_RH.SetPositionAndRotation(grabPositionR, effectiveRotationR);
+                PlayerInfo.IK_RH.SetPositionAndRotation(grabPositionR, effectiveRotationR);
             }
             if (grabL)
             {
@@ -359,7 +359,7 @@ namespace LucidityDrive
                     grabPositionL = grabbedRB_L.transform.TransformPoint(anchorL.connectedAnchor);
                     effectiveRotationL = grabbedRB_L.rotation * dynamicGrabRotationOffsetL;
                 }
-                LucidPlayerInfo.IK_LH.SetPositionAndRotation(grabPositionL, effectiveRotationL);
+                PlayerInfo.IK_LH.SetPositionAndRotation(grabPositionL, effectiveRotationL);
             }
         }
 
@@ -411,15 +411,15 @@ namespace LucidityDrive
             Vector3 posePos = currentPose.position;
             if (isPrimary != isRight && lt != null)
             {
-                Vector3 relPos = LucidPlayerInfo.head.InverseTransformPoint(posePos);
+                Vector3 relPos = PlayerInfo.head.InverseTransformPoint(posePos);
                 relPos.x *= -1;
-                posePos = LucidPlayerInfo.head.TransformPoint(relPos);
+                posePos = PlayerInfo.head.TransformPoint(relPos);
                 targetRotation *= Quaternion.Euler(transform.forward * 180);
             }
             if (itemPoses == defaultItemPosesL || itemPoses == defaultItemPosesR)
             {
                 itemPoses.position = animShoulder.position;
-                itemPoses.rotation = LucidPlayerInfo.head.rotation;
+                itemPoses.rotation = PlayerInfo.head.rotation;
             }
             bool isAnimated = isRight ? isAnimatedR : isAnimatedL;
             Transform targetTransform = isRight ? targetTransformR : targetTransformL;
@@ -438,13 +438,13 @@ namespace LucidityDrive
             Vector3 moveflat = Vector3.zero;
             moveflat.x = inputmove.x;
             moveflat.z = inputmove.y;
-            Vector3 motion = LucidPlayerInfo.pelvis.TransformVector(moveflat);
+            Vector3 motion = PlayerInfo.pelvis.TransformVector(moveflat);
 
             Vector3 desiredDir = motion.normalized;
-            Vector3 currentVelFlat = LucidPlayerInfo.mainBody.velocity;
+            Vector3 currentVelFlat = PlayerInfo.mainBody.velocity;
             currentVelFlat.y = 0;
             if (motion == Vector3.zero)
-                desiredDir = LucidPlayerInfo.pelvis.forward;
+                desiredDir = PlayerInfo.pelvis.forward;
             Vector3 perpVelocity = currentVelFlat - Vector3.Project(currentVelFlat, desiredDir);
 
             motion -= perpVelocity * swingStabilization;
@@ -453,14 +453,14 @@ namespace LucidityDrive
             float pull_sub = (unpull * pullSpeed * Time.fixedDeltaTime);
 
             currentPull = Mathf.Clamp(currentPull + pull_add - pull_sub, 0, maxPullHeight);
-            LucidPlayerInfo.swinging = currentPull < 0.05f;
+            PlayerInfo.swinging = currentPull < 0.05f;
 
             float handY = isRight ? grabPositionR.y : grabPositionL.y;
 
-            motion.y = ((handY - LucidPlayerInfo.pelvis.position.y) / animArmLength) - maxPullHeight + (currentPull * 2);
+            motion.y = ((handY - PlayerInfo.pelvis.position.y) / animArmLength) - maxPullHeight + (currentPull * 2);
             motion *= animArmLength;
-            if (!LucidPlayerInfo.swinging)
-                motion.y -= LucidPlayerInfo.mainBody.velocity.y * pullDamp;
+            if (!PlayerInfo.swinging)
+                motion.y -= PlayerInfo.mainBody.velocity.y * pullDamp;
             else
                 motion.y = 0;
             if (LucidInputValueShortcuts.jump)
@@ -486,7 +486,7 @@ namespace LucidityDrive
             if (anchorL != null)
             {
                 anchorL.targetPosition = anchorL.transform.InverseTransformPoint(handTargetL.position) - anchorL.anchor;
-                Quaternion localhand = Quaternion.Inverse(LucidPlayerInfo.pelvis.rotation) * handTargetL.rotation;
+                Quaternion localhand = Quaternion.Inverse(PlayerInfo.pelvis.rotation) * handTargetL.rotation;
                 localhand *= Quaternion.Inverse(dynamicGrabRotationOffsetL);
                 if (dynamicGrabL)
                     anchorL.targetRotation = localhand * poseOffsetL;
@@ -495,7 +495,7 @@ namespace LucidityDrive
             }
             if (anchorR != null)
             {
-                Quaternion localhand = Quaternion.Inverse(LucidPlayerInfo.pelvis.rotation) * handTargetR.rotation;
+                Quaternion localhand = Quaternion.Inverse(PlayerInfo.pelvis.rotation) * handTargetR.rotation;
                 localhand *= Quaternion.Inverse(dynamicGrabRotationOffsetR);
                 anchorR.targetPosition = anchorR.transform.InverseTransformPoint(handTargetR.position) - anchorR.anchor;
                 if (dynamicGrabR)
@@ -541,7 +541,7 @@ namespace LucidityDrive
 
             if (!grabToCheck)
             {
-                bool oldgrab = isRight ? LucidPlayerInfo.grabValidR : LucidPlayerInfo.grabValidL;
+                bool oldgrab = isRight ? PlayerInfo.grabValidR : PlayerInfo.grabValidL;
                 bool validgrab = ClimbScan(isRight, out Vector3 position, out Quaternion rotation, out Transform hitTransform);
                 ref IGrabTrigger oldGrabTrigger = ref lastGrabTriggerL;
                 if (isRight)
@@ -570,9 +570,9 @@ namespace LucidityDrive
                 }
 
                 if (isRight)
-                    LucidPlayerInfo.grabValidR = validgrab;
+                    PlayerInfo.grabValidR = validgrab;
                 else
-                    LucidPlayerInfo.grabValidL = validgrab;
+                    PlayerInfo.grabValidL = validgrab;
 
                 bool grabwait = (isRight ? grabWaitR : grabWaitL);
                 if (validgrab && grabwait)
@@ -583,15 +583,15 @@ namespace LucidityDrive
             else
             {
                 if (isRight)
-                    LucidPlayerInfo.grabValidR = true;
+                    PlayerInfo.grabValidR = true;
                 else
-                    LucidPlayerInfo.grabValidL = true;
+                    PlayerInfo.grabValidL = true;
             }
         }
 
         private bool ClimbScan(bool isRight, out Vector3 position, out Quaternion rotation, out Transform targetTransform)
         {
-            Transform cam = LucidPlayerInfo.head;
+            Transform cam = PlayerInfo.head;
             Vector3 campos = cam.position;
             Vector3 camfwd = cam.forward;
             Vector3 camright = cam.right;
@@ -605,9 +605,9 @@ namespace LucidityDrive
 
             Vector3 projectvector = Vector3.up;
             if (initialHitInfo.normal.y < -0.05f)
-                projectvector = -LucidPlayerInfo.pelvis.forward + Vector3.up;
+                projectvector = -PlayerInfo.pelvis.forward + Vector3.up;
             else if (initialHitInfo.normal.y > 0.05f)
-                projectvector = LucidPlayerInfo.pelvis.forward + Vector3.up;
+                projectvector = PlayerInfo.pelvis.forward + Vector3.up;
 
             Vector3 hitvector = Vector3.ProjectOnPlane(projectvector, initialHitInfo.normal).normalized;
             if (Mathf.Abs(initialHitInfo.normal.y) < 0.01f)
@@ -649,7 +649,7 @@ namespace LucidityDrive
 
             if (!validgrab && grabbableInitialHit)
             {
-                Vector3 jointfwd = LucidPlayerInfo.pelvis.forward;
+                Vector3 jointfwd = PlayerInfo.pelvis.forward;
 
                 if (Mathf.Abs(initialHitInfo.normal.y) < 0.05f)
                     jointfwd = Vector3.up;
@@ -675,17 +675,17 @@ namespace LucidityDrive
         private void CalcClimbRelative()
         {
             Vector3 center = Vector3.zero;
-            if (LucidPlayerInfo.climbR)
+            if (PlayerInfo.climbR)
             {
-                Vector3 relative = unRotateR.transform.InverseTransformPoint(LucidPlayerInfo.pelvis.position);
+                Vector3 relative = unRotateR.transform.InverseTransformPoint(PlayerInfo.pelvis.position);
                 center += relative;
             }
-            if (LucidPlayerInfo.climbL)
+            if (PlayerInfo.climbL)
             {
-                Vector3 relative = unRotateL.transform.InverseTransformPoint(LucidPlayerInfo.pelvis.position);
+                Vector3 relative = unRotateL.transform.InverseTransformPoint(PlayerInfo.pelvis.position);
                 center += relative;
             }
-            if (LucidPlayerInfo.climbL && LucidPlayerInfo.climbR)
+            if (PlayerInfo.climbL && PlayerInfo.climbR)
             {
                 center /= 2;
             }
@@ -693,7 +693,7 @@ namespace LucidityDrive
             Vector3 climbrelative = center;
             climbrelative /= limitDistance;
 
-            LucidPlayerInfo.climbRelative = climbrelative;
+            PlayerInfo.climbRelative = climbrelative;
         }
 
 
@@ -704,7 +704,7 @@ namespace LucidityDrive
                 lt_L.OnUse.Invoke();
             else
             {
-                if (LucidPlayerInfo.grabValidL)
+                if (PlayerInfo.grabValidL)
                     Grab(false);
                 else
                     grabWaitL = true;
@@ -717,7 +717,7 @@ namespace LucidityDrive
                 lt_R.OnUse.Invoke();
             else
             {
-                if (LucidPlayerInfo.grabValidR)
+                if (PlayerInfo.grabValidR)
                     Grab(true);
                 else
                     grabWaitR = true;
@@ -904,13 +904,13 @@ namespace LucidityDrive
             if (isRight)
                 grab = ref grabR;
 
-            ref bool climb = ref LucidPlayerInfo.climbL;
+            ref bool climb = ref PlayerInfo.climbL;
             if (isRight)
-                climb = ref LucidPlayerInfo.climbR;
+                climb = ref PlayerInfo.climbR;
 
-            ref bool otherClimb = ref LucidPlayerInfo.climbR;
+            ref bool otherClimb = ref PlayerInfo.climbR;
             if (isRight)
-                otherClimb = ref LucidPlayerInfo.climbL;
+                otherClimb = ref PlayerInfo.climbL;
 
             ref bool grabLock = ref grabLockL;
             if (isRight)
@@ -947,9 +947,9 @@ namespace LucidityDrive
 
             Destroy(jointTarget);
 
-            Vector3 dir = LucidPlayerInfo.head.forward;
+            Vector3 dir = PlayerInfo.head.forward;
             if (grabbedRB == null)
-                LucidPlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
+                PlayerInfo.mainBody.AddForce(dir * ungrabBoost, ForceMode.Acceleration);
 
             if (targetTransform != null)
             {
@@ -972,7 +972,7 @@ namespace LucidityDrive
             if (!otherClimb)
             {
                 currentPull = 0;
-                LucidPlayerInfo.swinging = false;
+                PlayerInfo.swinging = false;
             }
             if (otherLT != null)
                 otherLT.UpdatePriority(true);
@@ -1020,7 +1020,7 @@ namespace LucidityDrive
                 dynamic = true;
                 grabbedRB = grabTargetRB;
                 dynamicGrabRotationOffset = Quaternion.Inverse(grabbedRB.rotation) * grabRotation;
-                poseOffset = Quaternion.Inverse(grabbedRB.rotation) * LucidPlayerInfo.pelvis.rotation;
+                poseOffset = Quaternion.Inverse(grabbedRB.rotation) * PlayerInfo.pelvis.rotation;
 
                 eventBox = grabTarget.gameObject.GetComponent<EventBox>();
                 if (eventBox == null)
@@ -1045,7 +1045,7 @@ namespace LucidityDrive
                 dynamicGrabRotationOffset = Quaternion.identity;
             }
 
-            jointTarget = LucidShortcuts.AddComponent(LucidPlayerInfo.pelvis.gameObject, jointReference);
+            jointTarget = Shortcuts.AddComponent(PlayerInfo.pelvis.gameObject, jointReference);
             jointTarget.autoConfigureConnectedAnchor = false;
             jointTarget.linearLimit = sjlewis;
             jointTarget.connectedBody = grabbedRB;

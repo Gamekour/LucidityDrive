@@ -98,7 +98,7 @@ namespace LucidityDrive
 
         IEnumerator WaitForInit()
         {
-            while (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.pelvis == null || !Arms.instance.initialized)
+            while (!PlayerInfo.animModelInitialized || PlayerInfo.pelvis == null || !Arms.instance.initialized)
                 yield return null;
             Arms la = Arms.instance;
 
@@ -111,12 +111,12 @@ namespace LucidityDrive
             {
                 if (autoGrabR)
                 {
-                    transform.position = LucidPlayerInfo.pelvis.position;
+                    transform.position = PlayerInfo.pelvis.position;
                     la.ForceGrab(rb, true);
                 }
                 if (autoGrabL)
                 {
-                    transform.position = LucidPlayerInfo.pelvis.position;
+                    transform.position = PlayerInfo.pelvis.position;
                     la.ForceGrab(rb, false);
                 }
             }
@@ -124,12 +124,12 @@ namespace LucidityDrive
             {
                 if (autoGrabL)
                 {
-                    transform.position = LucidPlayerInfo.pelvis.position;
+                    transform.position = PlayerInfo.pelvis.position;
                     la.ForceGrab(rb, false);
                 }
                 if (autoGrabR)
                 {
-                    transform.position = LucidPlayerInfo.pelvis.position;
+                    transform.position = PlayerInfo.pelvis.position;
                     la.ForceGrab(rb, true);
                 }
             }

@@ -46,8 +46,8 @@ namespace LucidityDrive
             LucidInputActionRefs.camSelect3.started += CameraSwitch3;
             LucidInputActionRefs.camSelect4.started += CameraSwitch4;
             LucidInputActionRefs.camCycle.started += CameraCycle;
-            LucidPlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
-            LucidPlayerInfo.FPTransform = cameraPoints[0];
+            PlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
+            PlayerInfo.FPTransform = cameraPoints[0];
             fovBase = Camera.main.fieldOfView;
         }
 
@@ -58,7 +58,7 @@ namespace LucidityDrive
             LucidInputActionRefs.camSelect3.started -= CameraSwitch3;
             LucidInputActionRefs.camSelect4.started -= CameraSwitch4;
             LucidInputActionRefs.camCycle.started -= CameraCycle;
-            LucidPlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
+            PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
         }
 
         public void AssignVismodel(Vismodel vismodel)
@@ -90,10 +90,10 @@ namespace LucidityDrive
         }
         private void ChangeCam(int index, bool ignoreHeadlocked = false)
         {
-            if (!LucidPlayerInfo.headLocked && !ignoreHeadlocked) return;
+            if (!PlayerInfo.headLocked && !ignoreHeadlocked) return;
 
             cameraPointIndex = index;
-            LucidPlayerInfo.inFirstPerson = index == 0;
+            PlayerInfo.inFirstPerson = index == 0;
             if (index == 3)
             {
                 Transform tcam = cameraPoints[3].transform;
@@ -101,12 +101,12 @@ namespace LucidityDrive
                 tcam.rotation = Camera.main.transform.rotation;
             }
 
-            LucidPlayerInfo.onChangeCameraPoint.Invoke(cameraPointIndex);
+            PlayerInfo.onChangeCameraPoint.Invoke(cameraPointIndex);
         }
 
         private void Update()
         {
-            float speed = LucidPlayerInfo.mainBody.velocity.magnitude;
+            float speed = PlayerInfo.mainBody.velocity.magnitude;
             if (speed < fovMinSpeed)
                 speed = 0;
             currentspeed = Mathf.SmoothDamp(currentspeed, speed, ref fovDampRef, fovSmoothTime);
@@ -115,13 +115,13 @@ namespace LucidityDrive
 
         private void FixedUpdate()
         {
-            if (!LucidPlayerInfo.animModelInitialized || Camera.main == null) return;
+            if (!PlayerInfo.animModelInitialized || Camera.main == null) return;
 
             Vector3 FPCamPos = cameraPoints[0].position;
 
-            bool cast1 = Physics.SphereCast(LucidPlayerInfo.pelvis.position, FPCollisionRadius, headrootTarget.position - LucidPlayerInfo.pelvis.position, out RaycastHit hitInfo, Vector3.Distance(LucidPlayerInfo.pelvis.position, headrootTarget.position) + 0.05f, LucidShortcuts.geometryMask);
-                Debug.DrawLine(LucidPlayerInfo.pelvis.position, headrootTarget.position);
-            bool cast2 = Physics.SphereCast(headrootTarget.position, FPCollisionRadius, FPCamPos - headrootTarget.position, out RaycastHit hitInfo2, Vector3.Distance(FPCamPos, headrootTarget.position) + 0.05f, LucidShortcuts.geometryMask);
+            bool cast1 = Physics.SphereCast(PlayerInfo.pelvis.position, FPCollisionRadius, headrootTarget.position - PlayerInfo.pelvis.position, out RaycastHit hitInfo, Vector3.Distance(PlayerInfo.pelvis.position, headrootTarget.position) + 0.05f, Shortcuts.geometryMask);
+                Debug.DrawLine(PlayerInfo.pelvis.position, headrootTarget.position);
+            bool cast2 = Physics.SphereCast(headrootTarget.position, FPCollisionRadius, FPCamPos - headrootTarget.position, out RaycastHit hitInfo2, Vector3.Distance(FPCamPos, headrootTarget.position) + 0.05f, Shortcuts.geometryMask);
                 Debug.DrawLine(headrootTarget.position, FPCamPos);
 
             FPCollision = cast1 || cast2;
@@ -130,11 +130,11 @@ namespace LucidityDrive
                 float hitDist = hitInfo.distance;
                 if (!cast1)
                     hitDist = hitInfo2.distance;
-                float totalDist = Vector3.Distance(LucidPlayerInfo.pelvis.position, headrootTarget.position);
+                float totalDist = Vector3.Distance(PlayerInfo.pelvis.position, headrootTarget.position);
                 if (!cast1)
                     totalDist = Vector3.Distance(FPCamPos, headrootTarget.position);
 
-                FPcollisionOffset = (LucidPlayerInfo.pelvis.position - headrootTarget.position).normalized * (Mathf.Abs(totalDist - hitDist) + FPCollisionRadius);
+                FPcollisionOffset = (PlayerInfo.pelvis.position - headrootTarget.position).normalized * (Mathf.Abs(totalDist - hitDist) + FPCollisionRadius);
                 if (!cast1)
                     FPcollisionOffset = (headrootTarget.position - FPCamPos).normalized * (Mathf.Abs(totalDist - hitDist) + FPCollisionRadius);
             }
@@ -142,7 +142,7 @@ namespace LucidityDrive
 
         private void LateUpdate()
         {
-            if (!LucidPlayerInfo.animModelInitialized || Camera.main == null) return;
+            if (!PlayerInfo.animModelInitialized || Camera.main == null) return;
 
             if (headrootTarget != null && headRoot != null)
             {
@@ -155,7 +155,7 @@ namespace LucidityDrive
                 Quaternion smoothRotation = SmoothDamp(headRoot.rotation, targetRotation, ref smoothDeriv, headRotationSmoothTime);
 
                 // Combine raw rotation with smoothed rotation
-                Quaternion raw = LucidPlayerInfo.head.transform.rotation;
+                Quaternion raw = PlayerInfo.head.transform.rotation;
                 Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, mouselookBlend);
                 float totalAngle = Quaternion.Angle(finalRotation, raw);
                 if (totalAngle > 0)

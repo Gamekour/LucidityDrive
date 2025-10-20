@@ -29,7 +29,7 @@ namespace LucidityDrive.Extras
         public void SetState(CursorLockMode state)
         {
             Cursor.lockState = state;
-            LucidPlayerInfo.headLocked = (state == CursorLockMode.Locked);
+            PlayerInfo.headLocked = (state == CursorLockMode.Locked);
         }
 
         public void SetState(string statename)

@@ -29,14 +29,14 @@ namespace LucidityDrive.Extras
                 joint = GetComponent<ConfigurableJoint>();
                 rb = GetComponent<Rigidbody>();
             }
-            LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-            LucidPlayerInfo.OnAnimModellInitialized.AddListener(OnInitializeAnimModel);
+            PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+            PlayerInfo.OnAnimModellInitialized.AddListener(OnInitializeAnimModel);
         }
 
         private void OnDisable()
         {
-            LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
-            LucidPlayerInfo.OnAnimModellInitialized.RemoveListener(OnInitializeAnimModel);
+            PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+            PlayerInfo.OnAnimModellInitialized.RemoveListener(OnInitializeAnimModel);
         }
 
         public void OnAssignVismodel(Vismodel newModel)
@@ -54,9 +54,9 @@ namespace LucidityDrive.Extras
             if (!usePlayermodel) return;
 
             if (!useForceMatch)
-                HardAttach(LucidPlayerInfo.animationModel);
+                HardAttach(PlayerInfo.animationModel);
             else
-                targetTransform = LucidPlayerInfo.animationModel.GetBoneTransform(targetBone);
+                targetTransform = PlayerInfo.animationModel.GetBoneTransform(targetBone);
         }
 
         private void HardAttach(Animator targetAnim)

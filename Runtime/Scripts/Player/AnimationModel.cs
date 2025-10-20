@@ -131,13 +131,13 @@ namespace LucidityDrive
         private void Awake()
         {
             instance = this;
-            LucidPlayerInfo.camUpsideDownThreshold = camUpsideDownThreshold;
+            PlayerInfo.camUpsideDownThreshold = camUpsideDownThreshold;
             ActiveAnimationSettings = defaultAnimationSettings;
         }
         private void Start()
         {
-            pelvis = LucidPlayerInfo.pelvis;
-            head = LucidPlayerInfo.head;
+            pelvis = PlayerInfo.pelvis;
+            head = PlayerInfo.head;
         }
         private void Update()
         {
@@ -146,20 +146,20 @@ namespace LucidityDrive
             transform.position += pelvis.position - animpelvis.position;
             transform.rotation = pelvis.rotation;
             float targetFlip = 0;
-            if (LucidPlayerInfo.head.up.y < camUpsideDownThreshold)
-                targetFlip = Vector3.SignedAngle(LucidPlayerInfo.pelvis.forward, LucidPlayerInfo.head.forward, LucidPlayerInfo.pelvis.right);
+            if (PlayerInfo.head.up.y < camUpsideDownThreshold)
+                targetFlip = Vector3.SignedAngle(PlayerInfo.pelvis.forward, PlayerInfo.head.forward, PlayerInfo.pelvis.right);
             float flipamount = Mathf.SmoothDampAngle(oldFlip, targetFlip, ref flipRef, flipSmoothTime);
-            if (LucidPlayerInfo.groundDistance < LucidPlayerInfo.totalLegLength * groundDistanceThresholdScale)
+            if (PlayerInfo.groundDistance < PlayerInfo.totalLegLength * groundDistanceThresholdScale)
                 flipamount = 0;
             transform.Rotate(Vector3.ClampMagnitude(leanOffset * leanScale, maxLeanAngle) + (Vector3.right * flipamount), Space.Self);
             oldFlip = flipamount;
 
-            float animPhase = LucidPlayerInfo.animPhase;
+            float animPhase = PlayerInfo.animPhase;
 
-            Vector3 velflat = LucidPlayerInfo.mainBody.velocity;
+            Vector3 velflat = PlayerInfo.mainBody.velocity;
             velflat.y = 0;
 
-            float stepRateAdjusted = stepRate * (1 + (LucidPlayerInfo.mainBody.velocity.magnitude * scaleStepRateByVelocity));
+            float stepRateAdjusted = stepRate * (1 + (PlayerInfo.mainBody.velocity.magnitude * scaleStepRateByVelocity));
 
             if (velflat.magnitude > 0.1f)
             {
@@ -169,27 +169,27 @@ namespace LucidityDrive
             }
 
             bool isRight = animPhase > 0.5f;
-            bool wasRight = LucidPlayerInfo.animPhase > 0.5f;
-            if (wasRight != isRight && LucidPlayerInfo.grounded && !LucidPlayerInfo.slidingBack && !LucidPlayerInfo.slidingForward)
+            bool wasRight = PlayerInfo.animPhase > 0.5f;
+            if (wasRight != isRight && PlayerInfo.grounded && !PlayerInfo.slidingBack && !PlayerInfo.slidingForward)
                 onFootChanged.Invoke();
 
-            LucidPlayerInfo.animPhase = animPhase;
+            PlayerInfo.animPhase = animPhase;
 
             float stepphase = 0.5f - animPhase;
             stepphase = Mathf.Abs(stepphase) * 2;
-            LucidPlayerInfo.stepPhase = stepphase;
+            PlayerInfo.stepPhase = stepphase;
         }
 
         private void OnEnable()
         {
-            LucidPlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
-            LucidPlayerInfo.OnRemoveVismodel.AddListener(OnVismodelRemoved);
+            PlayerInfo.OnAssignVismodel.AddListener(OnAssignVismodel);
+            PlayerInfo.OnRemoveVismodel.AddListener(OnVismodelRemoved);
         }
 
         private void OnDisable()
         {
-            LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
-            LucidPlayerInfo.OnRemoveVismodel.RemoveListener(OnVismodelRemoved);
+            PlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
+            PlayerInfo.OnRemoveVismodel.RemoveListener(OnVismodelRemoved);
         }
 
         public void CopyValues()
@@ -230,7 +230,7 @@ namespace LucidityDrive
             anim.runtimeAnimatorController = controller;
             anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             anim.avatar = targetAvatar;
-            LucidPlayerInfo.animationModel = anim;
+            PlayerInfo.animationModel = anim;
             Component c = newPlayerModel.AddComponent(typeof(AnimatorEventReciever));
             ((AnimatorEventReciever)c).target = this;
 
@@ -243,29 +243,29 @@ namespace LucidityDrive
             animHandR = anim.GetBoneTransform(HumanBodyBones.RightHand);
             animShoulderL = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
             animShoulderR = anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
-            LucidPlayerInfo.IK_LF = IK_LF;
-            LucidPlayerInfo.IK_RF = IK_RF;
-            LucidPlayerInfo.IK_LH = IK_LH;
-            LucidPlayerInfo.IK_RH = IK_RH;
+            PlayerInfo.IK_LF = IK_LF;
+            PlayerInfo.IK_RF = IK_RF;
+            PlayerInfo.IK_LH = IK_LH;
+            PlayerInfo.IK_RH = IK_RH;
         }
 
         public void OnVismodelRemoved()
         {
-            LucidPlayerInfo.animModelInitialized = false;
+            PlayerInfo.animModelInitialized = false;
             initialized = false;
         }
 
         private void FixedUpdate()
         {
-            if (anim == null || LucidPlayerInfo.vismodelRef == null) return;
+            if (anim == null || PlayerInfo.vismodelRef == null) return;
 
             if (!initialized)
             {
                 if (anim.isInitialized)
                 {
                     initialized = true;
-                    LucidPlayerInfo.animModelInitialized = true;
-                    LucidPlayerInfo.OnAnimModellInitialized.Invoke();
+                    PlayerInfo.animModelInitialized = true;
+                    PlayerInfo.OnAnimModellInitialized.Invoke();
                 }
             }
         }
@@ -280,10 +280,10 @@ namespace LucidityDrive
 
         private void CollectBoneRotations()
         {
-            foreach (HumanBodyBones hb2 in LucidShortcuts.hb2list)
+            foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
             {
                 Transform t = anim.GetBoneTransform(hb2);
-                string hbstring = LucidShortcuts.boneNames[hb2];
+                string hbstring = Shortcuts.boneNames[hb2];
 
                 if (t == null) continue;
 
@@ -316,13 +316,13 @@ namespace LucidityDrive
             Vector3 velflat = localVel;
             velflat.y = 0;
             float alignment = CalculateAlignment();
-            Vector3 localNrm = LucidPlayerInfo.pelvis.InverseTransformDirection(LucidPlayerInfo.hipspace.up);
+            Vector3 localNrm = PlayerInfo.pelvis.InverseTransformDirection(PlayerInfo.hipspace.up);
             Vector2 lerplean = CalculateLean(localVel, localNrm);
             leanOffset = new Vector3(lerplean.y, 0, -lerplean.x);
             Vector3 hang = CalculateHang();
 
             float currentClimb = anim.GetFloat(_CLIMB);
-            float targetCimb = LucidPlayerInfo.climbRelative.y;
+            float targetCimb = PlayerInfo.climbRelative.y;
             hang.y = Mathf.SmoothDamp(currentClimb, targetCimb, ref climbRef, climbSmoothTime);
 
             float stanceHeight = CalculateStanceHeight();
@@ -346,28 +346,28 @@ namespace LucidityDrive
 
         private float CalculateStanceHeight()
         {
-            float stanceHeight = LucidPlayerInfo.stanceHeight;
+            float stanceHeight = PlayerInfo.stanceHeight;
             float currentStanceHeight = anim.GetFloat(_STANCEHEIGHT);
             stanceHeight = Mathf.SmoothDamp(currentStanceHeight, stanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
 
-            if (LucidPlayerInfo.head.up.y > camUpsideDownThreshold)
+            if (PlayerInfo.head.up.y > camUpsideDownThreshold)
             {
-                CapsuleCollider hipColl = LucidPlayerInfo.pelvisColl;
+                CapsuleCollider hipColl = PlayerInfo.pelvisColl;
                 Vector3 point1 = hipColl.transform.position + (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
                 Vector3 point2 = hipColl.transform.position - (hipColl.transform.up * (hipColl.height * 0.5f - hipColl.radius));
-                bool upHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfoUp, 100, LucidShortcuts.geometryMask);
-                bool downHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.down, out RaycastHit hitInfoDown, 100, LucidShortcuts.geometryMask);
+                bool upHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.up, out RaycastHit hitInfoUp, 100, Shortcuts.geometryMask);
+                bool downHit = Physics.CapsuleCast(point1, point2, hipColl.radius - 0.1f, Vector3.down, out RaycastHit hitInfoDown, 100, Shortcuts.geometryMask);
 
                 if (upHit)
                 {
-                    float totalspace = hitInfoUp.distance + LucidPlayerInfo.totalLegLength + 0.1f;
+                    float totalspace = hitInfoUp.distance + PlayerInfo.totalLegLength + 0.1f;
                     if (downHit)
                         totalspace = hitInfoUp.point.y - hitInfoDown.point.y;
-                    float heightratio = Mathf.Clamp01(totalspace / LucidPlayerInfo.vismodelRef.stanceHeightFactor);
-                    LucidPlayerInfo.maxStanceHeight = heightratio;
+                    float heightratio = Mathf.Clamp01(totalspace / PlayerInfo.vismodelRef.stanceHeightFactor);
+                    PlayerInfo.maxStanceHeight = heightratio;
                 }
                 else
-                    LucidPlayerInfo.maxStanceHeight = 1;
+                    PlayerInfo.maxStanceHeight = 1;
             }
 
             return stanceHeight;
@@ -376,7 +376,7 @@ namespace LucidityDrive
         private float CalculateAlignment()
         {
             float lastalignment = anim.GetFloat(_ALIGNMENT);
-            float alignmentSmooth = Mathf.SmoothDamp(lastalignment, LucidPlayerInfo.alignment, ref alignmentRef, alignmentSmoothTime);
+            float alignmentSmooth = Mathf.SmoothDamp(lastalignment, PlayerInfo.alignment, ref alignmentRef, alignmentSmoothTime);
             return alignmentSmooth;
         }
 
@@ -392,7 +392,7 @@ namespace LucidityDrive
 
         private Vector3 CalculateLocalVelocity()
         {
-            Vector3 localVel = LucidPlayerInfo.pelvis.InverseTransformVector(LucidPlayerInfo.mainBody.velocity);
+            Vector3 localVel = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.mainBody.velocity);
             Vector3 currentvellocal = Vector3.zero;
             currentvellocal.x = anim.GetFloat(_VEL_X);
             currentvellocal.z = anim.GetFloat(_VEL_Z);
@@ -404,7 +404,7 @@ namespace LucidityDrive
             Vector3 currentClimbRelative = Vector3.zero;
             currentClimbRelative.x = anim.GetFloat(_HANG_X);
             currentClimbRelative.z = anim.GetFloat(_HANG_Z);
-            Vector3 climbRelative = LucidPlayerInfo.climbRelative;
+            Vector3 climbRelative = PlayerInfo.climbRelative;
             return Vector3.SmoothDamp(currentClimbRelative, climbRelative, ref hangRef, hangSmoothTime);
         }
 
@@ -421,7 +421,7 @@ namespace LucidityDrive
             anim.SetFloat(_VEL_X_N, velN.x);
             anim.SetFloat(_VEL_Y_N, velN.y);
             anim.SetFloat(_VEL_Z_N, velN.z);
-            anim.SetFloat(_ANIMCYCLE, LucidPlayerInfo.animPhase);
+            anim.SetFloat(_ANIMCYCLE, PlayerInfo.animPhase);
             anim.SetFloat(_ALIGNMENT, alignment);
             anim.SetFloat(_CLIMB, hang.y);
             anim.SetFloat(_HANG_X, hang.x);
@@ -429,23 +429,23 @@ namespace LucidityDrive
             anim.SetFloat(_LEAN_X, lean.x);
             anim.SetFloat(_LEAN_Z, lean.y);
             anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
-            anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(LucidPlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
-            anim.SetFloat(_HEAD_UP_Y, LucidPlayerInfo.head.up.y);
-            anim.SetFloat(_HEAD_FWD_Y, LucidPlayerInfo.head.forward.y);
-            anim.SetInteger(_PROBE_PATTERN, LucidPlayerInfo.probePattern);
+            anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(PlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
+            anim.SetFloat(_HEAD_UP_Y, PlayerInfo.head.up.y);
+            anim.SetFloat(_HEAD_FWD_Y, PlayerInfo.head.forward.y);
+            anim.SetInteger(_PROBE_PATTERN, PlayerInfo.probePattern);
         }
 
         private void UpdateAnimatorBools()
         {
-            bool slide = LucidPlayerInfo.slidingBack;
+            bool slide = PlayerInfo.slidingBack;
 
-            anim.SetBool(_GROUNDED, LucidPlayerInfo.groundDistance < LucidPlayerInfo.totalLegLength * groundDistanceThresholdScale);
-            anim.SetBool(_FLIGHT, LucidPlayerInfo.flying);
-            anim.SetBool(_GRAB_L, LucidPlayerInfo.climbL);
-            anim.SetBool(_GRAB_R, LucidPlayerInfo.climbR);
-            anim.SetBool(_CLIMBING, LucidPlayerInfo.climbing);
-            anim.SetBool(_PELVIS_COLLISION, LucidPlayerInfo.pelvisCollision);
-            anim.SetBool(_SWINGING, LucidPlayerInfo.swinging);
+            anim.SetBool(_GROUNDED, PlayerInfo.groundDistance < PlayerInfo.totalLegLength * groundDistanceThresholdScale);
+            anim.SetBool(_FLIGHT, PlayerInfo.flying);
+            anim.SetBool(_GRAB_L, PlayerInfo.climbL);
+            anim.SetBool(_GRAB_R, PlayerInfo.climbR);
+            anim.SetBool(_CLIMBING, PlayerInfo.climbing);
+            anim.SetBool(_PELVIS_COLLISION, PlayerInfo.pelvisCollision);
+            anim.SetBool(_SWINGING, PlayerInfo.swinging);
         }
 
         private Vector2 LeanCalc(Vector3 localvel, Vector3 localnrm, float k1 = 0.3f, float k2 = 0.7f)
@@ -456,11 +456,11 @@ namespace LucidityDrive
             Vector2 slope = Vector2.zero;
             slope.x = localnrm.x;
             slope.y = localnrm.z;
-            if (LucidPlayerInfo.probePattern == 1)
+            if (PlayerInfo.probePattern == 1)
                 slope = Vector2.zero;
-            if (LucidPlayerInfo.stanceHeight < 0.11f)
+            if (PlayerInfo.stanceHeight < 0.11f)
                 accel = Vector2.zero;
-            else if (LucidPlayerInfo.alignment < 0.5f && LucidPlayerInfo.groundDistance < LucidPlayerInfo.totalLegLength * groundDistanceThresholdScale)
+            else if (PlayerInfo.alignment < 0.5f && PlayerInfo.groundDistance < PlayerInfo.totalLegLength * groundDistanceThresholdScale)
                 accel = -accel * 2;
             Vector2 lean = Vector2.zero;
             lean.x = (accel.x * k1) + (slope.x * k2);
@@ -476,26 +476,26 @@ namespace LucidityDrive
             Vector3 kneeposL = animKneeL.position;
             Vector3 kneeposR = animKneeR.position;
 
-            bool hitL = UpdateFootPosition(true, footposL, kneeposL, LucidPlayerInfo.legspaceL, ref LCast);
-            bool hitR = UpdateFootPosition(false, footposR, kneeposR, LucidPlayerInfo.legspaceR, ref RCast);
+            bool hitL = UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast);
+            bool hitR = UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast);
 
-            bool prev_grounded = LucidPlayerInfo.grounded;
+            bool prev_grounded = PlayerInfo.grounded;
 
-            LucidPlayerInfo.grounded = hitL || hitR;
+            PlayerInfo.grounded = hitL || hitR;
 
-            if (!prev_grounded && LucidPlayerInfo.grounded)
+            if (!prev_grounded && PlayerInfo.grounded)
             {
-                LucidPlayerInfo.lastLandingForce = LucidPlayerInfo.mainBody.velocity.y;
-                onGrounded.Invoke(LucidPlayerInfo.lastLandingForce);
-                if (LucidPlayerInfo.lastLandingForce < -hardLandingForce)
+                PlayerInfo.lastLandingForce = PlayerInfo.mainBody.velocity.y;
+                onGrounded.Invoke(PlayerInfo.lastLandingForce);
+                if (PlayerInfo.lastLandingForce < -hardLandingForce)
                     queueRoll = true;
             }
 
-            if (LucidPlayerInfo.crawling)
-                LucidPlayerInfo.footSurface = LucidPlayerInfo.hipspace.up;
+            if (PlayerInfo.crawling)
+                PlayerInfo.footSurface = PlayerInfo.hipspace.up;
 
-            LucidPlayerInfo.IK_LF.position = LCast;
-            LucidPlayerInfo.IK_RF.position = RCast;
+            PlayerInfo.IK_LF.position = LCast;
+            PlayerInfo.IK_RF.position = RCast;
         }
 
         private bool UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
@@ -503,11 +503,11 @@ namespace LucidityDrive
             Vector3 thighOrigin = legspace.position + (legspace.up * legCastStartHeightOffset);
             Debug.DrawLine(thighOrigin, thighOrigin + ((kneepos - thighOrigin).normalized * Vector3.Distance(thighOrigin, kneepos)), Color.magenta);
             Debug.DrawLine(kneepos, kneepos + ((footpos - legspace.position).normalized * (Vector3.Distance(kneepos, footpos))), Color.magenta);
-            bool thighCast = Physics.SphereCast(thighOrigin, legCastThickness, (kneepos - thighOrigin).normalized, out RaycastHit hitInfoThigh, Vector3.Distance(thighOrigin, kneepos), LucidShortcuts.geometryMask);
-            bool shinCast = Physics.SphereCast(kneepos, legCastThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos), LucidShortcuts.geometryMask);
-            LucidPlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
-            LucidPlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
-            LucidPlayerInfo.totalLegLength = LucidPlayerInfo.thighLength + LucidPlayerInfo.calfLength - legCastThickness;
+            bool thighCast = Physics.SphereCast(thighOrigin, legCastThickness, (kneepos - thighOrigin).normalized, out RaycastHit hitInfoThigh, Vector3.Distance(thighOrigin, kneepos), Shortcuts.geometryMask);
+            bool shinCast = Physics.SphereCast(kneepos, legCastThickness, (footpos - legspace.position).normalized, out RaycastHit hitInfoShin, Vector3.Distance(kneepos, footpos), Shortcuts.geometryMask);
+            PlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
+            PlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
+            PlayerInfo.totalLegLength = PlayerInfo.thighLength + PlayerInfo.calfLength - legCastThickness;
 
             Vector3 CastOld = Cast;
             if (thighCast)
@@ -518,12 +518,12 @@ namespace LucidityDrive
                 ref Transform lastCastHit = ref lastCastHitR;
                 if (isLeft)
                     lastCastHit = ref lastCastHitR;
-                ref Rigidbody connectedRB = ref LucidPlayerInfo.connectedRB_RF;
+                ref Rigidbody connectedRB = ref PlayerInfo.connectedRB_RF;
                 if (isLeft)
-                    connectedRB = ref LucidPlayerInfo.connectedRB_LF;
-                ref Collider connectedColl = ref LucidPlayerInfo.connectedColl_RF;
+                    connectedRB = ref PlayerInfo.connectedRB_LF;
+                ref Collider connectedColl = ref PlayerInfo.connectedColl_RF;
                 if (isLeft)
-                    connectedColl = ref LucidPlayerInfo.connectedColl_LF;
+                    connectedColl = ref PlayerInfo.connectedColl_LF;
 
                 if (hitInfoThigh.transform != lastCastHit)
                 {
@@ -554,13 +554,13 @@ namespace LucidityDrive
                     if (isLeft)
                     {
                         if (rbvalid)
-                            LucidPlayerInfo.connectedRB_LF = rb;
+                            PlayerInfo.connectedRB_LF = rb;
                         lastCastHitL = hitInfoShin.transform;
                     }
                     else
                     {
                         if (rbvalid)
-                            LucidPlayerInfo.connectedRB_RF = rb;
+                            PlayerInfo.connectedRB_RF = rb;
                         lastCastHitR = hitInfoShin.transform;
                     }
                 }
@@ -570,25 +570,25 @@ namespace LucidityDrive
                 Cast = footpos;
                 if (isLeft)
                 {
-                    LucidPlayerInfo.connectedRB_LF = null;
-                    LucidPlayerInfo.IK_LF.localRotation = Quaternion.LookRotation(LucidPlayerInfo.pelvis.forward);
+                    PlayerInfo.connectedRB_LF = null;
+                    PlayerInfo.IK_LF.localRotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
                     lastCastHitL = null;
                 }
                 else
                 {
-                    LucidPlayerInfo.connectedRB_RF = null;
-                    LucidPlayerInfo.IK_RF.localRotation = Quaternion.LookRotation(LucidPlayerInfo.pelvis.forward);
+                    PlayerInfo.connectedRB_RF = null;
+                    PlayerInfo.IK_RF.localRotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
                     lastCastHitR = null;
                 }
             }
 
-            if (LucidPlayerInfo.stanceHeight > 0.11f && Vector3.Distance(thighOrigin, Cast) < minCastDist)
+            if (PlayerInfo.stanceHeight > 0.11f && Vector3.Distance(thighOrigin, Cast) < minCastDist)
             {
-                Cast = thighOrigin + (LucidPlayerInfo.pelvis.forward * LucidPlayerInfo.totalLegLength);
-                LucidPlayerInfo.connectedRB_LF = null;
-                LucidPlayerInfo.connectedRB_RF = null;
+                Cast = thighOrigin + (PlayerInfo.pelvis.forward * PlayerInfo.totalLegLength);
+                PlayerInfo.connectedRB_LF = null;
+                PlayerInfo.connectedRB_RF = null;
             }
-            else if (LucidPlayerInfo.stanceHeight < 0.11f)
+            else if (PlayerInfo.stanceHeight < 0.11f)
             {
                 Vector3 footNormal = Vector3.up;
                 if (thighCast)
@@ -596,7 +596,7 @@ namespace LucidityDrive
                 else if (shinCast)
                     footNormal = hitInfoShin.normal;
 
-                if (Vector3.Angle(Vector3.up, footNormal) < LucidPlayerInfo.slidePushAngleThreshold)
+                if (Vector3.Angle(Vector3.up, footNormal) < PlayerInfo.slidePushAngleThreshold)
                     Cast = footpos;
             }
 
@@ -607,7 +607,7 @@ namespace LucidityDrive
 
         private void UpdateFootSpaceAndRotation(bool isLeft, Vector3 normal, Vector3 point)
         {
-            bool highcheck = Physics.SphereCast(point + Vector3.up * 0.2f, 0.1f, Vector3.down, out RaycastHit hitInfo, 0.2f, LucidShortcuts.geometryMask);
+            bool highcheck = Physics.SphereCast(point + Vector3.up * 0.2f, 0.1f, Vector3.down, out RaycastHit hitInfo, 0.2f, Shortcuts.geometryMask);
             if (highcheck)
             {
                 if (hitInfo.normal.y > normal.y)
@@ -616,72 +616,72 @@ namespace LucidityDrive
                 }
             }
 
-            if (normal.y > highSlopeThreshold || LucidInputValueShortcuts.jump || LucidPlayerInfo.climbing || LucidPlayerInfo.stanceHeight < 0.09f)
+            if (normal.y > highSlopeThreshold || LucidInputValueShortcuts.jump || PlayerInfo.climbing || PlayerInfo.stanceHeight < 0.09f)
             {
                 if (isLeft)
-                    LucidPlayerInfo.footSurfaceL = normal;
+                    PlayerInfo.footSurfaceL = normal;
                 else
-                    LucidPlayerInfo.footSurfaceR = normal;
+                    PlayerInfo.footSurfaceR = normal;
 
-                LucidPlayerInfo.footSurface = normal;
-                LucidPlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
-                LucidPlayerInfo.footspace.up = normal;
+                PlayerInfo.footSurface = normal;
+                PlayerInfo.footspace.position = point + (normal * verticalFootAdjust);
+                PlayerInfo.footspace.up = normal;
             }
 
-            Vector3 footforward = LucidPlayerInfo.pelvis.forward;
+            Vector3 footforward = PlayerInfo.pelvis.forward;
             if (Mathf.Abs(normal.y) < 0.1f)
                 footforward = Vector3.up;
 
             if (isLeft)
-                LucidPlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, normal);
+                PlayerInfo.IK_LF.rotation = Quaternion.LookRotation(footforward, normal);
             else
-                LucidPlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, normal);
+                PlayerInfo.IK_RF.rotation = Quaternion.LookRotation(footforward, normal);
         }
 
         private void UpdateHandPositions()
         {
-            if (!LucidPlayerInfo.grabL)
+            if (!PlayerInfo.grabL)
             {
-                LucidPlayerInfo.handTargetL.SetPositionAndRotation(animHandL.position, animHandL.rotation);
-                UpdateHandPosition(true, animShoulderL, LucidPlayerInfo.handTargetL);
+                PlayerInfo.handTargetL.SetPositionAndRotation(animHandL.position, animHandL.rotation);
+                UpdateHandPosition(true, animShoulderL, PlayerInfo.handTargetL);
             }
-            if (!LucidPlayerInfo.grabR)
+            if (!PlayerInfo.grabR)
             {
-                LucidPlayerInfo.handTargetR.SetPositionAndRotation(animHandR.position, animHandR.rotation);
-                UpdateHandPosition(false, animShoulderR, LucidPlayerInfo.handTargetR);
+                PlayerInfo.handTargetR.SetPositionAndRotation(animHandR.position, animHandR.rotation);
+                UpdateHandPosition(false, animShoulderR, PlayerInfo.handTargetR);
             }
         }
 
         private void UpdateHandPosition(bool isLeft, Transform shoulder, Transform hand)
         {
-            bool armHit = Physics.SphereCast(shoulder.position, legCastThickness / 2, hand.position - shoulder.position, out RaycastHit armHitInfo, Vector3.Distance(hand.position, shoulder.position), LucidShortcuts.geometryMask);
+            bool armHit = Physics.SphereCast(shoulder.position, legCastThickness / 2, hand.position - shoulder.position, out RaycastHit armHitInfo, Vector3.Distance(hand.position, shoulder.position), Shortcuts.geometryMask);
 
             if (isLeft)
-                LucidPlayerInfo.handCollisionL = armHit;
+                PlayerInfo.handCollisionL = armHit;
             else
-                LucidPlayerInfo.handCollisionR = armHit;
+                PlayerInfo.handCollisionR = armHit;
 
             if (armHit)
             {
-                Vector3 handforward = LucidPlayerInfo.pelvis.forward;
+                Vector3 handforward = PlayerInfo.pelvis.forward;
                 if (Mathf.Abs(armHitInfo.normal.y) < 0.05f)
                     handforward = Vector3.up;
 
                 if (isLeft)
                 {
-                    LucidPlayerInfo.IK_LH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
+                    PlayerInfo.IK_LH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
                 }
                 else
                 {
-                    LucidPlayerInfo.IK_RH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
+                    PlayerInfo.IK_RH.SetPositionAndRotation(armHitInfo.point, Quaternion.LookRotation(handforward, armHitInfo.normal));
                 }
             }
             else
             {
                 if (isLeft)
-                    LucidPlayerInfo.IK_LH.position = Vector3.zero;
+                    PlayerInfo.IK_LH.position = Vector3.zero;
                 else
-                    LucidPlayerInfo.IK_RH.position = Vector3.zero;
+                    PlayerInfo.IK_RH.position = Vector3.zero;
             }
         }
 

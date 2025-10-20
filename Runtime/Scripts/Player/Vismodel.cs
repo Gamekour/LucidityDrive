@@ -24,16 +24,16 @@ namespace LucidityDrive
 
         private void OnEnable()
         {
-            LucidPlayerInfo.onChangeCameraPoint.AddListener(OnCameraPointChanged);
+            PlayerInfo.onChangeCameraPoint.AddListener(OnCameraPointChanged);
         }
 
         private void OnDisable()
         {
             if (!initialized) return;
 
-            LucidPlayerInfo.OnRemoveVismodel.Invoke();
-            LucidPlayerInfo.vismodelRef = null;
-            LucidPlayerInfo.onChangeCameraPoint.RemoveListener(OnCameraPointChanged);
+            PlayerInfo.OnRemoveVismodel.Invoke();
+            PlayerInfo.vismodelRef = null;
+            PlayerInfo.onChangeCameraPoint.RemoveListener(OnCameraPointChanged);
         }
 
         private void Start()
@@ -46,7 +46,7 @@ namespace LucidityDrive
         private void OnAnimatorIK(int layerIndex)
         {
             if (!initialized) return;
-            if (LucidPlayerInfo.animModelInitialized)
+            if (PlayerInfo.animModelInitialized)
                 LocalCalc();
         }
 
@@ -65,25 +65,25 @@ namespace LucidityDrive
         {
             if (!initialized) return;
 
-            if (LucidPlayerInfo.inFirstPerson)
+            if (PlayerInfo.inFirstPerson)
                 headRef.localScale = Vector3.one * 0.001f;
             else
                 headRef.localScale = defaultHeadScale;
 
             foreach (GameObject g in FirstPersonOnly)
-                g.SetActive(LucidPlayerInfo.inFirstPerson);
+                g.SetActive(PlayerInfo.inFirstPerson);
             foreach (GameObject g in NonFirstPersonOnly)
-                g.SetActive(!LucidPlayerInfo.inFirstPerson);
+                g.SetActive(!PlayerInfo.inFirstPerson);
         }
 
         private void FixedUpdate()
         {
-            if (initialized && LucidPlayerInfo.vismodelRef == null)
+            if (initialized && PlayerInfo.vismodelRef == null)
             {
                 if (anim.isInitialized)
                 {
-                    LucidPlayerInfo.vismodelRef = this;
-                    LucidPlayerInfo.OnAssignVismodel.Invoke(this);
+                    PlayerInfo.vismodelRef = this;
+                    PlayerInfo.OnAssignVismodel.Invoke(this);
                 }
             }
         }
@@ -91,38 +91,38 @@ namespace LucidityDrive
         //creates a pose for the visual model based on the playermodel's animation, active IK points, and collisions with the ground
         private void LocalCalc()
         {
-            if (LucidPlayerInfo.animationModel == null) return;
+            if (PlayerInfo.animationModel == null) return;
 
-            Transform animHips = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips);
+            Transform animHips = PlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Hips);
 
             Transform visHips = anim.GetBoneTransform(HumanBodyBones.Hips);
 
             Vector3 offset = animHips.position - visHips.position;
             transform.position += offset;
-            Quaternion qAnimHips = LucidPlayerInfo.animationModel.bodyRotation;
-            Quaternion qAnimHead = LucidPlayerInfo.head.rotation;
+            Quaternion qAnimHips = PlayerInfo.animationModel.bodyRotation;
+            Quaternion qAnimHead = PlayerInfo.head.rotation;
 
             anim.SetBoneLocalRotation(HumanBodyBones.Hips, qAnimHips);
             anim.SetBoneLocalRotation(HumanBodyBones.Head, qAnimHead);
 
-            foreach (HumanBodyBones hb2 in LucidShortcuts.hb2list)
+            foreach (HumanBodyBones hb2 in Shortcuts.hb2list)
             {
-                string hbstring = LucidShortcuts.boneNames[hb2];
+                string hbstring = Shortcuts.boneNames[hb2];
                 if (AnimationModel.instance.boneRots.ContainsKey(hbstring))
                     anim.SetBoneLocalRotation(hb2, AnimationModel.instance.boneRots[hbstring]);
             }
-            bool doSlideIK = LucidPlayerInfo.surfaceAngle < LucidPlayerInfo.slidePushAngleThreshold;
+            bool doSlideIK = PlayerInfo.surfaceAngle < PlayerInfo.slidePushAngleThreshold;
             bool isSliding = LucidInputValueShortcuts.bslide || LucidInputValueShortcuts.slide;
-            bool enableFootIK = !(LucidPlayerInfo.crawling || (isSliding && !doSlideIK));
+            bool enableFootIK = !(PlayerInfo.crawling || (isSliding && !doSlideIK));
             float footIKWeight = enableFootIK ? 1 : 0;
             anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, footIKWeight);
             anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, footIKWeight);
             anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, footIKWeight);
             anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, footIKWeight);
-            anim.SetIKPosition(AvatarIKGoal.LeftFoot, LucidPlayerInfo.IK_LF.position);
-            anim.SetIKRotation(AvatarIKGoal.LeftFoot, LucidPlayerInfo.IK_LF.rotation);
-            anim.SetIKPosition(AvatarIKGoal.RightFoot, LucidPlayerInfo.IK_RF.position);
-            anim.SetIKRotation(AvatarIKGoal.RightFoot, LucidPlayerInfo.IK_RF.rotation);
+            anim.SetIKPosition(AvatarIKGoal.LeftFoot, PlayerInfo.IK_LF.position);
+            anim.SetIKRotation(AvatarIKGoal.LeftFoot, PlayerInfo.IK_LF.rotation);
+            anim.SetIKPosition(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.position);
+            anim.SetIKRotation(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.rotation);
 
             CalculateHandIK(false);
             CalculateHandIK(true);
@@ -130,9 +130,9 @@ namespace LucidityDrive
 
         private void CalculateHandIK(bool isRight)
         {
-            bool grab = isRight ? LucidPlayerInfo.grabR : LucidPlayerInfo.grabL;
-            bool handCollision = isRight ? LucidPlayerInfo.handCollisionR : LucidPlayerInfo.handCollisionL;
-            Transform IKTransform = isRight ? LucidPlayerInfo.IK_RH : LucidPlayerInfo.IK_LH;
+            bool grab = isRight ? PlayerInfo.grabR : PlayerInfo.grabL;
+            bool handCollision = isRight ? PlayerInfo.handCollisionR : PlayerInfo.handCollisionL;
+            Transform IKTransform = isRight ? PlayerInfo.IK_RH : PlayerInfo.IK_LH;
             AvatarIKGoal IKGoal = isRight ? AvatarIKGoal.RightHand : AvatarIKGoal.LeftHand;
             float grabweight = isRight ? grabWeightR : grabWeightL;
 

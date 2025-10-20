@@ -16,10 +16,10 @@ namespace LucidityDrive.Extras
                     transform.position = Camera.main.transform.position;
                     transform.rotation = Camera.main.transform.rotation;
                 }
-                else if (LucidPlayerInfo.head != null)
+                else if (PlayerInfo.head != null)
                 {
-                    transform.position = LucidPlayerInfo.head.position;
-                    transform.rotation = LucidPlayerInfo.head.rotation;
+                    transform.position = PlayerInfo.head.position;
+                    transform.rotation = PlayerInfo.head.rotation;
                 }
             }
         }

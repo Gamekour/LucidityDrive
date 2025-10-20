@@ -61,7 +61,7 @@ namespace LucidityDrive
                 if (actionValueMapping.ContainsKey(action))
                     InitializeShortcutValue(action);
             }
-            LucidPlayerInfo.OnInputsReady.Invoke();
+            PlayerInfo.OnInputsReady.Invoke();
         }
 
         //generic event for setting the input value shortcut when the action is modified

@@ -23,16 +23,16 @@ namespace LucidityDrive.Extras
             float previousStamina = stamina;
 
             bool considerJump = (
-                LucidPlayerInfo.isJumping &&
+                PlayerInfo.isJumping &&
                 staminaUseRateJumping != 0 &&
-                !LucidPlayerInfo.disableJump);
+                !PlayerInfo.disableJump);
 
             bool considerSprint = (
-                LucidPlayerInfo.isSprinting &&
+                PlayerInfo.isSprinting &&
                 staminaUseRateSprinting != 0 &&
-                LucidPlayerInfo.grounded &&
+                PlayerInfo.grounded &&
                 LucidInputValueShortcuts.movement.magnitude > 0 &&
-                !LucidPlayerInfo.disableSprint);
+                !PlayerInfo.disableSprint);
 
             bool usingStamina = (considerJump || considerSprint);
 
@@ -55,8 +55,8 @@ namespace LucidityDrive.Extras
             if (!Mathf.Approximately(previousStamina, stamina) && onStaminaChange != null)
                 onStaminaChange.Invoke(stamina / staminaMax);
 
-            LucidPlayerInfo.disableSprint = (stamina < staminaMinRequirement && staminaUseRateSprinting > 0);
-            LucidPlayerInfo.disableJump = (stamina < staminaMinRequirement && staminaUseRateJumping > 0);
+            PlayerInfo.disableSprint = (stamina < staminaMinRequirement && staminaUseRateSprinting > 0);
+            PlayerInfo.disableJump = (stamina < staminaMinRequirement && staminaUseRateJumping > 0);
         }
     }
 }

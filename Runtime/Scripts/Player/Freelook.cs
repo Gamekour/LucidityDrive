@@ -17,26 +17,26 @@ namespace LucidityDrive
 
         private void Awake()
         {
-            LucidPlayerInfo.head = transform;
+            PlayerInfo.head = transform;
         }
 
         private void OnEnable()
         {
-            LucidPlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
-            LucidPlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
+            PlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
+            PlayerInfo.OnAnimModellInitialized.AddListener(OnAnimModelInitialized);
         }
 
         private void OnDisable()
         {
-            LucidPlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
-            LucidPlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
+            PlayerInfo.OnAssignVismodel.RemoveListener(AssignVismodel);
+            PlayerInfo.OnAnimModellInitialized.RemoveListener(OnAnimModelInitialized);
         }
 
         private void Update()
         {
             if (head == null) return;
             transform.position = head.position;
-            if (Camera.main == null || chest == null || !LucidPlayerInfo.headLocked || !LucidPlayerInfo.animModelInitialized)
+            if (Camera.main == null || chest == null || !PlayerInfo.headLocked || !PlayerInfo.animModelInitialized)
                 return;
 
             CalculateRotation();
@@ -44,7 +44,7 @@ namespace LucidityDrive
 
         private void OnAnimModelInitialized()
         {
-            head = LucidPlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Head);
+            head = PlayerInfo.animationModel.GetBoneTransform(HumanBodyBones.Head);
         }
 
         public void AssignVismodel(Vismodel vismodel)
@@ -54,7 +54,7 @@ namespace LucidityDrive
 
         private void CalculateRotation()
         {
-            LucidPlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
+            PlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
 
             Vector2 headLookInput = LucidInputValueShortcuts.headLook;
             headLookInput *= sensitivityModifier * sensitivity;
@@ -62,7 +62,7 @@ namespace LucidityDrive
 
             Vector3 headForwardFlat = transform.forward;
             headForwardFlat.y = 0;
-            Vector3 hipForwardFlat = LucidPlayerInfo.pelvis.forward;
+            Vector3 hipForwardFlat = PlayerInfo.pelvis.forward;
             hipForwardFlat.y = 0;
 
             Vector3 rotation = new(headLookInput.y, headLookInput.x, 0);

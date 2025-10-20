@@ -7,16 +7,13 @@ using UnityEngine.Events;
 
 namespace LucidityDrive
 {
-    public class LucidWorldInfo : MonoBehaviour
+    public class LDGlobal : MonoBehaviour
     {
         [SerializeField] LayerMask geometryMaskLayers;
-        private void Awake()
-        {
-            LucidShortcuts.geometryMask = geometryMaskLayers;
-        }
+        private void Awake() => Shortcuts.geometryMask = geometryMaskLayers;
     }
 
-    public static class LucidShortcuts
+    public static class Shortcuts
     {
         public static int geometryMask = 0; //determines which layers should be considered for physics casting in most Lucidity Drive scripts
 
@@ -34,7 +31,7 @@ namespace LucidityDrive
                     {
                         pinfo.SetValue(comp, pinfo.GetValue(other, null), null);
                     }
-                    catch { } // In case of NotImplementedException being thrown. For some reason specifying that exception didn't seem to catch it, so I didn't catch anything specific.
+                    catch { }
                 }
             }
             FieldInfo[] finfos = type.GetFields(flags);
@@ -156,7 +153,7 @@ namespace LucidityDrive
     }
 
     //global player data, used to simplify information access between scripts
-    public static class LucidPlayerInfo
+    public static class PlayerInfo
     {
         #region Initialization Events
         public static UnityEvent<Vismodel> OnAssignVismodel = new();
