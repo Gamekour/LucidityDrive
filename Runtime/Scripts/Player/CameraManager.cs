@@ -6,29 +6,33 @@ namespace LucidityDrive
     public class CameraManager : MonoBehaviour
     {
         public static int cameraPointIndex = 0;
+        [HideInInspector] public float fovBase = 80;
 
+        [Tooltip("Transforms for the camera to target in different camera modes")]
         [SerializeField] Transform[] cameraPoints;
+        [Tooltip("Transform to attach to the player's head")]
         [SerializeField] Transform headRoot;
+        [Tooltip("Default camera type (0 = First Person, 1 = Second Person, 2 = Third Person, 3 = Stationary)")]
         [SerializeField] int defaultCameraPoint = 0;
-        [SerializeField]
-        float
-            headRotationSmoothTime,
-            mouselookBlend,
-            mouselookBlendTransitionSpeed,
-            nonFPCameraSmoothTime,
-            fovBase,
-            fovBySpeed,
-            fovDampTime,
-            fovMinSpeed,
-            fovMax,
-            minAngle,
-            FPCollisionRadius
-            ;
+        [Tooltip("Smooth the camera rotation by this value")]
+        [SerializeField] float headRotationSmoothTime = 0;
+        [Tooltip("Mix between mouse movement and animated head movement; 0 = completely stable, 1= chaotic")]
+        [SerializeField] float mouselookBlend = 0.1f;
+        [Tooltip("Smooth the camera position by this value when not in first person")]
+        [SerializeField] float nonFPCameraSmoothTime = 0.05f;
+        [Tooltip("Change Field of View by this number, scaled by velocity")]
+        [SerializeField] float fovBySpeed = 5;
+        [Tooltip("Smooth time for Field of View change")]
+        [SerializeField] float fovSmoothTime = 0.5f;
+        [Tooltip("Minimum speed at which Field of View begins to change")]
+        [SerializeField] float fovMinSpeed = 5;
+        [Tooltip("Maximum Field of View")]
+        [SerializeField] float fovMax = 120;
+        [Tooltip("Radius of first-person camera collision check")]
+        [SerializeField] float FPCollisionRadius = 0.03f;
 
         private Transform headrootTarget;
-        private bool forceMouselook = false;
         private bool FPCollision;
-        private float currentMouselookBlend = 0;
         private float currentspeed;
         private Quaternion smoothDeriv = Quaternion.identity;
         private Vector3 externalDampRef = Vector3.zero;
@@ -37,7 +41,6 @@ namespace LucidityDrive
 
         private void Start()
         {
-            LucidPlayerInfo.mainCamera = Camera.main;
             LucidInputActionRefs.camSelect1.started += CameraSwitch1;
             LucidInputActionRefs.camSelect2.started += CameraSwitch2;
             LucidInputActionRefs.camSelect3.started += CameraSwitch3;
@@ -45,6 +48,7 @@ namespace LucidityDrive
             LucidInputActionRefs.camCycle.started += CameraCycle;
             LucidPlayerInfo.OnAssignVismodel.AddListener(AssignVismodel);
             LucidPlayerInfo.FPTransform = cameraPoints[0];
+            fovBase = Camera.main.fieldOfView;
         }
 
         private void OnDisable()
@@ -93,8 +97,8 @@ namespace LucidityDrive
             if (index == 3)
             {
                 Transform tcam = cameraPoints[3].transform;
-                tcam.position = LucidPlayerInfo.mainCamera.transform.position;
-                tcam.rotation = LucidPlayerInfo.mainCamera.transform.rotation;
+                tcam.position = Camera.main.transform.position;
+                tcam.rotation = Camera.main.transform.rotation;
             }
 
             LucidPlayerInfo.onChangeCameraPoint.Invoke(cameraPointIndex);
@@ -105,13 +109,13 @@ namespace LucidityDrive
             float speed = LucidPlayerInfo.mainBody.velocity.magnitude;
             if (speed < fovMinSpeed)
                 speed = 0;
-            currentspeed = Mathf.SmoothDamp(currentspeed, speed, ref fovDampRef, fovDampTime);
-            LucidPlayerInfo.mainCamera.fieldOfView = Mathf.Clamp(fovBase + (currentspeed * fovBySpeed), fovBase, fovMax);
+            currentspeed = Mathf.SmoothDamp(currentspeed, speed, ref fovDampRef, fovSmoothTime);
+            Camera.main.fieldOfView = Mathf.Clamp(fovBase + (currentspeed * fovBySpeed), fovBase, fovMax);
         }
 
         private void FixedUpdate()
         {
-            if (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.mainCamera == null) return;
+            if (!LucidPlayerInfo.animModelInitialized || Camera.main == null) return;
 
             Vector3 FPCamPos = cameraPoints[0].position;
 
@@ -138,7 +142,7 @@ namespace LucidityDrive
 
         private void LateUpdate()
         {
-            if (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.mainCamera == null) return;
+            if (!LucidPlayerInfo.animModelInitialized || Camera.main == null) return;
 
             if (headrootTarget != null && headRoot != null)
             {
@@ -147,33 +151,24 @@ namespace LucidityDrive
                 else
                     headRoot.position = headrootTarget.position;
 
-
                 Quaternion targetRotation = headrootTarget.rotation;
                 Quaternion smoothRotation = SmoothDamp(headRoot.rotation, targetRotation, ref smoothDeriv, headRotationSmoothTime);
 
-                if (forceMouselook)
-                    currentMouselookBlend = 0;
-                else
-                {
-                    if (currentMouselookBlend < mouselookBlend)
-                        currentMouselookBlend = Mathf.Clamp(currentMouselookBlend + (Time.deltaTime * mouselookBlendTransitionSpeed), 0, mouselookBlend);
-                }
-
                 // Combine raw rotation with smoothed rotation
                 Quaternion raw = LucidPlayerInfo.head.transform.rotation;
-                Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, currentMouselookBlend);
+                Quaternion finalRotation = Quaternion.Slerp(smoothRotation, raw, mouselookBlend);
                 float totalAngle = Quaternion.Angle(finalRotation, raw);
-                if (totalAngle > minAngle)
+                if (totalAngle > 0)
                     headRoot.rotation = finalRotation;
                 else
                     headRoot.rotation = raw;
             }
 
             // Update camera position and rotation
-            LucidPlayerInfo.mainCamera.transform.position = cameraPoints[cameraPointIndex].position;
+            Camera.main.transform.position = cameraPoints[cameraPointIndex].position;
             if (cameraPointIndex == 0 && FPCollision)
-                LucidPlayerInfo.mainCamera.transform.position += FPcollisionOffset;
-            LucidPlayerInfo.mainCamera.transform.rotation = cameraPoints[cameraPointIndex].rotation;
+                Camera.main.transform.position += FPcollisionOffset;
+            Camera.main.transform.rotation = cameraPoints[cameraPointIndex].rotation;
         }
 
         public Quaternion SmoothDamp(Quaternion rot, Quaternion target, ref Quaternion deriv, float time)
@@ -201,16 +196,6 @@ namespace LucidityDrive
             deriv.w -= derivError.w;
 
             return new Quaternion(result.x, result.y, result.z, result.w);
-        }
-
-        public void OnHeadCollisionStay(Collision c)
-        {
-            forceMouselook = true;
-        }
-
-        public void OnHeadCollisionExit(Collision c)
-        {
-            forceMouselook = false;
         }
     }
 }

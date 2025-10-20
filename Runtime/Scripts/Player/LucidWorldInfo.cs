@@ -193,7 +193,6 @@ namespace LucidityDrive
         public static Collider connectedColl_LF;
 
         public static CapsuleCollider pelvisColl;
-        public static Camera mainCamera;
         public static Animator animationModel;
         public static LucidLegs legRef;
         public static LucidVismodel vismodelRef;

@@ -38,7 +38,7 @@ namespace LucidityDrive
         {
             if (head == null) return;
             transform.position = head.position;
-            if (LucidPlayerInfo.mainCamera == null || chest == null || !LucidPlayerInfo.headLocked || !LucidPlayerInfo.animModelInitialized)
+            if (Camera.main == null || chest == null || !LucidPlayerInfo.headLocked || !LucidPlayerInfo.animModelInitialized)
                 return;
 
             CalculateRotation();
