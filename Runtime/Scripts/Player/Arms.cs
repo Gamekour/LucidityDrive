@@ -21,9 +21,27 @@ namespace LucidityDrive
             set { m_activeArmSettings = value; CopyValues(); } //copy values any time the movement settings are changed
         }
 
+        [Tooltip("Arm Settings to load on Start")]
         public ArmSettings defaultArmSettings;
+        [Tooltip("Item Pose root to use when picking up non-tool rigidbodies (Right Hand)")]
         public Transform defaultItemPosesR;
+        [Tooltip("Item Pose root to use when picking up non-tool rigidbodies (Left Hand)")]
         public Transform defaultItemPosesL;
+
+        [Tooltip("ConfigurableJoint to copy when grabbing things")]
+        [SerializeField] ConfigurableJoint jointReference;
+        [Tooltip("Grab transform used in certain calculations")]
+        [SerializeField] Transform unRotateL, unRotateR;
+        [Tooltip("Grab transform used in certain calculations")]
+        [SerializeField] Transform handTargetL, handTargetR;
+        [Tooltip("Indicator for available grab positions")]
+        [SerializeField] Transform grabIndicatorL, grabIndicatorR;
+        [Tooltip("Rigidbody arms connect to when creating an arm joint for static geometry")]
+        [SerializeField] Rigidbody staticGrabRB_L, staticGrabRB_R;
+        [Tooltip("Layers that can be grabbed")]
+        [SerializeField] LayerMask CastMask;
+        [Tooltip("Tags that indicate grabbable surfaces (not requiring a ledge)")]
+        [SerializeField] string[] grippyTags;
 
         private float
             castDistance,
@@ -39,14 +57,6 @@ namespace LucidityDrive
             pullDamp,
             maxPullHeight
             ;
-
-        [SerializeField] ConfigurableJoint jointReference;
-        [SerializeField] Transform unRotateL, unRotateR;
-        [SerializeField] Transform handTargetL, handTargetR;
-        [SerializeField] Transform grabIndicatorL, grabIndicatorR;
-        [SerializeField] Rigidbody staticGrabRB_L, staticGrabRB_R;
-        [SerializeField] LayerMask CastMask;
-        [SerializeField] string[] grippyTags;
         private SoftJointLimit sjlewis;
         private EventBox eventBoxL, eventBoxR;
         private ConfigurableJoint anchorL, anchorR;

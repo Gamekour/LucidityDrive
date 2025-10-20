@@ -19,13 +19,6 @@ namespace LucidityDrive
 {
     public class Legs : MonoBehaviour
     {
-        public float Timescale //quick access to timescale
-        {
-            get { return Time.timeScale; }
-            set { Time.timeScale = value; }
-        }
-
-        [Header("References")]
         private MovementSettings m_movementSettings;
         public MovementSettings MovementSettings
         {
@@ -33,22 +26,36 @@ namespace LucidityDrive
             set { m_movementSettings = value; CopyValues(); } //copy values any time the movement settings are changed
         }
 
+        [Header("References")]
+
+        [Tooltip("Movement settings to load on Start")]
+        [SerializeField] MovementSettings defaultMovementSettings;
+
+        [Tooltip("Enable this to sprint by default, and walk when the sprint key is held")]
         public bool autoSprint = true;
+        [Tooltip("Enable this to disable the default sprint implementation (in case you want to run your own logic, i.e. with the stamina system)")]
         public bool overrideSprint = false;
+        [Tooltip("Enable this to change the jump behavior such that holding the jump button causes you to crouch, and letting go actually jumps. Easier for new players, but inhibits advanced manuevers.")]
         public bool jumpPrepare = false;
 
         [HideInInspector]
         public bool sprintOverride = false;
 
+        [Tooltip("Left Leg Space transform used for certain calculations")]
         [SerializeField] Transform legSpaceL;
+        [Tooltip("Left Leg Space transform used for certain calculations")]
         [SerializeField] Transform legSpaceR;
+        [Tooltip("Hip Space transform used for certain calculations")]
         [SerializeField] Transform hipSpace;
+        [Tooltip("Foot Space transform used for certain calculations")]
         [SerializeField] Transform footSpace;
+        [Tooltip("Virtual Floor transform used for certain calculations")]
         [SerializeField] Transform vFloor;
 
+        [Tooltip("Hip collider")]
         [SerializeField] CapsuleCollider pelvisCollider;
-        [SerializeField] MovementSettings defaultMovementSettings;
 
+        [Tooltip("Input binding to update this script with current movement setting values")]
         [SerializeField] InputAction reloadMovementSettings;
 
         //parameters copied from movementsettings

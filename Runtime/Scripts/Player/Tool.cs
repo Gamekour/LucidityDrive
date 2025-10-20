@@ -7,30 +7,52 @@ namespace LucidityDrive
     [RequireComponent(typeof(Rigidbody))]
     public class Tool : MonoBehaviour
     {
+        [Tooltip("Transform the tool will try to match")]
         public Transform targetTransform;
+        [Tooltip("Root transform for item poses")]
         public Transform itemPoses;
-        public Transform PrimaryGrip, SecondaryGrip;
-        public Transform ItemPosePrimary, ItemPoseSecondary;
+        [Tooltip("Grab point for the primary holding hand, relative to the tool transform")]
+        public Transform PrimaryGrip;
+        [Tooltip("Grab point for the secondary holding hand, relative to the tool transform")]
+        public Transform SecondaryGrip;
+        [Tooltip("Target Pose for primary holding hand")]
+        public Transform ItemPosePrimary;
+        [Tooltip("Target Pose for secondary holding hand")]
+        public Transform ItemPoseSecondary;
+        [Tooltip("Objects to disable if this tool is not priority")]
         public GameObject DisableIfNotPriority;
+        [Tooltip("Enable this to switch the grab order when grabbing with both hands")]
         public bool switchGrabOrder = false;
+        [Tooltip("Enable this to prevent the player from dropping this tool")]
         public bool disableDrop = false;
-        public bool autoGrabL, autoGrabR = false;
+        [Tooltip("Automatically grab the tool with the left hand when enabled")]
+        public bool autoGrabL = false;
+        [Tooltip("Automatically grab the tool with the right hand when enabled")]
+        public bool autoGrabR = false;
+        [Tooltip("Queue a forced grab, useful for animations")]
         public bool queueForceGrabPrimary, queueForceGrabSecondary = false;
+        [Tooltip("Queue a forced animation grab, useful for animations involving sub-parts like ammo magazines")]
         public bool queueForceGrabAnimationPrimary, queueForceGrabAnimationSecondary = false;
+        [Tooltip("Queue a forced ungrab, useful for animations")]
         public bool queueUngrabPrimary, queueUngrabSecondary = false;
-        [Header("Optional")]
+        [Tooltip("(Optional) Rigidbody to follow when doing a Grab Animation")]
         public Rigidbody animationTargetPrimary, animationTargetSecondary;
-        private Vector3 posOffsetPrimary, posOffsetSecondary;
-        private Quaternion rotOffsetPrimary, rotOffsetSecondary;
-        private Rigidbody rb;
+
+        [Tooltip("Triggered when the grab input is invoked on the same hand holding this tool")]
+        public UnityEvent OnUse;
+        [Tooltip("Triggered when the grab input is cancelled on the same hand holding this tool")]
+        public UnityEvent OnUseUp;
+        [Tooltip("Triggered when this tool is grabbed")]
+        public UnityEvent OnGrab;
+        [Tooltip("Triggered when this tool is dropped")]
+        public UnityEvent OnDrop;
 
         [HideInInspector]
         public bool held, leftHanded, isPriority = false;
 
-        public UnityEvent OnUse;
-        public UnityEvent OnUseUp;
-        public UnityEvent OnGrab;
-        public UnityEvent OnDrop;
+        private Vector3 posOffsetPrimary, posOffsetSecondary;
+        private Quaternion rotOffsetPrimary, rotOffsetSecondary;
+        private Rigidbody rb;
 
         public void OnEnable()
         {

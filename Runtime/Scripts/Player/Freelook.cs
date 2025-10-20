@@ -1,11 +1,12 @@
-using System.Collections;
 using UnityEngine;
 
 namespace LucidityDrive
 {
     public class Freelook : MonoBehaviour
     {
+        [Tooltip("Look-sensitivity")]
         public float sensitivity = 9;
+        [Tooltip("Scale sensitivity for X and Y separately")]
         public Vector2 sensitivityModifier = Vector2.one;
         [Tooltip("Clamp the percieved delta-time to this value (reduces camera movement during frame stutters)")]
         [SerializeField] float maxDeltaTime = 0.06f;
