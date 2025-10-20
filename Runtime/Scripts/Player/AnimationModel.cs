@@ -10,6 +10,7 @@ namespace LucidityDrive
     {
         public static AnimationModel instance;
 
+        [Tooltip("Animation settings to load on Start")]
         public AnimationSettings defaultAnimationSettings;
 
         private AnimationSettings m_activeAnimationSettings;
@@ -19,15 +20,22 @@ namespace LucidityDrive
             set { m_activeAnimationSettings = value; CopyValues(); } //copy values any time the movement settings are changed
         }
 
+        [Tooltip("Animation logic for the player model")]
         [SerializeField] RuntimeAnimatorController controller;
-        [SerializeField] Camera fpcam;
 
-        [SerializeField]
-        Transform
-            IK_LF,
-            IK_RF,
-            IK_LH,
-            IK_RH;
+        [Tooltip("Left Foot IK Target")]
+        [SerializeField] Transform IK_LF;
+        [Tooltip("Right Foot IK Target")]
+        [SerializeField] Transform IK_RF;
+        [Tooltip("Left Hand IK Target")]
+        [SerializeField] Transform IK_LH;
+        [Tooltip("Right Hand IK Target")]
+        [SerializeField] Transform IK_RH;
+
+        [Tooltip("Triggered when foot switches between left and right, useful for footstep sounds (value = is Right)")]
+        public UnityEvent<bool> onFootChanged;
+        [Tooltip("Triggered when landing on the ground (value = landing force)")]
+        public UnityEvent<float> onGrounded;
 
         private float
             groundDistanceThresholdScale,
@@ -54,8 +62,7 @@ namespace LucidityDrive
             velNFallback
             ;
 
-        public UnityEvent onFootChanged;
-        public UnityEvent<float> onGrounded;
+        
 
         [HideInInspector]
         public Dictionary<string, Quaternion> boneRots = new();
@@ -171,7 +178,7 @@ namespace LucidityDrive
             bool isRight = animPhase > 0.5f;
             bool wasRight = PlayerInfo.animPhase > 0.5f;
             if (wasRight != isRight && PlayerInfo.grounded && !PlayerInfo.slidingBack && !PlayerInfo.slidingForward)
-                onFootChanged.Invoke();
+                onFootChanged.Invoke(isRight);
 
             PlayerInfo.animPhase = animPhase;
 
