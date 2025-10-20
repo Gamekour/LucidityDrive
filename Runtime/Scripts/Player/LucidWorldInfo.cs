@@ -194,7 +194,7 @@ namespace LucidityDrive
 
         public static CapsuleCollider pelvisColl;
         public static Animator animationModel;
-        public static LucidLegs legRef;
+        public static Legs legRef;
         public static LucidVismodel vismodelRef;
         #endregion
 

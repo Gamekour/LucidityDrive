@@ -17,7 +17,7 @@ class GFG : IComparer<RaycastHit>
 
 namespace LucidityDrive
 {
-    public class LucidLegs : MonoBehaviour
+    public class Legs : MonoBehaviour
     {
         public float Timescale //quick access to timescale
         {
@@ -277,7 +277,7 @@ namespace LucidityDrive
         public void CopyValues()
         {
             Type TMoveSettings = typeof(MovementSettings);
-            Type TLegs = typeof(LucidLegs);
+            Type TLegs = typeof(Legs);
             FieldInfo[] fields = TMoveSettings.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             foreach (var field in fields)
             {

@@ -1127,7 +1127,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8279943886381286131}
   - component: {fileID: 5558137487855974142}
-  - component: {fileID: 6962469843135845524}
+  - component: {fileID: 5850852421196511812}
   m_Layer: 3
   m_Name: Legs
   m_TagString: Untagged
@@ -1178,7 +1178,7 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 2
---- !u!114 &6962469843135845524
+--- !u!114 &5850852421196511812
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1187,7 +1187,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3481516828095479701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84801d359f42b734b9bc39f78c07f3d6, type: 3}
+  m_Script: {fileID: 11500000, guid: fcb6dc3da86c0f245a722e6c5d1544a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   autoSprint: 0
@@ -1206,12 +1206,12 @@ MonoBehaviour:
     m_Name: Reload Movement Settings
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: d75e4f56-e33d-4dc2-83b3-eac287015887
+    m_Id: 33ab2458-2071-45fe-ae0e-2dcde82aacfb
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: 9ac25fcf-df64-497f-b808-d192025c86f3
+      m_Id: a2c40977-8a67-4164-8197-9831f2bf472d
       m_Path: <Keyboard>/f1
       m_Interactions: 
       m_Processors: 
