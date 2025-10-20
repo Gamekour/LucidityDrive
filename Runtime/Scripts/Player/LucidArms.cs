@@ -1,28 +1,35 @@
+using System;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace LucidityDrive
 {
     public class LucidArms : MonoBehaviour
     {
         public static LucidArms instance;
+
         [HideInInspector]
         public bool initialized = false;
 
+        private ArmSettings m_activeArmSettings;
+        public ArmSettings ActiveArmSettings
+        {
+            get { return m_activeArmSettings; }
+            set { m_activeArmSettings = value; CopyValues(); } //copy values any time the movement settings are changed
+        }
+
+        public ArmSettings defaultArmSettings;
         public Transform defaultItemPosesR;
         public Transform defaultItemPosesL;
 
-        [SerializeField]
-        float
-            shoulderDistance,
+        private float
             castDistance,
             limitDistance,
-            shoulderStiffness,
             firstCastWidth,
             secondCastWidth,
-            maxInitialNrmY,
             minDowncastNrmY,
             ungrabBoost,
             climbModeForceThreshold,
@@ -85,6 +92,7 @@ namespace LucidityDrive
             LucidPlayerInfo.handTargetL = handTargetL;
             LucidPlayerInfo.handTargetR = handTargetR;
             RespawnInterface.OnRespawn.AddListener(OnRespawn);
+            ActiveArmSettings = defaultArmSettings;
         }
 
         private void OnDisable()
@@ -101,6 +109,25 @@ namespace LucidityDrive
             ManageInputSubscriptions(false);
             LucidPlayerInfo.OnAssignVismodel.RemoveListener(OnAssignVismodel);
             RespawnInterface.OnRespawn.RemoveListener(OnRespawn);
+        }
+
+        public void CopyValues()
+        {
+            Type TArmSettings = typeof(ArmSettings);
+            Type TArms = typeof(LucidArms);
+            FieldInfo[] fields = TArmSettings.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            foreach (var field in fields)
+            {
+                // Find the corresponding field in the destination object
+                FieldInfo destField = TArms.GetField(field.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+                if (destField != null && destField.FieldType == field.FieldType)
+                {
+                    // Copy the value from the source field to the destination field
+                    object value = field.GetValue(ActiveArmSettings);
+                    destField.SetValue(this, value);
+                }
+            }
         }
 
         private void ManageInputSubscriptions(bool subscribe)
@@ -195,7 +222,7 @@ namespace LucidityDrive
 
             if (anchorL != null)
             {
-                anchorL.anchor += (targetposL - anchorL.anchor) * shoulderStiffness;
+                anchorL.anchor = targetposL;
                 grabForceL = anchorL.currentForce;
                 if (lt_L != null)
                     grabbedRB_L.AddForce((LucidPlayerInfo.mainBody.velocity - grabbedRB_L.velocity) * velocityCheatForLucidTools);
@@ -204,7 +231,7 @@ namespace LucidityDrive
                 grabForceL = Vector3.down * 1000;
             if (anchorR != null)
             {
-                anchorR.anchor += (targetposR - anchorR.anchor) * shoulderStiffness;
+                anchorR.anchor = targetposR;
                 grabForceR = anchorR.currentForce;
                 if (lt_R != null)
                     grabbedRB_R.AddForce((LucidPlayerInfo.mainBody.velocity - grabbedRB_R.velocity) * velocityCheatForLucidTools);
@@ -562,7 +589,7 @@ namespace LucidityDrive
             }
         }
 
-        private bool ClimbScan(bool right, out Vector3 position, out Quaternion rotation, out Transform targetTransform)
+        private bool ClimbScan(bool isRight, out Vector3 position, out Quaternion rotation, out Transform targetTransform)
         {
             Transform cam = LucidPlayerInfo.head;
             Vector3 campos = cam.position;
@@ -570,12 +597,11 @@ namespace LucidityDrive
             Vector3 camright = cam.right;
             float castAdjust = castDistance * animArmLength;
 
-            Vector3 shoulder = campos + (right ? camright * shoulderDistance : -camright * shoulderDistance);
+            Vector3 animShoulder = isRight ? animShoulderR.position : animShoulderL.position;
 
-            bool initialHit = Physics.SphereCast(shoulder, firstCastWidth, camfwd, out RaycastHit initialHitInfo, castAdjust, CastMask);
+            bool initialHit = Physics.SphereCast(animShoulder, firstCastWidth, camfwd, out RaycastHit initialHitInfo, castAdjust, CastMask);
 
             bool grabbableInitialHit = (initialHit && grippyTags.Contains(initialHitInfo.transform.gameObject.tag));
-            initialHit &= ((initialHitInfo.normal.y) < maxInitialNrmY);
 
             Vector3 projectvector = Vector3.up;
             if (initialHitInfo.normal.y < -0.05f)
@@ -588,7 +614,7 @@ namespace LucidityDrive
                 hitvector = Vector3.up;
 
             float angle = Vector3.Angle(-cam.forward, hitvector);
-            float dist = Vector3.Distance(shoulder, initialHitInfo.point);
+            float dist = Vector3.Distance(animShoulder, initialHitInfo.point);
 
             //i know this trig stuff looks scary but that's just how it knows where to look when you're dealing with a sloped wall
             float sinC = (dist * Mathf.Sin(Mathf.Deg2Rad * angle)) / castAdjust;
@@ -601,9 +627,9 @@ namespace LucidityDrive
             bool holeCastHit = false;
             if (surfaceCastHit)
             {
-                Vector3 holeCastStart = shoulder;
+                Vector3 holeCastStart = animShoulder;
                 holeCastStart.y = surfaceCastHitInfo.point.y + secondCastWidth + (1 - surfaceCastHitInfo.normal.y) + 0.01f;
-                holeCastHit = Physics.SphereCast(holeCastStart, secondCastWidth, (surfaceCastHitInfo.point - shoulder).normalized, out RaycastHit holeCastInfo, Vector3.Distance(surfaceCastHitInfo.point, shoulder));
+                holeCastHit = Physics.SphereCast(holeCastStart, secondCastWidth, (surfaceCastHitInfo.point - animShoulder).normalized, out RaycastHit holeCastInfo, Vector3.Distance(surfaceCastHitInfo.point, animShoulder));
             }
             bool validgrab = initialHit && surfaceCastHit && surfaceCastHitInfo.normal.y > minDowncastNrmY && !holeCastHit;
 
@@ -638,7 +664,7 @@ namespace LucidityDrive
                 validgrab = true;
             }
 
-            if (right)
+            if (isRight)
                 grippyR = grabbableInitialHit;
             else
                 grippyL = grabbableInitialHit;

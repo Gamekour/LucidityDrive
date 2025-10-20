@@ -30,7 +30,7 @@ MonoBehaviour:
   scaleStepRateByVelocity: 0.25
   wobbleScale: 2
   hardLandingForce: 10
-  leanScale: 50
+  leanScale: 60
   maxLeanAngle: 45
   highSlopeThreshold: 0.2
   velNFallback: 0.25
