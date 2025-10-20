@@ -3,14 +3,12 @@ using UnityEngine;
 
 namespace LucidityDrive
 {
-    public class LucidFreelook : MonoBehaviour
+    public class Freelook : MonoBehaviour
     {
-        [SerializeField] Vector2 sensitivity = Vector2.one;
-        [SerializeField]
-        float
-            headRadius,
-            sensitivityMultiplier,
-            maxDeltaTime;
+        public float sensitivity = 9;
+        public Vector2 sensitivityModifier = Vector2.one;
+        [Tooltip("Clamp the percieved delta-time to this value (reduces camera movement during frame stutters)")]
+        [SerializeField] float maxDeltaTime = 0.06f;
 
         private Transform chest;
         private Transform head;
@@ -59,7 +57,7 @@ namespace LucidityDrive
             LucidPlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
 
             Vector2 headLookInput = LucidInputValueShortcuts.headLook;
-            headLookInput *= sensitivity * sensitivityMultiplier;
+            headLookInput *= sensitivityModifier * sensitivity;
             headLookInput *= Mathf.Clamp(Time.deltaTime, 0, maxDeltaTime);
 
             Vector3 headForwardFlat = transform.forward;
@@ -119,11 +117,6 @@ namespace LucidityDrive
 
             Vector3 localEulerAngles = transform.localEulerAngles;
             localEulerAngles.x = 0;
-        }
-
-        public void SetSensitivity(float sens)
-        {
-            sensitivityMultiplier = sens;
         }
     }
 }
