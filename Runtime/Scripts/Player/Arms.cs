@@ -7,9 +7,9 @@ using UnityEngine.InputSystem;
 
 namespace LucidityDrive
 {
-    public class LucidArms : MonoBehaviour
+    public class Arms : MonoBehaviour
     {
-        public static LucidArms instance;
+        public static Arms instance;
 
         [HideInInspector]
         public bool initialized = false;
@@ -40,10 +40,10 @@ namespace LucidityDrive
             maxPullHeight
             ;
 
+        [SerializeField] ConfigurableJoint jointReference;
         [SerializeField] Transform unRotateL, unRotateR;
         [SerializeField] Transform handTargetL, handTargetR;
         [SerializeField] Transform grabIndicatorL, grabIndicatorR;
-        [SerializeField] ConfigurableJoint jointReference;
         [SerializeField] Rigidbody staticGrabRB_L, staticGrabRB_R;
         [SerializeField] LayerMask CastMask;
         [SerializeField] string[] grippyTags;
@@ -114,7 +114,7 @@ namespace LucidityDrive
         public void CopyValues()
         {
             Type TArmSettings = typeof(ArmSettings);
-            Type TArms = typeof(LucidArms);
+            Type TArms = typeof(Arms);
             FieldInfo[] fields = TArmSettings.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             foreach (var field in fields)
             {

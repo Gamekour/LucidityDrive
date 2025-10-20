@@ -98,9 +98,9 @@ namespace LucidityDrive
 
         IEnumerator WaitForInit()
         {
-            while (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.pelvis == null || !LucidArms.instance.initialized)
+            while (!LucidPlayerInfo.animModelInitialized || LucidPlayerInfo.pelvis == null || !Arms.instance.initialized)
                 yield return null;
-            LucidArms la = LucidArms.instance;
+            Arms la = Arms.instance;
 
             if (autoGrabL || autoGrabR)
             {
@@ -135,13 +135,13 @@ namespace LucidityDrive
             }
         }
 
-        public void ForceUngrab(bool isPrimary) => LucidArms.instance.ForceUngrab(leftHanded ? !isPrimary : isPrimary);
-        public void ForceGrab(bool isPrimary) => LucidArms.instance.ForceGrab(rb, leftHanded ? !isPrimary : isPrimary);
+        public void ForceUngrab(bool isPrimary) => Arms.instance.ForceUngrab(leftHanded ? !isPrimary : isPrimary);
+        public void ForceGrab(bool isPrimary) => Arms.instance.ForceGrab(rb, leftHanded ? !isPrimary : isPrimary);
         public void ForceGrabAnimationTransform(bool isPrimary)
         {
             bool isRight = leftHanded ? !isPrimary : isPrimary;
             Rigidbody targetRigidbody = isPrimary ? animationTargetPrimary : animationTargetSecondary;
-            LucidArms.instance.ForceGrab(targetRigidbody, isRight, true);
+            Arms.instance.ForceGrab(targetRigidbody, isRight, true);
         }
     }
 }

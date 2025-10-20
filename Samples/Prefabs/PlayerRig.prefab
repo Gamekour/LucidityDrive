@@ -527,7 +527,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4817675790358543164}
-  - component: {fileID: 4848895638340277302}
+  - component: {fileID: 2815296351149224635}
   m_Layer: 3
   m_Name: Arms
   m_TagString: Untagged
@@ -559,7 +559,7 @@ Transform:
   - {fileID: 3863980810481572721}
   m_Father: {fileID: 2635777386139525533}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4848895638340277302
+--- !u!114 &2815296351149224635
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -568,20 +568,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1449891932281873368}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a79874f871de7b45ab63db4d069d0e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 78a7d6bbfc438124ea4e635d2fb304b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   initialized: 0
   defaultArmSettings: {fileID: 11400000, guid: ad9a5ba5bdcf14145993ae3c307f287b, type: 2}
   defaultItemPosesR: {fileID: 6720735153854775999}
   defaultItemPosesL: {fileID: 2627895434607080231}
+  jointReference: {fileID: 8104106875629303383}
   unRotateL: {fileID: 2514462217036454194}
   unRotateR: {fileID: 7846883258637758168}
   handTargetL: {fileID: 4805471699546250404}
   handTargetR: {fileID: 3060035688075794280}
   grabIndicatorL: {fileID: 800082366653244502}
   grabIndicatorR: {fileID: 3863980810481572721}
-  jointReference: {fileID: 8104106875629303383}
   staticGrabRB_L: {fileID: 5797118526999027328}
   staticGrabRB_R: {fileID: 7413648164269627048}
   CastMask:
@@ -6610,6 +6610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 596b1d94a4c7b0546b5093357a6e6a4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fovBase: 80
   cameraPoints:
   - {fileID: 3959364408176602085}
   - {fileID: 6184506732131234826}
@@ -6619,14 +6620,11 @@ MonoBehaviour:
   defaultCameraPoint: 0
   headRotationSmoothTime: 0.6
   mouselookBlend: 0.1
-  mouselookBlendTransitionSpeed: 1
   nonFPCameraSmoothTime: 0.05
-  fovBase: 80
   fovBySpeed: 5
-  fovDampTime: 0.5
+  fovSmoothTime: 0.5
   fovMinSpeed: 5
   fovMax: 120
-  minAngle: 0
   FPCollisionRadius: 0.03
 --- !u!1 &6532721719779654200
 GameObject:
