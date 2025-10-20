@@ -5873,8 +5873,8 @@ MonoBehaviour:
   onGrabbed:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: LucidityDrive.LucidLegs, nostalgiagarden.luciditydrive.runtime
+      - m_Target: {fileID: 2058047613}
+        m_TargetAssemblyTypeName: LucidityDrive.Legs, nostalgiagarden.luciditydrive.runtime
         m_MethodName: ActivateAutopilot
         m_Mode: 2
         m_Arguments:
@@ -8170,6 +8170,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 93489011}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1282949277
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1444417065679913702, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_Name
+      value: VismodelExampleMinimal
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251880110278662236, guid: d9c705b3a4f96cb439c26a5f5cd90d75,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d9c705b3a4f96cb439c26a5f5cd90d75, type: 3}
 --- !u!1 &1344992100
 GameObject:
   m_ObjectHideFlags: 0
@@ -10595,8 +10663,8 @@ MonoBehaviour:
   onGrabbed:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: LucidityDrive.LucidLegs, nostalgiagarden.luciditydrive.runtime
+      - m_Target: {fileID: 2058047613}
+        m_TargetAssemblyTypeName: LucidityDrive.Legs, nostalgiagarden.luciditydrive.runtime
         m_MethodName: ActivateAutopilot
         m_Mode: 2
         m_Arguments:
@@ -11693,6 +11761,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 93489011}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2058047613 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5850852421196511812, guid: feb5ffb413408f64bb3e0843d3c27f57,
+    type: 3}
+  m_PrefabInstance: {fileID: 825995170}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcb6dc3da86c0f245a722e6c5d1544a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2082882802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12046,6 +12126,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: VismodelExample
       objectReference: {fileID: 0}
+    - target: {fileID: 1444417065679913702, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2251880110278662236, guid: c0dfbb5b4a7cdc942888f1f923bd4ba3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12107,6 +12192,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 825995170}
   - {fileID: 4909195841416271024}
+  - {fileID: 1282949277}
   - {fileID: 1927088119}
   - {fileID: 1563620791}
   - {fileID: 121298324}
