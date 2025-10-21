@@ -122,6 +122,7 @@ namespace LucidityDrive
         {
             while (!PlayerInfo.animModelInitialized || PlayerInfo.pelvis == null || !Arms.instance.initialized)
                 yield return null;
+            yield return new WaitForFixedUpdate();
             Arms la = Arms.instance;
 
             if (autoGrabL || autoGrabR)
