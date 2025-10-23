@@ -116,8 +116,6 @@ namespace LucidityDrive
             _VEL_Z_N = "velZN",
             _HANG_X = "hangX",
             _HANG_Z = "hangZ",
-            _LEAN_X = "leanX",
-            _LEAN_Z = "leanZ",
             _ANIMCYCLE = "animcycle",
             _ALIGNMENT = "alignment",
             _CLIMB = "climb",
@@ -129,7 +127,6 @@ namespace LucidityDrive
             _STANCEHEIGHT = "stanceHeight",
             _WOBBLE = "wobble",
             _HARD_LAND = "hardLanding",
-            _PELVIS_COLLISION = "pelvisCollision",
             _PROBE_PATTERN = "probePattern",
             _SWINGING = "swinging",
             _HEAD_UP_Y = "headUpY",
@@ -433,8 +430,6 @@ namespace LucidityDrive
             anim.SetFloat(_CLIMB, hang.y);
             anim.SetFloat(_HANG_X, hang.x);
             anim.SetFloat(_HANG_Z, hang.z);
-            anim.SetFloat(_LEAN_X, lean.x);
-            anim.SetFloat(_LEAN_Z, lean.y);
             anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
             anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(PlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
             anim.SetFloat(_HEAD_UP_Y, PlayerInfo.head.up.y);
@@ -451,7 +446,6 @@ namespace LucidityDrive
             anim.SetBool(_GRAB_L, PlayerInfo.climbL);
             anim.SetBool(_GRAB_R, PlayerInfo.climbR);
             anim.SetBool(_CLIMBING, PlayerInfo.climbing);
-            anim.SetBool(_PELVIS_COLLISION, PlayerInfo.pelvisCollision);
             anim.SetBool(_SWINGING, PlayerInfo.swinging);
         }
 
