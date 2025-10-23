@@ -1077,7 +1077,6 @@ MonoBehaviour:
   defaultAnimationSettings: {fileID: 11400000, guid: 902253bb87bcfe04394d99018ad0a4bd,
     type: 2}
   controller: {fileID: 9100000, guid: 9d5a21555745d03aaa9bfae1f6d47cef, type: 2}
-  fpcam: {fileID: 5496875962166913160}
   IK_LF: {fileID: 8982907529161714512}
   IK_RF: {fileID: 5249457337260208995}
   IK_LH: {fileID: 3483037214520940076}
@@ -1190,6 +1189,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcb6dc3da86c0f245a722e6c5d1544a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
+    type: 2}
   autoSprint: 0
   overrideSprint: 0
   jumpPrepare: 0
@@ -1200,8 +1201,6 @@ MonoBehaviour:
   footSpace: {fileID: 283649365809611213}
   vFloor: {fileID: 2916796221035400664}
   pelvisCollider: {fileID: 1105449760031442629}
-  defaultMovementSettings: {fileID: 11400000, guid: a8469793e13abd740b02263daaae8b9c,
-    type: 2}
   reloadMovementSettings:
     m_Name: Reload Movement Settings
     m_Type: 0
@@ -6825,7 +6824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b591950ef54e5864bac765cdc3a62b54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultLockMode: 0
+  defaultLockMode: 1
 --- !u!114 &5102646455301297706
 MonoBehaviour:
   m_ObjectHideFlags: 0
