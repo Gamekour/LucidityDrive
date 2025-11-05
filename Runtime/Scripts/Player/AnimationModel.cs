@@ -509,87 +509,54 @@ namespace LucidityDrive
             PlayerInfo.thighLength = Vector3.Distance(thighOrigin, kneepos);
             PlayerInfo.calfLength = Vector3.Distance(kneepos, footpos);
             PlayerInfo.totalLegLength = PlayerInfo.thighLength + PlayerInfo.calfLength - legCastThickness;
+            Rigidbody rb = null;
+
+            ref Rigidbody connectedRB = ref PlayerInfo.connectedRB_RF;
+            if (isLeft)
+                connectedRB = ref PlayerInfo.connectedRB_LF;
+
+            ref Transform lastCastHit = ref lastCastHitR;
+            if (isLeft)
+                lastCastHit = ref lastCastHitR;
+
+            ref Collider connectedColl = ref PlayerInfo.connectedColl_RF;
+            if (isLeft)
+                connectedColl = ref PlayerInfo.connectedColl_LF;
+
+            RaycastHit hitInfoToUse = hitInfoThigh;
+            if (!thighCast && shinCast)
+                hitInfoToUse = hitInfoShin;
 
             Vector3 CastOld = Cast;
-            if (thighCast)
+            if (thighCast || shinCast)
             {
-                Cast = hitInfoThigh.point;
-                UpdateFootSpaceAndRotation(isLeft, hitInfoThigh.normal, hitInfoThigh.point);
+                Cast = hitInfoToUse.point;
+                UpdateFootSpaceAndRotation(isLeft, hitInfoToUse.normal, hitInfoToUse.point);
 
-                ref Transform lastCastHit = ref lastCastHitR;
-                if (isLeft)
-                    lastCastHit = ref lastCastHitR;
-                ref Rigidbody connectedRB = ref PlayerInfo.connectedRB_RF;
-                if (isLeft)
-                    connectedRB = ref PlayerInfo.connectedRB_LF;
-                ref Collider connectedColl = ref PlayerInfo.connectedColl_RF;
-                if (isLeft)
-                    connectedColl = ref PlayerInfo.connectedColl_LF;
+                bool rbvalid = hitInfoToUse.transform.TryGetComponent(out rb);
+                bool collvalid = hitInfoToUse.transform.TryGetComponent(out Collider c);
 
-                if (hitInfoThigh.transform != lastCastHit)
-                {
-                    bool rbvalid = hitInfoThigh.transform.TryGetComponent(out Rigidbody rb);
-                    bool collvalid = hitInfoThigh.transform.TryGetComponent(out Collider c);
-
-                    if (rbvalid)
-                        connectedRB = rb;
-                    else
-                        connectedRB = null;
-                    if (collvalid)
-                        connectedColl = c;
-                    else
-                        connectedColl = null;
-                    lastCastHit = hitInfoThigh.transform;
-                }
-            }
-            else if (shinCast)
-            {
-                Cast = hitInfoShin.point;
-                UpdateFootSpaceAndRotation(isLeft, hitInfoShin.normal, hitInfoShin.point);
-
-                bool lastCastHit = isLeft ? lastCastHitL : lastCastHitR;
-                if (hitInfoShin.transform != lastCastHit)
-                {
-                    Rigidbody rb = hitInfoShin.transform.GetComponent<Rigidbody>();
-                    bool rbvalid = rb != null;
-                    if (isLeft)
-                    {
-                        if (rbvalid)
-                            PlayerInfo.connectedRB_LF = rb;
-                        lastCastHitL = hitInfoShin.transform;
-                    }
-                    else
-                    {
-                        if (rbvalid)
-                            PlayerInfo.connectedRB_RF = rb;
-                        lastCastHitR = hitInfoShin.transform;
-                    }
-                }
+                if (rbvalid)
+                    connectedRB = rb;
+                else
+                    connectedRB = null;
+                if (collvalid)
+                    connectedColl = c;
+                else
+                    connectedColl = null;
+                lastCastHit = hitInfoToUse.transform;
             }
             else
             {
                 Cast = footpos;
+                connectedRB = null;
+                lastCastHit = null;
                 if (isLeft)
-                {
-                    PlayerInfo.connectedRB_LF = null;
                     PlayerInfo.IK_LF.localRotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
-                    lastCastHitL = null;
-                }
                 else
-                {
-                    PlayerInfo.connectedRB_RF = null;
                     PlayerInfo.IK_RF.localRotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
-                    lastCastHitR = null;
-                }
             }
-
-            if (PlayerInfo.stanceHeight > 0.11f && Vector3.Distance(thighOrigin, Cast) < minCastDist)
-            {
-                Cast = thighOrigin + (PlayerInfo.pelvis.forward * PlayerInfo.totalLegLength);
-                PlayerInfo.connectedRB_LF = null;
-                PlayerInfo.connectedRB_RF = null;
-            }
-            else if (PlayerInfo.stanceHeight < 0.11f)
+            if (PlayerInfo.stanceHeight < 0.11f)
             {
                 Vector3 footNormal = Vector3.up;
                 if (thighCast)
