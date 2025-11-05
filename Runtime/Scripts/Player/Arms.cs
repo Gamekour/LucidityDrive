@@ -1,3 +1,4 @@
+using LucidityDrive.Extras;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -59,6 +60,7 @@ namespace LucidityDrive
             ;
         private SoftJointLimit sjlewis;
         private EventBox eventBoxL, eventBoxR;
+        private TempLayerOverride tloL, tloR;
         private ConfigurableJoint anchorL, anchorR;
         private Rigidbody grabbedRB_R, grabbedRB_L;
         private Tool lt_R, lt_L;
@@ -965,6 +967,9 @@ namespace LucidityDrive
             {
                 IGrabTrigger trig = targetTransform.GetComponent<IGrabTrigger>();
                 trig?.UngrabEvent();
+                TempLayerOverride activeTLO = targetTransform.GetComponent<TempLayerOverride>();
+                if (activeTLO != null)
+                    Destroy(activeTLO);
                 grabbedRB = null;
             }
 
@@ -1020,6 +1025,10 @@ namespace LucidityDrive
             if (isRight)
                 eventBox = ref eventBoxR;
 
+            ref TempLayerOverride tlo = ref tloL;
+            if (isRight)
+                tlo = ref tloR;
+
             if (jointTarget != null)
                 Destroy(jointTarget);
 
@@ -1035,6 +1044,12 @@ namespace LucidityDrive
                 eventBox = grabTarget.gameObject.GetComponent<EventBox>();
                 if (eventBox == null)
                     eventBox = grabTarget.gameObject.AddComponent<EventBox>();
+                tlo = grabTarget.gameObject.GetComponent<TempLayerOverride>();
+                if (tlo == null)
+                {
+                    tlo = grabTarget.gameObject.AddComponent<TempLayerOverride>();
+                    tlo.newLayer = 7;
+                }
                 eventBox.onCollisionExit = new UnityEvent<Collision>();
                 eventBox.onHover = new UnityEvent();
                 eventBox.onUnHover = new UnityEvent();
