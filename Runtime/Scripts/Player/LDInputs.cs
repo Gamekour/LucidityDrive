@@ -131,7 +131,8 @@ namespace LucidityDrive
             camSelect4,
             camCycle,
             mouseUnlock,
-            freeLook
+            freeLook,
+            spin
             ;
     }
 
@@ -151,7 +152,8 @@ namespace LucidityDrive
             bslide,
             grabL,
             grabR,
-            freeLook
+            freeLook,
+            spin
             ;
     }
 }

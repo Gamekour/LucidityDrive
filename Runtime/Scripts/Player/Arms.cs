@@ -56,7 +56,9 @@ namespace LucidityDrive
             swingStabilization,
             pullSpeed,
             pullDamp,
-            maxPullHeight
+            maxPullHeight,
+            rbSpringScale,
+            rbDampScale
             ;
         private SoftJointLimit sjlewis;
         private EventBox eventBoxL, eventBoxR;
@@ -258,12 +260,12 @@ namespace LucidityDrive
             CalcClimbRelative();
 
             if (PlayerInfo.climbL && PlayerInfo.climbing)
-                ClimbPose(false);
+                ItemPose(false);
             else
                 ItemPose(false);
 
             if (PlayerInfo.climbR && PlayerInfo.climbing)
-                ClimbPose(true);
+                ItemPose(true);
             else
                 ItemPose(true);
 
@@ -1034,6 +1036,8 @@ namespace LucidityDrive
 
             bool dynamic = false;
 
+            float springscale = 1;
+
             if (grabTarget.TryGetComponent(out Rigidbody grabTargetRB))
             {
                 dynamic = true;
@@ -1062,6 +1066,8 @@ namespace LucidityDrive
                 ignoreMask |= (1 << 3);
 
                 eventBox.ignoreLayers = ignoreMask;
+
+                springscale = rbSpringScale;
             }
             else
             {
@@ -1076,7 +1082,24 @@ namespace LucidityDrive
             jointTarget.connectedBody = grabbedRB;
             jointTarget.enableCollision = true;
             if (dynamic)
+            {
                 jointTarget.connectedAnchor = grabTarget.InverseTransformPoint(grabPosition);
+                if (springscale != 1)
+                {
+                    JointDrive scaledDriveX = jointReference.xDrive;
+                    JointDrive scaledDriveY = jointReference.yDrive;
+                    JointDrive scaledDriveZ = jointReference.zDrive;
+                    scaledDriveX.positionSpring *= rbSpringScale;
+                    scaledDriveX.positionDamper *= rbDampScale;
+                    scaledDriveY.positionSpring *= rbSpringScale;
+                    scaledDriveY.positionDamper *= rbDampScale;
+                    scaledDriveZ.positionSpring *= rbSpringScale;
+                    scaledDriveZ.positionDamper *= rbDampScale;
+                    jointTarget.xDrive = scaledDriveX;
+                    jointTarget.yDrive = scaledDriveY;
+                    jointTarget.zDrive = scaledDriveZ;
+                }    
+            }
             else
             {
                 JointDrive disableDrive = new JointDrive();

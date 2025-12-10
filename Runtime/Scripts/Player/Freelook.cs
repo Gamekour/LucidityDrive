@@ -9,11 +9,14 @@ namespace LucidityDrive
         [Tooltip("Scale sensitivity for X and Y separately")]
         public Vector2 sensitivityModifier = Vector2.one;
         [Tooltip("Clamp the percieved delta-time to this value (reduces camera movement during frame stutters)")]
-        [SerializeField] float maxDeltaTime = 0.06f;
+        public float maxDeltaTime = 0.06f;
+        [Tooltip("Multiply last delta by this value when spinning")]
+        public float spinScale = 1.5f;
 
+        private Vector2 lastDelta;
         private Transform chest;
         private Transform head;
-
+        private bool appliedSpin = false;
         private float currentOffset, targetOffset;
 
         private void Awake()
@@ -40,6 +43,16 @@ namespace LucidityDrive
             if (Camera.main == null || chest == null || !PlayerInfo.headLocked || !PlayerInfo.animModelInitialized)
                 return;
 
+            if (!LucidInputValueShortcuts.spin)
+            {
+                lastDelta = LucidInputValueShortcuts.headLook;
+                appliedSpin = false;
+            }
+            else if (!appliedSpin)
+            {
+                lastDelta *= spinScale;
+                appliedSpin = true;
+            }
             CalculateRotation();
         }
 
@@ -57,7 +70,7 @@ namespace LucidityDrive
         {
             PlayerInfo.mainBody.inertiaTensorRotation = Quaternion.identity;
 
-            Vector2 headLookInput = LucidInputValueShortcuts.headLook;
+            Vector2 headLookInput = lastDelta;
             headLookInput *= sensitivityModifier * sensitivity;
             headLookInput *= Mathf.Clamp(Time.deltaTime, 0, maxDeltaTime);
 

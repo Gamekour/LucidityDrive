@@ -27,7 +27,7 @@
                     "name": "crouch",
                     "type": "Button",
                     "id": "28757e52-046a-461c-ac3f-5714658cb8ca",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -166,6 +166,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "spin",
+                    "type": "Button",
+                    "id": "faec9441-ef21-46f1-8fc4-9d5b804a51bf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -271,7 +280,7 @@
                 {
                     "name": "",
                     "id": "ff301805-0b04-4069-967e-0b0d4829672f",
-                    "path": "<Keyboard>/leftCtrl",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
@@ -292,17 +301,6 @@
                 },
                 {
                     "name": "",
-                    "id": "7b212edb-5e9f-45fa-b442-29344baf8ac7",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Default-Keyboard",
-                    "action": "slide",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "d958f605-b38e-428b-a379-f03a6ab76c15",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -314,8 +312,19 @@
                 },
                 {
                     "name": "",
+                    "id": "eae46655-76a9-48cf-aec8-63ac862e7355",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Default-Keyboard",
+                    "action": "slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "a0b8e0d6-e7f0-4b67-8b3e-f6f58ab6ea1e",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",
@@ -595,6 +604,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "freeLook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fc5cce6a-5ab3-4337-b37f-f6e9ae2ccc53",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Default-Keyboard",
+                    "action": "spin",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

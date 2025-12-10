@@ -27,6 +27,10 @@ namespace LucidityDrive
         public float pullDamp = 1;
         [Tooltip("Maximum height the arms will try to pull to, relative to grab position")]
         public float maxPullHeight = 3;
+        [Tooltip("Scale of joint springs created with rigidbodies")]
+        public float rbSpringScale = 4;
+        [Tooltip("Scale of joint springs dampers created with rigidbodies")]
+        public float rbDampScale = 40;
         [Header("Experimental")]
         [Tooltip("Vertical force threshold to activate climbing logic while grabbing a physics object; very buggy and can cause animation softlocks. set to Infinity to disable")]
         public float climbModeForceThreshold = Mathf.Infinity;

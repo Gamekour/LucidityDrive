@@ -4431,6 +4431,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: stanceHeight
     m_EventTreshold: 0.09
+  - m_ConditionMode: 4
+    m_ConditionEvent: headForwardY
+    m_EventTreshold: -0.5
   - m_ConditionMode: 2
     m_ConditionEvent: flight
     m_EventTreshold: 0
