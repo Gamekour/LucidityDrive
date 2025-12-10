@@ -260,12 +260,12 @@ namespace LucidityDrive
             CalcClimbRelative();
 
             if (PlayerInfo.climbL && PlayerInfo.climbing)
-                ItemPose(false);
+                ClimbPose(false);
             else
                 ItemPose(false);
 
             if (PlayerInfo.climbR && PlayerInfo.climbing)
-                ItemPose(true);
+                ClimbPose(true);
             else
                 ItemPose(true);
 

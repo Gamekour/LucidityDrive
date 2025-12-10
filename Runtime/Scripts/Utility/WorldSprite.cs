@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class WorldSprite : MonoBehaviour
 {
-    public Vector2 UIScale = Vector2.one * 100;
-    public Sprite sprite;
+    public Vector2 UIScale = Vector2.one * 0.05f;
+    public Texture image;
 
-    private void OnEnable() => StartCoroutine(WaitToAdd());
-    private void OnDisable() => WorldSpriteManager.instance?.RemoveItem(this);
-
-    IEnumerator WaitToAdd()
+    private void OnGUI()
     {
-        while (WorldSpriteManager.instance == null)
-            yield return null;
-        WorldSpriteManager.instance?.AddItem(this);
+        Rect targetRect = new();
+        targetRect.width = Screen.height * UIScale.x;
+        targetRect.height = Screen.height * UIScale.y;
+        Vector2 screenpos = Camera.main.WorldToScreenPoint(transform.position);
+        targetRect.position = new Vector2(screenpos.x - targetRect.width / 2, Screen.height - screenpos.y - targetRect.height / 2);
+        GUI.DrawTexture(targetRect, image);
     }
 }
