@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16356dae03afee643a69b2d4d605cfb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIScale: {x: 200, y: 200}
+  UIScale: {x: 0.25, y: 0.25}
   image: {fileID: 2800000, guid: e9c90a46ebfe48346af10c84102aee5a, type: 3}
 --- !u!1 &1449891932281873368
 GameObject:
@@ -1212,7 +1212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16356dae03afee643a69b2d4d605cfb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIScale: {x: 200, y: 200}
+  UIScale: {x: 0.25, y: 0.25}
   image: {fileID: 2800000, guid: d5483fd585e54ae9293673e5b8695918, type: 3}
 --- !u!1 &4095379362296046315
 GameObject:
