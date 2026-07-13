@@ -3029,10 +3029,13 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: stanceHeight
-    m_EventTreshold: 0.09
+    m_EventTreshold: 0.5
+  - m_ConditionMode: 4
+    m_ConditionEvent: headUpY
+    m_EventTreshold: 0
   - m_ConditionMode: 3
     m_ConditionEvent: headForwardY
-    m_EventTreshold: -0.5
+    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: flight
     m_EventTreshold: 0
@@ -4440,6 +4443,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: stanceHeight
     m_EventTreshold: 0.09
+  - m_ConditionMode: 3
+    m_ConditionEvent: alignment
+    m_EventTreshold: 0
   - m_ConditionMode: 4
     m_ConditionEvent: headForwardY
     m_EventTreshold: -0.5
@@ -4449,9 +4455,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: climbing
     m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: disableAnyState
-    m_EventTreshold: 0
+  - m_ConditionMode: 3
+    m_ConditionEvent: airtime
+    m_EventTreshold: 0.3
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8443710410607676518}
   m_Solo: 0
@@ -4525,6 +4531,9 @@ AnimatorStateTransition:
     m_EventTreshold: 2
   - m_ConditionMode: 1
     m_ConditionEvent: grounded
+    m_EventTreshold: 0
+  - m_ConditionMode: 3
+    m_ConditionEvent: headUpY
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4673449810457700624}

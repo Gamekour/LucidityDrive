@@ -96,5 +96,7 @@ namespace LucidityDrive
         public float climbLegAdjust = 0.3f;
         [Tooltip("Maximum angle for freelook before hips start to rotate anyways")]
         public float maxFreeLookAngle = 60;
+        [Tooltip("Smooth time for changes in stance height")]
+        public float stanceHeightSmoothTime = 0.4f;
     }
 }

@@ -63,7 +63,7 @@
                     "name": "grabR",
                     "type": "Button",
                     "id": "7a242f23-4eaf-441e-a265-64e6e6c46876",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -313,7 +313,7 @@
                 {
                     "name": "",
                     "id": "eae46655-76a9-48cf-aec8-63ac862e7355",
-                    "path": "<Keyboard>/z",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Default-Keyboard",
@@ -324,7 +324,7 @@
                 {
                     "name": "",
                     "id": "a0b8e0d6-e7f0-4b67-8b3e-f6f58ab6ea1e",
-                    "path": "<Keyboard>/x",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default-Keyboard",

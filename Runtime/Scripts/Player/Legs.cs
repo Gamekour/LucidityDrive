@@ -103,12 +103,14 @@ namespace LucidityDrive
             climbLegAdjust,
             slideBoostVertical,
             slideBoostHorizontal,
-            maxFreeLookAngle
+            maxFreeLookAngle,
+            stanceHeightSmoothTime
             = 0;
 
         private Rigidbody rb;
         private Vector3 bodyCollisionNrm;
         private float animPhase = 0;
+        private float stanceHeightRef = 0;
         private bool stuckBackSlide = false;
         private bool preparingJump = false;
         private bool releaseJumping = false;
@@ -192,6 +194,8 @@ namespace LucidityDrive
                 newStanceHeight = stanceHeightCrawl;
             else if (inputCrouch || (inputJump && jumpPrepare))
                 newStanceHeight = stanceHeightCrouched;
+
+            newStanceHeight = Mathf.SmoothDamp(PlayerInfo.stanceHeight, newStanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
 
             newStanceHeight = Mathf.Clamp(newStanceHeight, 0, PlayerInfo.maxStanceHeight);
 
