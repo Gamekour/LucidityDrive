@@ -59,10 +59,9 @@ namespace LucidityDrive
             leanScale,
             maxLeanAngle,
             highSlopeThreshold,
-            velNFallback
+            velNFallback,
+            airtime
             ;
-
-        
 
         [HideInInspector]
         public Dictionary<string, Quaternion> boneRots = new();
@@ -130,7 +129,8 @@ namespace LucidityDrive
             _PROBE_PATTERN = "probePattern",
             _SWINGING = "swinging",
             _HEAD_UP_Y = "headUpY",
-            _HEAD_FWD_Y = "headForwardY"
+            _HEAD_FWD_Y = "headForwardY",
+            _AIRTIME = "airtime"
             ;
         private void Awake()
         {
@@ -182,6 +182,11 @@ namespace LucidityDrive
             float stepphase = 0.5f - animPhase;
             stepphase = Mathf.Abs(stepphase) * 2;
             PlayerInfo.stepPhase = stepphase;
+
+            if (!PlayerInfo.grounded)
+                airtime += Time.deltaTime;
+            else
+                airtime = 0;
         }
 
         private void OnEnable()
@@ -434,6 +439,7 @@ namespace LucidityDrive
             anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(PlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
             anim.SetFloat(_HEAD_UP_Y, PlayerInfo.head.up.y);
             anim.SetFloat(_HEAD_FWD_Y, PlayerInfo.head.forward.y);
+            anim.SetFloat(_AIRTIME, airtime);
             anim.SetInteger(_PROBE_PATTERN, PlayerInfo.probePattern);
         }
 
