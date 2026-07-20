@@ -56,3 +56,4 @@ MonoBehaviour:
   minLegAdjust: 0.2
   climbLegAdjust: 0.3
   maxFreeLookAngle: 60
+  stanceHeightSmoothTime: 0.1

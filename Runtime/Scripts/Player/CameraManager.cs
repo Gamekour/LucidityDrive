@@ -106,7 +106,7 @@ namespace LucidityDrive
 
         private void Update()
         {
-            float speed = PlayerInfo.mainBody.velocity.magnitude;
+            float speed = PlayerInfo.mainBody.linearVelocity.magnitude;
             if (speed < fovMinSpeed)
                 speed = 0;
             currentspeed = Mathf.SmoothDamp(currentspeed, speed, ref fovDampRef, fovSmoothTime);

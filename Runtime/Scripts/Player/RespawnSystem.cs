@@ -59,7 +59,7 @@ namespace LucidityDrive
         {
             PlayerInfo.pelvis.position = point;
             Arms.instance.transform.position = point;
-            PlayerInfo.mainBody.velocity = Vector3.zero;
+            PlayerInfo.mainBody.linearVelocity = Vector3.zero;
             if (PlayerInfo.vismodelRef != null)
                 PlayerInfo.vismodelRef.transform.position = point;
             OnRespawn.Invoke();
@@ -68,7 +68,7 @@ namespace LucidityDrive
         {
             PlayerInfo.pelvis.position = point;
             Arms.instance.transform.position = point;
-            PlayerInfo.mainBody.velocity = velocity;
+            PlayerInfo.mainBody.linearVelocity = velocity;
             if (PlayerInfo.vismodelRef != null)
                 PlayerInfo.vismodelRef.transform.position = point;
             OnRespawn.Invoke();

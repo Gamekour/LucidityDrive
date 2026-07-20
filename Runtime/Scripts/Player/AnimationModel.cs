@@ -160,10 +160,10 @@ namespace LucidityDrive
 
             float animPhase = PlayerInfo.animPhase;
 
-            Vector3 velflat = PlayerInfo.mainBody.velocity;
+            Vector3 velflat = PlayerInfo.mainBody.linearVelocity;
             velflat.y = 0;
 
-            float stepRateAdjusted = stepRate * (1 + (PlayerInfo.mainBody.velocity.magnitude * scaleStepRateByVelocity));
+            float stepRateAdjusted = stepRate * (1 + (PlayerInfo.mainBody.linearVelocity.magnitude * scaleStepRateByVelocity));
 
             if (velflat.magnitude > 0.1f)
             {
@@ -401,7 +401,7 @@ namespace LucidityDrive
 
         private Vector3 CalculateLocalVelocity()
         {
-            Vector3 localVel = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.mainBody.velocity);
+            Vector3 localVel = PlayerInfo.pelvis.InverseTransformVector(PlayerInfo.mainBody.linearVelocity);
             Vector3 currentvellocal = Vector3.zero;
             currentvellocal.x = anim.GetFloat(_VEL_X);
             currentvellocal.z = anim.GetFloat(_VEL_Z);
@@ -436,7 +436,7 @@ namespace LucidityDrive
             anim.SetFloat(_HANG_X, hang.x);
             anim.SetFloat(_HANG_Z, hang.z);
             anim.SetFloat(_STANCEHEIGHT, smoothedStanceHeight);
-            anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(PlayerInfo.mainBody.velocity.magnitude) * wobbleScale));
+            anim.SetFloat(_WOBBLE, 1 + (Mathf.Abs(PlayerInfo.mainBody.linearVelocity.magnitude) * wobbleScale));
             anim.SetFloat(_HEAD_UP_Y, PlayerInfo.head.up.y);
             anim.SetFloat(_HEAD_FWD_Y, PlayerInfo.head.forward.y);
             anim.SetFloat(_AIRTIME, airtime);
@@ -492,7 +492,7 @@ namespace LucidityDrive
 
             if (!prev_grounded && PlayerInfo.grounded)
             {
-                PlayerInfo.lastLandingForce = PlayerInfo.mainBody.velocity.y;
+                PlayerInfo.lastLandingForce = PlayerInfo.mainBody.linearVelocity.y;
                 onGrounded.Invoke(PlayerInfo.lastLandingForce);
                 if (PlayerInfo.lastLandingForce < -hardLandingForce)
                     queueRoll = true;

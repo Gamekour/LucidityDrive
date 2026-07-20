@@ -29,7 +29,7 @@ public class WindCube : MonoBehaviour
             force *= relativeForce.magnitude;
             if (target != null)
             {
-                Vector3 localvel = transform.InverseTransformVector(target.velocity);
+                Vector3 localvel = transform.InverseTransformVector(target.linearVelocity);
                 if ((localvel.y > threshold) || threshold == 0)
                 {
                     if (multiplicative)
@@ -38,12 +38,12 @@ public class WindCube : MonoBehaviour
                     }
                     if (subVel)
                     {
-                        force -= target.velocity;
+                        force -= target.linearVelocity;
                         force /= Time.fixedDeltaTime;
                         force *= (1 - matchSmoothness);
                     }
                     target.AddForce(force, fm);
-                    target.velocity /= drag + 1;
+                    target.linearVelocity /= drag + 1;
                 }
             }
             else

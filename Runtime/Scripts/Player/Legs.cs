@@ -158,7 +158,7 @@ namespace LucidityDrive
             if (!LucidInputValueShortcuts.freeLook || Vector3.Angle(headflat.normalized, transform.forward) > maxFreeLookAngle)
                 RotationLogic();
 
-            Vector3 velflathip = hipSpace.InverseTransformVector(rb.velocity);
+            Vector3 velflathip = hipSpace.InverseTransformVector(rb.linearVelocity);
             velflathip.y = 0;
 
             //all of these need to eventually be delegated to bools
@@ -362,15 +362,15 @@ namespace LucidityDrive
             if (aerialDrag != 0)
             {
                 float aerialDragMultiplier = 1f / (1f + (aerialDrag * Time.fixedDeltaTime));
-                float vely = rb.velocity.y;
-                rb.velocity *= aerialDragMultiplier;
-                Vector3 vel = rb.velocity;
+                float vely = rb.linearVelocity.y;
+                rb.linearVelocity *= aerialDragMultiplier;
+                Vector3 vel = rb.linearVelocity;
                 vel.y = vely;
-                rb.velocity = vel;
+                rb.linearVelocity = vel;
             }
 
             // Calculate current horizontal velocity
-            Vector3 velflat = rb.velocity;
+            Vector3 velflat = rb.linearVelocity;
             velflat.y = 0;
 
             // Project current velocity onto desired movement direction
@@ -425,14 +425,14 @@ namespace LucidityDrive
             }
             moveFlat.y = Mathf.Clamp(moveFlat.y, yclampmin, yclampmax);
             float flightDragMultiplier = 1f / (1f + (flightDrag * Time.fixedDeltaTime));
-            rb.velocity *= flightDragMultiplier;
+            rb.linearVelocity *= flightDragMultiplier;
             rb.AddForce(moveFlat * flightSpeed, ForceMode.Acceleration);
         }
 
         //handles the forces necessary to keep the player upright and moving
         private void LegPush(bool inputCrouch, bool inputJump, bool inputSprint)
         {
-            Vector3 velflat = rb.velocity;
+            Vector3 velflat = rb.linearVelocity;
             velflat.y = 0;
 
             Vector2 moveVector = LucidInputValueShortcuts.movement;
@@ -481,7 +481,7 @@ namespace LucidityDrive
             Debug.DrawRay(footSpace.position, pushdir, Color.red);
 
             float downness = Mathf.Clamp01(1 - footSpace.up.y) * Mathf.Abs(footSpace.up.x);
-            float movedownamount = Mathf.Clamp((hipSpace.TransformVector(moveFlat).normalized.y * rb.velocity.magnitude), -targetHeightByNegativeSlopeClamp, 0);
+            float movedownamount = Mathf.Clamp((hipSpace.TransformVector(moveFlat).normalized.y * rb.linearVelocity.magnitude), -targetHeightByNegativeSlopeClamp, 0);
             movedownamount *= targetHeightByNegativeSlope;
             movedownamount -= downness;
 
@@ -524,7 +524,7 @@ namespace LucidityDrive
             if (LucidInputValueShortcuts.jump && !PlayerInfo.disableJump)
                 forceadjust *= jumpForceScale;
 
-            float currentY = rb.velocity.y;
+            float currentY = rb.linearVelocity.y;
             float targetY = Mathf.LerpUnclamped(forceadjust, 0, heightratio);
             float diff = targetY - currentY;
 
@@ -535,11 +535,11 @@ namespace LucidityDrive
             slide = -slide;
             Vector3 dir = hipSpace.TransformVector(moveFlat);
             if (dir.magnitude == 0)
-                dir = -rb.velocity;
-            Vector3 current = rb.velocity - pointVelocity;
+                dir = -rb.linearVelocity;
+            Vector3 current = rb.linearVelocity - pointVelocity;
             current *= rb.mass;
             NrmSlide(current, out Vector3 velslide, out float velnrm);
-            slide += (Vector3.Angle(rb.velocity, dir) / 180) * footSlideStrength * velslide;
+            slide += (Vector3.Angle(rb.linearVelocity, dir) / 180) * footSlideStrength * velslide;
             nrm += velnrm;
 
             PlayerInfo.alignment = 1 - (Mathf.Clamp01(Vector3.Angle(velflat, dir) / 90) * Mathf.Clamp01(velflat.magnitude / (moveSpeed * sprintScale)));
@@ -563,14 +563,14 @@ namespace LucidityDrive
             float t_strafe = Mathf.Clamp01(Mathf.Abs(moveFlat.normalized.x / (1 - strafeWalkStartThreshold)) - strafeWalkStartThreshold);
             moveadjust *= Mathf.Lerp(1, strafeWalkSpeedMult, t_strafe);
 
-            float diffmag = 1 - Mathf.Clamp01(rb.velocity.magnitude / moveadjust);
+            float diffmag = 1 - Mathf.Clamp01(rb.linearVelocity.magnitude / moveadjust);
             moveadjust *= 1 + (diffmag * moveBurst);
 
             float jumpadjust = (inputJump && !PlayerInfo.disableJump) ? directionalJumpStrength : 1;
             Vector3 movetarget = jumpadjust * moveadjust * hipSpace.TransformVector(moveFlat);
             Vector3 dirJumpBoost = directionalJumpBoost * hipSpace.TransformVector(moveFlat) * rb.mass;
             dirJumpBoost *= (inputJump && !PlayerInfo.disableJump) ? 1 : 0;
-            Vector3 relativevel = hipSpace.InverseTransformVector(rb.velocity);
+            Vector3 relativevel = hipSpace.InverseTransformVector(rb.linearVelocity);
             relativevel.y = 0;
             relativevel = hipSpace.TransformVector(relativevel);
             Vector3 movediff = movetarget - relativevel;
@@ -673,7 +673,7 @@ namespace LucidityDrive
             Vector3 willflat = (PlayerInfo.pelvis.TransformVector(moveFlat) * (moveSpeed / 2));
             willflat.y = 0;
 
-            Vector3 velflat = rb.velocity;
+            Vector3 velflat = rb.linearVelocity;
             velflat.y = 0;
 
             Vector3 legR = legSpaceR.position;

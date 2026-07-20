@@ -171,12 +171,12 @@ namespace LucidityDrive
             if (lt_L != null)
             {
                 lt_L.transform.position = PlayerInfo.pelvis.position;
-                grabbedRB_L.velocity = Vector3.zero;
+                grabbedRB_L.linearVelocity = Vector3.zero;
             }
             if (lt_R != null)
             {
                 lt_R.transform.position = PlayerInfo.pelvis.position;
-                grabbedRB_R.velocity = Vector3.zero;
+                grabbedRB_R.linearVelocity = Vector3.zero;
             }
         }
 
@@ -239,7 +239,7 @@ namespace LucidityDrive
                 anchorL.anchor = targetposL;
                 grabForceL = anchorL.currentForce;
                 if (lt_L != null)
-                    grabbedRB_L.AddForce((PlayerInfo.mainBody.velocity - grabbedRB_L.velocity) * velocityCheatForLucidTools);
+                    grabbedRB_L.AddForce((PlayerInfo.mainBody.linearVelocity - grabbedRB_L.linearVelocity) * velocityCheatForLucidTools);
             }
             else
                 grabForceL = Vector3.down * 1000;
@@ -248,7 +248,7 @@ namespace LucidityDrive
                 anchorR.anchor = targetposR;
                 grabForceR = anchorR.currentForce;
                 if (lt_R != null)
-                    grabbedRB_R.AddForce((PlayerInfo.mainBody.velocity - grabbedRB_R.velocity) * velocityCheatForLucidTools);
+                    grabbedRB_R.AddForce((PlayerInfo.mainBody.linearVelocity - grabbedRB_R.linearVelocity) * velocityCheatForLucidTools);
             }
             else
                 grabForceR = Vector3.down * 1000;
@@ -455,7 +455,7 @@ namespace LucidityDrive
             Vector3 motion = PlayerInfo.pelvis.TransformVector(moveflat);
 
             Vector3 desiredDir = motion.normalized;
-            Vector3 currentVelFlat = PlayerInfo.mainBody.velocity;
+            Vector3 currentVelFlat = PlayerInfo.mainBody.linearVelocity;
             currentVelFlat.y = 0;
             if (motion == Vector3.zero)
                 desiredDir = PlayerInfo.pelvis.forward;
@@ -474,7 +474,7 @@ namespace LucidityDrive
             motion.y = ((handY - PlayerInfo.pelvis.position.y) / animArmLength) - maxPullHeight + (currentPull * 2);
             motion *= animArmLength;
             if (!PlayerInfo.swinging)
-                motion.y -= PlayerInfo.mainBody.velocity.y * pullDamp;
+                motion.y -= PlayerInfo.mainBody.linearVelocity.y * pullDamp;
             else
                 motion.y = 0;
             if (LucidInputValueShortcuts.jump)
