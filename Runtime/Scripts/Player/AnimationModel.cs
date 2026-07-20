@@ -1,8 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 
 namespace LucidityDrive
 {
@@ -12,6 +16,12 @@ namespace LucidityDrive
 
         [Tooltip("Animation settings to load on Start")]
         public AnimationSettings defaultAnimationSettings;
+
+        public PlayableGraph graph;
+        public AnimationLayerMixerPlayable mixer;
+        public AnimatorControllerPlayable controllerPlayable;
+        public AnimationPlayableOutput playableOutput;
+        public Coroutine emoteCoroutine;
 
         private AnimationSettings m_activeAnimationSettings;
         public AnimationSettings ActiveAnimationSettings
@@ -143,6 +153,39 @@ namespace LucidityDrive
             pelvis = PlayerInfo.pelvis;
             head = PlayerInfo.head;
         }
+
+        private void SetupPlayables()
+        {
+            graph = PlayableGraph.Create("LDMasterGraph");
+            playableOutput = AnimationPlayableOutput.Create(graph, "Animation", anim);
+            controllerPlayable = AnimatorControllerPlayable.Create(graph, controller);
+            mixer = AnimationLayerMixerPlayable.Create(graph, 2);
+            graph.Connect(controllerPlayable, 0, mixer, 0);
+            mixer.SetInputWeight(0, 1);
+            playableOutput.SetSourcePlayable(mixer);
+            graph.Play();
+        }
+
+        public void StartEmote(AnimationClip animation)
+        {
+            if (emoteCoroutine == null)
+                emoteCoroutine = StartCoroutine(IEmote(animation));
+            else
+            {
+                StopCoroutine(emoteCoroutine);
+                emoteCoroutine = StartCoroutine(IEmote(animation));
+            }
+        }    
+
+        public IEnumerator IEmote(AnimationClip animation)
+        {
+            graph.Disconnect(mixer, 1);
+            var playableAddon = AnimationClipPlayable.Create(graph, animation);
+            graph.Connect(playableAddon, 0, mixer, 1);
+            yield return new WaitForSeconds(2);
+            graph.Disconnect(mixer, 1);
+        }
+
         private void Update()
         {
             if (!initialized) return;
@@ -236,7 +279,7 @@ namespace LucidityDrive
             }
             Destroy(newVisModel);
             anim = newPlayerModel.GetComponent<Animator>();
-            anim.runtimeAnimatorController = controller;
+
             anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             anim.avatar = targetAvatar;
             PlayerInfo.animationModel = anim;
@@ -256,6 +299,8 @@ namespace LucidityDrive
             PlayerInfo.IK_RF = IK_RF;
             PlayerInfo.IK_LH = IK_LH;
             PlayerInfo.IK_RH = IK_RH;
+
+            SetupPlayables();
         }
 
         public void OnVismodelRemoved()
