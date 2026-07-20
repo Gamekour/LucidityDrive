@@ -175,7 +175,16 @@ namespace LucidityDrive
                 StopCoroutine(emoteCoroutine);
                 emoteCoroutine = StartCoroutine(IEmote(animation));
             }
-        }    
+        }
+
+        public void StopEmote(AnimationClip animation)
+        {
+            if (emoteCoroutine != null)
+            {
+                StopCoroutine(emoteCoroutine);
+                graph.Disconnect(mixer, 1);
+            }
+        }
 
         public IEnumerator IEmote(AnimationClip animation)
         {
