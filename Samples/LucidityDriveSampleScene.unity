@@ -692,7 +692,7 @@ GameObject:
   - component: {fileID: 77326792}
   - component: {fileID: 77326791}
   m_Layer: 0
-  m_Name: emote_jiggy
+  m_Name: emote_meditate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -735,7 +735,7 @@ MonoBehaviour:
         m_MethodName: SetEmoteMask
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 31900000, guid: 7dceffd7c64cc704ba38894dd2acce34,
+          m_ObjectArgument: {fileID: 31900000, guid: 1fb21a529bd45364ead05b9236cfaa0d,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AvatarMask, UnityEngine
           m_IntArgument: 0
@@ -748,7 +748,7 @@ MonoBehaviour:
         m_MethodName: StartEmoteLooping
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 7400000, guid: ccde06c22c3618446be898ac80ae63b9,
+          m_ObjectArgument: {fileID: 7400000, guid: 9aba23b224a55cd4a9a4efed5ce1699a,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AnimationClip, UnityEngine
           m_IntArgument: 0
