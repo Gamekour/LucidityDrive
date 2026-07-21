@@ -186,26 +186,29 @@ namespace LucidityDrive
                 inputSprint = !inputSprint;
             bool doGroundLogic = PlayerInfo.grounded && PlayerInfo.footSurface.y >= -0.001f;
 
-            float newStanceHeight = 1;
 
-            if (inputBackslide || PlayerInfo.head.up.y < PlayerInfo.camUpsideDownThreshold || PlayerInfo.swinging)
-                newStanceHeight = 0;
-            else if (inputCrawl)
-                newStanceHeight = stanceHeightCrawl;
-            else if (inputCrouch || (inputJump && jumpPrepare))
-                newStanceHeight = stanceHeightCrouched;
+            if (PlayerInfo.stanceHeightOverride == -1)
+            {
+                float newStanceHeight = 1;
+                if (inputBackslide || PlayerInfo.head.up.y < PlayerInfo.camUpsideDownThreshold || PlayerInfo.swinging)
+                    newStanceHeight = 0;
+                else if (inputCrawl)
+                    newStanceHeight = stanceHeightCrawl;
+                else if (inputCrouch || (inputJump && jumpPrepare))
+                    newStanceHeight = stanceHeightCrouched;
+                newStanceHeight = Mathf.SmoothDamp(PlayerInfo.stanceHeight, newStanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
 
-            newStanceHeight = Mathf.SmoothDamp(PlayerInfo.stanceHeight, newStanceHeight, ref stanceHeightRef, stanceHeightSmoothTime);
+                newStanceHeight = Mathf.Clamp(newStanceHeight, 0, PlayerInfo.maxStanceHeight);
 
-            newStanceHeight = Mathf.Clamp(newStanceHeight, 0, PlayerInfo.maxStanceHeight);
-
-            Vector3 destination = PlayerInfo.autoPilotDestination;
-            if (PlayerInfo.autoPilotTransformDestination != null)
-                destination = PlayerInfo.autoPilotTransformDestination.position;
-            if (PlayerInfo.autoPilot && Vector3.Distance(transform.position, destination) < (PlayerInfo.totalLegLength * 3))
-                newStanceHeight = Mathf.Clamp01(((destination.y - transform.position.y) / PlayerInfo.totalLegLength) + 0.5f);
-
-            PlayerInfo.stanceHeight = newStanceHeight;
+                Vector3 destination = PlayerInfo.autoPilotDestination;
+                if (PlayerInfo.autoPilotTransformDestination != null)
+                    destination = PlayerInfo.autoPilotTransformDestination.position;
+                if (PlayerInfo.autoPilot && Vector3.Distance(transform.position, destination) < (PlayerInfo.totalLegLength * 3))
+                    newStanceHeight = Mathf.Clamp01(((destination.y - transform.position.y) / PlayerInfo.totalLegLength) + 0.5f);
+                PlayerInfo.stanceHeight = newStanceHeight;
+            }
+            else
+                PlayerInfo.stanceHeight = PlayerInfo.stanceHeightOverride;
 
             bool doingLegPush = false;
             if (PlayerInfo.flying)

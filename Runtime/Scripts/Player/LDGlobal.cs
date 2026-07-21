@@ -228,6 +228,8 @@ namespace LucidityDrive
             camUpsideDownThreshold
             = 0;
 
+        public static float stanceHeightOverride = -1;
+
         public static bool
             grounded,
             pelvisCollision,

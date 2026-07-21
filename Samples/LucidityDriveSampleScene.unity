@@ -768,6 +768,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1790871085}
+        m_TargetAssemblyTypeName: LucidityDrive.AnimationModel, nostalgiagarden.luciditydrive.runtime
+        m_MethodName: OverrideEmoteStanceHeight
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   actionCancelled:
     m_PersistentCalls:
       m_Calls: []
@@ -8245,7 +8257,7 @@ GameObject:
   - component: {fileID: 1186402531}
   - component: {fileID: 1186402530}
   m_Layer: 0
-  m_Name: emote_swag
+  m_Name: emote_gocrazy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8301,7 +8313,7 @@ MonoBehaviour:
         m_MethodName: StartEmote
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 7400000, guid: b0efdee38eef0874fab4d3a35a00baa6,
+          m_ObjectArgument: {fileID: 7400000, guid: ea0a07635ad18e44988ef4e315900d78,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AnimationClip, UnityEngine
           m_IntArgument: 0

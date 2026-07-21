@@ -176,6 +176,7 @@ namespace LucidityDrive
             mixer.SetInputWeight(0, 1);
             mixer.SetInputWeight(1, 1);
             playableOutput.SetSourcePlayable(mixer);
+            graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
             graph.Play();
         }
 
@@ -189,6 +190,7 @@ namespace LucidityDrive
 
         public void StartEmote(AnimationClip animation)
         {
+            CloseEmote();
             if (emoteCoroutine == null)
                 emoteCoroutine = StartCoroutine(IEmote(animation));
             else
@@ -196,6 +198,11 @@ namespace LucidityDrive
                 StopCoroutine(emoteCoroutine);
                 emoteCoroutine = StartCoroutine(IEmote(animation));
             }
+        }
+
+        public void OverrideEmoteStanceHeight(float value)
+        {
+            PlayerInfo.stanceHeightOverride = value;
         }
 
         public void StartEmoteLooping(AnimationClip animation)
@@ -211,11 +218,11 @@ namespace LucidityDrive
                 StopCoroutine(emoteCoroutine);
             }
             CloseEmote();
+            emoteMask = defaultMask;
         }
 
         private void SetupEmote(AnimationClip animation)
         {
-            graph.Disconnect(mixer, 1);
             var playableAddon = AnimationClipPlayable.Create(graph, animation);
             graph.Connect(playableAddon, 0, mixer, 1);
             if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFootIK))
@@ -246,10 +253,9 @@ namespace LucidityDrive
             PlayerInfo.disableIK_RF = false;
             PlayerInfo.disableIK_RH = false;
             PlayerInfo.disableIK_LH = false;
-            emoteMask = defaultMask;
-            mixer.SetLayerMaskFromAvatarMask(1, defaultMask);
             graph.Disconnect(mixer, 1);
             queueEmoteCancel = false;
+            PlayerInfo.stanceHeightOverride = -1;
         }
 
         public IEnumerator IEmote(AnimationClip animation)
@@ -257,6 +263,7 @@ namespace LucidityDrive
             SetupEmote(animation);
             yield return new WaitForSeconds(2);
             CloseEmote();
+            emoteMask = defaultMask;
         }
 
         private void Update()
@@ -305,8 +312,12 @@ namespace LucidityDrive
                 airtime = 0;
 
             if (queueEmoteCancel)
-                if (PlayerInfo.mainBody.linearVelocity.magnitude > emoteCancelThreshold)
+            {
+                Vector3 processed_vel = Vector3.Scale(PlayerInfo.mainBody.linearVelocity, new Vector3(1, 0.1f, 1));
+                if (processed_vel.magnitude > emoteCancelThreshold || LucidInputValueShortcuts.jump)
                     StopEmote();
+            }
+                
         }
 
         private void OnEnable()
@@ -456,7 +467,7 @@ namespace LucidityDrive
             float targetCimb = PlayerInfo.climbRelative.y;
             hang.y = Mathf.SmoothDamp(currentClimb, targetCimb, ref climbRef, climbSmoothTime);
 
-            float stanceHeight = CalculateStanceHeight();
+            float stanceHeight = PlayerInfo.stanceHeightOverride == -1 ? CalculateStanceHeight() : PlayerInfo.stanceHeightOverride;
 
             UpdateAnimatorFloats(localVel, alignment, lerplean, hang, stanceHeight);
             UpdateAnimatorBools();
