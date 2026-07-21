@@ -8,18 +8,32 @@ namespace LucidityDrive
 {
     public class LDInputs : MonoBehaviour
     {
-        [SerializeField] InputActionAsset m_ActionAsset;
-        public InputActionAsset ActionAsset { get => m_ActionAsset; set => m_ActionAsset = value; }
+        public InputActionAsset ActionAsset;
+        public bool restoreControlOnStart = true;
 
         private readonly Dictionary<InputAction, FieldInfo> actionValueMapping = new();
         private readonly List<InputAction> activeValueInputs = new();
+
+        [SerializeField] CursorLockMode defaultLockMode;
 
         private void Awake() => Setup();
 
         private void OnEnable()
         {
-            if (m_ActionAsset != null)
-                m_ActionAsset.Enable();
+            if (ActionAsset != null)
+            {
+                ActionAsset.Enable();
+                if (restoreControlOnStart)
+                    RestoreControl();
+            }
+        }
+
+        private void OnDisable() => LucidInputActionRefs.mouseUnlock.started -= MouseLockToggle;
+
+        private void Start()
+        {
+            LucidInputActionRefs.mouseUnlock.started += MouseLockToggle;
+            SetState(defaultLockMode);
         }
 
         private void Update()
@@ -105,6 +119,42 @@ namespace LucidityDrive
             else
             {
                 valueField.SetValue(this, null);
+            }
+        }
+
+        public void RevokeControl() => ActionAsset.actionMaps[0].Disable();
+        public void RestoreControl() => ActionAsset.actionMaps[0].Enable();
+
+        private void MouseLockToggle(InputAction.CallbackContext obj)
+        {
+            if (Cursor.lockState == CursorLockMode.Locked)
+                SetState(CursorLockMode.None);
+            else
+                SetState(CursorLockMode.Locked);
+        }
+
+        public void SetState(CursorLockMode state)
+        {
+            Cursor.lockState = state;
+            PlayerInfo.headLocked = (state == CursorLockMode.Locked);
+        }
+
+        public void SetState(string statename)
+        {
+            switch (statename.ToLower())
+            {
+                case "none":
+                    SetState(CursorLockMode.None);
+                    break;
+                case "locked":
+                    SetState(CursorLockMode.Locked);
+                    break;
+                case "confined":
+                    SetState(CursorLockMode.Confined);
+                    break;
+                default:
+                    SetState(CursorLockMode.None);
+                    break;
             }
         }
     }

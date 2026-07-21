@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "baseActions",
     "maps": [
         {
@@ -637,25 +638,7 @@
                     "name": "mouseUnlock",
                     "type": "Button",
                     "id": "70843e2d-8c9a-49ab-8b7e-5bbd3f06150a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "teamSelect",
-                    "type": "Button",
-                    "id": "3e279137-7f85-442f-bcf6-43a262b4a091",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "classSelect",
-                    "type": "Button",
-                    "id": "b1e6b585-dc47-41a7-a73a-8f59305d456e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -692,28 +675,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "mouseUnlock",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5e9220fb-6952-4c52-83b2-fcf9345a686f",
-                    "path": "<Keyboard>/m",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "teamSelect",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8adc3fe7-4e59-4d9a-b06f-e9eae2d4239f",
-                    "path": "<Keyboard>/comma",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "classSelect",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

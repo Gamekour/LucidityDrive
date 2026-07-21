@@ -74,7 +74,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b7a5db94c2adf60ebbfab400237bcfed, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: b7a5db94c2adf60ebbfab400237bcfed, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.2
   m_Pitch: 1.4
@@ -548,10 +549,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990773853417489159}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -575,13 +576,13 @@ ConfigurableJoint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990773853417489159}
+  serializedVersion: 4
   m_ConnectedBody: {fileID: 0}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 1
   m_YMotion: 1
@@ -709,10 +710,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2255393124248980031}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -962,6 +963,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultAnimationSettings: {fileID: 11400000, guid: 902253bb87bcfe04394d99018ad0a4bd,
     type: 2}
+  emoteMask: {fileID: 0}
   controller: {fileID: 9100000, guid: 9d5a21555745d03aaa9bfae1f6d47cef, type: 2}
   IK_LF: {fileID: 8982907529161714512}
   IK_RF: {fileID: 5249457337260208995}
@@ -994,6 +996,21 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 8300000, guid: b7a5db94c2adf60ebbfab400237bcfed,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onEmoteClosed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3325826316032673845}
+        m_TargetAssemblyTypeName: LucidityDrive.LDInputs, nostalgiagarden.luciditydrive.runtime
+        m_MethodName: RestoreControl
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1043,10 +1060,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3481516828095479701}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 69
-  m_Drag: 0
-  m_AngularDrag: 40
+  m_LinearDamping: 0
+  m_AngularDamping: 40
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -6189,7 +6206,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &7985057013613257735
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6205,6 +6222,11 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6226,9 +6248,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -6260,7 +6284,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1773428102 &2720679182346602725
 ParentConstraint:
   m_ObjectHideFlags: 0
@@ -6649,7 +6672,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2635777386139525533}
   - component: {fileID: 3325826316032673845}
-  - component: {fileID: 4850541687374653960}
   - component: {fileID: 5102646455301297706}
   - component: {fileID: 4081950408320705897}
   m_Layer: 3
@@ -6695,20 +6717,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e8e6a8b42bfba540aad9311c903c3c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ActionAsset: {fileID: -944628639613478452, guid: 9704697406044d44a877b355bb924010,
+  ActionAsset: {fileID: -944628639613478452, guid: 9704697406044d44a877b355bb924010,
     type: 3}
---- !u!114 &4850541687374653960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6671152753758007464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b591950ef54e5864bac765cdc3a62b54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  restoreControlOnStart: 1
   defaultLockMode: 1
 --- !u!114 &5102646455301297706
 MonoBehaviour:
@@ -6794,10 +6805,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6946202236830433546}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}

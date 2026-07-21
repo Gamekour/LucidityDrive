@@ -23,6 +23,7 @@ namespace LucidityDrive
         public AnimationPlayableOutput playableOutput;
         public AvatarMask emoteMask;
         public Coroutine emoteCoroutine;
+        private AnimationClip lastEmote;
 
         private AvatarMask defaultMask;
 
@@ -49,6 +50,8 @@ namespace LucidityDrive
         public UnityEvent<bool> onFootChanged;
         [Tooltip("Triggered when landing on the ground (value = landing force)")]
         public UnityEvent<float> onGrounded;
+        [Tooltip("Triggered when an emote ends")]
+        public UnityEvent<AnimationClip> onEmoteClosed;
 
         private float
             groundDistanceThresholdScale,
@@ -245,6 +248,7 @@ namespace LucidityDrive
                 PlayerInfo.disableIK_LH = true;
                 Arms.instance.ForceUngrab(false);
             }
+            lastEmote = animation;
         }
 
         private void CloseEmote()
@@ -256,6 +260,7 @@ namespace LucidityDrive
             graph.Disconnect(mixer, 1);
             queueEmoteCancel = false;
             PlayerInfo.stanceHeightOverride = -1;
+            onEmoteClosed.Invoke(lastEmote);
         }
 
         public IEnumerator IEmote(AnimationClip animation)
