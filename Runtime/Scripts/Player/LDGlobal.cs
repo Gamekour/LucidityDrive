@@ -252,7 +252,11 @@ namespace LucidityDrive
             slidingForward,
             swinging,
             inFirstPerson,
-            autoPilot
+            autoPilot,
+            disableIK_LF,
+            disableIK_RF,
+            disableIK_LH,
+            disableIK_RH
             = false;
 
         public static byte probePattern = 0;

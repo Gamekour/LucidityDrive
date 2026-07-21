@@ -114,11 +114,12 @@ namespace LucidityDrive
             bool doSlideIK = PlayerInfo.surfaceAngle < PlayerInfo.slidePushAngleThreshold;
             bool isSliding = LucidInputValueShortcuts.bslide || LucidInputValueShortcuts.slide;
             bool enableFootIK = !(PlayerInfo.crawling || (isSliding && !doSlideIK));
-            float footIKWeight = enableFootIK ? 1 : 0;
-            anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, footIKWeight);
-            anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, footIKWeight);
-            anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, footIKWeight);
-            anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, footIKWeight);
+            float footIKWeightL = (enableFootIK & !PlayerInfo.disableIK_LF) ? 1 : 0;
+            float footIKWeightR = (enableFootIK & !PlayerInfo.disableIK_RF) ? 1 : 0;
+            anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, footIKWeightL);
+            anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, footIKWeightR);
+            anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, footIKWeightL);
+            anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, footIKWeightR);
             anim.SetIKPosition(AvatarIKGoal.LeftFoot, PlayerInfo.IK_LF.position);
             anim.SetIKRotation(AvatarIKGoal.LeftFoot, PlayerInfo.IK_LF.rotation);
             anim.SetIKPosition(AvatarIKGoal.RightFoot, PlayerInfo.IK_RF.position);
@@ -134,7 +135,9 @@ namespace LucidityDrive
             bool handCollision = isRight ? PlayerInfo.handCollisionR : PlayerInfo.handCollisionL;
             Transform IKTransform = isRight ? PlayerInfo.IK_RH : PlayerInfo.IK_LH;
             AvatarIKGoal IKGoal = isRight ? AvatarIKGoal.RightHand : AvatarIKGoal.LeftHand;
+            bool isDisabled = isRight ? PlayerInfo.disableIK_RH : PlayerInfo.disableIK_LH;
             float grabweight = isRight ? grabWeightR : grabWeightL;
+            grabweight *= isDisabled ? 0 : 1;
 
             if (grab || handCollision)
             {

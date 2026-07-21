@@ -21,7 +21,10 @@ namespace LucidityDrive
         public AnimationLayerMixerPlayable mixer;
         public AnimatorControllerPlayable controllerPlayable;
         public AnimationPlayableOutput playableOutput;
+        public AvatarMask emoteMask;
         public Coroutine emoteCoroutine;
+
+        private AvatarMask defaultMask;
 
         private AnimationSettings m_activeAnimationSettings;
         public AnimationSettings ActiveAnimationSettings
@@ -70,7 +73,8 @@ namespace LucidityDrive
             maxLeanAngle,
             highSlopeThreshold,
             velNFallback,
-            airtime
+            airtime,
+            emoteCancelThreshold
             ;
 
         [HideInInspector]
@@ -84,6 +88,7 @@ namespace LucidityDrive
 
         private Animator anim;
 
+        private bool queueEmoteCancel = false;
         private bool queueRoll = false;
         private Vector2 leanSmoothRef;
         private Vector3
@@ -147,6 +152,12 @@ namespace LucidityDrive
             instance = this;
             PlayerInfo.camUpsideDownThreshold = camUpsideDownThreshold;
             ActiveAnimationSettings = defaultAnimationSettings;
+
+            defaultMask = new AvatarMask();
+            for (int i = 0; i < (int)AvatarMaskBodyPart.LastBodyPart; i++)
+                defaultMask.SetHumanoidBodyPartActive((AvatarMaskBodyPart)i, true);
+
+            emoteMask = defaultMask;
         }
         private void Start()
         {
@@ -162,8 +173,17 @@ namespace LucidityDrive
             mixer = AnimationLayerMixerPlayable.Create(graph, 2);
             graph.Connect(controllerPlayable, 0, mixer, 0);
             mixer.SetInputWeight(0, 1);
+            mixer.SetLayerMaskFromAvatarMask(1, emoteMask);
             playableOutput.SetSourcePlayable(mixer);
             graph.Play();
+        }
+
+        public void QueueEmoteCancel() => queueEmoteCancel = true;
+
+        public void SetEmoteMask(AvatarMask am)
+        {
+            emoteMask = am;
+            mixer.SetLayerMaskFromAvatarMask(1, emoteMask);
         }
 
         public void StartEmote(AnimationClip animation)
@@ -177,13 +197,25 @@ namespace LucidityDrive
             }
         }
 
-        public void StopEmote(AnimationClip animation)
+        public void StopEmote()
         {
             if (emoteCoroutine != null)
             {
                 StopCoroutine(emoteCoroutine);
-                graph.Disconnect(mixer, 1);
+                CloseEmote();
             }
+        }
+
+        private void CloseEmote()
+        {
+            PlayerInfo.disableIK_LF = false;
+            PlayerInfo.disableIK_RF = false;
+            PlayerInfo.disableIK_RH = false;
+            PlayerInfo.disableIK_LH = false;
+            emoteMask = defaultMask;
+            mixer.SetLayerMaskFromAvatarMask(1, defaultMask);
+            graph.Disconnect(mixer, 1);
+            queueEmoteCancel = false;
         }
 
         public IEnumerator IEmote(AnimationClip animation)
@@ -191,8 +223,16 @@ namespace LucidityDrive
             graph.Disconnect(mixer, 1);
             var playableAddon = AnimationClipPlayable.Create(graph, animation);
             graph.Connect(playableAddon, 0, mixer, 1);
+            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFootIK))
+                PlayerInfo.disableIK_LF = true;
+            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFootIK))
+                PlayerInfo.disableIK_RF = true;
+            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.RightHandIK))
+                PlayerInfo.disableIK_RH = true;
+            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftHandIK))
+                PlayerInfo.disableIK_LH = true;
             yield return new WaitForSeconds(2);
-            graph.Disconnect(mixer, 1);
+            CloseEmote();
         }
 
         private void Update()
@@ -239,6 +279,10 @@ namespace LucidityDrive
                 airtime += Time.deltaTime;
             else
                 airtime = 0;
+
+            if (queueEmoteCancel)
+                if (PlayerInfo.mainBody.linearVelocity.magnitude > emoteCancelThreshold)
+                    StopEmote();
         }
 
         private void OnEnable()

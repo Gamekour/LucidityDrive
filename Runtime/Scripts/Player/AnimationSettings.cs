@@ -49,5 +49,7 @@ namespace LucidityDrive
         public float highSlopeThreshold = 0.2f;
         [Tooltip("Fallback value (relative to actual Y-velocity) for normalized Y-velocity parameter if lateral velocity is too low.")] 
         public float velNFallback = 0.25f;
+        [Tooltip("Required velocity magnitude to cancel emote if cancel is queued")]
+        public float emoteCancelThreshold = 1f;
     }
 }

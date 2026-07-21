@@ -692,7 +692,7 @@ GameObject:
   - component: {fileID: 77326792}
   - component: {fileID: 77326791}
   m_Layer: 0
-  m_Name: emote_moonwalk
+  m_Name: emote_jiggy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -732,12 +732,37 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1790871085}
         m_TargetAssemblyTypeName: LucidityDrive.AnimationModel, nostalgiagarden.luciditydrive.runtime
+        m_MethodName: SetEmoteMask
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 31900000, guid: 7dceffd7c64cc704ba38894dd2acce34,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AvatarMask, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1790871085}
+        m_TargetAssemblyTypeName: LucidityDrive.AnimationModel, nostalgiagarden.luciditydrive.runtime
         m_MethodName: StartEmote
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 7400000, guid: ccde06c22c3618446be898ac80ae63b9,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AnimationClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1790871085}
+        m_TargetAssemblyTypeName: LucidityDrive.AnimationModel, nostalgiagarden.luciditydrive.runtime
+        m_MethodName: QueueEmoteCancel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -8220,7 +8245,7 @@ GameObject:
   - component: {fileID: 1186402531}
   - component: {fileID: 1186402530}
   m_Layer: 0
-  m_Name: emote_fly
+  m_Name: emote_swag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8260,10 +8285,23 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1790871085}
         m_TargetAssemblyTypeName: LucidityDrive.AnimationModel, nostalgiagarden.luciditydrive.runtime
+        m_MethodName: SetEmoteMask
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 31900000, guid: 93f7809ae50ba5144a0611e2119a81de,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AvatarMask, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1790871085}
+        m_TargetAssemblyTypeName: LucidityDrive.AnimationModel, nostalgiagarden.luciditydrive.runtime
         m_MethodName: StartEmote
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 7400000, guid: d90016e4b07381d4896663397fd4add0,
+          m_ObjectArgument: {fileID: 7400000, guid: b0efdee38eef0874fab4d3a35a00baa6,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AnimationClip, UnityEngine
           m_IntArgument: 0
