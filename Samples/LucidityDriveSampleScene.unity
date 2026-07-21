@@ -745,7 +745,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1790871085}
         m_TargetAssemblyTypeName: LucidityDrive.AnimationModel, nostalgiagarden.luciditydrive.runtime
-        m_MethodName: StartEmote
+        m_MethodName: StartEmoteLooping
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 7400000, guid: ccde06c22c3618446be898ac80ae63b9,

@@ -34,4 +34,4 @@ MonoBehaviour:
   maxLeanAngle: 45
   highSlopeThreshold: 0.2
   velNFallback: 0.25
-  emoteCancelThreshold: 1
+  emoteCancelThreshold: 2

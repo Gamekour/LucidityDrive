@@ -173,6 +173,7 @@ namespace LucidityDrive
             mixer = AnimationLayerMixerPlayable.Create(graph, 2);
             graph.Connect(controllerPlayable, 0, mixer, 0);
             mixer.SetInputWeight(0, 1);
+            mixer.SetInputWeight(1, 0);
             mixer.SetLayerMaskFromAvatarMask(1, emoteMask);
             playableOutput.SetSourcePlayable(mixer);
             graph.Play();
@@ -197,6 +198,12 @@ namespace LucidityDrive
             }
         }
 
+        public void StartEmoteLooping(AnimationClip animation)
+        {
+            StopEmote();
+            SetupEmote(animation);
+        }
+
         public void StopEmote()
         {
             if (emoteCoroutine != null)
@@ -204,6 +211,23 @@ namespace LucidityDrive
                 StopCoroutine(emoteCoroutine);
                 CloseEmote();
             }
+        }
+
+        private void SetupEmote(AnimationClip animation)
+        {
+            graph.Disconnect(mixer, 1);
+            var playableAddon = AnimationClipPlayable.Create(graph, animation);
+            graph.Connect(playableAddon, 0, mixer, 1);
+            mixer.SetInputWeight(0, 0);
+            mixer.SetInputWeight(1, 1);
+            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFootIK))
+                PlayerInfo.disableIK_LF = true;
+            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFootIK))
+                PlayerInfo.disableIK_RF = true;
+            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.RightHandIK))
+                PlayerInfo.disableIK_RH = true;
+            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftHandIK))
+                PlayerInfo.disableIK_LH = true;
         }
 
         private void CloseEmote()
@@ -216,21 +240,13 @@ namespace LucidityDrive
             mixer.SetLayerMaskFromAvatarMask(1, defaultMask);
             graph.Disconnect(mixer, 1);
             queueEmoteCancel = false;
+            mixer.SetInputWeight(0, 1);
+            mixer.SetInputWeight(1, 0);
         }
 
         public IEnumerator IEmote(AnimationClip animation)
         {
-            graph.Disconnect(mixer, 1);
-            var playableAddon = AnimationClipPlayable.Create(graph, animation);
-            graph.Connect(playableAddon, 0, mixer, 1);
-            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFootIK))
-                PlayerInfo.disableIK_LF = true;
-            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFootIK))
-                PlayerInfo.disableIK_RF = true;
-            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.RightHandIK))
-                PlayerInfo.disableIK_RH = true;
-            if (emoteMask.GetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftHandIK))
-                PlayerInfo.disableIK_LH = true;
+            SetupEmote(animation);
             yield return new WaitForSeconds(2);
             CloseEmote();
         }
