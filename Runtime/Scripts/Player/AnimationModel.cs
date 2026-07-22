@@ -621,12 +621,14 @@ namespace LucidityDrive
             Vector3 kneeposL = animKneeL.position;
             Vector3 kneeposR = animKneeR.position;
 
-            bool hitL = UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast);
-            bool hitR = UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast);
+            bool highslopeL;
+            bool highslopeR;
+            bool hitL = UpdateFootPosition(true, footposL, kneeposL, PlayerInfo.legspaceL, ref LCast, out highslopeL);
+            bool hitR = UpdateFootPosition(false, footposR, kneeposR, PlayerInfo.legspaceR, ref RCast, out highslopeR);
 
             bool prev_grounded = PlayerInfo.grounded;
 
-            PlayerInfo.grounded = hitL || hitR;
+            PlayerInfo.grounded = (hitL && !highslopeL) || (hitR && !highslopeR);
 
             if (!prev_grounded && PlayerInfo.grounded)
             {
@@ -643,7 +645,7 @@ namespace LucidityDrive
             if (!PlayerInfo.disableIK_RF) PlayerInfo.IK_RF.position = RCast;
         }
 
-        private bool UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast)
+        private bool UpdateFootPosition(bool isLeft, Vector3 footpos, Vector3 kneepos, Transform legspace, ref Vector3 Cast, out bool highslope)
         {
             Vector3 thighOrigin = legspace.position + (legspace.up * legCastStartHeightOffset);
             Debug.DrawLine(thighOrigin, thighOrigin + ((kneepos - thighOrigin).normalized * Vector3.Distance(thighOrigin, kneepos)), Color.magenta);
@@ -700,17 +702,17 @@ namespace LucidityDrive
                 else
                     PlayerInfo.IK_RF.localRotation = Quaternion.LookRotation(PlayerInfo.pelvis.forward);
             }
+            Vector3 footNormal = Vector3.up;
+            if (thighCast)
+                footNormal = hitInfoThigh.normal;
+            else if (shinCast)
+                footNormal = hitInfoShin.normal;
             if (PlayerInfo.stanceHeight < 0.11f)
             {
-                Vector3 footNormal = Vector3.up;
-                if (thighCast)
-                    footNormal = hitInfoThigh.normal;
-                else if (shinCast)
-                    footNormal = hitInfoShin.normal;
-
                 if (Vector3.Angle(Vector3.up, footNormal) < PlayerInfo.slidePushAngleThreshold)
                     Cast = footpos;
             }
+            highslope = (footNormal.y < highSlopeThreshold && !LucidInputValueShortcuts.jump);
 
             Cast = Vector3.SmoothDamp(Cast, CastOld, ref footRef, footSmoothTime);
 
